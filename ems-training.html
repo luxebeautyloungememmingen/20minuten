@@ -2,686 +2,110 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="EMS Personal Training in Memmingen & Senden – 20 Minuten für maximale Ergebnisse. Kostenloses Probetraining sichern.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="description" content="EMS Personal Training in Memmingen & Senden – 20 Minuten für maximale Ergebnisse.">
+<meta name="theme-color" content="#2f8614">
 <title>EMS Training Memmingen & Senden – fitbox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet">
-<style>
-:root {
-  --green: #2f8614;
-  --dark-green: #246610;
-  --green-light: #e8f5e0;
-  --green-mid: #c2e0aa;
-  --black: #111;
-  --text: #1a1a1a;
-  --text-muted: #6b7280;
-  --bg: #f9f9f6;
-  --bg-alt: #f2f2ee;
-  --white: #ffffff;
-  --border: #e2e2dc;
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  overflow-x: hidden;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-/* ── BANNER ── */
-#fb-action-banner {
-  display: none;
-  background: var(--green);
-  color: #fff;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 9px 16px;
-  position: relative;
-  z-index: 201;
-}
-#fb-action-banner.show { display: block; }
-#fb-action-banner a { color: #fff; text-decoration: underline; margin-left: 8px; }
-
-/* ── NAV ── */
-.fb-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 14px 20px;
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 200;
-}
-.fb-logo img { height: 38px; width: auto; display: block; }
-.fb-nav-cta {
-  background: var(--green);
-  color: var(--white);
-  font-weight: 700;
-  font-size: 13px;
-  padding: 10px 18px;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: background .2s;
-  white-space: nowrap;
-}
-.fb-nav-cta:hover { background: var(--dark-green); }
-
-/* ── HERO ── */
-.fb-hero {
-  background: var(--white);
-  padding: 36px 20px 0;
-  border-bottom: 1px solid var(--border);
-}
-.fb-hero-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 32px;
-  align-items: center;
-}
-.fb-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--dark-green);
-  margin-bottom: 14px;
-  background: var(--green-light);
-  padding: 5px 12px;
-  border-radius: 2px;
-}
-.fb-eyebrow::before { content: ''; display: block; width: 16px; height: 2px; background: var(--dark-green); }
-.fb-h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 56px;
-  line-height: .92;
-  letter-spacing: 1px;
-  margin-bottom: 20px;
-  color: var(--black);
-}
-.fb-h1 .accent { color: var(--green); }
-.fb-h1 .outline { -webkit-text-stroke: 2px var(--green); color: transparent; }
-.fb-hero-desc { font-size: 16px; color: var(--text-muted); line-height: 1.75; margin-bottom: 28px; }
-.fb-hero-desc strong { color: var(--dark-green); font-weight: 600; }
-.fb-hero-actions { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
-.fb-btn-primary {
-  background: var(--green);
-  color: var(--white);
-  font-weight: 700;
-  font-size: 16px;
-  padding: 16px 28px;
-  border-radius: 4px;
-  text-decoration: none;
-  text-align: center;
-  transition: all .2s;
-  display: block;
-}
-.fb-btn-primary:hover { background: var(--dark-green); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(47,134,21,0.25); }
-.fb-hero-note { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; justify-content: center; }
-.fb-hero-note::before { content: '✓'; color: var(--green); font-weight: 700; }
-.fb-scarcity {
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 4px;
-  padding: 10px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #856404;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.fb-hero-photo { border-radius: 8px 8px 0 0; overflow: hidden; height: 260px; }
-.fb-hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
-
-/* ── STATS BAR ── */
-.fb-stats-bar {
-  background: var(--green);
-  padding: 20px;
-  display: flex;
-  gap: 0;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.fb-stat-item {
-  flex: 1;
-  min-width: 80px;
-  text-align: center;
-  padding: 8px 12px;
-  border-right: 1px solid rgba(255,255,255,0.2);
-}
-.fb-stat-item:last-child { border-right: none; }
-.fb-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: #fff; line-height: 1; }
-.fb-stat-label { font-size: 11px; color: rgba(255,255,255,0.85); margin-top: 2px; }
-
-/* ── SECTIONS ── */
-.fb-section { padding: 40px 20px; }
-.fb-section-inner { max-width: 1100px; margin: 0 auto; }
-.fb-section-label { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--dark-green); margin-bottom: 10px; }
-.fb-section-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; margin-bottom: 14px; color: var(--black); }
-
-/* ── BENEFITS ── */
-.fb-benefits { background: var(--white); border-bottom: 1px solid var(--border); }
-.fb-benefits-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 28px; }
-.fb-benefit {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 22px 20px;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-  transition: border-color .2s;
-}
-.fb-benefit:hover { border-color: var(--green); }
-.fb-benefit-icon {
-  width: 40px; height: 40px;
-  background: var(--green-light);
-  border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.fb-benefit-icon svg { width: 20px; height: 20px; stroke: var(--dark-green); fill: none; }
-.fb-benefit h3 { font-size: 15px; font-weight: 600; color: var(--black); margin-bottom: 5px; }
-.fb-benefit p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
-
-/* ── TRUST ── */
-.fb-trust {
-  background: var(--bg-alt);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 32px 20px;
-}
-.fb-trust-inner { max-width: 1100px; margin: 0 auto; }
-.fb-trust-label { text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px; }
-.fb-trust-badges {
-  display: flex; flex-direction: column; gap: 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--white);
-}
-.fb-trust-item {
-  padding: 18px 24px;
-  border-bottom: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  align-items: center; text-align: center;
-}
-.fb-trust-item:last-child { border-bottom: none; }
-.fb-trust-item-sub { font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-.fb-trust-item-name { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 1.5px; color: var(--black); }
-.fb-trust-item-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
-
-/* ── REVIEWS ── */
-.fb-reviews { background: var(--bg); border-bottom: 1px solid var(--border); }
-.fb-reviews-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 28px; }
-.fb-review { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 22px 20px; }
-.fb-review-stars { color: #f59e0b; font-size: 16px; margin-bottom: 10px; }
-.fb-review-text { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 12px; font-style: italic; }
-.fb-review-author { font-size: 13px; font-weight: 600; color: var(--dark-green); }
-
-/* ── STEPS ── */
-.fb-steps-section { background: var(--bg-alt); border-bottom: 1px solid var(--border); }
-.fb-next-steps { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 28px; }
-.fb-next-step {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
-  display: flex; gap: 16px; align-items: flex-start;
-}
-.fb-next-step-num { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--green); line-height: 1; flex-shrink: 0; width: 36px; }
-.fb-next-step h3 { font-size: 15px; font-weight: 600; color: var(--black); margin-bottom: 4px; }
-.fb-next-step p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-
-/* ── STUDIOS ── */
-.fb-studios { background: var(--white); border-bottom: 1px solid var(--border); }
-.fb-studio-banner { border-radius: 8px; overflow: hidden; height: 220px; margin-bottom: 24px; position: relative; }
-.fb-studio-banner img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
-.fb-studio-banner-text {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,0.28);
-  display: flex; align-items: center; justify-content: center;
-}
-.fb-studio-banner-text span {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 36px; color: #fff; letter-spacing: 2px;
-  text-align: center; text-shadow: 0 2px 12px rgba(0,0,0,0.4);
-}
-.fb-studios-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-.fb-studio-card {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 8px; padding: 24px 20px;
-  position: relative; overflow: hidden;
-}
-.fb-studio-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--green), var(--dark-green));
-}
-.fb-studio-name { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--black); margin-bottom: 4px; }
-.fb-studio-sub { font-size: 11px; color: var(--dark-green); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; }
-.fb-studio-info { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
-.fb-studio-info-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
-.fb-studio-info-item svg { width: 14px; height: 14px; stroke: var(--green); fill: none; flex-shrink: 0; }
-.fb-wa-btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  background: #25d366; color: #fff;
-  font-weight: 700; font-size: 14px;
-  padding: 12px 16px; border-radius: 6px;
-  text-decoration: none; transition: background .2s;
-}
-.fb-wa-btn:hover { background: #1ebe5a; }
-
-/* ── FORM SECTION ── */
-.fb-form-section { background: var(--green-light); border-top: 3px solid var(--green); }
-.fb-form-inner { max-width: 680px; margin: 0 auto; }
-.fb-form-header { text-align: center; margin-bottom: 28px; }
-.fb-form-header .fb-section-label { text-align: center; }
-.fb-form-header .fb-section-title { font-size: 32px; }
-.fb-form-subtitle { font-size: 15px; color: var(--text-muted); margin-top: 8px; }
-
-/* Steps indicator */
-.fb-steps-indicator { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 28px; }
-.fb-step-dot {
-  width: 28px; height: 28px; border-radius: 50%;
-  border: 2px solid var(--border); background: var(--white);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; color: var(--text-muted);
-  transition: all .3s; flex-shrink: 0;
-}
-.fb-step-dot.active { background: var(--green); border-color: var(--green); color: #fff; }
-.fb-step-dot.done { background: var(--green); border-color: var(--green); color: #fff; }
-.fb-step-line { flex: 1; height: 2px; background: var(--border); max-width: 40px; transition: background .3s; }
-.fb-step-line.done { background: var(--green); }
-
-/* Form steps */
-.fb-form-step { display: none; }
-.fb-form-step.active { display: block; }
-.fb-step-title { font-size: 18px; font-weight: 700; color: var(--black); margin-bottom: 8px; text-align: center; line-height: 1.3; }
-.fb-step-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; text-align: center; }
-
-/* Goal picker */
-.fb-goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.fb-goal-btn {
-  background: var(--white); border: 2px solid var(--border);
-  border-radius: 8px; padding: 16px 12px;
-  cursor: pointer; text-align: center; transition: all .2s;
-}
-.fb-goal-btn:hover { border-color: var(--green); background: var(--green-light); }
-.fb-goal-btn.active { border-color: var(--green); background: var(--green-light); }
-.fb-goal-emoji { font-size: 28px; display: block; margin-bottom: 6px; }
-.fb-goal-label { font-size: 13px; font-weight: 600; color: var(--black); }
-
-/* Studio picker */
-.fb-studio-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-.fb-studio-pick-btn {
-  border: 2px solid var(--border); background: var(--white);
-  padding: 16px 14px; cursor: pointer;
-  text-align: left; transition: all .2s;
-  border-radius: 8px; position: relative;
-}
-.fb-studio-pick-btn:hover { border-color: var(--green); }
-.fb-studio-pick-btn.active { border-color: var(--green); background: var(--green-light); }
-.fb-studio-pick-btn.active::after {
-  content: '✓'; position: absolute; top: 10px; right: 12px;
-  color: var(--dark-green); font-weight: 700; font-size: 14px;
-}
-.fb-pick-name { font-weight: 700; font-size: 14px; color: var(--black); margin-bottom: 3px; }
-.fb-pick-sub { font-size: 11px; color: var(--text-muted); }
-
-/* Slot calendar */
-.fb-slot-section { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-top: 4px; }
-.fb-slot-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.fb-slot-nav-btn {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 6px; padding: 6px 14px;
-  font-size: 13px; font-weight: 600; cursor: pointer; color: var(--text);
-}
-.fb-slot-nav-btn:hover { background: var(--green-light); border-color: var(--green); }
-.fb-slot-week-label { font-size: 13px; font-weight: 700; color: var(--text); }
-.fb-slot-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; max-height: 260px; overflow-y: auto; }
-.fb-slot-btn {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 6px; padding: 10px 6px;
-  font-size: 12px; font-weight: 600; cursor: pointer;
-  text-align: center; color: var(--text); transition: all .2s;
-}
-.fb-slot-btn:hover { background: var(--green-light); border-color: var(--green); }
-.fb-slot-btn.selected { background: var(--green); border-color: var(--dark-green); color: #fff; }
-.fb-slot-day-label { font-size: 10px; color: var(--text-muted); font-weight: 500; display: block; margin-bottom: 2px; }
-.fb-slot-btn.selected .fb-slot-day-label { color: rgba(255,255,255,0.85); }
-.fb-slot-loading { text-align: center; padding: 24px; color: var(--text-muted); font-size: 14px; grid-column: 1/-1; }
-.fb-slot-empty { text-align: center; padding: 24px; color: var(--text-muted); font-size: 13px; grid-column: 1/-1; }
-.fb-slot-selected-info {
-  background: var(--green-light); border: 1px solid var(--green);
-  border-radius: 6px; padding: 10px 14px;
-  font-size: 13px; font-weight: 600; color: var(--dark-green);
-  margin-top: 10px; display: none;
-}
-.fb-wunschzeit { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-top: 4px; }
-.fb-wunschzeit-hint { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.6; }
-.fb-skip-slot { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 10px; }
-.fb-skip-slot a { color: var(--dark-green); text-decoration: underline; cursor: pointer; }
-
-/* Form fields */
-.fb-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-.fb-field { display: flex; flex-direction: column; gap: 5px; }
-.fb-field.full { grid-column: 1/-1; }
-.fb-label { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--text-muted); }
-.fb-input, .fb-select {
-  padding: 13px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 6px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 15px; color: var(--text); background: var(--white);
-  transition: border-color .2s, box-shadow .2s;
-  outline: none; appearance: none; width: 100%;
-}
-.fb-input:focus, .fb-select:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(47,134,21,0.12);
-}
-.fb-input::placeholder { color: #bbb; }
-.fb-privacy { font-size: 11px; color: var(--text-muted); line-height: 1.6; margin: 12px 0 18px; }
-.fb-privacy a { color: var(--dark-green); }
-
-/* Summary */
-.fb-summary { background: var(--white); border: 1px solid var(--green); border-radius: 6px; padding: 12px 14px; margin-bottom: 16px; font-size: 13px; }
-.fb-summary-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px dashed var(--border); }
-.fb-summary-row:last-child { border-bottom: none; }
-.fb-summary-label { color: var(--text-muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
-.fb-summary-value { color: var(--black); font-weight: 600; text-align: right; }
-
-/* Nav buttons */
-.fb-form-nav { display: flex; gap: 10px; margin-top: 16px; }
-.fb-btn-back {
-  background: var(--white); border: 1.5px solid var(--border);
-  color: var(--text); font-family: 'DM Sans', sans-serif;
-  font-weight: 600; font-size: 14px; padding: 13px 20px;
-  border-radius: 6px; cursor: pointer; flex: 0 0 auto;
-}
-.fb-btn-next {
-  background: var(--green); color: #fff;
-  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 15px;
-  padding: 14px 20px; border: none; border-radius: 6px;
-  cursor: pointer; flex: 1; transition: background .2s;
-}
-.fb-btn-next:hover { background: var(--dark-green); }
-.fb-btn-next:disabled { opacity: .6; cursor: not-allowed; }
-.fb-spinner {
-  display: none; width: 18px; height: 18px;
-  border: 2px solid rgba(255,255,255,0.4); border-top-color: white;
-  border-radius: 50%; animation: fbSpin .7s linear infinite; margin: 0 auto;
-}
-.fb-btn-next.loading .fb-btn-text { display: none; }
-.fb-btn-next.loading .fb-spinner { display: block; }
-@keyframes fbSpin { to { transform: rotate(360deg); } }
-
-/* Error / Success */
-.fb-error { display: none; background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; padding: 10px 14px; border-radius: 6px; font-size: 13px; margin-top: 10px; }
-.fb-error.show { display: block; }
-.fb-success { display: none; text-align: center; padding: 40px 20px; }
-.fb-success.show { display: block; }
-.fb-success-icon {
-  width: 64px; height: 64px; background: var(--green);
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 16px; font-size: 28px; color: white;
-  box-shadow: 0 8px 24px rgba(47,134,21,0.3);
-}
-.fb-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--black); margin-bottom: 10px; }
-.fb-success p { font-size: 15px; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; }
-.fb-success-steps { background: var(--white); border-radius: 8px; padding: 20px; text-align: left; margin-bottom: 20px; }
-.fb-success-step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
-.fb-success-step:last-child { margin-bottom: 0; }
-.fb-success-step-num { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--green); line-height: 1; flex-shrink: 0; }
-.fb-success-step p { font-size: 13px; color: var(--text); line-height: 1.5; margin: 0; }
-.fb-wa-success-btn {
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  background: #25d366; color: #fff;
-  font-weight: 700; font-size: 15px; padding: 16px 24px;
-  border-radius: 8px; text-decoration: none; transition: background .2s;
-}
-.fb-wa-success-btn:hover { background: #1ebe5a; }
-
-/* ── STICKY CTA (Mobile) ── */
-.fb-sticky-cta {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
-  background: var(--green);
-  padding: 12px 20px;
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
-  transform: translateY(100%); transition: transform .3s;
-}
-.fb-sticky-cta.visible { transform: translateY(0); }
-.fb-sticky-cta-text { color: rgba(255,255,255,0.9); font-size: 12px; line-height: 1.4; }
-.fb-sticky-cta-text strong { color: #fff; font-size: 14px; display: block; }
-.fb-sticky-cta-btn {
-  background: #fff; color: var(--dark-green);
-  font-weight: 700; font-size: 14px; padding: 11px 20px;
-  border-radius: 6px; text-decoration: none; white-space: nowrap; flex-shrink: 0;
-}
-
-/* ── WA FLOAT ── */
-.fb-wa-float {
-  position: fixed; bottom: 80px; right: 16px; z-index: 299;
-  width: 52px; height: 52px; background: #25d366;
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2); text-decoration: none; transition: transform .2s;
-}
-.fb-wa-float:hover { transform: scale(1.08); }
-.fb-wa-float svg { width: 28px; height: 28px; fill: #fff; }
-
-/* ── FOOTER ── */
-.fb-footer {
-  background: var(--bg-alt); padding: 28px 20px;
-  border-top: 1px solid var(--border);
-  display: flex; flex-direction: column; gap: 12px; align-items: flex-start;
-}
-.fb-footer-logo img { height: 30px; width: auto; }
-.fb-footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
-.fb-footer-links a { font-size: 12px; color: var(--text-muted); text-decoration: none; }
-.fb-footer-links a:hover { color: var(--dark-green); }
-
-body { padding-bottom: 70px; }
-
-/* ── RESPONSIVE ── */
-@media (min-width: 640px) {
-  .fb-hero { padding: 56px 32px 0; }
-  .fb-section { padding: 72px 32px; }
-  .fb-trust { padding: 40px 32px; }
-  .fb-benefits-grid { grid-template-columns: 1fr 1fr; }
-  .fb-reviews-grid { grid-template-columns: 1fr 1fr; }
-  .fb-trust-badges { flex-direction: row; }
-  .fb-trust-item { border-bottom: none; border-right: 1px solid var(--border); flex: 1; }
-  .fb-trust-item:last-child { border-right: none; }
-  .fb-next-steps { grid-template-columns: 1fr 1fr; }
-  .fb-slot-grid { grid-template-columns: repeat(4,1fr); }
-}
-@media (min-width: 1024px) {
-  .fb-nav { padding: 20px 48px; }
-  .fb-logo img { height: 44px; }
-  .fb-hero { padding: 72px 48px 0; }
-  .fb-section { padding: 88px 48px; }
-  .fb-hero-inner { grid-template-columns: 1fr 1fr; gap: 64px; }
-  .fb-hero-photo { border-radius: 8px; height: 440px; }
-  .fb-h1 { font-size: clamp(60px, 8vw, 108px); }
-  .fb-btn-primary { display: inline-block; width: auto; }
-  .fb-hero-actions { flex-direction: row; align-items: center; }
-  .fb-hero-note { justify-content: flex-start; }
-  .fb-benefits-grid { grid-template-columns: repeat(3,1fr); }
-  .fb-reviews-grid { grid-template-columns: repeat(3,1fr); }
-  .fb-studios-grid { grid-template-columns: 1fr 1fr; }
-  .fb-next-steps { grid-template-columns: repeat(3,1fr); }
-  .fb-footer { flex-direction: row; justify-content: space-between; align-items: center; padding: 32px 48px; }
-  .fb-wa-float { bottom: 24px; right: 24px; width: 60px; height: 60px; }
-  body { padding-bottom: 0; }
-  .fb-sticky-cta { display: none; }
-}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ems-training.css">
 </head>
 <body>
 
-<!-- ACTION BANNER (config-gesteuert) -->
 <div id="fb-action-banner"></div>
 
-<!-- NAV -->
 <nav class="fb-nav">
-  <div class="fb-logo">
-    <img id="cfg-logo" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox Logo">
-  </div>
-  <a href="#fb-anmeldung" class="fb-nav-cta" id="cfg-nav-cta">Jetzt ausprobieren →</a>
+  <div class="fb-logo"><img id="cfg-logo" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></div>
+  <a href="#fb-inline-quiz" class="fb-nav-cta" id="cfg-nav-cta">Jetzt starten →</a>
 </nav>
 
-<!-- HERO -->
 <section class="fb-hero">
   <div class="fb-hero-inner">
     <div class="fb-hero-left">
-      <div class="fb-eyebrow" id="cfg-eyebrow">EMS Personal Training</div>
-      <div class="fb-h1" id="cfg-h1">
-        20 MIN.<br>
-        <span class="accent">MAXIMALE</span><br>
-        <span class="outline">WIRKUNG.</span>
-      </div>
-      <p class="fb-hero-desc" id="cfg-hero-desc">
-        Mit <strong>EMS-Training</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong> gleichzeitig — was klassisches Training in 90 Minuten schafft, erreichst du bei uns in 20 Minuten.
-      </p>
+      <div class="fb-eyebrow">EMS Personal Training</div>
+      <h1 class="fb-h1">20 MIN.<br><span class="accent">MAXIMALE</span><br><span class="outline">WIRKUNG.</span></h1>
+      <p class="fb-hero-desc">Mit <strong>EMS-Training</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong> gleichzeitig — was klassisches Training in 90 Minuten schafft, schaffst du bei uns in 20.</p>
       <div class="fb-scarcity" id="cfg-scarcity">⚠️ Nur noch wenige Plätze pro Monat verfügbar!</div>
-      <div class="fb-hero-actions" style="margin-top:14px;">
-        <a href="#fb-anmeldung" class="fb-btn-primary" id="cfg-hero-cta">🎯 Kostenloses Probetraining sichern</a>
-        <span class="fb-hero-note" id="cfg-hero-note">100% kostenlos &amp; unverbindlich</span>
-      </div>
     </div>
-    <div class="fb-hero-photo">
-      <img id="cfg-hero-img" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg" alt="EMS Training fitbox">
-    </div>
+    <div class="fb-hero-photo"><img id="cfg-hero-img" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg" alt="EMS Training" loading="eager"></div>
   </div>
 </section>
 
-<!-- STATS BAR -->
-<div class="fb-stats-bar" id="cfg-stats-bar">
-  <div class="fb-stat-item">
-    <div class="fb-stat-num" data-stat="0">20</div>
-    <div class="fb-stat-label" data-stat-label="0">Min. pro Session</div>
+<section class="fb-inline-quiz" id="fb-inline-quiz">
+  <div class="fb-inline-quiz-inner">
+    <div class="fb-inline-quiz-eyebrow">Kostenlos · 60 Sekunden</div>
+    <div class="fb-inline-quiz-title" id="cfg-quiz-title">Was ist dein Ziel?</div>
+    <div class="fb-inline-quiz-sub" id="cfg-quiz-sub">Wähle ein Ziel — wir zeigen dir den schnellsten Weg dorthin.</div>
+    <div class="fb-quiz-goal-grid">
+      <button type="button" class="fb-quiz-goal-btn" data-goal="abnehmen" onclick="fbStartQuiz(this)"><span class="emoji">⚖️</span><span class="label">Abnehmen<br>& straffen</span></button>
+      <button type="button" class="fb-quiz-goal-btn" data-goal="muskelaufbau" onclick="fbStartQuiz(this)"><span class="emoji">💪</span><span class="label">Muskeln<br>& Kraft</span></button>
+      <button type="button" class="fb-quiz-goal-btn" data-goal="ruecken" onclick="fbStartQuiz(this)"><span class="emoji">🧘</span><span class="label">Rücken<br>& Haltung</span></button>
+      <button type="button" class="fb-quiz-goal-btn" data-goal="gesundheit" onclick="fbStartQuiz(this)"><span class="emoji">⚡</span><span class="label">Allgemein<br>fitter werden</span></button>
+    </div>
+    <div class="fb-quiz-hint" id="cfg-quiz-hint">100% kostenlos & unverbindlich</div>
   </div>
-  <div class="fb-stat-item">
-    <div class="fb-stat-num" data-stat="1">90%</div>
-    <div class="fb-stat-label" data-stat-label="1">Muskelfasern aktiv</div>
-  </div>
-  <div class="fb-stat-item">
-    <div class="fb-stat-num" data-stat="2">200+</div>
-    <div class="fb-stat-label" data-stat-label="2">Zufriedene Mitglieder</div>
-  </div>
-  <div class="fb-stat-item">
-    <div class="fb-stat-num" data-stat="3">2</div>
-    <div class="fb-stat-label" data-stat-label="3">Studios Region</div>
-  </div>
+</section>
+
+<div class="fb-stats-bar">
+  <div class="fb-stat-item"><div class="fb-stat-num" data-stat="0">20</div><div class="fb-stat-label" data-stat-label="0">Min. pro Session</div></div>
+  <div class="fb-stat-item"><div class="fb-stat-num" data-stat="1">90%</div><div class="fb-stat-label" data-stat-label="1">Muskelfasern aktiv</div></div>
+  <div class="fb-stat-item"><div class="fb-stat-num" data-stat="2">200+</div><div class="fb-stat-label" data-stat-label="2">Zufriedene Mitglieder</div></div>
+  <div class="fb-stat-item"><div class="fb-stat-num" data-stat="3">2</div><div class="fb-stat-label" data-stat-label="3">Studios Region</div></div>
 </div>
 
-<!-- BENEFITS -->
 <section class="fb-section fb-benefits">
   <div class="fb-section-inner">
     <div class="fb-section-label">Deine Vorteile</div>
     <div class="fb-section-title">Warum fitbox?</div>
     <div class="fb-benefits-grid">
-      <div class="fb-benefit">
-        <div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg></div>
-        <div><h3>Zeiteffizient</h3><p>20 Minuten ersetzen 90 Minuten klassisches Training. Perfekt für volle Terminkalender.</p></div>
-      </div>
-      <div class="fb-benefit">
-        <div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div>
-        <div><h3>Persönliche Betreuung</h3><p>Kein anonymes Fitnessstudio. Dein Trainer begleitet dich durch jede Einheit.</p></div>
-      </div>
-      <div class="fb-benefit">
-        <div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
-        <div><h3>Gelenkschonend</h3><p>Ideal bei Rückenschmerzen, nach Verletzungen oder als sanfter Einstieg ins Training.</p></div>
-      </div>
-      <div class="fb-benefit">
-        <div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        <div><h3>Messbare Ergebnisse</h3><p>Körperanalyse, regelmäßige Check-ins und klare Ziele — du siehst deinen Fortschritt.</p></div>
-      </div>
-      <div class="fb-benefit">
-        <div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-        <div><h3>Modernste Technologie</h3><p>SYMBIONT &amp; miha bodytec — medizinisch zertifizierte EMS-Geräte, Made in Germany.</p></div>
-      </div>
-      <div class="fb-benefit">
-        <div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <div><h3>Für alle geeignet</h3><p>Anfänger, Wiedereinsteiger oder Sportler — wir passen das Training individuell an.</p></div>
-      </div>
+      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg></div><div><h3>Zeiteffizient</h3><p>20 Minuten ersetzen 90 Minuten klassisches Training.</p></div></div>
+      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div><div><h3>Persönliche Betreuung</h3><p>Kein anonymes Fitnessstudio. Dein Trainer begleitet dich.</p></div></div>
+      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><h3>Gelenkschonend</h3><p>Ideal bei Rückenschmerzen oder als sanfter Einstieg.</p></div></div>
+      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><h3>Messbare Ergebnisse</h3><p>Körperanalyse, Check-ins und klare Ziele — du siehst Fortschritt.</p></div></div>
+      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div><h3>Modernste Technologie</h3><p>SYMBIONT &amp; miha bodytec — Made in Germany.</p></div></div>
+      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><h3>Für alle geeignet</h3><p>Anfänger, Wiedereinsteiger oder Sportler — individuell.</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- TRUST -->
 <div class="fb-trust">
   <div class="fb-trust-inner">
     <div class="fb-trust-label">Ausgestattet mit professioneller Technologie</div>
     <div class="fb-trust-badges">
-      <div class="fb-trust-item">
-        <div class="fb-trust-item-sub">EMS-Anzug</div>
-        <div class="fb-trust-item-name">SYMBIONT</div>
-        <div class="fb-trust-item-desc">by schwa-medico</div>
-      </div>
-      <div class="fb-trust-item">
-        <div class="fb-trust-item-sub">EMS-Gerät</div>
-        <div class="fb-trust-item-name">MIHA BODYTEC</div>
-        <div class="fb-trust-item-desc">Marktführer seit 2007</div>
-      </div>
-      <div class="fb-trust-item">
-        <div class="fb-trust-item-sub">Qualität</div>
-        <div class="fb-trust-item-name">MADE IN GERMANY</div>
-        <div class="fb-trust-item-desc">Medizinisch zertifiziert</div>
-      </div>
+      <div class="fb-trust-item"><div class="fb-trust-item-sub">EMS-Anzug</div><div class="fb-trust-item-name">SYMBIONT</div><div class="fb-trust-item-desc">by schwa-medico</div></div>
+      <div class="fb-trust-item"><div class="fb-trust-item-sub">EMS-Gerät</div><div class="fb-trust-item-name">MIHA BODYTEC</div><div class="fb-trust-item-desc">Marktführer seit 2007</div></div>
+      <div class="fb-trust-item"><div class="fb-trust-item-sub">Qualität</div><div class="fb-trust-item-name">MADE IN GERMANY</div><div class="fb-trust-item-desc">Medizinisch zertifiziert</div></div>
     </div>
   </div>
 </div>
 
-<!-- REVIEWS -->
 <section class="fb-section fb-reviews">
   <div class="fb-section-inner">
     <div class="fb-section-label">Das sagen unsere Mitglieder</div>
     <div class="fb-section-title">Echte Ergebnisse.</div>
-    <div class="fb-reviews-grid" id="cfg-reviews-grid">
-      <!-- injected by JS -->
-    </div>
+    <div class="fb-reviews-grid" id="cfg-reviews-grid"></div>
   </div>
 </section>
 
-<!-- NEXT STEPS -->
 <section class="fb-section fb-steps-section">
   <div class="fb-section-inner">
     <div class="fb-section-label">So einfach geht's</div>
     <div class="fb-section-title">In 3 Schritten zum Probetraining</div>
     <div class="fb-next-steps">
-      <div class="fb-next-step">
-        <div class="fb-next-step-num">1</div>
-        <div><h3>Jetzt eintragen</h3><p>Klick auf den Button, beantworte 3 kurze Fragen und trag dich unverbindlich ein.</p></div>
-      </div>
-      <div class="fb-next-step">
-        <div class="fb-next-step-num">2</div>
-        <div><h3>Termin bestätigen</h3><p>Wir melden uns persönlich bei dir — oder du buchst direkt online deinen Wunschtermin.</p></div>
-      </div>
-      <div class="fb-next-step">
-        <div class="fb-next-step-num">3</div>
-        <div><h3>EMS erleben</h3><p>Komm ins Studio, erlebe EMS kostenlos und überzeuge dich selbst. Ohne Druck, ohne Verpflichtung.</p></div>
-      </div>
+      <div class="fb-next-step"><div class="fb-next-step-num">1</div><div><h3>Ziel wählen</h3><p>Tippe oben auf dein Ziel — wir leiten dich durch die nächsten Schritte.</p></div></div>
+      <div class="fb-next-step"><div class="fb-next-step-num">2</div><div><h3>Termin bestätigen</h3><p>Wir melden uns persönlich oder buche direkt online.</p></div></div>
+      <div class="fb-next-step"><div class="fb-next-step-num">3</div><div><h3>EMS erleben</h3><p>Komm ins Studio, erlebe EMS kostenlos. Ohne Druck.</p></div></div>
     </div>
   </div>
 </section>
 
-<!-- STUDIOS -->
 <section class="fb-section fb-studios">
   <div class="fb-section-inner">
     <div class="fb-section-label">Unsere Standorte</div>
     <div class="fb-section-title">Zwei Studios. Eine Qualität.</div>
     <div class="fb-studio-banner">
-      <img id="cfg-studio-banner-img" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg" alt="fitbox Studio">
+      <img id="cfg-studio-banner-img" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg" alt="fitbox Studio" loading="lazy">
       <div class="fb-studio-banner-text"><span>MEMMINGEN &amp; SENDEN</span></div>
     </div>
     <div class="fb-studios-grid">
@@ -689,43 +113,24 @@ body { padding-bottom: 70px; }
         <div class="fb-studio-name">fitbox Memmingen</div>
         <div class="fb-studio-sub">EMS Personal Training</div>
         <div class="fb-studio-info">
-          <div class="fb-studio-info-item">
-            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span id="cfg-mem-adresse">Memmingen Amendingen</span>
-          </div>
-          <div class="fb-studio-info-item">
-            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
-            <span id="cfg-mem-zeiten">Mo–Fr &amp; nach Vereinbarung</span>
-          </div>
+          <div class="fb-studio-info-item"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span id="cfg-mem-adresse">Memmingen Amendingen</span></div>
+          <div class="fb-studio-info-item"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span id="cfg-mem-zeiten">Mo–Fr &amp; nach Vereinbarung</span></div>
         </div>
-        <a href="https://wa.me/4915730024124" id="cfg-mem-wa" target="_blank" class="fb-wa-btn">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
-          WhatsApp Memmingen
-        </a>
+        <a href="https://wa.me/4915730024124" id="cfg-mem-wa" target="_blank" rel="noopener" class="fb-wa-btn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>WhatsApp Memmingen</a>
       </div>
       <div class="fb-studio-card">
         <div class="fb-studio-name">fitbox Senden</div>
         <div class="fb-studio-sub">EMS Personal Training</div>
         <div class="fb-studio-info">
-          <div class="fb-studio-info-item">
-            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            <span id="cfg-sen-adresse">Senden (Iller)</span>
-          </div>
-          <div class="fb-studio-info-item">
-            <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>
-            <span id="cfg-sen-zeiten">Mo–Fr &amp; nach Vereinbarung</span>
-          </div>
+          <div class="fb-studio-info-item"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span id="cfg-sen-adresse">Senden (Iller)</span></div>
+          <div class="fb-studio-info-item"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span id="cfg-sen-zeiten">Mo–Fr &amp; nach Vereinbarung</span></div>
         </div>
-        <a href="https://wa.me/4915561206719" id="cfg-sen-wa" target="_blank" class="fb-wa-btn">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
-          WhatsApp Senden
-        </a>
+        <a href="https://wa.me/4915561206719" id="cfg-sen-wa" target="_blank" rel="noopener" class="fb-wa-btn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>WhatsApp Senden</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- MULTI-STEP FORM -->
 <section class="fb-section fb-form-section" id="fb-anmeldung">
   <div class="fb-form-inner">
     <div class="fb-form-header">
@@ -744,47 +149,25 @@ body { padding-bottom: 70px; }
       <div class="fb-step-dot" id="fbDot4">4</div>
     </div>
 
-    <!-- STEP 1: ZIEL -->
     <div class="fb-form-step active" id="fbStep1">
       <div class="fb-step-title">Was ist dein Ziel?</div>
-      <div class="fb-step-sub">Damit wir dein Training optimal auf dich abstimmen können</div>
+      <div class="fb-step-sub">Damit wir dein Training optimal abstimmen können</div>
       <div class="fb-goal-grid">
-        <button type="button" class="fb-goal-btn" data-goal="abnehmen" onclick="fbSelectGoal(this)">
-          <span class="fb-goal-emoji">⚖️</span>
-          <span class="fb-goal-label">Abnehmen &amp; straffen</span>
-        </button>
-        <button type="button" class="fb-goal-btn" data-goal="muskelaufbau" onclick="fbSelectGoal(this)">
-          <span class="fb-goal-emoji">💪</span>
-          <span class="fb-goal-label">Muskeln &amp; Kraft aufbauen</span>
-        </button>
-        <button type="button" class="fb-goal-btn" data-goal="ruecken" onclick="fbSelectGoal(this)">
-          <span class="fb-goal-emoji">🧘</span>
-          <span class="fb-goal-label">Rücken &amp; Haltung</span>
-        </button>
-        <button type="button" class="fb-goal-btn" data-goal="gesundheit" onclick="fbSelectGoal(this)">
-          <span class="fb-goal-emoji">⚡</span>
-          <span class="fb-goal-label">Allgemein fitter werden</span>
-        </button>
+        <button type="button" class="fb-goal-btn" data-goal="abnehmen" onclick="fbSelectGoal(this)"><span class="fb-goal-emoji">⚖️</span><span class="fb-goal-label">Abnehmen &amp; straffen</span></button>
+        <button type="button" class="fb-goal-btn" data-goal="muskelaufbau" onclick="fbSelectGoal(this)"><span class="fb-goal-emoji">💪</span><span class="fb-goal-label">Muskeln &amp; Kraft</span></button>
+        <button type="button" class="fb-goal-btn" data-goal="ruecken" onclick="fbSelectGoal(this)"><span class="fb-goal-emoji">🧘</span><span class="fb-goal-label">Rücken &amp; Haltung</span></button>
+        <button type="button" class="fb-goal-btn" data-goal="gesundheit" onclick="fbSelectGoal(this)"><span class="fb-goal-emoji">⚡</span><span class="fb-goal-label">Allgemein fitter werden</span></button>
       </div>
-      <div class="fb-form-nav">
-        <button type="button" class="fb-btn-next" id="fbNext1" onclick="fbGoToStep(2)" disabled>Weiter →</button>
-      </div>
+      <div class="fb-form-nav"><button type="button" class="fb-btn-next" id="fbNext1" onclick="fbGoToStep(2)" disabled>Weiter →</button></div>
       <div class="fb-error" id="fbError1"></div>
     </div>
 
-    <!-- STEP 2: STUDIO -->
     <div class="fb-form-step" id="fbStep2">
-      <div class="fb-step-title">Welches Studio möchtest du besuchen?</div>
+      <div class="fb-step-title">Welches Studio?</div>
       <div class="fb-step-sub">Beide Studios — gleiche Qualität, persönliche Betreuung</div>
       <div class="fb-studio-picker">
-        <button type="button" class="fb-studio-pick-btn" data-studio="50de091d-debc-4172-8053-b516f42c4321" data-code="MEM" onclick="fbSelectStudio(this)">
-          <div class="fb-pick-name">fitbox Memmingen</div>
-          <div class="fb-pick-sub">Memmingen Amendingen</div>
-        </button>
-        <button type="button" class="fb-studio-pick-btn" data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb" data-code="SEN" onclick="fbSelectStudio(this)">
-          <div class="fb-pick-name">fitbox Senden</div>
-          <div class="fb-pick-sub">Senden (Iller)</div>
-        </button>
+        <button type="button" class="fb-studio-pick-btn" data-studio="50de091d-debc-4172-8053-b516f42c4321" data-code="MEM" onclick="fbSelectStudio(this)"><div class="fb-pick-name">fitbox Memmingen</div><div class="fb-pick-sub">Memmingen Amendingen</div></button>
+        <button type="button" class="fb-studio-pick-btn" data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb" data-code="SEN" onclick="fbSelectStudio(this)"><div class="fb-pick-name">fitbox Senden</div><div class="fb-pick-sub">Senden (Iller)</div></button>
       </div>
       <div class="fb-form-nav">
         <button type="button" class="fb-btn-back" onclick="fbGoToStep(1)">← Zurück</button>
@@ -793,7 +176,6 @@ body { padding-bottom: 70px; }
       <div class="fb-error" id="fbError2"></div>
     </div>
 
-    <!-- STEP 3: TERMIN -->
     <div class="fb-form-step" id="fbStep3">
       <div class="fb-step-title" id="fbStep3Title">Wann passt es dir?</div>
       <div class="fb-step-sub" id="fbStep3Sub">Wähle deinen Wunschtermin</div>
@@ -801,7 +183,7 @@ body { padding-bottom: 70px; }
         <div class="fb-slot-section">
           <div class="fb-slot-nav">
             <button type="button" class="fb-slot-nav-btn" id="fbSlotPrev" onclick="fbSlotPrevWeek()">‹</button>
-            <span class="fb-slot-week-label" id="fbSlotWeekLabel">Lade Termine...</span>
+            <span class="fb-slot-week-label" id="fbSlotWeekLabel">Lade...</span>
             <button type="button" class="fb-slot-nav-btn" id="fbSlotNext" onclick="fbSlotNextWeek()">›</button>
           </div>
           <div id="fbSlotGrid" class="fb-slot-grid"><div class="fb-slot-loading">Lade verfügbare Termine...</div></div>
@@ -811,12 +193,12 @@ body { padding-bottom: 70px; }
       </div>
       <div id="fbWunschzeitSection" style="display:none;">
         <div class="fb-wunschzeit">
-          <p class="fb-wunschzeit-hint">Unser Team in Senden meldet sich persönlich bei dir. Wann bist du am besten erreichbar?</p>
-          <div class="fb-goal-grid" style="grid-template-columns:1fr 1fr;gap:8px;" id="fbReachGrid">
-            <button type="button" class="fb-goal-btn" data-reach="morgens" onclick="fbSelectReach(this)" style="padding:12px 8px;"><span class="fb-goal-label">Morgens</span></button>
-            <button type="button" class="fb-goal-btn" data-reach="mittags" onclick="fbSelectReach(this)" style="padding:12px 8px;"><span class="fb-goal-label">Mittags</span></button>
-            <button type="button" class="fb-goal-btn" data-reach="nachmittags" onclick="fbSelectReach(this)" style="padding:12px 8px;"><span class="fb-goal-label">Nachmittags</span></button>
-            <button type="button" class="fb-goal-btn" data-reach="abends" onclick="fbSelectReach(this)" style="padding:12px 8px;"><span class="fb-goal-label">Abends</span></button>
+          <p class="fb-wunschzeit-hint">Unser Team in Senden meldet sich persönlich. Wann bist du am besten erreichbar?</p>
+          <div class="fb-goal-grid" id="fbReachGrid">
+            <button type="button" class="fb-goal-btn" data-reach="morgens" onclick="fbSelectReach(this)" style="padding:12px 8px;min-height:54px;"><span class="fb-goal-label">Morgens</span></button>
+            <button type="button" class="fb-goal-btn" data-reach="mittags" onclick="fbSelectReach(this)" style="padding:12px 8px;min-height:54px;"><span class="fb-goal-label">Mittags</span></button>
+            <button type="button" class="fb-goal-btn" data-reach="nachmittags" onclick="fbSelectReach(this)" style="padding:12px 8px;min-height:54px;"><span class="fb-goal-label">Nachmittags</span></button>
+            <button type="button" class="fb-goal-btn" data-reach="abends" onclick="fbSelectReach(this)" style="padding:12px 8px;min-height:54px;"><span class="fb-goal-label">Abends</span></button>
           </div>
         </div>
       </div>
@@ -827,7 +209,6 @@ body { padding-bottom: 70px; }
       <div class="fb-error" id="fbError3"></div>
     </div>
 
-    <!-- STEP 4: KONTAKT -->
     <div class="fb-form-step" id="fbStep4">
       <div class="fb-step-title">Fast geschafft!</div>
       <div class="fb-step-sub">Wo dürfen wir dich erreichen?</div>
@@ -838,492 +219,60 @@ body { padding-bottom: 70px; }
           <input class="fb-input" type="text" id="fbFirstName" placeholder="Max" required autocomplete="given-name">
         </div>
         <div class="fb-field full">
-          <label class="fb-label" for="fbPhone">Telefon * <span style="font-weight:400;text-transform:none;letter-spacing:0;">(Wir rufen dich an — kein Spam)</span></label>
-          <input class="fb-input" type="tel" id="fbPhone" placeholder="+49 151 12345678" required autocomplete="tel">
+          <label class="fb-label" for="fbPhone">Telefon * <span style="font-weight:400;text-transform:none;">(Wir rufen dich an)</span></label>
+          <input class="fb-input" type="tel" id="fbPhone" placeholder="+49 151 12345678" required autocomplete="tel" inputmode="tel">
         </div>
         <div class="fb-field">
-          <label class="fb-label" for="fbLastName">Nachname <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#999;">(optional)</span></label>
+          <label class="fb-label" for="fbLastName">Nachname <span style="font-weight:400;text-transform:none;color:#999;">(optional)</span></label>
           <input class="fb-input" type="text" id="fbLastName" placeholder="Mustermann" autocomplete="family-name">
         </div>
         <div class="fb-field">
-          <label class="fb-label" for="fbEmail">E-Mail <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#999;">(optional)</span></label>
-          <input class="fb-input" type="email" id="fbEmail" placeholder="max@email.de" autocomplete="email">
+          <label class="fb-label" for="fbEmail">E-Mail <span style="font-weight:400;text-transform:none;color:#999;">(optional)</span></label>
+          <input class="fb-input" type="email" id="fbEmail" placeholder="max@email.de" autocomplete="email" inputmode="email">
         </div>
       </div>
-      <p class="fb-privacy">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung deiner Anfrage nutzen. Wir geben deine Daten nicht weiter. Mehr in unserer <a href="#" id="cfg-datenschutz-link">Datenschutzerklärung</a>.</p>
+      <p class="fb-privacy">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung deiner Anfrage nutzen. Mehr in unserer <a href="#" id="cfg-datenschutz-link">Datenschutzerklärung</a>.</p>
       <div class="fb-form-nav">
         <button type="button" class="fb-btn-back" onclick="fbGoToStep(3)">← Zurück</button>
-        <button type="button" class="fb-btn-next" id="fbSubmitBtn" onclick="fbSubmit()">
-          <span class="fb-btn-text">Probetraining sichern 🎯</span>
-          <div class="fb-spinner"></div>
-        </button>
+        <button type="button" class="fb-btn-next" id="fbSubmitBtn" onclick="fbSubmit()"><span class="fb-btn-text">Probetraining sichern 🎯</span><div class="fb-spinner"></div></button>
       </div>
       <div class="fb-error" id="fbError4"></div>
     </div>
 
-    <!-- SUCCESS -->
     <div class="fb-success" id="fbSuccessMsg">
       <div class="fb-success-icon">✓</div>
       <h3>Anfrage erhalten!</h3>
       <p id="fbSuccessText">Wir melden uns innerhalb von 24 Stunden persönlich bei dir.</p>
       <div class="fb-success-steps">
-        <div class="fb-success-step">
-          <div class="fb-success-step-num">1</div>
-          <p><strong>Bestätigung erhalten</strong> — Deine Anfrage ist bei uns eingegangen.</p>
-        </div>
-        <div class="fb-success-step">
-          <div class="fb-success-step-num">2</div>
-          <p id="fbSuccessStep2"><strong>Wir melden uns</strong> — Persönlich per Telefon zur Terminbestätigung.</p>
-        </div>
-        <div class="fb-success-step">
-          <div class="fb-success-step-num">3</div>
-          <p><strong>EMS erleben</strong> — Kostenlos, unverbindlich, ohne Druck.</p>
-        </div>
+        <div class="fb-success-step"><div class="fb-success-step-num">1</div><p><strong>Bestätigung erhalten</strong> — Deine Anfrage ist eingegangen.</p></div>
+        <div class="fb-success-step"><div class="fb-success-step-num">2</div><p id="fbSuccessStep2"><strong>Wir melden uns</strong> — Persönlich per Telefon.</p></div>
+        <div class="fb-success-step"><div class="fb-success-step-num">3</div><p><strong>EMS erleben</strong> — Kostenlos, unverbindlich.</p></div>
       </div>
-      <a id="fbWaSuccessBtn" href="#" target="_blank" class="fb-wa-success-btn">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
-        Direkt per WhatsApp schreiben
-      </a>
+      <a id="fbWaSuccessBtn" href="#" target="_blank" rel="noopener" class="fb-wa-success-btn"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>Direkt per WhatsApp schreiben</a>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="fb-footer">
-  <div class="fb-footer-logo">
-    <img id="cfg-footer-logo" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox Logo">
-  </div>
+  <div class="fb-footer-logo"><img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></div>
   <div class="fb-footer-links">
     <a href="#" id="cfg-impressum-link">Impressum</a>
     <a href="#" id="cfg-datenschutz-link2">Datenschutz</a>
   </div>
 </footer>
 
-<!-- STICKY CTA -->
 <div class="fb-sticky-cta" id="fbStickyCta">
   <div class="fb-sticky-cta-text">
     <strong id="cfg-sticky-title">Kostenloses Probetraining</strong>
     <span id="cfg-sticky-sub">Nur noch wenige Plätze frei!</span>
   </div>
-  <a href="#fb-anmeldung" class="fb-sticky-cta-btn">Termin sichern</a>
+  <a href="#fb-inline-quiz" class="fb-sticky-cta-btn">Jetzt starten</a>
 </div>
 
-<!-- WA FLOAT -->
-<a href="#" class="fb-wa-float" id="fbWaFloat" target="_blank" title="WhatsApp">
-  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
+<a href="#" class="fb-wa-float" id="fbWaFloat" target="_blank" rel="noopener" title="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
 </a>
 
-<script>
-// ═══════════════════════════════════════
-// CONFIG LOADER
-// ═══════════════════════════════════════
-const DEFAULT_CONFIG = {
-  // Banner
-  banner_active: false,
-  banner_text: "🎉 Sommer-Aktion: 2 Monate zum Preis von 1 — nur bis 31.07.!",
-  banner_link_text: "Jetzt sichern",
-  banner_link_url: "#fb-anmeldung",
-  // Hero
-  hero_img: "https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg",
-  scarcity_text: "⚠️ Nur noch wenige Plätze pro Monat verfügbar!",
-  hero_cta_text: "🎯 Kostenloses Probetraining sichern",
-  hero_note: "100% kostenlos & unverbindlich",
-  nav_cta_text: "Jetzt ausprobieren →",
-  // Stats
-  stats: [
-    { num: "20", label: "Min. pro Session" },
-    { num: "90%", label: "Muskelfasern aktiv" },
-    { num: "200+", label: "Zufriedene Mitglieder" },
-    { num: "2", label: "Studios Region" }
-  ],
-  // Studios
-  studio_banner_img: "https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg",
-  mem_adresse: "Memmingen Amendingen",
-  mem_zeiten: "Mo–Fr & nach Vereinbarung",
-  mem_wa: "4915730024124",
-  sen_adresse: "Senden (Iller)",
-  sen_zeiten: "Mo–Fr & nach Vereinbarung",
-  sen_wa: "4915561206719",
-  // Reviews
-  reviews: [
-    { text: "„Tolles Studio und ein super Trainerteam! Die Betreuung ist aufmerksam, professionell und immer motivierend. Seit fünf Jahren dabei und immer noch begeistert."", author: "Bettina L. aus Memmingen" },
-    { text: "„Endlich ein Training, das sich in meinen Alltag integrieren lässt. Seit über einem Jahr dabei: fitter Körper, bessere Haltung und keine Rückenschmerzen mehr."", author: "Susanne H. aus Buxheim" },
-    { text: "„Die Trainer sind motivierend und holen das Beste aus einem heraus. Termine lassen sich schnell abstimmen, dazu ein modernes und gepflegtes Studio."", author: "Hermann K. aus Kirchdorf" }
-  ],
-  // Sticky
-  sticky_title: "Kostenloses Probetraining",
-  sticky_sub: "Nur noch wenige Plätze frei!",
-  // Links
-  impressum_url: "#",
-  datenschutz_url: "#",
-  // Form
-  form_title: "Probetraining sichern",
-  form_subtitle: "In 60 Sekunden zum kostenlosen Termin — wir melden uns persönlich."
-};
-
-async function loadConfig() {
-  let cfg = { ...DEFAULT_CONFIG };
-  try {
-    const res = await fetch('./config.json?t=' + Date.now());
-    if (res.ok) {
-      const remote = await res.json();
-      cfg = { ...DEFAULT_CONFIG, ...remote };
-    }
-  } catch(e) { /* config.json nicht vorhanden → Defaults */ }
-  applyConfig(cfg);
-}
-
-function applyConfig(c) {
-  // Banner
-  const banner = document.getElementById('fb-action-banner');
-  if (c.banner_active && c.banner_text) {
-    banner.innerHTML = c.banner_text + (c.banner_link_text ? ` <a href="${c.banner_link_url || '#fb-anmeldung'}">${c.banner_link_text}</a>` : '');
-    banner.classList.add('show');
-  }
-  // Hero
-  setImg('cfg-hero-img', c.hero_img);
-  setText('cfg-scarcity', c.scarcity_text);
-  setText('cfg-hero-cta', c.hero_cta_text);
-  setText('cfg-hero-note', c.hero_note);
-  setText('cfg-nav-cta', c.nav_cta_text);
-  // Stats
-  if (Array.isArray(c.stats)) {
-    c.stats.forEach((s, i) => {
-      const num = document.querySelector(`[data-stat="${i}"]`);
-      const lbl = document.querySelector(`[data-stat-label="${i}"]`);
-      if (num) num.textContent = s.num;
-      if (lbl) lbl.textContent = s.label;
-    });
-  }
-  // Studios
-  setImg('cfg-studio-banner-img', c.studio_banner_img);
-  setText('cfg-mem-adresse', c.mem_adresse);
-  setText('cfg-mem-zeiten', c.mem_zeiten);
-  setText('cfg-sen-adresse', c.sen_adresse);
-  setText('cfg-sen-zeiten', c.sen_zeiten);
-  setHref('cfg-mem-wa', 'https://wa.me/' + c.mem_wa);
-  setHref('cfg-sen-wa', 'https://wa.me/' + c.sen_wa);
-  // Reviews
-  if (Array.isArray(c.reviews)) {
-    const grid = document.getElementById('cfg-reviews-grid');
-    grid.innerHTML = c.reviews.map(r => `
-      <div class="fb-review">
-        <div class="fb-review-stars">⭐⭐⭐⭐⭐</div>
-        <p class="fb-review-text">${r.text}</p>
-        <div class="fb-review-author">${r.author}</div>
-      </div>`).join('');
-  }
-  // Sticky
-  setText('cfg-sticky-title', c.sticky_title);
-  setText('cfg-sticky-sub', c.sticky_sub);
-  // Links
-  setHref('cfg-impressum-link', c.impressum_url);
-  setHref('cfg-datenschutz-link', c.datenschutz_url);
-  setHref('cfg-datenschutz-link2', c.datenschutz_url);
-  // Form
-  setText('cfg-form-title', c.form_title);
-  setText('cfg-form-subtitle', c.form_subtitle);
-  // WA Float default
-  document.getElementById('fbWaFloat').href = 'https://wa.me/' + c.mem_wa;
-  // Store WA numbers for form logic
-  window.FB_WA = { MEM: c.mem_wa, SEN: c.sen_wa };
-}
-
-function setText(id, val) { if (val == null) return; const el = document.getElementById(id); if (el) el.textContent = val; }
-function setImg(id, src) { if (!src) return; const el = document.getElementById(id); if (el) el.src = src; }
-function setHref(id, href) { if (!href) return; const el = document.getElementById(id); if (el) el.href = href; }
-
-// ═══════════════════════════════════════
-// FORM LOGIC
-// ═══════════════════════════════════════
-var SUPABASE_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
-var SUPABASE_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
-var MAGICLINE_BASE = 'https://tight-tooth-c9e4.kuersat-oezdemir.workers.dev/proxy';
-var MEM_STUDIO_ID = 1262516030;
-
-var GOAL_LABELS = { abnehmen: 'Abnehmen & straffen', muskelaufbau: 'Muskeln & Kraft', ruecken: 'Rücken & Haltung', gesundheit: 'Allgemein fitter' };
-var REACH_LABELS = { morgens: 'Morgens', mittags: 'Mittags', nachmittags: 'Nachmittags', abends: 'Abends' };
-
-var state = { step: 1, goal: '', studioId: '', studioCode: '', studioName: '', reach: '', slot: null, slots: [], slotWindowStart: null, slotToday: null };
-
-// URL param: pre-select studio
-(function(){
-  var sp = new URLSearchParams(window.location.search).get('studio');
-  if (sp === 'memmingen') { var b = document.querySelector('[data-studio="50de091d-debc-4172-8053-b516f42c4321"]'); if(b) fbSelectStudio(b); }
-  else if (sp === 'senden') { var b = document.querySelector('[data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb"]'); if(b) fbSelectStudio(b); }
-})();
-
-// Sticky CTA
-var stickyCta = document.getElementById('fbStickyCta');
-var formSection = document.getElementById('fb-anmeldung');
-window.addEventListener('scroll', function() {
-  if (!stickyCta || !formSection) return;
-  var top = formSection.getBoundingClientRect().top;
-  stickyCta.classList.toggle('visible', top > 100);
-}, { passive: true });
-
-window.fbGoToStep = function(step) {
-  if (step === 2 && !state.goal) { showError('fbError1', 'Bitte wähle dein Ziel.'); return; }
-  if (step === 3 && !state.studioId) { showError('fbError2', 'Bitte wähle ein Studio.'); return; }
-  showStep(step);
-  if (step === 3) setupStep3();
-  if (step === 4) setupStep4();
-};
-
-function setupStep3() {
-  var title = document.getElementById('fbStep3Title');
-  var sub = document.getElementById('fbStep3Sub');
-  if (state.studioCode === 'MEM') {
-    document.getElementById('fbSlotSection').style.display = 'block';
-    document.getElementById('fbWunschzeitSection').style.display = 'none';
-    title.textContent = 'Wann passt es dir?';
-    sub.textContent = 'Wähle einen freien Termin in Memmingen';
-    initSlotCal();
-  } else {
-    document.getElementById('fbSlotSection').style.display = 'none';
-    document.getElementById('fbWunschzeitSection').style.display = 'block';
-    title.textContent = 'Wann sollen wir dich anrufen?';
-    sub.textContent = 'Unser Team in Senden meldet sich persönlich bei dir';
-  }
-}
-
-function setupStep4() {
-  var summary = document.getElementById('fbSummary');
-  var rows = [];
-  if (state.goal) rows.push({ label: 'Ziel', value: GOAL_LABELS[state.goal] || state.goal });
-  if (state.studioName) rows.push({ label: 'Studio', value: state.studioName });
-  if (state.slot) rows.push({ label: 'Wunschtermin', value: fmtSlot(new Date(state.slot.startDateTime)) });
-  else if (state.reach) rows.push({ label: 'Erreichbar', value: REACH_LABELS[state.reach] });
-  else rows.push({ label: 'Termin', value: 'Wir rufen zurück' });
-  summary.innerHTML = rows.map(r => `<div class="fb-summary-row"><span class="fb-summary-label">${r.label}</span><span class="fb-summary-value">${r.value}</span></div>`).join('');
-}
-
-function showStep(step) {
-  document.querySelectorAll('.fb-form-step').forEach(s => s.classList.remove('active'));
-  document.getElementById('fbStep' + step).classList.add('active');
-  state.step = step;
-  updateIndicator(step);
-  document.getElementById('fb-anmeldung').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function updateIndicator(step) {
-  for (var i = 1; i <= 4; i++) {
-    var dot = document.getElementById('fbDot' + i);
-    if (!dot) continue;
-    dot.classList.remove('active', 'done');
-    if (step > i) dot.classList.add('done');
-    else if (i === step) dot.classList.add('active');
-  }
-  for (var k = 1; k <= 3; k++) {
-    var line = document.getElementById('fbLine' + k);
-    if (line) line.classList.toggle('done', step > k);
-  }
-}
-
-function showError(id, msg) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(function() { el.classList.remove('show'); }, 5000);
-}
-
-window.fbSelectGoal = function(btn) {
-  document.querySelectorAll('#fbStep1 .fb-goal-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  state.goal = btn.dataset.goal;
-  document.getElementById('fbNext1').disabled = false;
-};
-
-window.fbSelectStudio = function(btn) {
-  document.querySelectorAll('.fb-studio-pick-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  state.studioId = btn.dataset.studio;
-  state.studioCode = btn.dataset.code;
-  state.studioName = btn.dataset.code === 'MEM' ? 'fitbox Memmingen' : 'fitbox Senden';
-  var wa = window.FB_WA || { MEM: '4915730024124', SEN: '4915561206719' };
-  document.getElementById('fbWaFloat').href = 'https://wa.me/' + (state.studioCode === 'SEN' ? wa.SEN : wa.MEM);
-  document.getElementById('fbNext2').disabled = false;
-};
-
-window.fbSelectReach = function(btn) {
-  document.querySelectorAll('#fbReachGrid .fb-goal-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  state.reach = btn.dataset.reach;
-};
-
-window.fbSkipSlot = function() {
-  state.slot = null;
-  document.querySelectorAll('.fb-slot-btn').forEach(b => b.classList.remove('selected'));
-  document.getElementById('fbSlotSelectedInfo').style.display = 'none';
-  fbGoToStep(4);
-};
-
-// Slot calendar
-function slotMonday(d) { var m = new Date(d); var dow = m.getDay() || 7; m.setDate(m.getDate() - dow + 1); m.setHours(0,0,0,0); return m; }
-function toYMD(d) { return d.toISOString().slice(0,10); }
-function fmtSlot(dt) {
-  return dt.toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' }) + ' ' +
-         dt.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }) + ' Uhr';
-}
-
-function initSlotCal() {
-  var today = new Date(); today.setHours(0,0,0,0);
-  state.slotToday = today;
-  state.slotWindowStart = slotMonday(today);
-  loadSlots();
-}
-
-async function loadSlots() {
-  var grid = document.getElementById('fbSlotGrid');
-  var label = document.getElementById('fbSlotWeekLabel');
-  grid.innerHTML = '<div class="fb-slot-loading">Lade verfügbare Termine...</div>';
-  document.getElementById('fbSlotSelectedInfo').style.display = 'none';
-
-  var weekDays = [];
-  for (var i = 0; i < 6; i++) { var d = new Date(state.slotWindowStart); d.setDate(d.getDate()+i); weekDays.push(d); }
-  var startDate = toYMD(weekDays[0]);
-  var endDay = new Date(weekDays[5]); endDay.setDate(endDay.getDate()+1);
-  var endDate = toYMD(endDay);
-
-  var d0 = new Date(weekDays[0]); d0.setHours(12);
-  var jan1 = new Date(d0.getFullYear(),0,1);
-  var kw = Math.ceil(((d0-jan1)/86400000+jan1.getDay()+1)/7);
-  label.textContent = 'KW ' + kw + ' · ' +
-    weekDays[0].toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' }) + ' – ' +
-    weekDays[5].toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-
-  document.getElementById('fbSlotPrev').disabled = state.slotToday.getTime() >= weekDays[0].getTime();
-
-  try {
-    var res = await fetch(MAGICLINE_BASE + '/connect/v1/trialsession?studioId=' + MEM_STUDIO_ID + '&startDate=' + startDate + '&endDate=' + endDate);
-    if (!res.ok) throw new Error('API Fehler');
-    var data = await res.json();
-    state.slots = (data.slots || []).sort((a,b) => new Date(a.startDateTime) - new Date(b.startDateTime));
-  } catch(e) { state.slots = []; }
-
-  if (!state.slots.length) {
-    grid.innerHTML = '<div class="fb-slot-empty">Keine freien Termine in dieser Woche.<br>Bitte andere Woche wählen oder zurückrufen lassen.</div>';
-    return;
-  }
-
-  var byDay = {};
-  state.slots.forEach(s => { var key = toYMD(new Date(s.startDateTime)); if (!byDay[key]) byDay[key] = []; byDay[key].push(s); });
-  grid.innerHTML = '';
-  Object.keys(byDay).forEach(day => {
-    var dayLabel = new Date(day+'T12:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit' });
-    byDay[day].forEach(s => {
-      var dt = new Date(s.startDateTime);
-      var time = dt.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
-      var btn = document.createElement('button');
-      btn.type = 'button'; btn.className = 'fb-slot-btn'; btn.dataset.iso = s.startDateTime;
-      btn.innerHTML = '<span class="fb-slot-day-label">' + dayLabel + '</span>' + time + ' Uhr';
-      btn.onclick = function() { fbSelectSlot(s, btn); };
-      grid.appendChild(btn);
-    });
-  });
-}
-
-function fbSelectSlot(slot, btn) {
-  document.querySelectorAll('.fb-slot-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  state.slot = slot;
-  var info = document.getElementById('fbSlotSelectedInfo');
-  info.style.display = 'block';
-  document.getElementById('fbSlotSelectedText').textContent = fmtSlot(new Date(slot.startDateTime));
-}
-
-window.fbSlotPrevWeek = function() {
-  state.slotWindowStart.setDate(state.slotWindowStart.getDate()-7);
-  if (state.slotToday.getTime() > state.slotWindowStart.getTime()) state.slotWindowStart = slotMonday(state.slotToday);
-  state.slot = null; loadSlots();
-};
-window.fbSlotNextWeek = function() { state.slotWindowStart.setDate(state.slotWindowStart.getDate()+7); state.slot = null; loadSlots(); };
-
-// Submit
-window.fbSubmit = async function() {
-  var btn = document.getElementById('fbSubmitBtn');
-  var firstName = document.getElementById('fbFirstName').value.trim();
-  var phone = document.getElementById('fbPhone').value.trim();
-  var lastName = document.getElementById('fbLastName').value.trim();
-  var email = document.getElementById('fbEmail').value.trim();
-
-  if (!firstName) { showError('fbError4', 'Bitte gib deinen Vornamen ein.'); return; }
-  if (!phone) { showError('fbError4', 'Bitte gib deine Telefonnummer ein.'); return; }
-  if (phone.replace(/\D/g,'').length < 6) { showError('fbError4', 'Bitte gib eine gültige Telefonnummer ein.'); return; }
-
-  btn.classList.add('loading'); btn.disabled = true;
-
-  var bookingSuccess = false, bookingError = null;
-
-  if (state.studioCode === 'MEM' && state.slot) {
-    try {
-      var bookRes = await fetch(MAGICLINE_BASE + '/connect/v1/trialsession/book', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          studioId: MEM_STUDIO_ID,
-          startDateTime: state.slot.startDateTime,
-          trainerRequired: true,
-          leadCustomer: {
-            firstname: firstName, lastname: lastName || firstName,
-            email: email || undefined, phone: phone || undefined,
-            privacyConfiguration: { email: true, phone: true }
-          }
-        })
-      });
-      if (bookRes.ok) bookingSuccess = true;
-      else { var t = await bookRes.text().catch(() => ''); bookingError = 'HTTP ' + bookRes.status + (t ? ': ' + t.slice(0,200) : ''); }
-    } catch(err) { bookingError = err.message || 'Netzwerkfehler'; }
-  }
-
-  try {
-    var notes = [];
-    if (state.goal) notes.push('Ziel: ' + (GOAL_LABELS[state.goal] || state.goal));
-    if (state.reach) notes.push('Erreichbar: ' + REACH_LABELS[state.reach]);
-    if (state.slot) {
-      notes.push('Wunschtermin: ' + fmtSlot(new Date(state.slot.startDateTime)));
-      notes.push(bookingSuccess ? 'Magicline: GEBUCHT' : 'Magicline: FEHLER (' + (bookingError || 'unbekannt') + ')');
-    } else if (state.studioCode === 'MEM') { notes.push('Kein Slot gewählt - Rückruf erwünscht'); }
-
-    await fetch(SUPABASE_URL + '/rest/v1/pt_leads', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Prefer': 'return=minimal' },
-      body: JSON.stringify({ studio_id: state.studioId, first_name: firstName, last_name: lastName || null, phone, email: email || null, source_code: 'website', status_key: 'new', is_active: true, notes: notes.join(' | ') })
-    });
-  } catch(err) { console.error('Lead-Speicherung fehlgeschlagen:', err); }
-
-  showSuccess(firstName, bookingSuccess);
-  btn.classList.remove('loading'); btn.disabled = false;
-};
-
-function showSuccess(firstName, bookingSuccess) {
-  document.getElementById('fbStepsIndicator').style.display = 'none';
-  document.querySelectorAll('.fb-form-step').forEach(s => s.style.display = 'none');
-  var fh = document.querySelector('.fb-form-header'); if(fh) fh.style.display = 'none';
-
-  var wa = window.FB_WA || { MEM: '4915730024124', SEN: '4915561206719' };
-  var waNum = state.studioCode === 'SEN' ? wa.SEN : wa.MEM;
-  var waLink = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent('Hallo, ich habe gerade ein Probetraining angefragt (' + firstName + '). Wann können wir den Termin besprechen?');
-
-  var st = document.getElementById('fbSuccessText');
-  var s2 = document.getElementById('fbSuccessStep2');
-  if (state.studioCode === 'MEM' && state.slot && bookingSuccess) {
-    st.textContent = 'Dein Termin am ' + fmtSlot(new Date(state.slot.startDateTime)) + ' ist gebucht!';
-    s2.innerHTML = '<strong>Termin gebucht</strong> — ' + fmtSlot(new Date(state.slot.startDateTime));
-  } else if (state.studioCode === 'MEM' && state.slot) {
-    st.textContent = 'Dein Wunschtermin am ' + fmtSlot(new Date(state.slot.startDateTime)) + ' ist vorgemerkt. Wir bestätigen ihn telefonisch.';
-    s2.innerHTML = '<strong>Wir melden uns</strong> — zur Terminbestätigung am ' + fmtSlot(new Date(state.slot.startDateTime));
-  } else {
-    st.textContent = 'Wir melden uns innerhalb von 24 Stunden persönlich bei dir.';
-  }
-
-  document.getElementById('fbWaSuccessBtn').href = waLink;
-  document.getElementById('fbSuccessMsg').classList.add('show');
-  document.getElementById('fb-anmeldung').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-// Init
-loadConfig();
-</script>
+<script src="ems-training.js"></script>
 </body>
 </html>
