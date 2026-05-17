@@ -1244,6 +1244,9 @@ function bindAll(){
   if(vLibBtn) vLibBtn.addEventListener('click', openVideoLib);
   $('video-lib-close').addEventListener('click', closeVideoLib);
   $('video-lib-overlay').addEventListener('click', function(e){ if(e.target === this) closeVideoLib(); });
+  $('vlib-add-btn').addEventListener('click', vLibAddSelected);
+  $('vlib-del-btn').addEventListener('click', vLibDeleteSelected);
+  $('vlib-selall-btn').addEventListener('click', vLibToggleAll);
 
 
   // Farb-Picker Sync (color ↔ hex text)
@@ -1301,6 +1304,7 @@ function loadVideoLib(){
   var status = $('video-lib-status');
   grid.innerHTML = '';
   status.textContent = 'Lädt Videos...';
+  updateLibToolbar();
   fetch(SUPA_URL+'/storage/v1/object/list/'+BUCKET, {
     method:'POST',
     headers:Object.assign({'Content-Type':'application/json'}, supaHeaders()),
@@ -1317,25 +1321,99 @@ function loadVideoLib(){
     videos.forEach(function(f){
       var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+f.name;
       var sizeMB = f.metadata && f.metadata.size ? (f.metadata.size/1024/1024).toFixed(1)+' MB' : '';
+      var inPlaylist = currentUrls.indexOf(url) !== -1;
       var card = document.createElement('div');
-      card.className = 'vlib-card' + (currentUrls.indexOf(url) !== -1 ? ' selected' : '');
+      card.className = 'vlib-card' + (inPlaylist ? ' in-playlist' : '');
+      card.setAttribute('data-url', url);
+      card.setAttribute('data-name', f.name);
       card.innerHTML =
+        '<label class="vlib-check-wrap"><input type="checkbox" class="vlib-cb"'+(inPlaylist?' checked':'')+'>'+
+        '<span class="vlib-check-box"></span></label>'+
         '<div class="vlib-thumb"><video src="'+ea(url)+'" preload="metadata" muted playsinline></video></div>'+
         '<div class="vlib-info">'+
-          '<div class="vlib-name">'+ea(f.name)+'</div>'+
+          '<div class="vlib-name" title="'+ea(f.name)+'">'+ea(f.name)+'</div>'+
           (sizeMB ? '<div class="vlib-size">'+sizeMB+'</div>' : '')+
-          '<button class="vlib-select-btn" type="button">Auswählen</button>'+
         '</div>';
-      card.querySelector('.vlib-select-btn').addEventListener('click', function(){
-        addVideoUrl(url);
-        schedulePreview();
-        closeVideoLib();
-        toast('Video zur Rotation hinzugefügt');
+      card.querySelector('.vlib-cb').addEventListener('change', function(){
+        card.classList.toggle('checked', this.checked);
+        updateLibToolbar();
+      });
+      card.addEventListener('click', function(e){
+        if(e.target.closest('.vlib-check-wrap')) return;
+        var cb = card.querySelector('.vlib-cb');
+        cb.checked = !cb.checked;
+        cb.dispatchEvent(new Event('change'));
       });
       grid.appendChild(card);
     });
   })
   .catch(function(err){ status.textContent = 'Fehler beim Laden (' + err + ')'; });
+}
+
+function getCheckedLib(){
+  return Array.from(document.querySelectorAll('#video-lib-grid .vlib-cb:checked')).map(function(cb){
+    return cb.closest('.vlib-card');
+  });
+}
+
+function updateLibToolbar(){
+  var checked = getCheckedLib();
+  var n = checked.length;
+  var addBtn = $('vlib-add-btn');
+  var delBtn = $('vlib-del-btn');
+  var selAll = $('vlib-selall-btn');
+  if(addBtn){ addBtn.textContent = n > 0 ? '+ Hinzufügen ('+n+')' : '+ Hinzufügen'; addBtn.disabled = n === 0; }
+  if(delBtn){ delBtn.textContent = n > 0 ? '🗑 Löschen ('+n+')' : '🗑 Löschen'; delBtn.disabled = n === 0; }
+  var total = document.querySelectorAll('#video-lib-grid .vlib-cb').length;
+  if(selAll) selAll.textContent = (n === total && total > 0) ? 'Alle abwählen' : 'Alle auswählen';
+}
+
+function vLibAddSelected(){
+  getCheckedLib().forEach(function(card){
+    addVideoUrl(card.getAttribute('data-url'));
+  });
+  schedulePreview();
+  closeVideoLib();
+  toast('Videos zur Rotation hinzugefügt');
+}
+
+function vLibDeleteSelected(){
+  var cards = getCheckedLib();
+  if(cards.length === 0) return;
+  var names = cards.map(function(c){ return c.getAttribute('data-name'); });
+  if(!confirm(names.length + ' Video(s) unwiderruflich aus dem Bucket löschen?')) return;
+  var delBtn = $('vlib-del-btn');
+  if(delBtn){ delBtn.disabled = true; delBtn.textContent = 'Löscht...'; }
+  fetch(SUPA_URL+'/storage/v1/object/'+BUCKET, {
+    method:'DELETE',
+    headers:Object.assign({'Content-Type':'application/json'}, supaHeaders()),
+    body: JSON.stringify({prefixes: names})
+  })
+  .then(function(r){
+    if(!r.ok) return r.text().then(function(t){ throw new Error(t); });
+    // Remove from playlist too
+    names.forEach(function(name){
+      var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+name;
+      qa('#video-playlist [data-video-url]').forEach(function(el){
+        if(el.getAttribute('data-video-url') === url) el.remove();
+      });
+    });
+    renderVideoPlaylist(readVideoUrls());
+    schedulePreview();
+    toast(names.length + ' Video(s) gelöscht');
+    loadVideoLib();
+  })
+  .catch(function(err){ toast('Löschen fehlgeschlagen: '+err.message,'err'); updateLibToolbar(); });
+}
+
+function vLibToggleAll(){
+  var cbs = document.querySelectorAll('#video-lib-grid .vlib-cb');
+  var allChecked = Array.from(cbs).every(function(cb){ return cb.checked; });
+  cbs.forEach(function(cb){
+    cb.checked = !allChecked;
+    cb.closest('.vlib-card').classList.toggle('checked', !allChecked);
+  });
+  updateLibToolbar();
 }
 
 // ── VIDEO PLAYLIST ──
@@ -1394,28 +1472,41 @@ else { init(); }
 </script>
 <!-- VIDEO BIBLIOTHEK MODAL -->
 <div id="video-lib-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;align-items:center;justify-content:center">
-  <div style="background:var(--card);border-radius:12px;width:min(720px,95vw);max-height:85vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)">
-    <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
-      <div style="font-weight:700;font-size:15px;color:var(--ink)">🎬 Video auswählen</div>
+  <div style="background:var(--card);border-radius:12px;width:min(760px,96vw);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)">
+    <!-- Header -->
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div style="font-weight:700;font-size:15px;color:var(--ink)">🎬 Video-Bibliothek</div>
       <button id="video-lib-close" type="button" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1">✕</button>
     </div>
-    <div style="padding:12px 20px;border-bottom:1px solid var(--border);flex-shrink:0">
-      <div id="video-lib-status" style="font-size:12px;color:var(--muted)">Lädt Videos...</div>
+    <!-- Toolbar -->
+    <div style="padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap">
+      <div id="video-lib-status" style="font-size:12px;color:var(--muted);flex:1;min-width:100px"></div>
+      <button id="vlib-selall-btn" type="button" style="font-size:11px;font-weight:600;background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;cursor:pointer;color:var(--ink)">Alle auswählen</button>
+      <button id="vlib-add-btn" type="button" disabled style="font-size:11px;font-weight:700;background:var(--g);color:#fff;border:none;border-radius:6px;padding:5px 12px;cursor:pointer;opacity:.5">+ Hinzufügen</button>
+      <button id="vlib-del-btn" type="button" disabled style="font-size:11px;font-weight:700;background:var(--r);color:#fff;border:none;border-radius:6px;padding:5px 12px;cursor:pointer;opacity:.5">🗑 Löschen</button>
     </div>
-    <div id="video-lib-grid" style="padding:16px 20px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px"></div>
+    <!-- Grid -->
+    <div id="video-lib-grid" style="padding:14px 18px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px"></div>
   </div>
 </div>
 <style>
-.vlib-card{background:var(--bg);border:2px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:.15s}
-.vlib-card:hover{border-color:var(--g);transform:translateY(-1px)}
-.vlib-card.selected{border-color:var(--g);background:var(--gbg)}
-.vlib-thumb{width:100%;aspect-ratio:16/9;background:#000;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.vlib-thumb video{width:100%;height:100%;object-fit:cover}
-.vlib-info{padding:8px 10px}
-.vlib-name{font-size:11px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vlib-card{background:var(--bg);border:2px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:.15s;position:relative;user-select:none}
+.vlib-card:hover{border-color:var(--g)}
+.vlib-card.in-playlist{border-color:var(--g)}
+.vlib-card.checked{border-color:var(--g);background:var(--gbg);box-shadow:0 0 0 2px var(--g)}
+.vlib-check-wrap{position:absolute;top:7px;left:7px;z-index:2;cursor:pointer}
+.vlib-check-wrap input{position:absolute;opacity:0;width:0;height:0}
+.vlib-check-box{display:block;width:20px;height:20px;border-radius:5px;background:rgba(255,255,255,.9);border:2px solid var(--border);transition:.12s}
+.vlib-card.checked .vlib-check-box{background:var(--g);border-color:var(--g)}
+.vlib-card.checked .vlib-check-box::after{content:'✓';display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900;height:100%}
+.vlib-card.in-playlist::before{content:'✓ In Rotation';position:absolute;top:7px;right:7px;background:var(--g);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;z-index:2}
+.vlib-thumb{width:100%;aspect-ratio:16/9;background:#000;overflow:hidden}
+.vlib-thumb video{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.vlib-info{padding:7px 9px}
+.vlib-name{font-size:10px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vlib-size{font-size:10px;color:var(--muted);margin-top:2px}
-.vlib-select-btn{width:100%;margin-top:8px;background:var(--g);color:#fff;border:none;border-radius:5px;padding:6px;font-size:11px;font-weight:700;cursor:pointer}
-.vlib-select-btn:hover{background:var(--gl)}
+#vlib-add-btn:not(:disabled){opacity:1;cursor:pointer}
+#vlib-del-btn:not(:disabled){opacity:1;cursor:pointer}
 </style>
 </body>
 </html>
