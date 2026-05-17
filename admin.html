@@ -882,95 +882,50 @@ function previewImg(id, src){
   c.innerHTML = src ? '<img src="'+ea(src)+'" onerror="this.parentElement.innerHTML=\'<div class=img-ph>Bild nicht ladbar</div>\'" alt="">' : '<div class="img-ph">Kein Bild hochgeladen</div>';
 }
 
-// ── VIDEO UPLOAD (TUS resumable) ──
+// ── VIDEO UPLOAD (via Edge Function) ──
 function uploadVideo(file, onDone){
   var allowed = ['video/mp4','video/webm','video/quicktime'];
   if(allowed.indexOf(file.type) === -1){ toast('Nur MP4, WebM oder MOV erlaubt', 'err'); onDone(null); return; }
-  var ext = file.name.split('.').pop().toLowerCase();
-  var name = Date.now()+'_'+Math.random().toString(36).substr(2,6)+'.'+ext;
-  var btn = $('upl-video-btn');
+  var btn  = $('upl-video-btn');
   var wrap = $('video-progress-wrap');
   var bar  = $('video-progress-bar');
   var lbl  = $('video-progress-label');
   if(btn){ btn.disabled = true; btn.textContent = 'Lädt...'; }
   if(wrap) wrap.style.display = '';
 
-  var endpoint = SUPA_URL+'/storage/v1/upload/resumable';
-  var chunkSize = 6 * 1024 * 1024; // 6 MB chunks
-  var offset = 0;
-  var uploadUrl = null;
-
-  function updateProgress(loaded, total){
-    var pct = total > 0 ? Math.round(loaded/total*100) : 0;
-    if(bar) bar.style.width = pct+'%';
-    if(lbl) lbl.textContent = pct+'%';
-  }
-
-  function finish(success){
+  var xhr = new XMLHttpRequest();
+  xhr.upload.addEventListener('progress', function(e){
+    if(e.lengthComputable){
+      var pct = Math.round(e.loaded / e.total * 100);
+      if(bar) bar.style.width = pct + '%';
+      if(lbl) lbl.textContent = pct + '%';
+    }
+  });
+  xhr.addEventListener('load', function(){
     if(wrap) wrap.style.display = 'none';
     if(btn){ btn.disabled = false; btn.textContent = 'Hochladen'; }
-    if(success){
-      var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+name;
-      toast('Video hochgeladen!');
-      onDone(url);
+    if(xhr.status === 200){
+      try {
+        var res = JSON.parse(xhr.responseText);
+        if(res.url){ toast('Video hochgeladen!'); onDone(res.url); }
+        else { toast('Upload fehlgeschlagen: ' + (res.error||'Unbekannter Fehler'), 'err'); onDone(null); }
+      } catch(e){ toast('Upload fehlgeschlagen', 'err'); onDone(null); }
     } else {
+      toast('Upload fehlgeschlagen (' + xhr.status + ')', 'err');
       onDone(null);
     }
-  }
-
-  function uploadChunk(){
-    var chunk = file.slice(offset, offset + chunkSize);
-    var xhr = new XMLHttpRequest();
-    xhr.upload.addEventListener('progress', function(e){
-      if(e.lengthComputable) updateProgress(offset + e.loaded, file.size);
-    });
-    xhr.addEventListener('load', function(){
-      if(xhr.status === 204 || xhr.status === 200){
-        offset += chunk.size;
-        updateProgress(offset, file.size);
-        if(offset < file.size){ uploadChunk(); }
-        else { finish(true); }
-      } else {
-        toast('Upload fehlgeschlagen ('+xhr.status+')','err');
-        finish(false);
-      }
-    });
-    xhr.addEventListener('error', function(){
-      toast('Upload fehlgeschlagen','err');
-      finish(false);
-    });
-    xhr.open('PATCH', uploadUrl);
-    xhr.setRequestHeader('Content-Type', 'application/offset+octet-stream');
-    xhr.setRequestHeader('Upload-Offset', String(offset));
-    xhr.setRequestHeader('Tus-Resumable', '1.0.0');
-    xhr.send(chunk);
-  }
-
-  // Step 1: create upload
-  fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'apikey': SUPA_KEY,
-      'Authorization': 'Bearer '+SUPA_KEY,
-      'Content-Type': file.type,
-      'x-upsert': 'true',
-      'Upload-Length': String(file.size),
-      'Upload-Metadata': 'bucketName '+btoa(BUCKET)+',objectName '+btoa(name)+',contentType '+btoa(file.type),
-      'Tus-Resumable': '1.0.0'
-    }
-  })
-  .then(function(r){
-    if(r.status !== 201) return r.text().then(function(t){ throw new Error(t||r.status); });
-    uploadUrl = r.headers.get('Location');
-    if(!uploadUrl) throw new Error('Kein Upload-URL erhalten');
-    // make absolute if relative
-    if(uploadUrl.indexOf('http') !== 0) uploadUrl = SUPA_URL + uploadUrl;
-    uploadChunk();
-  })
-  .catch(function(err){
-    toast('Upload fehlgeschlagen: '+err.message,'err');
-    finish(false);
   });
+  xhr.addEventListener('error', function(){
+    if(wrap) wrap.style.display = 'none';
+    if(btn){ btn.disabled = false; btn.textContent = 'Hochladen'; }
+    toast('Upload fehlgeschlagen', 'err');
+    onDone(null);
+  });
+  xhr.open('POST', SUPA_URL + '/functions/v1/upload-video');
+  xhr.setRequestHeader('x-file-name', file.name);
+  xhr.setRequestHeader('x-file-size', String(file.size));
+  xhr.setRequestHeader('Content-Type', file.type);
+  xhr.send(file);
 }
 
 function previewVideo(url){
