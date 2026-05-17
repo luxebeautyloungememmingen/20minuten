@@ -1244,6 +1244,8 @@ function bindAll(){
   }
   var vLibBtn = $('upl-video-lib-btn');
   if(vLibBtn) vLibBtn.addEventListener('click', openVideoLib);
+  $('video-lib-close').addEventListener('click', closeVideoLib);
+  $('video-lib-overlay').addEventListener('click', function(e){ if(e.target === this) closeVideoLib(); });
   if(vClr){
     vClr.addEventListener('click', function(){
       $('cfg-video_url').value = ''; previewVideo(''); schedulePreview();
@@ -1387,8 +1389,6 @@ function loadVideoLib(){
     status.textContent = 'Fehler beim Laden (' + err + ')';
   });
 }
-$('video-lib-close').addEventListener('click', closeVideoLib);
-$('video-lib-overlay').addEventListener('click', function(e){ if(e.target === this) closeVideoLib(); });
 </script>
 </body>
 </html>
