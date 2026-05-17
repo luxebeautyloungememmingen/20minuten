@@ -207,6 +207,29 @@ button{cursor:pointer}
 .preview-off{position:absolute;inset:0;background:rgba(255,255,255,.6);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--muted);z-index:5}
 .preview-off.show{display:flex}
 
+/* SIZE SLIDERS (Größen-Regler in Panels) */
+.size-section{margin-top:20px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px;position:relative}
+.size-section-head{display:flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.size-section-head::before{content:'📏'}
+.size-section-reset{margin-left:auto;font-size:10px;font-weight:700;color:var(--muted);background:none;border:1px solid var(--border);border-radius:5px;padding:3px 8px;letter-spacing:0;text-transform:none;transition:.12s}
+.size-section-reset:hover{color:var(--g);border-color:var(--g);background:#fff}
+.size-row{display:grid;grid-template-columns:1fr 60px 24px;align-items:center;gap:10px;padding:7px 4px;border-bottom:1px dashed var(--border)}
+.size-row:last-child{border-bottom:none}
+.size-row-lbl{font-size:12px;color:var(--ink);font-weight:500;display:flex;align-items:center;gap:6px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.size-row-lbl small{color:var(--muted);font-size:10px;font-weight:400}
+.size-row-slider{display:flex;align-items:center;gap:8px;min-width:0}
+.size-row input[type=range]{appearance:none;-webkit-appearance:none;flex:1;height:4px;border-radius:4px;background:var(--border);outline:none;cursor:pointer;min-width:0}
+.size-row input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--g);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);transition:.12s}
+.size-row input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--g);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.size-row input[type=range]:hover::-webkit-slider-thumb{transform:scale(1.15)}
+.size-row .size-val{font-family:'SF Mono',Menlo,monospace;font-size:11px;font-weight:700;color:var(--g);background:#fff;border:1px solid var(--border);border-radius:5px;padding:3px 6px;text-align:center;width:100%;outline:none;min-width:0;cursor:text}
+.size-row .size-val:focus{border-color:var(--g);box-shadow:0 0 0 2px rgba(47,134,21,.12)}
+.size-row.is-default .size-val{color:var(--muted)}
+.size-row .size-row-reset{background:none;border:none;color:var(--muted);font-size:14px;padding:0;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.12s;opacity:0;cursor:pointer;font-weight:700}
+.size-row.is-custom .size-row-reset{opacity:1}
+.size-row .size-row-reset:hover{background:var(--border);color:var(--ink)}
+.size-row.is-custom .size-row-lbl::after{content:'';width:6px;height:6px;background:var(--y);border-radius:50%;flex-shrink:0;margin-left:auto}
+
 /* TOAST */
 .toast-wrap{position:fixed;top:60px;right:16px;z-index:999;display:flex;flex-direction:column;gap:7px}
 .toast{background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 15px;box-shadow:var(--shadow);font-size:13px;font-weight:600;animation:tIn .2s ease;display:flex;align-items:center;gap:8px}
@@ -703,6 +726,224 @@ var PANEL_META = {
   links:{icon:'🔗',title:'Rechtliche Links',sec:'sec-brand'}
 };
 
+// ── SIZE-REGLER pro Panel ──
+// Schema: [key, label, default, min, max, step, helpText?]
+// key landet in cfg.sizes[key]
+var PANEL_SIZES = {
+  banner: [
+    ['banner_font_size', 'Schriftgröße', 13, 10, 22, 1, 'Banner-Text']
+  ],
+  hero: [
+    ['hero_eyebrow_size',  'Eyebrow-Text',     10, 8,  18, 1, '"KOSTENLOS & UNVERBINDLICH"'],
+    ['hero_check_size',    'Check-Zeile ✓',    14, 11, 22, 1],
+    ['hero_desc_size',     'Beschreibung',     14, 11, 22, 1],
+    ['scarcity_font_size', 'Scarcity-Box',     12, 10, 18, 1],
+    ['hero_padding_y',     'Außenabstand oben/unten', 24, 8, 80, 2]
+  ],
+  quiz: [
+    ['quiz_cta_size',   'Kleiner Text drüber', 11, 9,  18, 1],
+    ['quiz_title_size', 'Quiz-Titel',          26, 18, 56, 1, '"Was ist dein Ziel?"'],
+    ['quiz_sub_size',   'Untertitel',          13, 10, 20, 1],
+    ['quiz_padding_y',  'Außenabstand oben/unten', 28, 8, 80, 2]
+  ],
+  goals: [
+    ['goal_img_height',         'Bild-Höhe (Mobile)',  100, 60, 220, 5],
+    ['goal_img_height_tablet',  'Bild-Höhe (Tablet)',  130, 60, 240, 5],
+    ['goal_img_height_desktop', 'Bild-Höhe (Desktop)', 160, 60, 280, 5],
+    ['goal_label_size',         'Label (Mobile)',      13,  10, 22, 1, 'Schrift unter dem Bild'],
+    ['goal_label_size_desktop', 'Label (Desktop)',     15,  10, 24, 1]
+  ],
+  stats: [
+    ['stats_num_size',         'Zahl (Mobile)',      30, 16, 64, 2],
+    ['stats_num_size_desktop', 'Zahl (Desktop)',     38, 18, 80, 2],
+    ['stats_lbl_size',         'Label (Mobile)',     10, 8,  18, 1],
+    ['stats_lbl_size_desktop', 'Label (Desktop)',    12, 9,  20, 1],
+    ['stats_padding_y',        'Außenabstand oben/unten', 16, 4, 60, 2]
+  ],
+  video: [
+    ['video_desc_size', 'Beschreibungstext', 14, 11, 22, 1]
+  ],
+  benefits: [
+    ['benefit_icon_size',  'Icon-Schrift',       18, 12, 32, 1],
+    ['benefit_icon_box',   'Icon-Box (Höhe&Breite)', 36, 24, 64, 2],
+    ['benefit_title_size', 'Karten-Titel',       14, 11, 22, 1],
+    ['benefit_text_size',  'Karten-Text',        13, 10, 20, 1]
+  ],
+  trust: [
+    ['trust_lbl_size',       'Label oben',     10, 8,  18, 1],
+    ['trust_item_sub_size',  'Item-Sub-Label', 9,  7,  16, 1],
+    ['trust_item_name_size', 'Item-Name (groß)', 20, 14, 42, 1],
+    ['trust_item_desc_size', 'Item-Beschreibung', 10, 8, 18, 1]
+  ],
+  reviews: [
+    ['review_stars_size',  'Sterne',       15, 10, 24, 1],
+    ['review_text_size',   'Review-Text',  13, 10, 20, 1],
+    ['review_author_size', 'Autor',        12, 9,  18, 1],
+    ['review_avatar_size', 'Profilbild',   44, 28, 80, 2]
+  ],
+  steps: [
+    ['step_num_size',   'Schritt-Nummer (groß)', 30, 18, 60, 2],
+    ['step_title_size', 'Schritt-Titel',         14, 11, 22, 1],
+    ['step_text_size',  'Schritt-Text',          12, 10, 20, 1]
+  ],
+  studios: [
+    ['studio_banner_height',     'Banner-Bild Höhe',  180, 100, 360, 10],
+    ['studio_banner_title_size', 'Banner-Titel',      28,  16,  56, 2],
+    ['studio_name_size',         'Studio-Name',       22,  14,  48, 2],
+    ['studio_sub_size',          'Adress-Label',      10,  8,   18, 1],
+    ['studio_info_size',         'Studio-Infozeile',  12,  10,  20, 1],
+    ['studio_wabtn_size',        'WhatsApp-Button',   14,  11,  22, 1]
+  ],
+  brand: [
+    ['brand_tag_size',        'Hashtags (Mobile)',  18, 12, 40, 1],
+    ['brand_tag_size_tablet', 'Hashtags (Tablet+)', 22, 14, 48, 2],
+    ['brand_padding_y',       'Außenabstand oben/unten', 32, 8, 80, 2]
+  ],
+  form: [
+    ['form_title_size',      'Titel',              28, 18, 56, 2],
+    ['form_subtitle_size',   'Untertitel',         14, 11, 22, 1],
+    ['form_step_title_size', 'Step-Titel',         17, 12, 28, 1, 'z.B. "Welches Studio?"'],
+    ['form_step_sub_size',   'Step-Untertitel',    12, 10, 20, 1],
+    ['form_input_size',      'Eingabefelder',      16, 13, 22, 1],
+    ['form_bnext_size',      'Weiter-Button',      15, 12, 22, 1]
+  ],
+  ctas: [
+    ['cta_sec_title_size',         'CTA-Titel (Mobile)',  22, 14, 48, 2],
+    ['cta_sec_title_size_desktop', 'CTA-Titel (Desktop)', 28, 16, 60, 2],
+    ['cta_sec_btn_size',           'Button-Text',         16, 12, 24, 1],
+    ['cta_sec_padding_y',          'Außenabstand oben/unten', 28, 8, 80, 2]
+  ],
+  design: [
+    // Globale Defaults werden hier nicht doppelt aufgeführt, sind im Design-Panel direkt
+    ['sec_padding_y',          'Section-Abstand (Mobile)',  36, 12, 100, 2, 'Abstand zw. allen Sections'],
+    ['sec_padding_y_tablet',   'Section-Abstand (Tablet)',  56, 16, 120, 2],
+    ['sec_padding_y_desktop',  'Section-Abstand (Desktop)', 72, 20, 140, 2],
+    ['sec_lbl_size',           'Section-Mini-Label',        10, 8,  18, 1, '"DEINE VORTEILE", "BEWERTUNGEN"…']
+  ]
+};
+
+// ── SIZE RENDERER ──
+// Baut die Slider-Box ans Ende eines Panels und bindet die Events
+function renderSizes(panelName){
+  var defs = PANEL_SIZES[panelName];
+  if(!defs || defs.length === 0) return;
+  var panel = $('spanel-'+panelName);
+  if(!panel) return;
+  // Falls schon vorhanden, neu aufbauen
+  var existing = panel.querySelector('.size-section');
+  if(existing) existing.remove();
+
+  var html = '<div class="size-section" data-size-panel="'+panelName+'">'+
+    '<div class="size-section-head">Größen-Feintuning <button class="size-section-reset" type="button" data-reset-panel-sizes>Alle zurücksetzen</button></div>';
+  defs.forEach(function(def){
+    var key=def[0], lbl=def[1], dflt=def[2], min=def[3], max=def[4], step=def[5]||1, help=def[6]||'';
+    html += '<div class="size-row" data-size-key="'+key+'" data-size-default="'+dflt+'">'+
+      '<div class="size-row-lbl">'+ea(lbl)+(help?' <small>'+ea(help)+'</small>':'')+'</div>'+
+      '<div class="size-row-slider">'+
+        '<input type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+dflt+'" data-size-slider>'+
+        '<input type="text" class="size-val" data-size-val value="'+dflt+'">'+
+      '</div>'+
+      '<button class="size-row-reset" type="button" data-reset-size title="Auf Standard zurücksetzen">⟲</button>'+
+    '</div>';
+  });
+  html += '</div>';
+  panel.insertAdjacentHTML('beforeend', html);
+
+  // Werte aus currentCfg.sizes setzen
+  var sizes = (currentCfg && currentCfg.sizes) || {};
+  panel.querySelectorAll('.size-row').forEach(function(row){
+    var key = row.getAttribute('data-size-key');
+    var dflt = parseFloat(row.getAttribute('data-size-default'));
+    var stored = sizes[key];
+    var slider = row.querySelector('[data-size-slider]');
+    var val = row.querySelector('[data-size-val]');
+    var initial = (stored != null && stored !== '') ? parseFloat(stored) : dflt;
+    if(!isNaN(initial)){
+      slider.value = initial;
+      val.value = initial;
+    }
+    var isCustom = stored != null && stored !== '' && parseFloat(stored) !== dflt;
+    row.classList.toggle('is-custom', isCustom);
+    row.classList.toggle('is-default', !isCustom);
+
+    function commit(newVal){
+      var num = parseFloat(newVal);
+      if(isNaN(num)) return;
+      var min = parseFloat(slider.min), max = parseFloat(slider.max);
+      if(num < min) num = min;
+      if(num > max) num = max;
+      slider.value = num;
+      val.value = num;
+      var custom = num !== dflt;
+      row.classList.toggle('is-custom', custom);
+      row.classList.toggle('is-default', !custom);
+      onAnyChange();
+    }
+    slider.addEventListener('input', function(){ commit(slider.value); });
+    val.addEventListener('input', function(){
+      // nicht direkt clampen während User noch tippt
+      var num = parseFloat(val.value);
+      if(!isNaN(num)){
+        slider.value = num;
+        var custom = num !== dflt;
+        row.classList.toggle('is-custom', custom);
+        row.classList.toggle('is-default', !custom);
+        onAnyChange();
+      }
+    });
+    val.addEventListener('blur', function(){ commit(val.value); });
+    val.addEventListener('keydown', function(e){ if(e.key==='Enter'){ commit(val.value); val.blur(); } });
+    row.querySelector('[data-reset-size]').addEventListener('click', function(){
+      commit(dflt);
+    });
+  });
+
+  // Reset-All
+  var resetAll = panel.querySelector('[data-reset-panel-sizes]');
+  if(resetAll){
+    resetAll.addEventListener('click', function(){
+      panel.querySelectorAll('.size-row').forEach(function(row){
+        var dflt = parseFloat(row.getAttribute('data-size-default'));
+        var slider = row.querySelector('[data-size-slider]');
+        var val = row.querySelector('[data-size-val]');
+        slider.value = dflt; val.value = dflt;
+        row.classList.remove('is-custom');
+        row.classList.add('is-default');
+      });
+      onAnyChange();
+    });
+  }
+}
+
+// Liest ALLE Size-Werte aus allen Panels (auch wenn aktuell nicht gerendert)
+function readSizes(){
+  var result = {};
+  Object.keys(PANEL_SIZES).forEach(function(panel){
+    var defs = PANEL_SIZES[panel];
+    defs.forEach(function(def){
+      var key=def[0], dflt=def[2];
+      // Aktueller Slider (falls Panel gerendert ist)
+      var row = q('.size-row[data-size-key="'+key+'"]');
+      if(row){
+        var v = row.querySelector('[data-size-val]').value;
+        var num = parseFloat(v);
+        if(!isNaN(num) && num !== dflt){
+          result[key] = num;
+        }
+        // wenn = Default → nicht speichern (so dass nur custom values in DB)
+      } else {
+        // Panel nicht gerendert → vorhandenen Wert aus currentCfg.sizes übernehmen
+        if(currentCfg && currentCfg.sizes && currentCfg.sizes[key] != null){
+          result[key] = currentCfg.sizes[key];
+        }
+      }
+    });
+  });
+  return result;
+}
+
+
+
 function $(id){ return document.getElementById(id); }
 function q(sel){ return document.querySelector(sel); }
 function qa(sel){ return document.querySelectorAll(sel); }
@@ -789,6 +1030,16 @@ function panelHasChanges(panel, a, b){
   var fields = PANEL_FIELDS[panel] || [];
   for(var i=0; i<fields.length; i++){
     if(!eqDeep(a[fields[i]], b[fields[i]])) return true;
+  }
+  // Auch Size-Slider dieses Panels berücksichtigen
+  var sizeDefs = PANEL_SIZES[panel];
+  if(sizeDefs){
+    var sa = (a && a.sizes) || {};
+    var sb = (b && b.sizes) || {};
+    for(var j=0; j<sizeDefs.length; j++){
+      var key = sizeDefs[j][0];
+      if(sa[key] !== sb[key]) return true;
+    }
   }
   return false;
 }
@@ -887,6 +1138,7 @@ function readSimple(){
   c.benefits = readBenefits();
   c.trust = readTrust();
   c.steps = readSteps();
+  c.sizes = readSizes();
   return c;
 }
 
@@ -928,6 +1180,12 @@ function renderAll(c){
   renderBenefits(c.benefits || []);
   renderTrust(c.trust || []);
   renderSteps(c.steps || []);
+  // Size-Slider für aktuell sichtbares Panel
+  var activeBtn = q('.snav-btn.active');
+  if(activeBtn){
+    var p = activeBtn.getAttribute('data-panel');
+    if(PANEL_SIZES[p]) renderSizes(p);
+  }
 }
 
 // ── DESIGN ──
@@ -1461,10 +1719,16 @@ function setPreviewMode(mode){
 // ── NAVIGATION ──
 function showPanel(name, source){
   if(!PANEL_META[name]) return;
+  // Vor dem Wechsel: aktuelle Werte ins currentCfg übernehmen (damit nichts verloren geht)
+  if(typeof readSimple === 'function' && Object.keys(currentCfg).length > 0){
+    // currentCfg ist bereits aktuell durch onAnyChange-Bindings
+  }
   qa('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-panel') === name); });
   qa('.spanel').forEach(function(p){ p.classList.toggle('active', p.id === 'spanel-'+name); });
   $('phIcon').textContent = PANEL_META[name].icon;
   $('phTitle').textContent = PANEL_META[name].title;
+  // Size-Slider für dieses Panel rendern (falls vorhanden)
+  if(PANEL_SIZES[name]) renderSizes(name);
   // Sidebar-Body scroll zurücksetzen
   $('sidebarBody').scrollTop = 0;
   // Vorschau nur scrollen wenn nicht vom Iframe-Scroll-Observer ausgelöst
