@@ -1293,6 +1293,58 @@ function bindAll(){
   });
 }
 
+// ── VIDEO BIBLIOTHEK ──
+function openVideoLib(){
+  var overlay = $('video-lib-overlay');
+  overlay.style.display = 'flex';
+  loadVideoLib();
+}
+function closeVideoLib(){
+  $('video-lib-overlay').style.display = 'none';
+}
+function loadVideoLib(){
+  var grid = $('video-lib-grid');
+  var status = $('video-lib-status');
+  grid.innerHTML = '';
+  status.textContent = 'Lädt Videos...';
+  fetch(SUPA_URL+'/storage/v1/object/list/'+BUCKET, {
+    method:'POST',
+    headers:Object.assign({'Content-Type':'application/json'}, supaHeaders()),
+    body: JSON.stringify({prefix:'', limit:200, offset:0, sortBy:{column:'created_at', order:'desc'}})
+  })
+  .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
+  .then(function(files){
+    var videos = files.filter(function(f){
+      return f.name && /\.(mp4|webm|mov|m4v)$/i.test(f.name);
+    });
+    if(videos.length === 0){ status.textContent = 'Keine Videos im Bucket gefunden.'; return; }
+    status.textContent = videos.length + ' Video' + (videos.length !== 1 ? 's' : '') + ' gefunden';
+    var currentUrl = $('cfg-video_url').value;
+    videos.forEach(function(f){
+      var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+f.name;
+      var sizeMB = f.metadata && f.metadata.size ? (f.metadata.size/1024/1024).toFixed(1)+' MB' : '';
+      var card = document.createElement('div');
+      card.className = 'vlib-card' + (currentUrl === url ? ' selected' : '');
+      card.innerHTML =
+        '<div class="vlib-thumb"><video src="'+ea(url)+'" preload="metadata" muted playsinline></video></div>'+
+        '<div class="vlib-info">'+
+          '<div class="vlib-name">'+ea(f.name)+'</div>'+
+          (sizeMB ? '<div class="vlib-size">'+sizeMB+'</div>' : '')+
+          '<button class="vlib-select-btn" type="button">Auswählen</button>'+
+        '</div>';
+      card.querySelector('.vlib-select-btn').addEventListener('click', function(){
+        $('cfg-video_url').value = url;
+        previewVideo(url);
+        schedulePreview();
+        closeVideoLib();
+        toast('Video ausgewählt');
+      });
+      grid.appendChild(card);
+    });
+  })
+  .catch(function(err){ status.textContent = 'Fehler beim Laden (' + err + ')'; });
+}
+
 function init(){
   bindAll();
   if(sessionStorage.getItem('adm')==='1'){
@@ -1319,7 +1371,6 @@ else { init(); }
     <div id="video-lib-grid" style="padding:16px 20px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px"></div>
   </div>
 </div>
-
 <style>
 .vlib-card{background:var(--bg);border:2px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:.15s}
 .vlib-card:hover{border-color:var(--g);transform:translateY(-1px)}
@@ -1332,63 +1383,5 @@ else { init(); }
 .vlib-select-btn{width:100%;margin-top:8px;background:var(--g);color:#fff;border:none;border-radius:5px;padding:6px;font-size:11px;font-weight:700;cursor:pointer}
 .vlib-select-btn:hover{background:var(--gl)}
 </style>
-
-<script>
-function openVideoLib(){
-  var overlay = $('video-lib-overlay');
-  overlay.style.display = 'flex';
-  loadVideoLib();
-}
-function closeVideoLib(){
-  $('video-lib-overlay').style.display = 'none';
-}
-function loadVideoLib(){
-  var grid = $('video-lib-grid');
-  var status = $('video-lib-status');
-  grid.innerHTML = '';
-  status.textContent = 'Lädt Videos...';
-  fetch(SUPA_URL+'/storage/v1/object/list/'+BUCKET, {
-    method:'POST',
-    headers:Object.assign({'Content-Type':'application/json'}, supaHeaders()),
-    body: JSON.stringify({prefix:'', limit:200, offset:0, sortBy:{column:'created_at', order:'desc'}})
-  })
-  .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
-  .then(function(files){
-    var videos = files.filter(function(f){
-      return f.name && /\.(mp4|webm|mov|m4v)$/i.test(f.name);
-    });
-    if(videos.length === 0){
-      status.textContent = 'Keine Videos im Bucket gefunden.';
-      return;
-    }
-    status.textContent = videos.length + ' Video' + (videos.length !== 1 ? 's' : '') + ' gefunden';
-    var currentUrl = $('cfg-video_url').value;
-    videos.forEach(function(f){
-      var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+f.name;
-      var sizeMB = f.metadata && f.metadata.size ? (f.metadata.size/1024/1024).toFixed(1)+' MB' : '';
-      var card = document.createElement('div');
-      card.className = 'vlib-card' + (currentUrl === url ? ' selected' : '');
-      card.innerHTML =
-        '<div class="vlib-thumb"><video src="'+ea(url)+'" preload="metadata" muted playsinline></video></div>'+
-        '<div class="vlib-info">'+
-          '<div class="vlib-name">'+ea(f.name)+'</div>'+
-          (sizeMB ? '<div class="vlib-size">'+sizeMB+'</div>' : '')+
-          '<button class="vlib-select-btn" type="button">Auswählen</button>'+
-        '</div>';
-      card.querySelector('.vlib-select-btn').addEventListener('click', function(){
-        $('cfg-video_url').value = url;
-        previewVideo(url);
-        schedulePreview();
-        closeVideoLib();
-        toast('Video ausgewählt');
-      });
-      grid.appendChild(card);
-    });
-  })
-  .catch(function(err){
-    status.textContent = 'Fehler beim Laden (' + err + ')';
-  });
-}
-</script>
 </body>
 </html>
