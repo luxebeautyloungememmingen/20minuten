@@ -97,7 +97,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .sinfo-i{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--m)}
 .wabtn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;font-weight:700;font-size:14px;padding:13px 16px;border-radius:8px;text-decoration:none;min-height:44px}
 
-.brand-tags{background:var(--b);color:#fff;padding:20px 16px;text-align:center}
+.cta-sec{background:var(--gl);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:28px 16px;text-align:center}
+.cta-sec-in{max-width:680px;margin:0 auto}
+.cta-sec-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--b);margin-bottom:14px;letter-spacing:.3px;line-height:1.1}
+.cta-sec-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(180deg,var(--g) 0%,var(--dg) 100%);color:#fff;font-weight:700;font-size:16px;padding:16px 32px;border-radius:10px;text-decoration:none;border:none;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(47,134,21,.25);transition:all .2s;min-height:54px;width:100%;max-width:400px}
+.cta-sec-btn:active{transform:scale(.98)}
+@media(min-width:640px){.cta-sec-title{font-size:28px}.cta-sec-btn{width:auto}}
 .brand-tags-line{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:#fff;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
 .brand-tag{color:var(--g)}
 
@@ -413,6 +418,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   </div>
 </section>
 
+<div class="cta-sec" id="cta-1" style="display:none">
+  <div class="cta-sec-in">
+    <div class="cta-sec-title" id="cta-1-title"></div>
+    <a href="#quiz" class="cta-sec-btn" id="cta-1-btn"></a>
+  </div>
+</div>
+
 <section class="sec steps-s">
   <div class="sec-in">
     <div class="sec-lbl">N&auml;chste Schritte</div>
@@ -424,6 +436,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     </div>
   </div>
 </section>
+
+<div class="cta-sec" id="cta-2" style="display:none">
+  <div class="cta-sec-in">
+    <div class="cta-sec-title" id="cta-2-title"></div>
+    <a href="#quiz" class="cta-sec-btn" id="cta-2-btn"></a>
+  </div>
+</div>
 
 <section class="sec studios">
   <div class="sec-in">
@@ -456,12 +475,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   </div>
 </section>
 
+<div class="cta-sec" id="cta-3" style="display:none">
+  <div class="cta-sec-in">
+    <div class="cta-sec-title" id="cta-3-title"></div>
+    <a href="#quiz" class="cta-sec-btn" id="cta-3-btn"></a>
+  </div>
+</div>
+
 <!-- BRAND HASHTAGS -->
 <div class="brand-tags">
   <div class="brand-tags-line" id="brand-tags-line">
     <span><span class="brand-tag">#</span>ImmermitSpa&szlig;</span>
     <span><span class="brand-tag">#</span>ImmermitTermin</span>
     <span><span class="brand-tag">#</span>ImmermitTrainer</span>
+  </div>
+</div>
+
+<div class="cta-sec" id="cta-4" style="display:none">
+  <div class="cta-sec-in">
+    <div class="cta-sec-title" id="cta-4-title"></div>
+    <a href="#quiz" class="cta-sec-btn" id="cta-4-btn"></a>
   </div>
 </div>
 
@@ -622,7 +655,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     sticky_title:'Gratis EMS-Probetraining', sticky_sub:'Nur wenige Pl\u00e4tze frei!',
     brand_tags:['#ImmermitSpa\u00df','#ImmermitTermin','#ImmermitTrainer'],
     impressum_url:'#', datenschutz_url:'#',
-    form_title:'Gutschein sichern', form_subtitle:'In 60 Sekunden zu deinem GRATIS EMS-Probetraining.'
+    form_title:'Gutschein sichern', form_subtitle:'In 60 Sekunden zu deinem GRATIS EMS-Probetraining.',
+    ctas:[
+      {active:true,  title:'Jetzt kostenloses Probetraining vereinbaren!', btn:'Gutschein sichern \u2192'},
+      {active:true,  title:'Starte noch diese Woche mit EMS!',             btn:'Termin jetzt sichern \u2192'},
+      {active:false, title:'',                                             btn:''},
+      {active:true,  title:'Jetzt kostenloses Probetraining vereinbaren!', btn:'Gutschein sichern \u2192'}
+    ]
   };
 
   var SUPA_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
@@ -732,6 +771,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     if($('form-t')) $('form-t').textContent = c.form_title;
     if($('form-st')) $('form-st').textContent = c.form_subtitle;
     if($('wa-float')) $('wa-float').href = 'https://wa.me/'+c.mem_wa;
+    // CTA-Buttons rendern
+    var ctas = c.ctas || DEFAULTS.ctas;
+    ctas.forEach(function(cta, i){
+      var n = i + 1;
+      var wrap = $('cta-'+n);
+      var titleEl = $('cta-'+n+'-title');
+      var btnEl = $('cta-'+n+'-btn');
+      if(!wrap) return;
+      if(cta.active && cta.btn){
+        wrap.style.display = '';
+        if(titleEl) titleEl.textContent = cta.title || '';
+        if(btnEl) btnEl.textContent = cta.btn;
+      } else {
+        wrap.style.display = 'none';
+      }
+    });
   }
 
   function loadConfig(){
@@ -1135,6 +1190,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
   if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); }
   else { init(); }
+
+  // Live-Preview: Config-Updates vom Admin empfangen
+  window.addEventListener('message', function(e){
+    if(e.data && e.data.type === 'fitbox-config-update' && e.data.config){
+      applyConfig(e.data.config);
+    }
+  });
 })();
 </script>
 </body>

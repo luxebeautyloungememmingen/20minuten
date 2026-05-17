@@ -3,897 +3,849 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>fitbox Landing Admin</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>Landing Admin · fitbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --g:#2f8614;--dg:#246610;--gl:#e8f5e0;--gl-deep:#dcefcd;
-  --b:#0c0f0a;--t:#1a1a1a;--m:#6b7280;--m-l:#9ca3af;
-  --bg:#fafaf7;--ba:#f1f1ec;--w:#fff;--bd:#e5e7eb;--bd-strong:#d1d5db;
-  --r:#dc2626;--y:#d97706;
-  --shadow-xs:0 1px 2px rgba(15,15,15,.04);
-  --shadow-sm:0 1px 3px rgba(15,15,15,.06), 0 1px 2px rgba(15,15,15,.04);
-  --shadow-md:0 4px 12px rgba(15,15,15,.06), 0 2px 4px rgba(15,15,15,.04);
-  --shadow-lg:0 12px 28px rgba(15,15,15,.08), 0 4px 12px rgba(15,15,15,.05);
-  --shadow-glow:0 0 0 3px rgba(47,134,21,.12);
-  --ease:cubic-bezier(.4,0,.2,1);
-}
+:root{--g:#2f8615;--gl:#95c11f;--gbg:#f0f7ed;--gbg2:#e4f0dc;--ink:#0f172a;--muted:#64748b;--border:#e2e8f0;--bg:#f1f5f1;--card:#fff;--hover:#f8fafc;--r:#dc2626;--y:#d97706;
+--shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow:0 1px 4px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--shadow-lg:0 4px 24px rgba(0,0,0,.08)}
 *{box-sizing:border-box;margin:0;padding:0}
-*::selection{background:var(--gl);color:var(--dg)}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-feature-settings:'ss01','cv11';-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(180deg,var(--bg) 0%,#f3f4ef 100%)}
-.lbox{background:var(--w);border:1px solid var(--bd);border-radius:14px;padding:40px 32px;width:100%;max-width:400px;box-shadow:var(--shadow-lg)}
-.llogo{text-align:center;margin-bottom:24px}
-.llogo img{height:34px}
-.ltitle{font-size:18px;font-weight:700;text-align:center;margin-bottom:6px;color:var(--b);letter-spacing:-.01em}
-.lsub{font-size:13px;text-align:center;color:var(--m);margin-bottom:24px}
-.lfield{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.llbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--m)}
-.linp{padding:13px 14px;border:1.5px solid var(--bd);border-radius:8px;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s var(--ease),box-shadow .2s var(--ease);background:var(--w)}
-.linp:focus{border-color:var(--g);box-shadow:var(--shadow-glow)}
-.lbtn{width:100%;padding:14px;background:linear-gradient(180deg,var(--g) 0%,var(--dg) 100%);color:#fff;border:none;border-radius:8px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;transition:transform .15s var(--ease),box-shadow .15s var(--ease);letter-spacing:.01em;box-shadow:0 2px 6px rgba(36,102,16,.18)}
-.lbtn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(36,102,16,.25)}
-.lbtn:active{transform:translateY(0)}
-.lerr{color:var(--r);font-size:13px;text-align:center;margin-top:10px;display:none}
+html,body{height:100%;font-family:'Sora',sans-serif;color:var(--ink);background:var(--bg);overflow:hidden}
+button,input,select,textarea{font-family:inherit}
+
+/* LOGIN */
+#login{height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a4a10 0%,#2f8615 100%)}
+.lbox{background:#fff;border-radius:16px;padding:40px 32px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.llogo{text-align:center;margin-bottom:6px}
+.llogo img{height:36px}
+.ltitle{font-size:18px;font-weight:700;text-align:center;margin-bottom:4px;color:var(--ink)}
+.lsub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px}
+.lf{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.ll{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+.li{padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;outline:none;transition:.15s}
+.li:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(47,134,21,.1)}
+.lb{width:100%;padding:14px;background:linear-gradient(180deg,var(--g) 0%,#246610 100%);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;transition:.15s}
+.lb:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(47,134,21,.3)}
+.lerr{color:var(--r);font-size:12px;text-align:center;margin-top:8px;display:none}
 .lerr.show{display:block}
 
-#admin{display:none;min-height:100vh}
-.top{background:var(--w);border-bottom:1px solid var(--bd);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:12px;flex-wrap:wrap;backdrop-filter:saturate(180%) blur(8px);background:rgba(255,255,255,.92)}
-.top-l{display:flex;align-items:center;gap:14px;min-width:0}
-.top-l img{height:30px;flex-shrink:0}
-.top-t{font-size:14px;font-weight:700;color:var(--b);white-space:nowrap;letter-spacing:-.01em}
-.top-t::before{content:'';display:inline-block;width:1px;height:18px;background:var(--bd);vertical-align:middle;margin-right:14px}
-.top-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.tbtn{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:9px 14px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--t);white-space:nowrap;transition:all .15s var(--ease)}
-.tbtn:hover{border-color:var(--bd-strong);background:var(--bg)}
-.tbtn-prev{background:var(--gl);color:var(--dg);border-color:#bedea3;font-weight:600}
-.tbtn-prev:hover{background:var(--gl-deep);border-color:var(--g)}
-.tbtn-save{background:linear-gradient(180deg,var(--g) 0%,var(--dg) 100%);color:#fff;border:none;font-weight:700;padding:10px 20px;box-shadow:0 2px 6px rgba(36,102,16,.2)}
-.tbtn-save:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(36,102,16,.28)}
-.tbtn-save:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+/* APP SHELL */
+#app{display:none;height:100vh;display:none;flex-direction:column}
+.app-grid{display:grid;grid-template-rows:46px 1fr;height:100vh}
 
-.body{display:flex}
-.side{width:240px;flex-shrink:0;border-right:1px solid var(--bd);background:var(--w);padding:20px 0;min-height:calc(100vh - 60px);position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
-.side-sec{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m-l);padding:16px 24px 8px}
-.side-i{display:flex;align-items:center;gap:10px;padding:11px 24px;font-size:13.5px;color:var(--t);cursor:pointer;border-left:3px solid transparent;transition:all .15s var(--ease);position:relative}
-.side-i:hover{background:var(--bg)}
-.side-i.active{background:var(--gl);color:var(--dg);border-left-color:var(--g);font-weight:600}
-.side-i.active::after{content:'';position:absolute;right:16px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--g)}
-.side-ic{font-size:15px;width:20px;text-align:center;opacity:.85}
+/* TOPBAR */
+.topbar{height:46px;background:linear-gradient(135deg,var(--g) 0%,#256a10 100%);display:flex;align-items:center;gap:8px;padding:0 14px;box-shadow:0 2px 12px rgba(0,0,0,.15);z-index:50;flex-shrink:0;overflow-x:auto;overflow-y:hidden}
+.topbar::-webkit-scrollbar{height:3px}
+.topbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:2px}
+.tb-logo{height:22px;flex-shrink:0}
+.tb-div{width:1px;height:20px;background:rgba(255,255,255,.22);flex-shrink:0;margin:0 2px}
+.tb-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.9);white-space:nowrap;flex-shrink:0}
+.tb-space{flex:1}
+.tb-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:12px;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.12s;white-space:nowrap;flex-shrink:0}
+.tb-btn:hover{background:rgba(255,255,255,.25)}
+.tb-btn.primary{background:#fff;color:var(--g);border-color:#fff}
+.tb-btn.primary:hover{background:rgba(255,255,255,.9)}
+.tb-btn:disabled{opacity:.6;cursor:not-allowed}
+.tb-preview-wrap{display:flex;background:rgba(255,255,255,.1);border-radius:8px;padding:3px;gap:2px;flex-shrink:0}
+.tb-preview-btn{appearance:none;border:none;background:transparent;color:rgba(255,255,255,.65);font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;cursor:pointer;transition:.12s;white-space:nowrap}
+.tb-preview-btn.active{background:#fff;color:var(--g)}
+.save-status{font-size:11px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:5px;flex-shrink:0}
+.save-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4)}
+.save-dot.saved{background:#95c11f}
+.save-dot.saving{background:#f59e0b;animation:blink .7s ease-in-out infinite}
+.save-dot.error{background:#ef4444}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
-.content{flex:1;padding:32px;max-width:980px}
-.panel{display:none;animation:fadeUp .35s var(--ease)}
-.panel.active{display:block}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.p-t{font-size:24px;font-weight:700;color:var(--b);margin-bottom:6px;letter-spacing:-.02em}
-.p-s{font-size:14px;color:var(--m);margin-bottom:28px;line-height:1.55;max-width:680px}
-.card{background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:var(--shadow-xs);transition:box-shadow .2s var(--ease)}
-.card:hover{box-shadow:var(--shadow-sm)}
-.card-t{font-size:13px;font-weight:700;color:var(--b);margin-bottom:18px;display:flex;align-items:center;gap:8px;letter-spacing:-.005em}
-.card-t::before{content:'';display:inline-block;width:3px;height:14px;background:var(--g);border-radius:100px;flex-shrink:0}
-.badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;letter-spacing:.5px;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;margin-left:auto}
-.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-.b-green{background:var(--gl);color:var(--dg)}
-.b-red{background:#fef2f2;color:var(--r)}
+/* WORKSPACE */
+.workspace{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 46px);overflow:hidden}
 
-.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.row.single{grid-template-columns:1fr}
-.row:last-child{margin-bottom:0}
-.field{display:flex;flex-direction:column;gap:6px}
-.lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--m);display:flex;align-items:center;gap:6px}
-.inp,.ta{padding:11px 14px;border:1.5px solid var(--bd);border-radius:8px;font-family:inherit;font-size:14px;color:var(--t);background:var(--w);outline:none;width:100%;transition:border-color .15s var(--ease),box-shadow .15s var(--ease)}
-.inp:focus,.ta:focus{border-color:var(--g);box-shadow:var(--shadow-glow)}
-.inp:hover:not(:focus),.ta:hover:not(:focus){border-color:var(--bd-strong)}
-.ta{min-height:80px;resize:vertical;line-height:1.5}
-.hint{font-size:11.5px;color:var(--m);margin-top:4px;line-height:1.45}
+/* SIDEBAR */
+.sidebar{background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-nav{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.sidebar-nav::-webkit-scrollbar{display:none}
+.snav-btn{flex:1;min-width:0;padding:11px 6px;font-size:11px;font-weight:600;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:.12s;white-space:nowrap}
+.snav-btn.active{color:var(--g);border-bottom-color:var(--g);background:var(--gbg)}
+.snav-btn:hover:not(.active){background:var(--hover)}
+.sidebar-body{flex:1;overflow-y:auto;padding:16px}
+.sidebar-body::-webkit-scrollbar{width:4px}
+.sidebar-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* PANELS */
+.spanel{display:none}
+.spanel.active{display:block}
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;display:flex;align-items:center;gap:6px}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-label:first-child{margin-top:0}
+
+/* FIELD */
+.field{margin-bottom:12px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.fl{font-size:11px;font-weight:600;color:var(--ink);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:5px}
+.fi,.fa,.fs{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--ink);background:#fff;outline:none;transition:.12s}
+.fi:focus,.fa:focus,.fs:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(47,134,21,.08)}
+.fi:hover:not(:focus),.fa:hover:not(:focus){border-color:#c8d5c8}
+.fa{resize:vertical;min-height:68px;line-height:1.5}
+.fh{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
 
 /* INFO TOOLTIP */
-.info{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--bd);color:var(--m);font-size:10px;font-weight:700;cursor:help;position:relative;font-family:inherit;border:none;transition:all .15s var(--ease);flex-shrink:0;line-height:1}
-.info::before{content:'i';font-style:italic}
-.info:hover{background:var(--g);color:#fff;transform:scale(1.08)}
-.info:hover .info-pop,.info:focus .info-pop{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-4px)}
-.info-pop{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(0);background:var(--b);color:#fff;font-size:12px;font-weight:400;line-height:1.5;padding:10px 14px;border-radius:8px;width:max-content;max-width:280px;text-align:left;letter-spacing:0;text-transform:none;opacity:0;visibility:hidden;transition:all .2s var(--ease);box-shadow:var(--shadow-lg);z-index:50;pointer-events:none;white-space:normal}
-.info-pop::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--b)}
-.info-pop strong{color:#fff;font-weight:600;display:block;margin-bottom:3px}
-.info-pop em{color:var(--gl);font-style:normal;font-family:'Courier New',monospace;font-size:11.5px;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px}
-.lbl .info{margin-left:auto}
-.lbl{justify-content:flex-start}
-.lbl > span{flex:1}
+.info-btn{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--border);color:var(--muted);font-size:9px;font-weight:700;cursor:help;border:none;position:relative;transition:.12s;flex-shrink:0;font-style:italic;line-height:1}
+.info-btn::before{content:'i'}
+.info-btn:hover{background:var(--g);color:#fff}
+.info-btn:hover .tip,.info-btn:focus .tip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-2px)}
+.tip{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--ink);color:#fff;font-size:11px;font-weight:400;line-height:1.5;padding:9px 12px;border-radius:8px;width:220px;text-align:left;letter-spacing:0;text-transform:none;opacity:0;visibility:hidden;transition:.18s;box-shadow:var(--shadow-lg);z-index:200;pointer-events:none;white-space:normal;font-style:normal}
+.tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink)}
+.tip strong{color:#fff;display:block;margin-bottom:2px;font-weight:700}
+.tip em{color:#95c11f;font-style:normal;background:rgba(255,255,255,.1);padding:1px 4px;border-radius:3px;font-size:10.5px}
 
-.tog-row{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding:12px 14px;background:var(--bg);border-radius:10px;border:1px solid var(--bd)}
-.tog{position:relative;width:46px;height:26px;flex-shrink:0}
+/* TOGGLE */
+.tog-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:12px}
+.tog{position:relative;width:38px;height:22px;flex-shrink:0}
 .tog input{opacity:0;width:0;height:0;position:absolute}
-.tog-s{position:absolute;inset:0;background:var(--bd-strong);border-radius:100px;cursor:pointer;transition:background .25s var(--ease)}
-.tog-s::after{content:'';position:absolute;left:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .25s var(--ease);box-shadow:0 2px 5px rgba(0,0,0,.2)}
-.tog input:checked + .tog-s{background:var(--g)}
-.tog input:checked + .tog-s::after{transform:translateX(20px)}
-.tog-l{font-size:14px;font-weight:500;color:var(--t)}
+.tog-track{position:absolute;inset:0;background:#c8d5c8;border-radius:100px;cursor:pointer;transition:.22s}
+.tog-track::after{content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;background:#fff;border-radius:50%;transition:.22s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.tog input:checked + .tog-track{background:var(--g)}
+.tog input:checked + .tog-track::after{transform:translateX(16px)}
+.tog-lbl{font-size:13px;font-weight:500;color:var(--ink)}
 
-.rev-i,.goal-i,.tag-i{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:18px;margin-bottom:12px;position:relative;transition:border-color .15s var(--ease),box-shadow .15s var(--ease)}
-.rev-i:hover,.goal-i:hover,.tag-i:hover{border-color:var(--bd-strong);box-shadow:var(--shadow-xs)}
-.rev-del,.goal-del,.tag-del{position:absolute;top:12px;right:12px;background:var(--w);border:1px solid var(--bd);color:var(--m);cursor:pointer;font-size:14px;padding:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .15s var(--ease);font-family:inherit;line-height:1}
-.rev-del:hover,.goal-del:hover,.tag-del:hover{color:var(--r);border-color:var(--r);background:#fef2f2}
-.add-btn{background:var(--gl);color:var(--dg);border:1.5px dashed var(--g);border-radius:10px;padding:14px;width:100%;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s var(--ease);letter-spacing:.01em}
-.add-btn:hover{background:var(--gl-deep);border-style:solid;transform:translateY(-1px);box-shadow:0 2px 8px rgba(47,134,21,.15)}
+/* BADGE */
+.badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;letter-spacing:.3px;text-transform:uppercase;display:inline-flex;align-items:center;gap:4px}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.badge-on{background:var(--gbg);color:var(--g)}
+.badge-off{background:#fef2f2;color:var(--r)}
 
-.stat-i{display:grid;grid-template-columns:120px 1fr;gap:12px;margin-bottom:12px;align-items:end;padding:14px;background:var(--bg);border:1px solid var(--bd);border-radius:10px}
-.stat-i:last-child{margin-bottom:0}
+/* ITEMS (reviews, goals, tags) */
+.item{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:14px;margin-bottom:10px;position:relative}
+.item:hover{border-color:#c8d5c8}
+.item-del{position:absolute;top:10px;right:10px;background:var(--card);border:1px solid var(--border);color:var(--muted);width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:.12s}
+.item-del:hover{color:var(--r);border-color:var(--r);background:#fef2f2}
+.add-btn{width:100%;padding:11px;background:var(--gbg);color:var(--g);border:1.5px dashed var(--g);border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;transition:.12s;display:flex;align-items:center;justify-content:center;gap:6px}
+.add-btn:hover{background:var(--gbg2);border-style:solid}
 
-.img-spec{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:8px;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;font-size:12px;color:var(--m)}
-.img-spec-px{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:var(--dg);background:var(--gl);padding:2px 7px;border-radius:4px;letter-spacing:.3px}
-.img-spec-sep{color:var(--bd-strong);font-weight:400}
-.img-prev img{width:100%;height:100%;object-fit:cover}
-.img-ph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--m-l);font-size:13px;text-align:center;padding:8px;font-weight:500}
-.goal-img-prev{margin-top:8px;border-radius:8px;overflow:hidden;height:100px;background:var(--ba);position:relative;border:1px solid var(--bd)}
-.goal-img-prev img{width:100%;height:100%;object-fit:cover}
-.upl-row{display:flex;gap:8px;align-items:stretch;margin-top:8px;flex-wrap:wrap}
-.upl-btn{background:var(--w);color:var(--dg);border:1.5px solid var(--g);border-radius:8px;padding:10px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;transition:all .15s var(--ease)}
-.upl-btn:hover{background:var(--gl);transform:translateY(-1px);box-shadow:0 3px 8px rgba(47,134,21,.15)}
-.upl-btn:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none;background:var(--bd);border-color:var(--bd);color:var(--m)}
-.upl-btn::before{content:'\2191';font-weight:900;font-size:14px}
+/* STATS */
+.stat-row{display:grid;grid-template-columns:90px 1fr;gap:8px;margin-bottom:8px;align-items:end;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+
+/* IMAGE UPLOAD */
+.img-box{border:1px solid var(--border);border-radius:10px;overflow:hidden;height:120px;background:var(--bg);position:relative;margin-bottom:8px}
+.img-box img{width:100%;height:100%;object-fit:cover;display:block}
+.img-ph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:12px;font-weight:500}
+.img-spec-bar{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:7px;font-size:11px;color:var(--muted);margin-bottom:8px}
+.img-spec-px{font-family:monospace;font-size:11px;font-weight:700;color:var(--g);background:var(--gbg);padding:2px 6px;border-radius:4px}
+.upl-row{display:flex;gap:7px;flex-wrap:wrap}
+.upl-btn{background:var(--card);color:var(--g);border:1.5px solid var(--g);border-radius:7px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:.12s}
+.upl-btn:hover{background:var(--gbg);transform:translateY(-1px)}
+.upl-btn:disabled{opacity:.6;cursor:wait;transform:none}
+.upl-btn::before{content:'\2191';font-weight:900}
 .upl-input{display:none}
-.upl-clear{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:9px 14px;font-family:inherit;font-size:12.5px;cursor:pointer;color:var(--m);transition:all .15s var(--ease);font-weight:500}
-.upl-clear:hover{color:var(--r);border-color:var(--r);background:#fef2f2}
-.upl-progress{position:absolute;inset:0;background:rgba(255,255,255,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--dg);font-size:13px;font-weight:600;gap:10px;backdrop-filter:blur(4px)}
-.upl-progress::before{content:'';width:26px;height:26px;border:3px solid var(--bd);border-top-color:var(--g);border-radius:50%;animation:upspin .7s linear infinite}
+.upl-clr{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:12px;color:var(--muted);cursor:pointer;transition:.12s}
+.upl-clr:hover{color:var(--r);border-color:var(--r)}
+.upl-prog{position:absolute;inset:0;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:var(--g);font-size:12px;font-weight:600;gap:8px;backdrop-filter:blur(4px)}
+.upl-prog::before{content:'';width:20px;height:20px;border:2.5px solid var(--border);border-top-color:var(--g);border-radius:50%;animation:upspin .7s linear infinite}
 @keyframes upspin{to{transform:rotate(360deg)}}
 
-#toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--b);color:#fff;padding:14px 22px;border-radius:10px;font-size:14px;font-weight:500;transform:translateY(120px);opacity:0;transition:all .3s var(--ease);pointer-events:none;max-width:90vw;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px}
-#toast::before{content:'';width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center}
-#toast.show{transform:translateY(0);opacity:1}
-#toast.success{background:linear-gradient(180deg,var(--g) 0%,var(--dg) 100%)}
-#toast.success::before{content:'\2713';background:rgba(255,255,255,.22);color:#fff;font-weight:900;font-size:12px}
-#toast.error{background:var(--r)}
-#toast.error::before{content:'!';background:rgba(255,255,255,.22);color:#fff;font-weight:900;font-size:13px}
+/* CTA ITEM */
+.cta-item{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:14px;margin-bottom:10px}
+.cta-num{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.cta-num span{background:var(--g);color:#fff;width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
 
-@media (max-width:768px){
-  .side{display:none}
-  .row{grid-template-columns:1fr}
-  .content{padding:20px 16px}
-  .top-t{display:none}
-  .top-t::before{display:none}
-  .top{padding:12px 16px}
-  .info-pop{max-width:220px;font-size:11.5px}
-  .stat-i{grid-template-columns:1fr}
-  .p-t{font-size:20px}
-  .card{padding:18px}
-}
+/* PREVIEW PANE */
+.preview-pane{background:#d4dfd4;overflow-y:auto;display:flex;justify-content:center;padding:24px;position:relative}
+.preview-pane::-webkit-scrollbar{width:5px}
+.preview-pane::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px}
+.preview-frame-wrap{width:100%;transition:max-width .3s;position:relative}
+.preview-frame-wrap.mobile{max-width:390px}
+.preview-frame-wrap.desktop{max-width:100%}
+.preview-browser{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.preview-bar{background:#f3f4f6;padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e5e7eb}
+.preview-dots{display:flex;gap:5px}
+.preview-dot{width:10px;height:10px;border-radius:50%}
+.preview-url{flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:5px 10px;font-size:11px;color:#6b7280;font-family:monospace}
+.preview-iframe{width:100%;border:none;display:block;height:calc(100vh - 46px - 48px - 48px)}
+.preview-loading{position:absolute;inset:0;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:13px;font-weight:600;color:var(--g);gap:10px;pointer-events:none;opacity:0;transition:.3s}
+.preview-loading.show{opacity:1;pointer-events:all}
+.preview-loading::before{content:'';width:20px;height:20px;border:2.5px solid #d1fae5;border-top-color:var(--g);border-radius:50%;animation:upspin .7s linear infinite}
+
+/* TOAST */
+.toast-wrap{position:fixed;top:60px;right:16px;z-index:999;display:flex;flex-direction:column;gap:7px}
+.toast{background:#fff;border:1px solid var(--border);border-radius:9px;padding:10px 15px;box-shadow:var(--shadow);font-size:13px;font-weight:600;animation:tIn .2s ease;display:flex;align-items:center;gap:8px}
+.toast.ok{border-color:#86efac;color:var(--g)}
+.toast.ok::before{content:'✓';font-weight:900}
+.toast.err{border-color:#fca5a5;color:var(--r)}
+.toast.err::before{content:'!';font-weight:900}
+@keyframes tIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:900px){.workspace{grid-template-columns:260px 1fr}.preview-pane{display:none}}
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login">
   <div class="lbox">
     <div class="llogo"><img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></div>
     <div class="ltitle">Landing Page Admin</div>
     <div class="lsub">Bitte mit dem Admin-Passwort einloggen</div>
-    <div class="lfield">
-      <label class="llbl">Passwort</label>
-      <input type="password" class="linp" id="loginPw" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
+    <div class="lf">
+      <label class="ll">Passwort</label>
+      <input type="password" class="li" id="loginPw" placeholder="••••••••">
     </div>
-    <button class="lbtn" id="loginBtn">Einloggen</button>
+    <button class="lb" id="loginBtn">Einloggen</button>
     <div class="lerr" id="loginErr">Falsches Passwort</div>
   </div>
 </div>
 
-<div id="admin">
-  <div class="top">
-    <div class="top-l">
-      <img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox">
-      <span class="top-t">Landing Page Admin</span>
+<!-- APP -->
+<div id="app" class="app-grid">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <img class="tb-logo" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox">
+    <div class="tb-div"></div>
+    <span class="tb-title">Landing Page Admin</span>
+    <div class="tb-space"></div>
+    <div class="save-status" id="saveStatus">
+      <div class="save-dot saved" id="saveDot"></div>
+      <span id="saveLabel">Gespeichert</span>
     </div>
-    <div class="top-r">
-      <a href="ems-training.html" target="_blank" class="tbtn tbtn-prev">Vorschau</a>
-      <button class="tbtn tbtn-save" id="saveBtn">Speichern</button>
-      <button class="tbtn" id="logoutBtn">Abmelden</button>
+    <div class="tb-div"></div>
+    <div class="tb-preview-wrap">
+      <button class="tb-preview-btn active" id="prevDesk" type="button">🖥 Desktop</button>
+      <button class="tb-preview-btn" id="prevMob" type="button">📱 Mobile</button>
     </div>
+    <button class="tb-btn" id="openSiteBtn" type="button">🔗 Seite öffnen</button>
+    <button class="tb-btn primary" id="saveBtn" type="button">💾 Speichern</button>
+    <button class="tb-btn" id="logoutBtn" type="button">Abmelden</button>
   </div>
 
-  <div class="body">
-    <div class="side">
-      <div class="side-sec">Seite</div>
-      <div class="side-i active" data-panel="banner"><span class="side-ic">&#128227;</span> Aktions-Banner</div>
-      <div class="side-i" data-panel="hero"><span class="side-ic">&#127968;</span> Hero (Gutschein-Header)</div>
-      <div class="side-i" data-panel="quiz"><span class="side-ic">&#127919;</span> Quiz-Texte</div>
-      <div class="side-i" data-panel="goals"><span class="side-ic">&#127919;</span> Ziele &amp; Bilder</div>
-      <div class="side-i" data-panel="stats"><span class="side-ic">&#128202;</span> Stats-Leiste</div>
-      <div class="side-i" data-panel="reviews"><span class="side-ic">&#11088;</span> Bewertungen</div>
-      <div class="side-i" data-panel="brand"><span class="side-ic">&#128293;</span> Brand-Hashtags</div>
-      <div class="side-sec">Studios</div>
-      <div class="side-i" data-panel="studios"><span class="side-ic">&#128205;</span> Standorte</div>
-      <div class="side-sec">Formular</div>
-      <div class="side-i" data-panel="form"><span class="side-ic">&#128221;</span> Formular &amp; CTA</div>
-      <div class="side-sec">Links</div>
-      <div class="side-i" data-panel="links"><span class="side-ic">&#128279;</span> Footer-Links</div>
-    </div>
+  <!-- WORKSPACE -->
+  <div class="workspace">
 
-    <div class="content">
-
-      <div class="panel active" id="panel-banner">
-        <div class="p-t">Aktions-Banner</div>
-        <div class="p-s">Zeigt einen gr&uuml;nen Hinweis-Streifen ganz oben auf der Landing Page &mdash; ideal f&uuml;r zeitlich begrenzte Aktionen, Feiertage oder besondere Hinweise.</div>
-        <div class="card">
-          <div class="card-t">Status <span class="badge b-red" id="badge-banner">Deaktiviert</span></div>
-          <div class="tog-row">
-            <label class="tog"><input type="checkbox" id="cfg-banner_active"><span class="tog-s"></span></label>
-            <span class="tog-l">Banner anzeigen</span>
-            <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>Banner ein-/ausblenden</strong>Schalter aktivieren = der Streifen erscheint oben auf der Landing Page. Ausschalten = Streifen verschwindet komplett, ohne dass du den Text l&ouml;schen musst.</span></button>
-          </div>
-          <div class="row single"><div class="field">
-            <label class="lbl">Banner-Text <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Hauptbotschaft des Banners</strong>Was im Streifen steht. Kurz und auffallend. Emojis sind erlaubt.<br><br>Beispiel:<br><em>&#127881; Sommer-Aktion: 2 Monate zum Preis von 1!</em></span></button></label>
-            <input type="text" class="inp" id="cfg-banner_text" placeholder="&#127881; Sommer-Aktion: 2 Monate zum Preis von 1!">
-          </div></div>
-          <div class="row">
-            <div class="field">
-              <label class="lbl">Link-Text (optional) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Optionaler Klick-Text</strong>Erscheint unterstrichen nach dem Banner-Text. Wenn leer, ist der Banner nur Info ohne Klick.<br><br>Beispiel: <em>Jetzt sichern</em></span></button></label>
-              <input type="text" class="inp" id="cfg-banner_link_text" placeholder="Jetzt sichern">
-            </div>
-            <div class="field">
-              <label class="lbl">Link-URL (optional) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Wohin der Link f&uuml;hrt</strong>Wenn ein Link-Text gesetzt ist, klickt man darauf und landet hier.<br><br>F&uuml;r das Formular auf derselben Seite: <em>#quiz</em><br>Externe Seite: <em>https://...</em></span></button></label>
-              <input type="text" class="inp" id="cfg-banner_link_url" placeholder="#quiz">
-            </div>
-          </div>
-        </div>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-nav">
+        <button class="snav-btn active" data-panel="banner" type="button">Banner</button>
+        <button class="snav-btn" data-panel="hero" type="button">Hero</button>
+        <button class="snav-btn" data-panel="quiz" type="button">Quiz</button>
+        <button class="snav-btn" data-panel="goals" type="button">Ziele</button>
+        <button class="snav-btn" data-panel="ctas" type="button">CTAs</button>
+        <button class="snav-btn" data-panel="stats" type="button">Stats</button>
+        <button class="snav-btn" data-panel="reviews" type="button">Reviews</button>
+        <button class="snav-btn" data-panel="studios" type="button">Studios</button>
+        <button class="snav-btn" data-panel="brand" type="button">Brand</button>
+        <button class="snav-btn" data-panel="form" type="button">Formular</button>
+        <button class="snav-btn" data-panel="links" type="button">Links</button>
       </div>
+      <div class="sidebar-body">
 
-      <div class="panel" id="panel-hero">
-        <div class="p-t">Hero (Gutschein-Header)</div>
-        <div class="p-s">Die zentrale Headline ganz oben auf der Landing Page. <strong>"Gutschein"-Framing</strong> wirkt psychologisch st&auml;rker als "Probetraining" &mdash; ein Gutschein hat einen Wert, den man sich sichert.</div>
-        <div class="card">
-          <div class="card-t">Headline</div>
-          <div class="row single"><div class="field">
-            <label class="lbl">Zeile 1 (kleiner) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Erste Zeile der Headline</strong>Die einleitenden Worte vor der Hauptbotschaft. Wird in schwarzer Schrift angezeigt.<br><br>Beispiel: <em>Sichere dir deinen Gutschein f&uuml;r ein</em></span></button></label>
-            <input type="text" class="inp" id="cfg-hero_title" placeholder="Sichere dir deinen Gutschein f&uuml;r ein">
-          </div></div>
-          <div class="row single"><div class="field">
-            <label class="lbl">Zeile 2 (gro&szlig;, gr&uuml;n) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Die Hauptbotschaft</strong>Wird gro&szlig; und in fitbox-Gr&uuml;n hervorgehoben. Das ist der bl&auml;ckfangende Teil.<br><br>Beispiel: <em>GRATIS EMS-Probetraining!</em></span></button></label>
-            <input type="text" class="inp" id="cfg-hero_sub" placeholder="GRATIS EMS-Probetraining!">
-          </div></div>
-          <div class="row single"><div class="field">
-            <label class="lbl">Check-Zeile (mit gr&uuml;nem H&auml;kchen) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Vertrauensbildender Zusatz</strong>Erscheint mit einem gr&uuml;nen H&auml;kchen davor &mdash; signalisiert Sicherheit.<br><br>Beispiel: <em>100% kostenlos und unverbindlich testen!</em></span></button></label>
-            <input type="text" class="inp" id="cfg-hero_check" placeholder="100% kostenlos und unverbindlich testen!">
-          </div></div>
-          <div class="row single"><div class="field">
-            <label class="lbl">Beschreibung <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Beschreibung unter der Headline</strong>Erkl&auml;rt kurz worum es geht. HTML-Tags wie <em>&lt;strong&gt;</em> sind erlaubt um W&ouml;rter fett zu machen.<br><br>Tipp: Bleibe bei 1-2 S&auml;tzen, sonst wird's zu lang.</span></button></label>
-            <textarea class="ta" id="cfg-hero_desc" placeholder="In nur 20 Minuten..."></textarea>
-          </div></div>
-        </div>
-        <div class="card">
-          <div class="card-t">Hero-Bild (optional)</div>
+        <!-- BANNER -->
+        <div class="spanel active" id="spanel-banner">
+          <div class="tog-row">
+            <label class="tog"><input type="checkbox" id="cfg-banner_active"><span class="tog-track"></span></label>
+            <span class="tog-lbl">Banner anzeigen</span>
+            <span class="badge badge-off" id="badge-banner" style="margin-left:auto">Aus</span>
+          </div>
           <div class="field">
-            <label class="lbl">Bild <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Hintergrundbild f&uuml;r den Hero-Bereich</strong>Aktuell wird der Hero textzentriert dargestellt &mdash; das Bild ist optional und kann bei Bedarf sp&auml;ter als dezenter Hintergrund eingebaut werden.<br><br>Max 5 MB. JPG, PNG oder WEBP. Empfohlen: 1600&times;1000px im Querformat.</span></button></label>
-            <div class="img-prev" id="hero-preview"><div class="img-ph">Noch kein Bild hochgeladen</div></div>
+            <label class="fl">Banner-Text <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hinweis-Streifen oben</strong>Erscheint in Grün ganz oben auf der Seite. Emojis erlaubt. Beispiel: <em>🎉 Sommer-Aktion!</em></span></button></label>
+            <input type="text" class="fi" id="cfg-banner_text" placeholder="🎉 Sommer-Aktion: ...">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="fl">Link-Text <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Klickbarer Zusatz</strong>Erscheint unterstrichen nach dem Text. Leer = kein Link. Beispiel: <em>Jetzt sichern</em></span></button></label>
+              <input type="text" class="fi" id="cfg-banner_link_text" placeholder="Jetzt sichern">
+            </div>
+            <div class="field">
+              <label class="fl">Link-URL</label>
+              <input type="text" class="fi" id="cfg-banner_link_url" placeholder="#quiz">
+            </div>
+          </div>
+        </div>
+
+        <!-- HERO -->
+        <div class="spanel" id="spanel-hero">
+          <div class="sec-label">Headline</div>
+          <div class="field">
+            <label class="fl">Zeile 1 (klein) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Einleitungszeile</strong>Schwarze kleinere Schrift über der grünen Hauptbotschaft. Beispiel: <em>Sichere dir deinen Gutschein für ein</em></span></button></label>
+            <input type="text" class="fi" id="cfg-hero_title" placeholder="Sichere dir deinen Gutschein für ein">
+          </div>
+          <div class="field">
+            <label class="fl">Zeile 2 – grün, groß <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hauptbotschaft</strong>Groß, fett, in fitbox-Grün. Das Erste was auffällt.</span></button></label>
+            <input type="text" class="fi" id="cfg-hero_sub" placeholder="GRATIS EMS-Probetraining!">
+          </div>
+          <div class="field">
+            <label class="fl">Check-Zeile ✓ <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Vertrauenssignal</strong>Erscheint mit grünem Häkchen davor. Beispiel: <em>100% kostenlos und unverbindlich!</em></span></button></label>
+            <input type="text" class="fi" id="cfg-hero_check" placeholder="100% kostenlos und unverbindlich testen!">
+          </div>
+          <div class="field">
+            <label class="fl">Beschreibung <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Erklärender Absatz</strong>1-2 Sätze unter dem Hauptheader. HTML erlaubt: <em>&lt;strong&gt;</em> für Fettschrift.</span></button></label>
+            <textarea class="fa" id="cfg-hero_desc" placeholder="In nur &lt;strong&gt;20 Minuten&lt;/strong&gt;..."></textarea>
+          </div>
+          <div class="sec-label">Bild</div>
+          <div class="field">
+            <div class="img-box" id="hero-preview"><div class="img-ph">Kein Bild hochgeladen</div></div>
+            <div class="img-spec-bar"><span class="img-spec-px">1200 × 800 px</span> · JPG/PNG/WEBP · max 5 MB · Querformat</div>
             <div class="upl-row">
               <input type="file" class="upl-input" id="upl-hero_img" accept="image/jpeg,image/png,image/webp">
-              <button class="upl-btn" data-upload="hero_img" data-prev="hero-preview">Bild hochladen</button>
-              <button class="upl-clear" data-clear="hero_img" data-prev="hero-preview" type="button">L&ouml;schen</button>
+              <button class="upl-btn" data-upload="hero_img" type="button">Hochladen</button>
+              <button class="upl-clr" data-clear="hero_img" type="button">Löschen</button>
             </div>
-            <div class="img-spec"><span class="img-spec-px">1200 &times; 800 px</span><span class="img-spec-sep">·</span><span>JPG / PNG / WEBP</span><span class="img-spec-sep">·</span><span>Max 5 MB</span><span class="img-spec-sep">·</span><span>Querformat</span></div>
             <input type="hidden" id="cfg-hero_img">
           </div>
+          <div class="sec-label">Extras</div>
+          <div class="field">
+            <label class="fl">Scarcity (gelbe Box) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Dringlichkeits-Hinweis</strong>Erscheint in gelber Box im Hero. Erzeugt FOMO. Beispiel: <em>⚠️ Nur wenige Plätze!</em></span></button></label>
+            <input type="text" class="fi" id="cfg-scarcity_text" placeholder="⚠️ Nur wenige Plätze pro Monat verfügbar!">
+          </div>
+          <div class="field">
+            <label class="fl">Nav-Button (oben rechts)</label>
+            <input type="text" class="fi" id="cfg-nav_cta_text" placeholder="Jetzt sichern">
+          </div>
         </div>
-        <div class="card">
-          <div class="card-t">Scarcity &amp; Nav</div>
-          <div class="row single"><div class="field">
-            <label class="lbl">Scarcity-Hinweis (gelbe Box) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Verknappungs-Hinweis</strong>Wird in einer gelben Warn-Box unter dem Hero angezeigt. Erzeugt Handlungsdruck (FOMO &mdash; Fear of Missing Out).<br><br>Beispiel: <em>&#9888;&#65039; Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!</em></span></button></label>
-            <input type="text" class="inp" id="cfg-scarcity_text" placeholder="Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!">
-          </div></div>
-          <div class="row single"><div class="field">
-            <label class="lbl">Nav-CTA (oben rechts) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Button-Text in der Navigation</strong>Der gr&uuml;ne Button oben rechts in der Navigationsleiste. Springt beim Klick zum Quiz.<br><br>Beispiel: <em>Jetzt sichern</em></span></button></label>
-            <input type="text" class="inp" id="cfg-nav_cta_text" placeholder="Jetzt sichern">
-          </div></div>
-        </div>
-      </div>
 
-      <div class="panel" id="panel-quiz">
-        <div class="p-t">Quiz-Texte (oben)</div>
-        <div class="p-s">Die Texte im gr&uuml;nen Quiz-Bereich direkt unter dem Hero. Hier startet der Conversion-Flow &mdash; je klarer die Aufforderung, desto h&ouml;her die Klickrate.</div>
-        <div class="card">
-          <div class="card-t">Quiz-Texte</div>
-          <div class="row single"><div class="field">
-            <label class="lbl">CTA-Text (klein, dr&uuml;ber) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Kleiner Hinweis &uuml;ber dem Quiz</strong>Erscheint in gr&uuml;ner Versalschrift &uuml;ber dem Quiz-Titel. Eine Art Etikett oder Eyebrow.<br><br>Beispiel: <em>Klicke auf dein Ziel</em><br>oder: <em>Kostenlos &middot; 60 Sekunden</em></span></button></label>
-            <input type="text" class="inp" id="cfg-quiz_cta" placeholder="Klicke auf dein Ziel">
-          </div></div>
-          <div class="row single"><div class="field">
-            <label class="lbl">Quiz-Titel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Hauptfrage im Quiz</strong>Direkte Frage an den Besucher. Wird in gro&szlig;er Bebas-Schrift angezeigt.<br><br>Beispiel: <em>Was ist dein Ziel?</em></span></button></label>
-            <input type="text" class="inp" id="cfg-quiz_title" placeholder="Was ist dein Ziel?">
-          </div></div>
-          <div class="row single"><div class="field">
-            <label class="lbl">Quiz-Untertitel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Erkl&auml;rung unter der Frage</strong>Gibt Kontext zur Auswahl. Sollte motivieren und die Klick-Aufforderung verst&auml;rken.<br><br>Beispiel: <em>Klicke HIER auf dein Ziel und sichere dir deinen Gutschein!</em></span></button></label>
-            <input type="text" class="inp" id="cfg-quiz_sub" placeholder="Klicke HIER auf dein Ziel...">
-          </div></div>
+        <!-- QUIZ -->
+        <div class="spanel" id="spanel-quiz">
+          <div class="field">
+            <label class="fl">Kleiner Text drüber <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Eyebrow-Text</strong>Kleiner Hinweis über dem Quiz-Titel in Großbuchstaben. Beispiel: <em>Klicke auf dein Ziel</em></span></button></label>
+            <input type="text" class="fi" id="cfg-quiz_cta" placeholder="Klicke auf dein Ziel">
+          </div>
+          <div class="field">
+            <label class="fl">Quiz-Titel <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hauptfrage</strong>Direkte Ansprache in großer Bebas-Schrift. Beispiel: <em>Was ist dein Ziel?</em></span></button></label>
+            <input type="text" class="fi" id="cfg-quiz_title" placeholder="Was ist dein Ziel?">
+          </div>
+          <div class="field">
+            <label class="fl">Untertitel</label>
+            <input type="text" class="fi" id="cfg-quiz_sub" placeholder="Klicke HIER auf dein Ziel...">
+          </div>
         </div>
-      </div>
 
-      <div class="panel" id="panel-goals">
-        <div class="p-t">Ziele &amp; Bilder</div>
-        <div class="p-s">Die 4 Goal-Buttons mit Bildern. <strong>Bilder konvertieren 30-50% besser als Emojis</strong> &mdash; lade eigene Fotos hoch, die zu jedem Ziel passen. Quadratische Bilder sehen am besten aus.</div>
-        <div class="card">
-          <div class="card-t">Ziele verwalten <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>So funktioniert's</strong>Jedes Ziel hat 3 Felder:<br><br><strong>Key (intern):</strong> Wird in der Datenbank gespeichert. Keine Umlaute, keine Leerzeichen. Beispiel: <em>abnehmen</em><br><br><strong>Label:</strong> Was der Besucher sieht. Hier darf alles rein. Beispiel: <em>Abnehmen &amp; Figur straffen</em><br><br><strong>Bild:</strong> Lade ein passendes Foto hoch (max 5MB).</span></button></div>
+        <!-- GOALS -->
+        <div class="spanel" id="spanel-goals">
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Die 4 Ziel-Buttons im Quiz. <strong>Quadratische Bilder (800×800 px)</strong> konvertieren besser als Emojis.</p>
           <div id="goals-container"></div>
-          <button class="add-btn" id="add-goal-btn">+ Ziel hinzuf&uuml;gen</button>
+          <button class="add-btn" id="add-goal-btn" type="button">+ Ziel hinzufügen</button>
         </div>
-      </div>
 
-      <div class="panel" id="panel-stats">
-        <div class="p-t">Stats-Leiste</div>
-        <div class="p-s">Die 4 Kennzahlen im gr&uuml;nen Balken zwischen Quiz und Vorteilen. Zeigt soziale Beweise und beeindruckende Fakten.</div>
-        <div class="card">
-          <div class="card-t">Kennzahlen <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>Stats &amp; Trust-Signals</strong>Jede Zahl hat eine Beschriftung darunter. Wirkt am besten mit konkreten Zahlen.<br><br>Beispiele:<br><em>20</em> &middot; Min. pro Session<br><em>90%</em> &middot; Muskelfasern aktiv<br><em>200+</em> &middot; Zufriedene Mitglieder<br><em>2</em> &middot; Studios Region</span></button></div>
+        <!-- CTAs -->
+        <div class="spanel" id="spanel-ctas">
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">4 Conversion-Buttons verteilt über die Seite. Schalte sie ein/aus und passe den Text an.</p>
+          <div id="ctas-container"></div>
+        </div>
+
+        <!-- STATS -->
+        <div class="spanel" id="spanel-stats">
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Die 4 Kennzahlen im grünen Balken. Konkrete Zahlen wirken besser als vage Aussagen.</p>
           <div id="stats-container"></div>
         </div>
-      </div>
 
-      <div class="panel" id="panel-reviews">
-        <div class="p-t">Bewertungen</div>
-        <div class="p-s">Echte Kundenstimmen erh&ouml;hen die Conversion massiv. <strong>Authentisch ist besser als perfekt</strong> &mdash; Vornamen + Ort wirken vertrauensw&uuml;rdiger als nur "Kunde".</div>
-        <div class="card">
-          <div class="card-t">Bewertungen verwalten <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>So wirken Reviews am besten</strong>3-6 Bewertungen sind optimal.<br><br><strong>Bewertungstext:</strong> 1-3 S&auml;tze, in der Ich-Form. Spezifisch (z.B. "Keine R&uuml;ckenschmerzen mehr") statt allgemein ("super").<br><br><strong>Autor:</strong> Vorname + Ort. Beispiel: <em>Bettina H. aus Memmingen</em></span></button></div>
+        <!-- REVIEWS -->
+        <div class="spanel" id="spanel-reviews">
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Echte Kundenstimmen. <strong>3-6 Reviews</strong> sind optimal. Vorname + Ort wirkt glaubwürdiger.</p>
           <div id="reviews-container"></div>
-          <button class="add-btn" id="add-review-btn">+ Bewertung hinzuf&uuml;gen</button>
+          <button class="add-btn" id="add-review-btn" type="button">+ Bewertung hinzufügen</button>
         </div>
-      </div>
 
-      <div class="panel" id="panel-brand">
-        <div class="p-t">Brand-Hashtags</div>
-        <div class="p-s">Die Hashtag-Slogan-Zeile im schwarzen Block kurz vor dem unteren Formular. Verleiht der Marke eine wiedererkennbare Signatur (wie Berlin: #ImmermitSpa&szlig;).</div>
-        <div class="card">
-          <div class="card-t">Hashtags <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>Brand-Slogan in Hashtag-Form</strong>Wirkt wie ein Social-Media-Slogan und bleibt im Kopf. 3-5 Hashtags sind optimal.<br><br>Das <em>#</em> am Anfang wird automatisch erg&auml;nzt &mdash; du kannst es weglassen oder mitschreiben.<br><br>Beispiele:<br><em>#ImmermitSpa&szlig;</em><br><em>#ImmermitTermin</em><br><em>#ImmermitTrainer</em></span></button></div>
-          <div id="tags-container"></div>
-          <button class="add-btn" id="add-tag-btn">+ Hashtag hinzuf&uuml;gen</button>
-        </div>
-      </div>
-
-      <div class="panel" id="panel-studios">
-        <div class="p-t">Standorte</div>
-        <div class="p-s">Adresse, &Ouml;ffnungszeiten und WhatsApp-Nummern f&uuml;r beide Studios. Die WhatsApp-Buttons leiten Interessenten direkt in den Chat &mdash; ein wichtiger zweiter Conversion-Pfad neben dem Formular.</div>
-        <div class="card">
-          <div class="card-t">Studio-Banner-Bild</div>
+        <!-- STUDIOS -->
+        <div class="spanel" id="spanel-studios">
+          <div class="sec-label">Studio-Banner-Bild</div>
           <div class="field">
-            <label class="lbl">Bild <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Bild &uuml;ber den Studio-Karten</strong>Querformat-Bild mit "MEMMINGEN &amp; SENDEN" Overlay. Idealerweise ein Foto eines Studios oder ein stimmungsvolles Trainings-Foto.<br><br>Max 5MB. Empfohlen: 1600&times;600px im Querformat.</span></button></label>
-            <div class="img-prev" id="studio-preview"><div class="img-ph">Noch kein Bild hochgeladen</div></div>
+            <div class="img-box" id="studio-preview"><div class="img-ph">Kein Bild hochgeladen</div></div>
+            <div class="img-spec-bar"><span class="img-spec-px">1600 × 600 px</span> · JPG/PNG/WEBP · max 5 MB · Querformat</div>
             <div class="upl-row">
               <input type="file" class="upl-input" id="upl-studio_banner_img" accept="image/jpeg,image/png,image/webp">
-              <button class="upl-btn" data-upload="studio_banner_img" data-prev="studio-preview">Bild hochladen</button>
-              <button class="upl-clear" data-clear="studio_banner_img" data-prev="studio-preview" type="button">L&ouml;schen</button>
+              <button class="upl-btn" data-upload="studio_banner_img" type="button">Hochladen</button>
+              <button class="upl-clr" data-clear="studio_banner_img" type="button">Löschen</button>
             </div>
-            <div class="img-spec"><span class="img-spec-px">1600 &times; 600 px</span><span class="img-spec-sep">·</span><span>JPG / PNG / WEBP</span><span class="img-spec-sep">·</span><span>Max 5 MB</span><span class="img-spec-sep">·</span><span>Querformat (breit)</span></div>
             <input type="hidden" id="cfg-studio_banner_img">
           </div>
-        </div>
-        <div class="card">
-          <div class="card-t">fitbox Memmingen</div>
-          <div class="row">
-            <div class="field">
-              <label class="lbl">Adresse <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Studio-Adresse</strong>Wird mit Pin-Symbol auf der Studio-Karte angezeigt. Kurz und klar.<br><br>Beispiel: <em>Memmingen Amendingen</em></span></button></label>
-              <input type="text" class="inp" id="cfg-mem_adresse">
-            </div>
-            <div class="field">
-              <label class="lbl">&Ouml;ffnungszeiten <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>&Ouml;ffnungszeiten oder Hinweis</strong>Da Trainings nur nach Terminvereinbarung stattfinden, reicht oft ein allgemeiner Hinweis.<br><br>Beispiel: <em>Mo&ndash;Fr &amp; nach Vereinbarung</em></span></button></label>
-              <input type="text" class="inp" id="cfg-mem_zeiten">
-            </div>
+          <div class="sec-label">fitbox Memmingen</div>
+          <div class="field"><label class="fl">Adresse</label><input type="text" class="fi" id="cfg-mem_adresse"></div>
+          <div class="field"><label class="fl">Öffnungszeiten</label><input type="text" class="fi" id="cfg-mem_zeiten"></div>
+          <div class="field">
+            <label class="fl">WhatsApp <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Format: 49151...</strong>Mit Ländervorwahl, ohne + oder führende 0. Beispiel: <em>4915730024124</em></span></button></label>
+            <input type="text" class="fi" id="cfg-mem_wa" placeholder="4915730024124">
           </div>
-          <div class="row single"><div class="field">
-            <label class="lbl">WhatsApp-Nummer <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Direkter WhatsApp-Link</strong>Bestimmt den Empf&auml;nger des WhatsApp-Buttons.<br><br><strong>Format:</strong> Mit L&auml;ndervorwahl, ohne <em>+</em> und ohne f&uuml;hrende <em>0</em>.<br><br>Falsch: <em>+49 0151 30024124</em><br>Richtig: <em>4915730024124</em></span></button></label>
-            <input type="text" class="inp" id="cfg-mem_wa">
-            <div class="hint">Format: 49151... (mit L&auml;ndervorwahl, ohne + oder 0)</div>
-          </div></div>
+          <div class="sec-label">fitbox Senden</div>
+          <div class="field"><label class="fl">Adresse</label><input type="text" class="fi" id="cfg-sen_adresse"></div>
+          <div class="field"><label class="fl">Öffnungszeiten</label><input type="text" class="fi" id="cfg-sen_zeiten"></div>
+          <div class="field"><label class="fl">WhatsApp</label><input type="text" class="fi" id="cfg-sen_wa" placeholder="4915561206719"></div>
         </div>
-        <div class="card">
-          <div class="card-t">fitbox Senden</div>
-          <div class="row">
-            <div class="field"><label class="lbl">Adresse</label><input type="text" class="inp" id="cfg-sen_adresse"></div>
-            <div class="field"><label class="lbl">&Ouml;ffnungszeiten</label><input type="text" class="inp" id="cfg-sen_zeiten"></div>
-          </div>
-          <div class="row single"><div class="field">
-            <label class="lbl">WhatsApp-Nummer <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Format wie bei Memmingen</strong>Mit L&auml;ndervorwahl, ohne + oder f&uuml;hrende 0.<br><br>Beispiel: <em>4915561206719</em></span></button></label>
-            <input type="text" class="inp" id="cfg-sen_wa">
-          </div></div>
-        </div>
-      </div>
 
-      <div class="panel" id="panel-form">
-        <div class="p-t">Formular (unten) &amp; CTA</div>
-        <div class="p-s">Texte f&uuml;r das gro&szlig;e Formular am Seitenende sowie die mobile Sticky-Bar (der gr&uuml;ne Balken am unteren Bildschirmrand bei mobilen Ger&auml;ten).</div>
-        <div class="card">
-          <div class="card-t">Unteres Formular</div>
-          <div class="row">
-            <div class="field">
-              <label class="lbl">Titel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>&Uuml;berschrift &uuml;ber dem Formular</strong>Erscheint &uuml;ber dem zweiten gro&szlig;en Formular am Seitenende.<br><br>Beispiel: <em>Gutschein sichern</em></span></button></label>
-              <input type="text" class="inp" id="cfg-form_title" placeholder="Gutschein sichern">
-            </div>
-            <div class="field">
-              <label class="lbl">Untertitel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Beschreibung unter dem Formular-Titel</strong>Kurzer einleitender Satz, der motiviert das Formular auszuf&uuml;llen.<br><br>Beispiel: <em>In 60 Sekunden zu deinem GRATIS EMS-Probetraining.</em></span></button></label>
-              <input type="text" class="inp" id="cfg-form_subtitle">
-            </div>
-          </div>
+        <!-- BRAND -->
+        <div class="spanel" id="spanel-brand">
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Die Hashtag-Signatur im schwarzen Block. 3–5 Tags empfohlen. # wird automatisch ergänzt.</p>
+          <div id="tags-container"></div>
+          <button class="add-btn" id="add-tag-btn" type="button">+ Hashtag hinzufügen</button>
         </div>
-        <div class="card">
-          <div class="card-t">Sticky CTA (Mobile) <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>Mobiler Aktions-Balken</strong>Der gr&uuml;ne Balken, der am unteren Bildschirmrand "klebt", wenn man auf dem Handy nach unten scrollt. Sehr starker Conversion-Treiber.</span></button></div>
-          <div class="row">
-            <div class="field">
-              <label class="lbl">Titel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Wei&szlig;er Titel im Sticky-Balken</strong>Hauptbotschaft, fett.<br><br>Beispiel: <em>Gratis EMS-Probetraining</em></span></button></label>
-              <input type="text" class="inp" id="cfg-sticky_title" placeholder="Gratis EMS-Probetraining">
-            </div>
-            <div class="field">
-              <label class="lbl">Untertitel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Heller Zusatz unter dem Titel</strong>Verst&auml;rkt mit Scarcity oder Vorteil.<br><br>Beispiel: <em>Nur wenige Pl&auml;tze frei!</em></span></button></label>
-              <input type="text" class="inp" id="cfg-sticky_sub">
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="panel" id="panel-links">
-        <div class="p-t">Footer-Links</div>
-        <div class="p-s">URLs f&uuml;r Impressum und Datenschutzerkl&auml;rung. <strong>Rechtlich verpflichtend</strong> &mdash; bitte unbedingt korrekt setzen.</div>
-        <div class="card">
-          <div class="card-t">Rechtliche Links</div>
-          <div class="row">
-            <div class="field">
-              <label class="lbl">Impressum-URL <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Pflichtangabe nach &sect; 5 TMG</strong>Vollst&auml;ndige URL zur Impressum-Seite.<br><br>Beispiel: <em>https://fitbox-memmingen.de/impressum</em></span></button></label>
-              <input type="text" class="inp" id="cfg-impressum_url">
-            </div>
-            <div class="field">
-              <label class="lbl">Datenschutz-URL <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Pflichtangabe nach DSGVO</strong>Vollst&auml;ndige URL zur Datenschutzerkl&auml;rung. Wird auch unter dem Anmeldeformular verlinkt.<br><br>Beispiel: <em>https://fitbox-memmingen.de/datenschutz</em></span></button></label>
-              <input type="text" class="inp" id="cfg-datenschutz_url">
-            </div>
-          </div>
+        <!-- FORM -->
+        <div class="spanel" id="spanel-form">
+          <div class="sec-label">Unteres Formular</div>
+          <div class="field"><label class="fl">Titel</label><input type="text" class="fi" id="cfg-form_title" placeholder="Gutschein sichern"></div>
+          <div class="field"><label class="fl">Untertitel</label><input type="text" class="fi" id="cfg-form_subtitle"></div>
+          <div class="sec-label">Sticky CTA (Mobile) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Grüner Balken unten</strong>Erscheint auf Smartphones wenn man nach unten scrollt. Sehr starker Conversion-Treiber.</span></button></div>
+          <div class="field"><label class="fl">Titel</label><input type="text" class="fi" id="cfg-sticky_title" placeholder="Gratis EMS-Probetraining"></div>
+          <div class="field"><label class="fl">Untertitel</label><input type="text" class="fi" id="cfg-sticky_sub"></div>
         </div>
-      </div>
 
+        <!-- LINKS -->
+        <div class="spanel" id="spanel-links">
+          <p style="font-size:12px;color:var(--r);font-weight:600;margin-bottom:12px">⚠️ Pflichtangaben nach TMG / DSGVO</p>
+          <div class="field"><label class="fl">Impressum-URL</label><input type="text" class="fi" id="cfg-impressum_url" placeholder="https://..."></div>
+          <div class="field"><label class="fl">Datenschutz-URL</label><input type="text" class="fi" id="cfg-datenschutz_url" placeholder="https://..."></div>
+        </div>
+
+      </div>
     </div>
+
+    <!-- PREVIEW PANE -->
+    <div class="preview-pane" id="previewPane">
+      <div class="preview-frame-wrap desktop" id="previewWrap">
+        <div class="preview-browser">
+          <div class="preview-bar">
+            <div class="preview-dots">
+              <div class="preview-dot" style="background:#ff5f57"></div>
+              <div class="preview-dot" style="background:#ffbd2e"></div>
+              <div class="preview-dot" style="background:#28c840"></div>
+            </div>
+            <div class="preview-url">20minuten-fitbox.de</div>
+          </div>
+          <iframe id="previewIframe" src="ems-training.html" class="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+        </div>
+        <div class="preview-loading" id="previewLoading">Vorschau wird aktualisiert...</div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<div id="toast"></div>
+<div class="toast-wrap" id="toastWrap"></div>
 
 <script>
 (function(){
-  'use strict';
-  var ADMIN_PW = 'fitbox2025!';
+'use strict';
+var PW = 'fitbox2025!';
+var SUPA_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+var SUPA_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+var BUCKET = 'landing';
+var cfg = {};
+var saveTimer = null;
+var previewTimer = null;
+var PREVIEW_DELAY = 900; // ms nach letzter Änderung
 
-  function $(id){ return document.getElementById(id); }
-  function qa(sel){ return document.querySelectorAll(sel); }
-  function escHTML(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function escAttr(s){ return String(s==null?'':s).replace(/"/g,'&quot;'); }
+function $(id){ return document.getElementById(id); }
+function q(sel){ return document.querySelector(sel); }
+function qa(sel){ return document.querySelectorAll(sel); }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function ea(s){ return String(s==null?'':s).replace(/"/g,'&quot;'); }
 
-  function doLogin(){
-    if($('loginPw').value === ADMIN_PW){
-      sessionStorage.setItem('adm_auth','1');
-      $('login').style.display = 'none';
-      $('admin').style.display = 'block';
-      loadAndRender();
-    } else {
-      $('loginErr').classList.add('show');
-      setTimeout(function(){ $('loginErr').classList.remove('show'); }, 3000);
-    }
+// ── AUTH ──
+function doLogin(){
+  if($('loginPw').value === PW){
+    sessionStorage.setItem('adm','1');
+    $('login').style.display = 'none';
+    $('app').style.display = 'block';
+    loadConfig();
+  } else {
+    $('loginErr').classList.add('show');
+    setTimeout(function(){ $('loginErr').classList.remove('show'); }, 3000);
   }
+}
+function doLogout(){ sessionStorage.removeItem('adm'); location.reload(); }
 
-  function doLogout(){ sessionStorage.removeItem('adm_auth'); location.reload(); }
+// ── TOAST ──
+function toast(msg, type){
+  var d = document.createElement('div');
+  d.className = 'toast ' + (type||'ok');
+  d.textContent = msg;
+  $('toastWrap').appendChild(d);
+  setTimeout(function(){ d.remove(); }, 3500);
+}
 
-  function showPanel(name){
-    qa('.panel').forEach(function(p){ p.classList.remove('active'); });
-    qa('.side-i').forEach(function(n){ n.classList.remove('active'); });
-    var p = $('panel-'+name); if(p) p.classList.add('active');
-    var n = document.querySelector('[data-panel="'+name+'"]'); if(n) n.classList.add('active');
-  }
+// ── SAVE STATUS ──
+function setSaveStatus(s){
+  var dot = $('saveDot'), lbl = $('saveLabel');
+  dot.className = 'save-dot ' + s;
+  lbl.textContent = s === 'saving' ? 'Speichert...' : s === 'saved' ? 'Gespeichert' : 'Fehler';
+}
 
-  var currentConfig = {};
+// ── SUPABASE HELPERS ──
+function supaHeaders(){
+  return {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
+}
 
-  var SUPA_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
-  var SUPA_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
-  var BUCKET = 'landing';
-
-  function supaHeaders(){
-    return {
-      'Content-Type': 'application/json',
-      'apikey': SUPA_KEY,
-      'Authorization': 'Bearer ' + SUPA_KEY
-    };
-  }
-
-  function loadAndRender(){
-    fetch(SUPA_URL + '/rest/v1/landing_config?id=eq.main&select=config', {
-      headers: supaHeaders()
-    })
+// ── LOAD ──
+function loadConfig(){
+  fetch(SUPA_URL+'/rest/v1/landing_config?id=eq.main&select=config', {headers:supaHeaders()})
     .then(function(r){ return r.ok ? r.json() : []; })
     .then(function(rows){
-      currentConfig = (rows && rows[0] && rows[0].config) ? rows[0].config : {};
-      renderForm();
+      cfg = (rows && rows[0] && rows[0].config) ? rows[0].config : {};
+      renderAll();
+      setSaveStatus('saved');
     })
-    .catch(function(err){
-      console.error('Load error:', err);
-      currentConfig = {};
-      renderForm();
-      showToast('Konnte Konfiguration nicht laden', 'error');
+    .catch(function(){ toast('Konfiguration konnte nicht geladen werden','err'); });
+}
+
+// ── SAVE ──
+function saveConfig(){
+  var config = readAll();
+  setSaveStatus('saving');
+  $('saveBtn').disabled = true;
+  fetch(SUPA_URL+'/rest/v1/landing_config?id=eq.main', {
+    method:'PATCH',
+    headers:Object.assign(supaHeaders(),{'Prefer':'return=minimal'}),
+    body:JSON.stringify({config:config, updated_at:new Date().toISOString()})
+  }).then(function(r){
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    cfg = config;
+    setSaveStatus('saved');
+    toast('Gespeichert! Seite ist sofort aktualisiert.');
+    refreshPreview();
+  }).catch(function(err){
+    setSaveStatus('error');
+    toast('Fehler beim Speichern: '+err.message,'err');
+  }).then(function(){ $('saveBtn').disabled = false; });
+}
+
+// ── PREVIEW ──
+function schedulePreview(){
+  clearTimeout(previewTimer);
+  setSaveStatus('saving');
+  previewTimer = setTimeout(function(){
+    saveConfig();
+  }, PREVIEW_DELAY);
+}
+
+function refreshPreview(){
+  var iframe = $('previewIframe');
+  if(!iframe) return;
+  $('previewLoading').classList.add('show');
+  iframe.src = iframe.src.split('?')[0] + '?t=' + Date.now();
+  iframe.onload = function(){ $('previewLoading').classList.remove('show'); };
+}
+
+// ── READ ALL ──
+function readAll(){
+  var c = {};
+  var simpleFields = [
+    'banner_text','banner_link_text','banner_link_url',
+    'nav_cta_text','hero_title','hero_sub','hero_check','hero_desc','hero_img','scarcity_text',
+    'quiz_cta','quiz_title','quiz_sub',
+    'studio_banner_img','mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
+    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle'
+  ];
+  simpleFields.forEach(function(k){
+    var el = $('cfg-'+k); if(el) c[k] = el.value.trim();
+  });
+  c.banner_active = $('cfg-banner_active').checked;
+  c.goals = readGoals();
+  c.stats = readStats();
+  c.reviews = readReviews();
+  c.brand_tags = readTags();
+  c.ctas = readCtas();
+  return c;
+}
+
+// ── RENDER ALL ──
+function renderAll(){
+  var simpleFields = [
+    'banner_text','banner_link_text','banner_link_url',
+    'nav_cta_text','hero_title','hero_sub','hero_check','hero_desc','hero_img','scarcity_text',
+    'quiz_cta','quiz_title','quiz_sub',
+    'studio_banner_img','mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
+    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle'
+  ];
+  simpleFields.forEach(function(k){
+    var el = $('cfg-'+k);
+    if(el && cfg[k] != null) el.value = cfg[k];
+  });
+  var ba = $('cfg-banner_active');
+  if(ba){ ba.checked = !!cfg.banner_active; updateBannerBadge(); }
+  if(cfg.hero_img) previewImg('hero-preview', cfg.hero_img);
+  if(cfg.studio_banner_img) previewImg('studio-preview', cfg.studio_banner_img);
+  renderGoals(cfg.goals || []);
+  renderStats(cfg.stats || [{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}]);
+  renderReviews(cfg.reviews || []);
+  renderTags(cfg.brand_tags || ['#ImmermitSpaß','#ImmermitTermin','#ImmermitTrainer']);
+  renderCtas(cfg.ctas || [
+    {active:true, title:'Jetzt kostenloses Probetraining vereinbaren!', btn:'Gutschein sichern →'},
+    {active:true, title:'Starte noch diese Woche mit EMS!', btn:'Termin jetzt sichern →'},
+    {active:false, title:'', btn:''},
+    {active:true, title:'Jetzt kostenloses Probetraining vereinbaren!', btn:'Gutschein sichern →'}
+  ]);
+}
+
+function updateBannerBadge(){
+  var active = $('cfg-banner_active').checked;
+  var b = $('badge-banner');
+  b.textContent = active ? 'An' : 'Aus';
+  b.className = 'badge ' + (active ? 'badge-on' : 'badge-off');
+}
+
+// ── IMAGE PREVIEW ──
+function previewImg(id, src){
+  var c = $(id); if(!c) return;
+  c.innerHTML = src ? '<img src="'+ea(src)+'" onerror="this.parentElement.innerHTML=\'<div class=img-ph>Bild nicht ladbar</div>\'" alt="">' : '<div class="img-ph">Kein Bild hochgeladen</div>';
+}
+
+// ── UPLOAD ──
+function bindUpload(key, prevId){
+  var fileInput = $('upl-'+key);
+  var hidden = $('cfg-'+key);
+  var uploadBtn = q('[data-upload="'+key+'"]');
+  var clearBtn = q('[data-clear="'+key+'"]');
+  var prevBox = $(prevId);
+  if(!fileInput || !uploadBtn) return;
+  uploadBtn.addEventListener('click', function(){ fileInput.click(); });
+  fileInput.addEventListener('change', function(){
+    var file = this.files[0]; if(!file) return;
+    uploadFile(file, function(url){
+      if(url){ hidden.value = url; previewImg(prevId, url); schedulePreview(); }
+    }, prevBox, uploadBtn);
+  });
+  if(clearBtn) clearBtn.addEventListener('click', function(){
+    hidden.value = ''; previewImg(prevId, ''); schedulePreview();
+  });
+}
+
+function uploadFile(file, onDone, prevBox, btn){
+  if(file.size > 5*1024*1024){ toast('Datei zu groß (max 5MB)', 'err'); onDone(null); return; }
+  var allowed = ['image/jpeg','image/jpg','image/png','image/webp'];
+  if(allowed.indexOf(file.type) === -1){ toast('Nur JPG, PNG oder WEBP erlaubt', 'err'); onDone(null); return; }
+  var ext = file.name.split('.').pop().toLowerCase();
+  var name = Date.now()+'_'+Math.random().toString(36).substr(2,6)+'.'+ext;
+  var oldHTML = prevBox ? prevBox.innerHTML : null;
+  if(prevBox) prevBox.innerHTML = '<div class="upl-prog">Lädt hoch...</div>';
+  if(btn){ btn.disabled = true; btn.textContent = 'Lädt...'; }
+  fetch(SUPA_URL+'/storage/v1/object/'+BUCKET+'/'+name, {
+    method:'POST',
+    headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':file.type,'x-upsert':'false'},
+    body:file
+  }).then(function(r){ if(!r.ok) return r.json().then(function(e){ throw new Error(e.message||'HTTP '+r.status); }); return r.json(); })
+  .then(function(){
+    var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+name;
+    toast('Bild hochgeladen!');
+    onDone(url);
+  }).catch(function(err){
+    toast('Upload fehlgeschlagen: '+err.message,'err');
+    if(prevBox && oldHTML !== null) prevBox.innerHTML = oldHTML;
+    onDone(null);
+  }).then(function(){
+    if(btn){ btn.disabled = false; btn.textContent = 'Hochladen'; }
+  });
+}
+
+// ── GOALS ──
+function renderGoals(goals){ var c = $('goals-container'); c.innerHTML = ''; goals.forEach(function(g){ addGoalEl(g); }); }
+function addGoalEl(g){
+  var c = $('goals-container');
+  var d = document.createElement('div'); d.className = 'item';
+  var img = (g && g.img) || '';
+  var uid = 'gi-'+Math.random().toString(36).substr(2,8);
+  d.innerHTML =
+    '<button class="item-del" type="button">&times;</button>'+
+    '<div class="field-row">'+
+      '<div class="field"><label class="fl">Key (intern)</label><input type="text" class="fi" data-goal-key value="'+ea((g&&g.key)||'')+'" placeholder="abnehmen"></div>'+
+      '<div class="field"><label class="fl">Label</label><input type="text" class="fi" data-goal-label value="'+ea((g&&g.label)||'')+'" placeholder="Abnehmen &amp; Figur straffen"></div>'+
+    '</div>'+
+    '<div class="field"><label class="fl">Bild</label>'+
+    '<div class="img-box" style="height:80px" data-prev-box>'+( img ? '<img src="'+ea(img)+'">' : '<div class="img-ph">Kein Bild</div>' )+'</div>'+
+    '<div class="img-spec-bar"><span class="img-spec-px">800 × 800 px</span> · Quadratisch · max 5 MB</div>'+
+    '<input type="hidden" data-goal-img value="'+ea(img)+'">'+
+    '<input type="file" class="upl-input" id="'+uid+'" accept="image/jpeg,image/png,image/webp">'+
+    '<div class="upl-row"><button class="upl-btn" data-gi-upl="'+uid+'" type="button">Hochladen</button><button class="upl-clr" data-gi-clr type="button">Löschen</button></div>'+
+    '</div>';
+  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); schedulePreview(); });
+  var fi = d.querySelector('#'+uid);
+  var ub = d.querySelector('[data-gi-upl]');
+  var cb = d.querySelector('[data-gi-clr]');
+  var pb = d.querySelector('[data-prev-box]');
+  var hi = d.querySelector('[data-goal-img]');
+  ub.addEventListener('click', function(){ fi.click(); });
+  fi.addEventListener('change', function(){
+    var f = this.files[0]; if(!f) return;
+    uploadFile(f, function(url){ if(url){ hi.value = url; pb.innerHTML = '<img src="'+ea(url)+'">'; schedulePreview(); } }, pb, ub);
+  });
+  cb.addEventListener('click', function(){ hi.value = ''; pb.innerHTML = '<div class="img-ph">Kein Bild</div>'; schedulePreview(); });
+  d.querySelectorAll('input[type=text]').forEach(function(inp){ inp.addEventListener('input', schedulePreview); });
+  c.appendChild(d);
+}
+function readGoals(){
+  var r = [];
+  qa('#goals-container .item').forEach(function(el){
+    var key = el.querySelector('[data-goal-key]').value.trim();
+    var label = el.querySelector('[data-goal-label]').value.trim();
+    var img = el.querySelector('[data-goal-img]').value.trim();
+    if(key && label) r.push({key:key, label:label, img:img});
+  });
+  return r;
+}
+
+// ── CTAS ──
+var CTA_POS = ['Nach Bewertungen','Nach 3-Schritt-Anleitung','Nach Studios','Vor unterem Formular'];
+function renderCtas(ctas){
+  var c = $('ctas-container'); c.innerHTML = '';
+  for(var i=0; i<4; i++){ addCtaEl(i, ctas[i] || {active:false,title:'',btn:''}); }
+}
+function addCtaEl(idx, cta){
+  var c = $('ctas-container');
+  var d = document.createElement('div'); d.className = 'cta-item';
+  d.innerHTML =
+    '<div class="cta-num"><span>'+(idx+1)+'</span> Position: '+CTA_POS[idx]+'</div>'+
+    '<div class="tog-row" style="margin-bottom:10px">'+
+      '<label class="tog"><input type="checkbox" data-cta-active '+(cta.active?'checked':'')+'><span class="tog-track"></span></label>'+
+      '<span class="tog-lbl">Anzeigen</span>'+
+    '</div>'+
+    '<div class="field"><label class="fl">Überschrift (optional)</label><input type="text" class="fi" data-cta-title value="'+ea(cta.title||'')+'" placeholder="Jetzt kostenloses Probetraining vereinbaren!"></div>'+
+    '<div class="field"><label class="fl">Button-Text *</label><input type="text" class="fi" data-cta-btn value="'+ea(cta.btn||'')+'" placeholder="Gutschein sichern →"></div>';
+  d.querySelectorAll('input').forEach(function(inp){ inp.addEventListener('change', schedulePreview); inp.addEventListener('input', schedulePreview); });
+  c.appendChild(d);
+}
+function readCtas(){
+  var r = [];
+  qa('#ctas-container .cta-item').forEach(function(el){
+    r.push({
+      active: el.querySelector('[data-cta-active]').checked,
+      title: el.querySelector('[data-cta-title]').value.trim(),
+      btn: el.querySelector('[data-cta-btn]').value.trim()
     });
+  });
+  return r;
+}
+
+// ── STATS ──
+function renderStats(stats){
+  var c = $('stats-container'); c.innerHTML = '';
+  stats.forEach(function(s,i){
+    var d = document.createElement('div'); d.className = 'stat-row';
+    d.innerHTML = '<div class="field"><label class="fl">Zahl</label><input type="text" class="fi" data-stat="'+i+'" data-fld="num" value="'+ea(s.num)+'" placeholder="20"></div>'+
+                  '<div class="field"><label class="fl">Beschriftung</label><input type="text" class="fi" data-stat="'+i+'" data-fld="label" value="'+ea(s.label)+'" placeholder="Min. pro Session"></div>';
+    d.querySelectorAll('input').forEach(function(inp){ inp.addEventListener('input', schedulePreview); });
+    c.appendChild(d);
+  });
+}
+function readStats(){
+  var r = [];
+  qa('[data-stat]').forEach(function(el){
+    var i = parseInt(el.getAttribute('data-stat'),10);
+    if(!r[i]) r[i] = {};
+    r[i][el.getAttribute('data-fld')] = el.value.trim();
+  });
+  return r.filter(Boolean);
+}
+
+// ── REVIEWS ──
+function renderReviews(reviews){ var c = $('reviews-container'); c.innerHTML = ''; reviews.forEach(function(r){ addReviewEl(r); }); }
+function addReviewEl(r){
+  var c = $('reviews-container');
+  var d = document.createElement('div'); d.className = 'item';
+  d.innerHTML = '<button class="item-del" type="button">&times;</button>'+
+    '<div class="field"><label class="fl">Text</label><textarea class="fa" data-rev-text rows="2">'+esc((r&&r.text)||'')+'</textarea></div>'+
+    '<div class="field"><label class="fl">Autor</label><input type="text" class="fi" data-rev-author value="'+ea((r&&r.author)||'')+'" placeholder="Max M. aus Memmingen"></div>';
+  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); schedulePreview(); });
+  d.querySelectorAll('input,textarea').forEach(function(inp){ inp.addEventListener('input', schedulePreview); });
+  c.appendChild(d);
+}
+function readReviews(){
+  var r = [];
+  qa('#reviews-container .item').forEach(function(el){
+    var t = el.querySelector('[data-rev-text]').value.trim();
+    var a = el.querySelector('[data-rev-author]').value.trim();
+    if(t||a) r.push({text:t, author:a});
+  });
+  return r;
+}
+
+// ── TAGS ──
+function renderTags(tags){ var c = $('tags-container'); c.innerHTML = ''; tags.forEach(function(t){ addTagEl(t); }); }
+function addTagEl(t){
+  var c = $('tags-container');
+  var d = document.createElement('div'); d.className = 'item'; d.style.padding = '10px 12px';
+  d.innerHTML = '<button class="item-del" type="button">&times;</button>'+
+    '<div class="field" style="margin:0"><label class="fl">Hashtag</label><input type="text" class="fi" data-tag value="'+ea(t||'')+'" placeholder="#ImmermitSpaß"></div>';
+  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); schedulePreview(); });
+  d.querySelector('[data-tag]').addEventListener('input', schedulePreview);
+  c.appendChild(d);
+}
+function readTags(){
+  var r = [];
+  qa('[data-tag]').forEach(function(el){
+    var v = el.value.trim();
+    if(v){ if(v[0]!=='#') v='#'+v; r.push(v); }
+  });
+  return r;
+}
+
+// ── PREVIEW MODE ──
+function setPreviewMode(mode){
+  var wrap = $('previewWrap');
+  wrap.className = 'preview-frame-wrap ' + mode;
+  $('prevDesk').classList.toggle('active', mode === 'desktop');
+  $('prevMob').classList.toggle('active', mode === 'mobile');
+}
+
+// ── NAV ──
+function showPanel(name){
+  qa('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-panel') === name); });
+  qa('.spanel').forEach(function(p){ p.classList.toggle('active', p.id === 'spanel-'+name); });
+}
+
+// ── LIVE PREVIEW: inject config into iframe ──
+function injectConfigIntoPreview(){
+  var iframe = $('previewIframe');
+  if(!iframe || !iframe.contentWindow) return;
+  var config = readAll();
+  try {
+    iframe.contentWindow.postMessage({type:'fitbox-config-update', config:config}, '*');
+  } catch(e){}
+}
+
+// ── BINDINGS ──
+function bindAll(){
+  $('loginBtn').addEventListener('click', doLogin);
+  $('loginPw').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  $('logoutBtn').addEventListener('click', doLogout);
+  $('saveBtn').addEventListener('click', saveConfig);
+  $('openSiteBtn').addEventListener('click', function(){ window.open('ems-training.html','_blank'); });
+  $('prevDesk').addEventListener('click', function(){ setPreviewMode('desktop'); });
+  $('prevMob').addEventListener('click', function(){ setPreviewMode('mobile'); });
+  $('cfg-banner_active').addEventListener('change', function(){ updateBannerBadge(); schedulePreview(); });
+  qa('.snav-btn').forEach(function(b){
+    b.addEventListener('click', function(){ showPanel(b.getAttribute('data-panel')); });
+  });
+  $('add-goal-btn').addEventListener('click', function(){ addGoalEl({}); });
+  $('add-review-btn').addEventListener('click', function(){ addReviewEl({}); });
+  $('add-tag-btn').addEventListener('click', function(){ addTagEl(''); });
+  bindUpload('hero_img', 'hero-preview');
+  bindUpload('studio_banner_img', 'studio-preview');
+
+  // Auto-save on any simple field change
+  var autoFields = [
+    'banner_text','banner_link_text','banner_link_url',
+    'nav_cta_text','hero_title','hero_sub','hero_check','hero_desc','scarcity_text',
+    'quiz_cta','quiz_title','quiz_sub',
+    'mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
+    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle'
+  ];
+  autoFields.forEach(function(k){
+    var el = $('cfg-'+k);
+    if(el) el.addEventListener('input', schedulePreview);
+  });
+
+  // Listen for iframe loaded — inject config
+  $('previewIframe').addEventListener('load', function(){
+    $('previewLoading').classList.remove('show');
+    setTimeout(injectConfigIntoPreview, 300);
+  });
+}
+
+function init(){
+  bindAll();
+  if(sessionStorage.getItem('adm')==='1'){
+    $('login').style.display='none';
+    $('app').style.display='block';
+    loadConfig();
   }
+}
 
-  function renderForm(){
-    var c = currentConfig;
-    var fields = [
-      'banner_text','banner_link_text','banner_link_url',
-      'nav_cta_text',
-      'hero_title','hero_sub','hero_check','hero_desc','hero_img','scarcity_text',
-      'quiz_cta','quiz_title','quiz_sub',
-      'studio_banner_img',
-      'mem_adresse','mem_zeiten','mem_wa',
-      'sen_adresse','sen_zeiten','sen_wa',
-      'sticky_title','sticky_sub',
-      'impressum_url','datenschutz_url',
-      'form_title','form_subtitle'
-    ];
-    fields.forEach(function(k){
-      var el = $('cfg-'+k);
-      if(el && c[k] != null) el.value = c[k];
-    });
-
-    var ba = $('cfg-banner_active');
-    if(ba){ ba.checked = !!c.banner_active; updateBannerBadge(); }
-
-    if(c.hero_img) previewImg('hero-preview', c.hero_img);
-    if(c.studio_banner_img) previewImg('studio-preview', c.studio_banner_img);
-
-    renderStats(c.stats || [
-      {num:'20', label:'Min. pro Session'},
-      {num:'90%', label:'Muskelfasern aktiv'},
-      {num:'200+', label:'Zufriedene Mitglieder'},
-      {num:'2', label:'Studios Region'}
-    ]);
-    renderReviews(c.reviews || []);
-    renderGoals(c.goals || []);
-    renderTags(c.brand_tags || ['#ImmermitSpa\u00df','#ImmermitTermin','#ImmermitTrainer']);
-  }
-
-  // ============ STATS ============
-  function renderStats(stats){
-    var c = $('stats-container');
-    c.innerHTML = '';
-    stats.forEach(function(s,i){
-      var div = document.createElement('div');
-      div.className = 'stat-i';
-      div.innerHTML =
-        '<div class="field"><label class="lbl">Zahl '+(i+1)+'</label>'+
-        '<input type="text" class="inp" data-stat="'+i+'" data-fld="num" value="'+escAttr(s.num)+'"></div>'+
-        '<div class="field"><label class="lbl">Beschriftung '+(i+1)+'</label>'+
-        '<input type="text" class="inp" data-stat="'+i+'" data-fld="label" value="'+escAttr(s.label)+'"></div>';
-      c.appendChild(div);
-    });
-  }
-
-  function readStats(){
-    var result = [];
-    qa('[data-stat]').forEach(function(el){
-      var i = parseInt(el.getAttribute('data-stat'),10);
-      if(!result[i]) result[i] = {};
-      result[i][el.getAttribute('data-fld')] = el.value.trim();
-    });
-    return result.filter(Boolean);
-  }
-
-  // ============ GOALS ============
-  function renderGoals(goals){
-    var c = $('goals-container');
-    c.innerHTML = '';
-    goals.forEach(function(g){ addGoalEl(g); });
-  }
-
-  function addGoalEl(g){
-    var c = $('goals-container');
-    var div = document.createElement('div');
-    div.className = 'goal-i';
-    var img = (g && g.img) || '';
-    var uid = 'goal-img-' + Math.random().toString(36).substr(2, 9);
-    div.innerHTML =
-      '<button class="goal-del" title="Entfernen">&times;</button>'+
-      '<div class="row">'+
-        '<div class="field"><label class="lbl">Key (intern)</label>'+
-        '<input type="text" class="inp" data-goal-key value="'+escAttr((g && g.key) || '')+'" placeholder="abnehmen"></div>'+
-        '<div class="field"><label class="lbl">Label (wird angezeigt)</label>'+
-        '<input type="text" class="inp" data-goal-label value="'+escAttr((g && g.label) || '')+'" placeholder="Abnehmen &amp; Figur straffen"></div>'+
-      '</div>'+
-      '<div class="field" style="margin-top:8px"><label class="lbl">Bild</label>'+
-      '<input type="hidden" data-goal-img value="'+escAttr(img)+'">'+
-      '<div class="goal-img-prev" data-prev-box>' + (img ? '<img src="'+escAttr(img)+'">' : '<div class="img-ph">Noch kein Bild hochgeladen</div>') + '</div>'+
-      '<div class="upl-row">'+
-        '<input type="file" class="upl-input" id="'+uid+'" accept="image/jpeg,image/png,image/webp">'+
-        '<button class="upl-btn" data-goal-upload="'+uid+'" type="button">Bild hochladen</button>'+
-        '<button class="upl-clear" data-goal-clear type="button">L&ouml;schen</button>'+
-      '</div>'+
-      '<div class="img-spec"><span class="img-spec-px">800 &times; 800 px</span><span class="img-spec-sep">&middot;</span><span>JPG / PNG / WEBP</span><span class="img-spec-sep">&middot;</span><span>Max 5 MB</span><span class="img-spec-sep">&middot;</span><span>Quadratisch</span></div>'+
-      '</div>';
-    div.querySelector('.goal-del').addEventListener('click', function(){ div.remove(); });
-
-    var fileInput = div.querySelector('#'+uid);
-    var uploadBtn = div.querySelector('[data-goal-upload]');
-    var clearBtn = div.querySelector('[data-goal-clear]');
-    var prevBox = div.querySelector('[data-prev-box]');
-    var hiddenInp = div.querySelector('[data-goal-img]');
-
-    uploadBtn.addEventListener('click', function(){ fileInput.click(); });
-    fileInput.addEventListener('change', function(){
-      var file = this.files[0];
-      if(!file) return;
-      uploadImageToSupabase(file, function(url){
-        if(url){
-          hiddenInp.value = url;
-          prevBox.innerHTML = '<img src="'+escAttr(url)+'">';
-        }
-      }, prevBox, uploadBtn);
-    });
-    clearBtn.addEventListener('click', function(){
-      hiddenInp.value = '';
-      prevBox.innerHTML = '<div class="img-ph">Noch kein Bild hochgeladen</div>';
-    });
-
-    c.appendChild(div);
-  }
-
-  function readGoals(){
-    var result = [];
-    qa('.goal-i').forEach(function(el){
-      var key = el.querySelector('[data-goal-key]').value.trim();
-      var label = el.querySelector('[data-goal-label]').value.trim();
-      var img = el.querySelector('[data-goal-img]').value.trim();
-      if(key && label) result.push({key:key, label:label, img:img});
-    });
-    return result;
-  }
-
-  // ============ REVIEWS ============
-  function renderReviews(reviews){
-    var c = $('reviews-container');
-    c.innerHTML = '';
-    reviews.forEach(function(r){ addReviewEl(r); });
-  }
-
-  function addReviewEl(r){
-    var c = $('reviews-container');
-    var div = document.createElement('div');
-    div.className = 'rev-i';
-    div.innerHTML =
-      '<button class="rev-del" title="Entfernen">&times;</button>'+
-      '<div class="field" style="margin-bottom:8px"><label class="lbl">Bewertungstext</label>'+
-      '<textarea class="ta" data-rev-text rows="3">'+escHTML((r && r.text) || '')+'</textarea></div>'+
-      '<div class="field"><label class="lbl">Autor</label>'+
-      '<input type="text" class="inp" data-rev-author value="'+escAttr((r && r.author) || '')+'"></div>';
-    div.querySelector('.rev-del').addEventListener('click', function(){ div.remove(); });
-    c.appendChild(div);
-  }
-
-  function readReviews(){
-    var result = [];
-    qa('.rev-i').forEach(function(el){
-      var t = el.querySelector('[data-rev-text]').value.trim();
-      var a = el.querySelector('[data-rev-author]').value.trim();
-      if(t || a) result.push({text:t, author:a});
-    });
-    return result;
-  }
-
-  // ============ TAGS ============
-  function renderTags(tags){
-    var c = $('tags-container');
-    c.innerHTML = '';
-    tags.forEach(function(t){ addTagEl(t); });
-  }
-
-  function addTagEl(t){
-    var c = $('tags-container');
-    var div = document.createElement('div');
-    div.className = 'tag-i';
-    div.innerHTML =
-      '<button class="tag-del" title="Entfernen">&times;</button>'+
-      '<div class="field"><label class="lbl">Hashtag</label>'+
-      '<input type="text" class="inp" data-tag value="'+escAttr(t || '')+'" placeholder="#ImmermitSpa&szlig;">'+
-      '<div class="hint"># wird automatisch erg&auml;nzt falls nicht vorhanden.</div></div>';
-    div.querySelector('.tag-del').addEventListener('click', function(){ div.remove(); });
-    c.appendChild(div);
-  }
-
-  function readTags(){
-    var result = [];
-    qa('[data-tag]').forEach(function(el){
-      var v = el.value.trim();
-      if(v){
-        if(v[0] !== '#') v = '#' + v;
-        result.push(v);
-      }
-    });
-    return result;
-  }
-
-  // ============ BANNER & PREVIEW ============
-  function updateBannerBadge(){
-    var active = $('cfg-banner_active').checked;
-    var badge = $('badge-banner');
-    badge.textContent = active ? 'Aktiv' : 'Deaktiviert';
-    badge.className = 'badge ' + (active ? 'b-green' : 'b-red');
-  }
-
-  function previewImg(containerId, src){
-    var c = $(containerId);
-    if(!c) return;
-    if(src){
-      c.innerHTML = '<img src="'+escAttr(src)+'" onerror="this.parentElement.innerHTML=\'<div class=img-ph>Bild nicht ladbar</div>\'" alt="">';
-    } else {
-      c.innerHTML = '<div class="img-ph">Noch kein Bild hochgeladen</div>';
-    }
-  }
-
-  // ============ SUPABASE STORAGE UPLOAD ============
-  function uploadImageToSupabase(file, onDone, prevBox, btn){
-    if(!file){ onDone(null); return; }
-    if(file.size > 5 * 1024 * 1024){
-      showToast('Datei zu gro\u00df (max 5MB).', 'error');
-      onDone(null); return;
-    }
-    var allowed = ['image/jpeg','image/jpg','image/png','image/webp'];
-    if(allowed.indexOf(file.type) === -1){
-      showToast('Format nicht erlaubt. Nur JPG, PNG oder WEBP.', 'error');
-      onDone(null); return;
-    }
-
-    // Filename: timestamp_originalname (Umlaute/Sonderzeichen raus)
-    var safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
-    var ext = safeName.split('.').pop();
-    var filename = Date.now() + '_' + Math.random().toString(36).substr(2, 6) + '.' + ext;
-
-    // Progress-Anzeige in Preview-Box
-    var oldHTML = prevBox ? prevBox.innerHTML : null;
-    if(prevBox) prevBox.innerHTML = '<div class="upl-progress">L\u00e4dt hoch...</div>';
-    if(btn){ btn.disabled = true; btn.textContent = 'L\u00e4dt...'; }
-
-    var uploadUrl = SUPA_URL + '/storage/v1/object/' + BUCKET + '/' + filename;
-
-    fetch(uploadUrl, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPA_KEY,
-        'Authorization': 'Bearer ' + SUPA_KEY,
-        'Content-Type': file.type,
-        'x-upsert': 'false'
-      },
-      body: file
-    })
-    .then(function(r){
-      if(!r.ok){ return r.json().then(function(err){ throw new Error(err.message || ('HTTP '+r.status)); }); }
-      return r.json();
-    })
-    .then(function(){
-      var publicUrl = SUPA_URL + '/storage/v1/object/public/' + BUCKET + '/' + filename;
-      showToast('Bild hochgeladen!', 'success');
-      onDone(publicUrl);
-    })
-    .catch(function(err){
-      console.error('Upload error:', err);
-      showToast('Upload fehlgeschlagen: ' + err.message, 'error');
-      if(prevBox && oldHTML !== null) prevBox.innerHTML = oldHTML;
-      onDone(null);
-    })
-    .then(function(){
-      if(btn){ btn.disabled = false; btn.textContent = 'Bild hochladen'; }
-    });
-  }
-
-  // ============ SAVE ============
-  function saveConfig(){
-    var btn = $('saveBtn');
-    btn.disabled = true; btn.textContent = 'Speichern...';
-
-    var config = {
-      banner_active: $('cfg-banner_active').checked,
-      banner_text: $('cfg-banner_text').value.trim(),
-      banner_link_text: $('cfg-banner_link_text').value.trim(),
-      banner_link_url: $('cfg-banner_link_url').value.trim(),
-      nav_cta_text: $('cfg-nav_cta_text').value.trim(),
-      hero_title: $('cfg-hero_title').value.trim(),
-      hero_sub: $('cfg-hero_sub').value.trim(),
-      hero_check: $('cfg-hero_check').value.trim(),
-      hero_desc: $('cfg-hero_desc').value.trim(),
-      hero_img: $('cfg-hero_img').value.trim(),
-      scarcity_text: $('cfg-scarcity_text').value.trim(),
-      quiz_cta: $('cfg-quiz_cta').value.trim(),
-      quiz_title: $('cfg-quiz_title').value.trim(),
-      quiz_sub: $('cfg-quiz_sub').value.trim(),
-      goals: readGoals(),
-      stats: readStats(),
-      studio_banner_img: $('cfg-studio_banner_img').value.trim(),
-      mem_adresse: $('cfg-mem_adresse').value.trim(),
-      mem_zeiten: $('cfg-mem_zeiten').value.trim(),
-      mem_wa: $('cfg-mem_wa').value.trim(),
-      sen_adresse: $('cfg-sen_adresse').value.trim(),
-      sen_zeiten: $('cfg-sen_zeiten').value.trim(),
-      sen_wa: $('cfg-sen_wa').value.trim(),
-      reviews: readReviews(),
-      brand_tags: readTags(),
-      sticky_title: $('cfg-sticky_title').value.trim(),
-      sticky_sub: $('cfg-sticky_sub').value.trim(),
-      impressum_url: $('cfg-impressum_url').value.trim(),
-      datenschutz_url: $('cfg-datenschutz_url').value.trim(),
-      form_title: $('cfg-form_title').value.trim(),
-      form_subtitle: $('cfg-form_subtitle').value.trim()
-    };
-
-    fetch(SUPA_URL + '/rest/v1/landing_config?id=eq.main', {
-      method: 'PATCH',
-      headers: Object.assign(supaHeaders(), {'Prefer': 'return=minimal'}),
-      body: JSON.stringify({ config: config, updated_at: new Date().toISOString() })
-    }).then(function(r){
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      currentConfig = config;
-      showToast('Gespeichert! Seite ist sofort aktualisiert.', 'success');
-    }).catch(function(err){
-      console.error('Save error:', err);
-      showToast('Speichern fehlgeschlagen: ' + (err.message || 'Netzwerkfehler'), 'error');
-    }).then(function(){
-      btn.disabled = false; btn.textContent = 'Speichern';
-    });
-  }
-
-  function showToast(msg, type){
-    var t = $('toast');
-    t.textContent = msg;
-    t.className = 'show ' + (type || '');
-    setTimeout(function(){ t.className = ''; }, 4500);
-  }
-
-  function bindUpload(fieldKey, prevId){
-    var fileInput = $('upl-'+fieldKey);
-    var hiddenInp = $('cfg-'+fieldKey);
-    var uploadBtn = document.querySelector('[data-upload="'+fieldKey+'"]');
-    var clearBtn = document.querySelector('[data-clear="'+fieldKey+'"]');
-    var prevBox = $(prevId);
-    if(!fileInput || !uploadBtn || !prevBox) return;
-
-    uploadBtn.addEventListener('click', function(){ fileInput.click(); });
-    fileInput.addEventListener('change', function(){
-      var file = this.files[0];
-      if(!file) return;
-      uploadImageToSupabase(file, function(url){
-        if(url){
-          hiddenInp.value = url;
-          previewImg(prevId, url);
-        }
-      }, prevBox, uploadBtn);
-    });
-    if(clearBtn){
-      clearBtn.addEventListener('click', function(){
-        hiddenInp.value = '';
-        previewImg(prevId, '');
-      });
-    }
-  }
-
-  function bindEvents(){
-    $('loginBtn').addEventListener('click', doLogin);
-    $('loginPw').addEventListener('keydown', function(e){ if(e.key === 'Enter') doLogin(); });
-    $('logoutBtn').addEventListener('click', doLogout);
-    $('saveBtn').addEventListener('click', saveConfig);
-    qa('.side-i').forEach(function(n){
-      var name = n.getAttribute('data-panel');
-      n.addEventListener('click', function(){ showPanel(name); });
-    });
-    $('cfg-banner_active').addEventListener('change', updateBannerBadge);
-    bindUpload('hero_img', 'hero-preview');
-    bindUpload('studio_banner_img', 'studio-preview');
-    $('add-review-btn').addEventListener('click', function(){ addReviewEl({}); });
-    $('add-goal-btn').addEventListener('click', function(){ addGoalEl({}); });
-    $('add-tag-btn').addEventListener('click', function(){ addTagEl(''); });
-  }
-
-  function init(){
-    bindEvents();
-    if(sessionStorage.getItem('adm_auth') === '1'){
-      $('login').style.display = 'none';
-      $('admin').style.display = 'block';
-      loadAndRender();
-    }
-  }
-
-  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); }
-  else { init(); }
+if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', init); }
+else { init(); }
 })();
 </script>
 </body>
