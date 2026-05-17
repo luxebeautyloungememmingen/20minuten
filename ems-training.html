@@ -294,9 +294,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       <div class="err" data-err="A2"></div>
     </div>
 
+
     <div class="fstep" data-step="A3">
+      <div class="st-t">Wie k&ouml;nnen wir dich erreichen?</div>
+      <div class="st-s">Deine Daten werden sicher &uuml;bertragen und nicht weitergegeben.</div>
+      <div class="fgrid">
+        <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
+        <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
+        <div class="field full"><label class="lbl">E-Mail *</label><input class="inp" type="email" data-input="email" required autocomplete="email" inputmode="email"></div>
+        <div class="field full"><label class="lbl">Nachname (optional)</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
+      </div>
+      <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link">Datenschutzerkl&auml;rung</a></p>
+      <div class="fnav">
+        <button type="button" class="bback" data-back="A2">Zur&uuml;ck</button>
+        <button type="button" class="bnext" data-next-contact="A">Weiter zum Termin</button>
+      </div>
+      <div class="err" data-err="A3"></div>
+    </div>
+
+    <div class="fstep" data-step="A4">
       <div class="st-t" data-step3-t="A">Wann passt es dir?</div>
-      <div class="st-s" data-step3-s="A">W&auml;hle deinen Wunschtermin</div>
+      <div class="st-s" data-step3-s="A">Fast fertig &mdash; w&auml;hle deinen Wunschtermin</div>
       <div data-slot-sec="A" style="display:none">
         <div class="slot-s">
           <div class="slot-nav">
@@ -320,24 +338,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
           </div>
         </div>
       </div>
-      <div class="fnav">
-        <button type="button" class="bback" data-back="A2">Zur&uuml;ck</button>
-        <button type="button" class="bnext" data-next="A4">Weiter</button>
-      </div>
-      <div class="err" data-err="A3"></div>
-    </div>
-
-    <div class="fstep" data-step="A4">
-      <div class="st-t">Fast geschafft!</div>
-      <div class="st-s">Wo d&uuml;rfen wir dich erreichen?</div>
-      <div class="summary" data-summary="A"></div>
-      <div class="fgrid">
-        <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
-        <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
-        <div class="field full"><label class="lbl">E-Mail *</label><input class="inp" type="email" data-input="email" required autocomplete="email" inputmode="email"></div>
-        <div class="field full"><label class="lbl">Nachname (optional)</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
-      </div>
-      <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link">Datenschutzerkl&auml;rung</a></p>
       <div class="fnav">
         <button type="button" class="bback" data-back="A3">Zur&uuml;ck</button>
         <button type="button" class="bnext" data-submit="A"><span class="btxt">Gutschein sichern</span><div class="spin"></div></button>
@@ -492,8 +492,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     </div>
 
     <div class="fstep" data-step="B3">
+      <div class="st-t">Wie k&ouml;nnen wir dich erreichen?</div>
+      <div class="st-s">Deine Daten werden sicher &uuml;bertragen und nicht weitergegeben.</div>
+      <div class="fgrid">
+        <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
+        <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
+        <div class="field full"><label class="lbl">E-Mail *</label><input class="inp" type="email" data-input="email" required autocomplete="email" inputmode="email"></div>
+        <div class="field full"><label class="lbl">Nachname (optional)</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
+      </div>
+      <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link2">Datenschutzerkl&auml;rung</a></p>
+      <div class="fnav">
+        <button type="button" class="bback" data-back="B2">Zur&uuml;ck</button>
+        <button type="button" class="bnext" data-next-contact="B">Weiter zum Termin</button>
+      </div>
+      <div class="err" data-err="B3"></div>
+    </div>
+
+    <div class="fstep" data-step="B4">
       <div class="st-t" data-step3-t="B">Wann passt es dir?</div>
-      <div class="st-s" data-step3-s="B">W&auml;hle deinen Wunschtermin</div>
+      <div class="st-s" data-step3-s="B">Fast fertig &mdash; w&auml;hle deinen Wunschtermin</div>
       <div data-slot-sec="B" style="display:none">
         <div class="slot-s">
           <div class="slot-nav">
@@ -517,24 +534,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
           </div>
         </div>
       </div>
-      <div class="fnav">
-        <button type="button" class="bback" data-back="B2">Zur&uuml;ck</button>
-        <button type="button" class="bnext" data-next="B4">Weiter</button>
-      </div>
-      <div class="err" data-err="B3"></div>
-    </div>
-
-    <div class="fstep" data-step="B4">
-      <div class="st-t">Fast geschafft!</div>
-      <div class="st-s">Wo d&uuml;rfen wir dich erreichen?</div>
-      <div class="summary" data-summary="B"></div>
-      <div class="fgrid">
-        <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
-        <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
-        <div class="field full"><label class="lbl">E-Mail *</label><input class="inp" type="email" data-input="email" required autocomplete="email" inputmode="email"></div>
-        <div class="field full"><label class="lbl">Nachname (optional)</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
-      </div>
-      <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link2">Datenschutzerkl&auml;rung</a></p>
       <div class="fnav">
         <button type="button" class="bback" data-back="B3">Zur&uuml;ck</button>
         <button type="button" class="bnext" data-submit="B"><span class="btxt">Gutschein sichern</span><div class="spin"></div></button>
@@ -620,7 +619,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   var REACHES = {morgens:'Morgens', mittags:'Mittags', nachmittags:'Nachmittags', abends:'Abends'};
   var WA = {MEM:'4915730024124', SEN:'4915561206719'};
 
-  function newState(){ return {step:1, goal:'', studioId:'', studioCode:'', studioName:'', reach:'', slot:null, slots:[], slotWindowStart:null, slotToday:null}; }
+  function newState(){ return {step:1, goal:'', studioId:'', studioCode:'', studioName:'', reach:'', slot:null, slots:[], slotWindowStart:null, slotToday:null, leadId:null, firstName:'', lastName:'', phone:'', email:''}; }
   var states = { A: newState(), B: newState() };
 
   function $(id){ return document.getElementById(id); }
@@ -750,8 +749,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     var s = q('[data-step="'+formId+step+'"]'); if(s) s.classList.add('active');
     states[formId].step = step;
     updateIndicator(formId, step);
-    if(step === 3) setupStep3(formId);
-    if(step === 4) setupStep4(formId);
+    if(step === 4) setupStep4(formId); // Step 4 = Termin
   }
 
   function goToStep(formId, step){
@@ -761,7 +759,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     showStep(formId, step);
   }
 
-  function setupStep3(formId){
+  // Step 3 = Kontakt, Step 4 = Termin
+  function setupStep4(formId){
     var st = states[formId];
     var slotSec = q('[data-slot-sec="'+formId+'"]');
     var wunschSec = q('[data-wunsch-sec="'+formId+'"]');
@@ -770,28 +769,72 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     if(st.studioCode === 'MEM'){
       slotSec.style.display = 'block';
       wunschSec.style.display = 'none';
-      t.textContent = 'Wann passt es dir?';
-      s.textContent = 'W\u00e4hle einen freien Termin in Memmingen';
+      if(t) t.textContent = 'Wann passt es dir?';
+      if(s) s.textContent = 'W\u00e4hle einen freien Termin in Memmingen';
       initSlotCal(formId);
     } else {
       slotSec.style.display = 'none';
       wunschSec.style.display = 'block';
-      t.textContent = 'Wann sollen wir dich anrufen?';
-      s.textContent = 'Unser Team in Senden meldet sich pers\u00f6nlich';
+      if(t) t.textContent = 'Wann sollen wir dich anrufen?';
+      if(s) s.textContent = 'Unser Team in Senden meldet sich pers\u00f6nlich';
     }
   }
 
-  function setupStep4(formId){
+  // Early Save: Lead sofort nach Kontakt-Step speichern, leadId in state merken
+  function earlyCapture(formId, onDone){
     var st = states[formId];
-    var rows = [];
-    if(st.goal) rows.push({l:'Ziel', v: stripHTML(GOAL_LABELS[st.goal] || st.goal)});
-    if(st.studioName) rows.push({l:'Studio', v: st.studioName});
-    if(st.slot) rows.push({l:'Wunschtermin', v: fmtSlot(new Date(st.slot.startDateTime))});
-    else if(st.reach) rows.push({l:'Erreichbar', v: REACHES[st.reach]});
-    else rows.push({l:'Termin', v: 'Wir rufen zur\u00fcck'});
-    q('[data-summary="'+formId+'"]').innerHTML = rows.map(function(r){
-      return '<div class="sum-r"><span class="sum-l">'+r.l+'</span><span class="sum-v">'+escapeHTML(r.v)+'</span></div>';
-    }).join('');
+    var formEl = q('[data-step="'+formId+'3"]');
+    var firstName = q('[data-input="fname"]', formEl).value.trim();
+    var phone = q('[data-input="phone"]', formEl).value.trim();
+    var email = q('[data-input="email"]', formEl).value.trim();
+    var lastName = q('[data-input="lname"]', formEl).value.trim();
+
+    if(!firstName){ showError(formId, 3, 'Bitte gib deinen Vornamen ein.'); return; }
+    if(!phone){ showError(formId, 3, 'Bitte gib deine Telefonnummer ein.'); return; }
+    if(phone.replace(/\D/g,'').length < 6){ showError(formId, 3, 'Bitte gib eine g\u00fcltige Telefonnummer ein.'); return; }
+    if(!email){ showError(formId, 3, 'Bitte gib deine E-Mail-Adresse ein.'); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showError(formId, 3, 'Bitte gib eine g\u00fcltige E-Mail-Adresse ein.'); return; }
+
+    // Kontaktdaten im State speichern
+    st.firstName = firstName;
+    st.lastName = lastName;
+    st.phone = phone;
+    st.email = email;
+
+    var notes = [];
+    if(st.goal) notes.push('Ziel: ' + stripHTML(GOAL_LABELS[st.goal] || st.goal));
+    notes.push('Form: ' + (formId === 'A' ? 'oben (Quiz)' : 'unten'));
+    notes.push('Status: Kontaktdaten eingegeben, Termin ausstehend');
+
+    var btn = q('[data-next-contact="'+formId+'"]');
+    if(btn){ btn.disabled = true; btn.textContent = '...'; }
+
+    fetch(SUPA_URL+'/rest/v1/pt_leads', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=representation','Accept':'application/json'},
+      body: JSON.stringify({
+        studio_id: st.studioId,
+        first_name: firstName,
+        last_name: lastName || null,
+        phone: phone,
+        email: email,
+        source_code: 'website',
+        status_key: 'new',
+        is_active: true,
+        notes: notes.join(' | ')
+      })
+    })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(rows){
+      if(rows && rows[0] && rows[0].id) st.leadId = rows[0].id;
+      if(btn){ btn.disabled = false; btn.textContent = 'Weiter zum Termin'; }
+      onDone();
+    })
+    .catch(function(err){
+      console.error('Early capture fehlgeschlagen:', err);
+      if(btn){ btn.disabled = false; btn.textContent = 'Weiter zum Termin'; }
+      onDone(); // trotzdem weiter
+    });
   }
 
   function stripHTML(s){ var d = document.createElement('div'); d.innerHTML = s; return d.textContent || d.innerText || ''; }
@@ -910,18 +953,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   // ============ SUBMIT ============
   function submit(formId){
     var st = states[formId];
-    var formEl = q('[data-step="'+formId+'4"]');
     var btn = q('[data-submit="'+formId+'"]');
-    var firstName = q('[data-input="fname"]', formEl).value.trim();
-    var phone = q('[data-input="phone"]', formEl).value.trim();
-    var lastName = q('[data-input="lname"]', formEl).value.trim();
-    var email = q('[data-input="email"]', formEl).value.trim();
 
-    if(!firstName){ showError(formId, 4, 'Bitte gib deinen Vornamen ein.'); return; }
-    if(!phone){ showError(formId, 4, 'Bitte gib deine Telefonnummer ein.'); return; }
-    if(phone.replace(/\D/g,'').length < 6){ showError(formId, 4, 'Bitte gib eine g\u00fcltige Telefonnummer ein.'); return; }
-    if(!email){ showError(formId, 4, 'Bitte gib deine E-Mail-Adresse ein.'); return; }
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showError(formId, 4, 'Bitte gib eine g\u00fcltige E-Mail-Adresse ein.'); return; }
+    // Kontaktdaten kommen aus dem State (wurden in earlyCapture gespeichert)
+    var firstName = st.firstName || '';
+    var lastName = st.lastName || '';
+    var phone = st.phone || '';
+    var email = st.email || '';
+
+    if(!firstName || !phone || !email){ showError(formId, 4, 'Bitte gehe zur\u00fcck und f\u00fclle alle Pflichtfelder aus.'); return; }
 
     btn.classList.add('loading'); btn.disabled = true;
     var bookingSuccess = false, bookingError = null;
@@ -932,7 +972,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
           studioId: MEM_ID, startDateTime: st.slot.startDateTime, trainerRequired: true,
-          leadCustomer: { firstname: firstName, lastname: lastName || firstName, email: email || undefined, phone: phone || undefined, privacyConfiguration: {email:true, phone:true} }
+          leadCustomer: { firstname: firstName, lastname: lastName || firstName, email: email, phone: phone, privacyConfiguration: {email:true, phone:true} }
         })
       }).then(function(r){ if(r.ok) bookingSuccess = true; else bookingError = 'HTTP '+r.status; })
         .catch(function(err){ bookingError = err.message || 'Netzwerkfehler'; });
@@ -948,16 +988,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       } else if(st.studioCode === 'MEM'){ notes.push('Kein Slot gew\u00e4hlt - R\u00fcckruf erw\u00fcnscht'); }
       notes.push('Form: ' + (formId === 'A' ? 'oben (Quiz)' : 'unten'));
 
-      return fetch(SUPA_URL+'/rest/v1/pt_leads', {
-        method:'POST',
-        headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
-        body: JSON.stringify({
-          studio_id: st.studioId, first_name: firstName, last_name: lastName || null,
-          phone: phone, email: email, source_code: 'website', status_key: 'new',
-          is_active: true, notes: notes.join(' | ')
-        })
-      });
-    }).catch(function(err){ console.error('Lead-Speicherung fehlgeschlagen:', err); })
+      // Update bestehenden Lead (von earlyCapture) oder neuen anlegen als Fallback
+      if(st.leadId){
+        return fetch(SUPA_URL+'/rest/v1/pt_leads?id=eq.'+st.leadId, {
+          method:'PATCH',
+          headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
+          body: JSON.stringify({ notes: notes.join(' | ') })
+        });
+      } else {
+        return fetch(SUPA_URL+'/rest/v1/pt_leads', {
+          method:'POST',
+          headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
+          body: JSON.stringify({
+            studio_id: st.studioId, first_name: firstName, last_name: lastName || null,
+            phone: phone, email: email, source_code: 'website', status_key: 'new',
+            is_active: true, notes: notes.join(' | ')
+          })
+        });
+      }
+    }).catch(function(err){ console.error('Lead-Update fehlgeschlagen:', err); })
     .then(function(){ showSuccess(formId, firstName, bookingSuccess); btn.classList.remove('loading'); btn.disabled = false; });
   }
 
@@ -994,8 +1043,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     qa('[data-reach-grid="'+formId+'"] .reach-b').forEach(function(btn){
       btn.addEventListener('click', function(){ selectReach(formId, btn); });
     });
-    var next3 = q('[data-next="'+formId+'4"]');
-    if(next3) next3.addEventListener('click', function(){ goToStep(formId, 4); });
+    // Step 3 = Kontakt → earlyCapture + weiter zu Step 4
+    var nextContact = q('[data-next-contact="'+formId+'"]');
+    if(nextContact) nextContact.addEventListener('click', function(){
+      earlyCapture(formId, function(){ showStep(formId, 4); });
+    });
     var sub = q('[data-submit="'+formId+'"]');
     if(sub) sub.addEventListener('click', function(){ submit(formId); });
     qa('[data-back^="'+formId+'"]').forEach(function(btn){
