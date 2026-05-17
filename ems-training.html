@@ -300,9 +300,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       <div class="st-s">Deine Daten werden sicher &uuml;bertragen und nicht weitergegeben.</div>
       <div class="fgrid">
         <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
+        <div class="field full"><label class="lbl">Nachname *</label><input class="inp" type="text" data-input="lname" required autocomplete="family-name"></div>
         <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
         <div class="field full"><label class="lbl">E-Mail *</label><input class="inp" type="email" data-input="email" required autocomplete="email" inputmode="email"></div>
-        <div class="field full"><label class="lbl">Nachname (optional)</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
       </div>
       <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link">Datenschutzerkl&auml;rung</a></p>
       <div class="fnav">
@@ -496,9 +496,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       <div class="st-s">Deine Daten werden sicher &uuml;bertragen und nicht weitergegeben.</div>
       <div class="fgrid">
         <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
+        <div class="field full"><label class="lbl">Nachname *</label><input class="inp" type="text" data-input="lname" required autocomplete="family-name"></div>
         <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
         <div class="field full"><label class="lbl">E-Mail *</label><input class="inp" type="email" data-input="email" required autocomplete="email" inputmode="email"></div>
-        <div class="field full"><label class="lbl">Nachname (optional)</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
       </div>
       <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link2">Datenschutzerkl&auml;rung</a></p>
       <div class="fnav">
@@ -790,6 +790,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     var lastName = q('[data-input="lname"]', formEl).value.trim();
 
     if(!firstName){ showError(formId, 3, 'Bitte gib deinen Vornamen ein.'); return; }
+    if(!lastName){ showError(formId, 3, 'Bitte gib deinen Nachnamen ein.'); return; }
     if(!phone){ showError(formId, 3, 'Bitte gib deine Telefonnummer ein.'); return; }
     if(phone.replace(/\D/g,'').length < 6){ showError(formId, 3, 'Bitte gib eine g\u00fcltige Telefonnummer ein.'); return; }
     if(!email){ showError(formId, 3, 'Bitte gib deine E-Mail-Adresse ein.'); return; }
