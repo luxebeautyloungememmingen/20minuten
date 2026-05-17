@@ -1412,6 +1412,11 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     'sec-steps':'Schritte','sec-studios':'Studios','sec-brand':'Brand'
   };
 
+  // Aktueller Config-Stand für Live-Vorschau (vom Admin gesetzt)
+  var _liveCfg = null;
+  // Flag: Scroll wurde programmatisch ausgelöst → keine Section-Visible-Events feuern
+  var _suppressVisibleUntil = 0;
+
   function initAdminPreview(){
     document.body.classList.add('admin-preview');
     // Sticky + float buttons ausblenden im Preview
@@ -1443,6 +1448,8 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
 
     // IntersectionObserver: sichtbare Section → Admin informieren
     var observer = new IntersectionObserver(function(entries){
+      // Während programmatischem Scroll keine Events feuern (verhindert Panel-Sprung)
+      if(Date.now() < _suppressVisibleUntil) return;
       entries.forEach(function(entry){
         if(entry.isIntersecting && entry.intersectionRatio > 0.3){
           var id = entry.target.id || entry.target.getAttribute('data-sec');
@@ -1457,6 +1464,29 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
       var el = document.getElementById(secId) || document.querySelector('[data-sec="'+secId+'"]');
       if(el) observer.observe(el);
     });
+
+    // Live-Vorschau: Admin schickt Config-Updates per postMessage
+    window.addEventListener('message', function(e){
+      if(!e.data || typeof e.data !== 'object') return;
+      // Live-Apply ohne DB-Roundtrip
+      if(e.data.type === 'fitbox-apply-config' && e.data.config){
+        try {
+          _liveCfg = e.data.config;
+          applyConfig(_liveCfg);
+        } catch(err){ console.error('Live apply failed:', err); }
+      }
+      // Smooth-Scroll zu Section, ohne Visible-Spam
+      if(e.data.type === 'fitbox-scroll-to' && e.data.secId){
+        var el = document.getElementById(e.data.secId) || document.querySelector('[data-sec="'+e.data.secId+'"]');
+        if(el){
+          _suppressVisibleUntil = Date.now() + 1200;
+          el.scrollIntoView({behavior:'smooth', block:'start'});
+        }
+      }
+    });
+
+    // Ready-Signal an Admin (Admin kann jetzt Config pushen)
+    try { window.parent.postMessage({type:'fitbox-ready'}, '*'); } catch(e){}
   }
 
   function init(){

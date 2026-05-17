@@ -6,99 +6,133 @@
 <title>Landing Admin · fitbox</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--g:#2f8615;--gl:#95c11f;--gbg:#f0f7ed;--gbg2:#e4f0dc;--ink:#0f172a;--muted:#64748b;--border:#e2e8f0;--bg:#f1f5f1;--card:#fff;--hover:#f8fafc;--r:#dc2626;--y:#d97706;
---shadow-sm:0 1px 2px rgba(0,0,0,.04);--shadow:0 1px 4px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);--shadow-lg:0 4px 24px rgba(0,0,0,.08)}
+:root{
+  --g:#2f8615;--gl:#95c11f;--gbg:#f0f7ed;--gbg2:#e4f0dc;
+  --ink:#0f172a;--muted:#64748b;--border:#e2e8f0;--bg:#f1f5f1;--card:#fff;--hover:#f8fafc;
+  --r:#dc2626;--y:#d97706;--info:#0284c7;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.04);
+  --shadow:0 1px 4px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
+  --shadow-lg:0 4px 24px rgba(0,0,0,.08);
+}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Sora',sans-serif;color:var(--ink);background:var(--bg);overflow:hidden}
 button,input,select,textarea{font-family:inherit}
+button{cursor:pointer}
 
 /* LOGIN */
 #login{height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a4a10 0%,#2f8615 100%)}
 .lbox{background:#fff;border-radius:16px;padding:40px 32px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .llogo{text-align:center;margin-bottom:6px}
 .llogo img{height:36px}
-.ltitle{font-size:18px;font-weight:700;text-align:center;margin-bottom:4px;color:var(--ink)}
+.ltitle{font-size:18px;font-weight:700;text-align:center;margin-bottom:4px}
 .lsub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px}
 .lf{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
 .ll{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
 .li{padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;outline:none;transition:.15s}
 .li:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(47,134,21,.1)}
-.lb{width:100%;padding:14px;background:linear-gradient(180deg,var(--g) 0%,#246610 100%);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px;cursor:pointer;transition:.15s}
+.lb{width:100%;padding:14px;background:linear-gradient(180deg,var(--g) 0%,#246610 100%);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:15px;transition:.15s}
 .lb:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(47,134,21,.3)}
 .lerr{color:var(--r);font-size:12px;text-align:center;margin-top:8px;display:none}
 .lerr.show{display:block}
 
 /* APP SHELL */
-#app{display:none;height:100vh;display:none;flex-direction:column}
-.app-grid{display:grid;grid-template-rows:46px 1fr;height:100vh}
+#app{display:none;height:100vh;flex-direction:column}
+.app-grid{display:grid;grid-template-rows:48px 1fr;height:100vh}
 
 /* TOPBAR */
-.topbar{height:46px;background:linear-gradient(135deg,var(--g) 0%,#256a10 100%);display:flex;align-items:center;gap:8px;padding:0 14px;box-shadow:0 2px 12px rgba(0,0,0,.15);z-index:50;flex-shrink:0;overflow-x:auto;overflow-y:hidden}
-.topbar::-webkit-scrollbar{height:3px}
-.topbar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);border-radius:2px}
+.topbar{height:48px;background:linear-gradient(135deg,var(--g) 0%,#256a10 100%);display:flex;align-items:center;gap:8px;padding:0 14px;box-shadow:0 2px 12px rgba(0,0,0,.15);z-index:50;flex-shrink:0}
 .tb-logo{height:22px;flex-shrink:0}
-.tb-div{width:1px;height:20px;background:rgba(255,255,255,.22);flex-shrink:0;margin:0 2px}
-.tb-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.9);white-space:nowrap;flex-shrink:0}
+.tb-div{width:1px;height:22px;background:rgba(255,255,255,.22);flex-shrink:0;margin:0 2px}
+.tb-title{font-size:13px;font-weight:700;color:rgba(255,255,255,.95);white-space:nowrap;flex-shrink:0}
 .tb-space{flex:1}
-.tb-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:12px;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.12s;white-space:nowrap;flex-shrink:0}
+.tb-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font-size:12px;font-weight:600;padding:7px 13px;border-radius:8px;display:flex;align-items:center;gap:6px;transition:.12s;white-space:nowrap;flex-shrink:0}
 .tb-btn:hover{background:rgba(255,255,255,.25)}
+.tb-btn:disabled{opacity:.5;cursor:not-allowed}
 .tb-btn.primary{background:#fff;color:var(--g);border-color:#fff}
-.tb-btn.primary:hover{background:rgba(255,255,255,.9)}
-.tb-btn:disabled{opacity:.6;cursor:not-allowed}
+.tb-btn.primary:hover{background:rgba(255,255,255,.92)}
+.tb-btn.danger{background:rgba(255,255,255,.1);border-color:rgba(255,180,180,.4);color:#fee}
+.tb-btn.danger:hover{background:rgba(220,38,38,.85);border-color:transparent}
+.tb-btn.icon{padding:7px 9px}
 .tb-preview-wrap{display:flex;background:rgba(255,255,255,.1);border-radius:8px;padding:3px;gap:2px;flex-shrink:0}
-.tb-preview-btn{appearance:none;border:none;background:transparent;color:rgba(255,255,255,.65);font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;cursor:pointer;transition:.12s;white-space:nowrap}
+.tb-preview-btn{appearance:none;border:none;background:transparent;color:rgba(255,255,255,.7);font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;transition:.12s;white-space:nowrap}
 .tb-preview-btn.active{background:#fff;color:var(--g)}
-.save-status{font-size:11px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:5px;flex-shrink:0}
-.save-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4)}
-.save-dot.saved{background:#95c11f}
-.save-dot.saving{background:#f59e0b;animation:blink .7s ease-in-out infinite}
-.save-dot.error{background:#ef4444}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* DIRTY STATUS */
+.dirty-status{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:rgba(255,255,255,.85);padding:5px 10px;background:rgba(255,255,255,.08);border-radius:8px;flex-shrink:0}
+.dirty-dot{width:8px;height:8px;border-radius:50%;background:#95c11f;flex-shrink:0;transition:.2s}
+.dirty-status.dirty .dirty-dot{background:#fbbf24;box-shadow:0 0 8px rgba(251,191,36,.5)}
+.dirty-status.saving .dirty-dot{background:#60a5fa;animation:pulse .8s ease-in-out infinite}
+.dirty-status.error .dirty-dot{background:#ef4444}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* WORKSPACE */
-.workspace{display:grid;grid-template-columns:52px 340px 1fr;height:calc(100vh - 46px);overflow:hidden}
+.workspace{display:grid;grid-template-columns:60px 360px 1fr;height:calc(100vh - 48px);overflow:hidden;transition:grid-template-columns .25s}
+.workspace.sidebar-collapsed{grid-template-columns:60px 0 1fr}
 
-/* SIDEBAR */
-.sidebar{display:contents}
+/* SIDEBAR NAV (Icon column) */
 .sidebar-nav{display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--bg);padding:6px 0;gap:1px;overflow-y:auto}
 .sidebar-nav::-webkit-scrollbar{display:none}
-.snav-btn{width:52px;min-height:48px;padding:6px 4px;font-size:9px;font-weight:700;color:var(--muted);border:none;background:none;cursor:pointer;border-left:2px solid transparent;transition:.12s;white-space:nowrap;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-transform:uppercase;letter-spacing:.03em;line-height:1.2}
+.snav-btn{width:60px;min-height:54px;padding:7px 4px;font-size:9.5px;font-weight:700;color:var(--muted);border:none;background:none;border-left:2px solid transparent;transition:.12s;white-space:nowrap;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-transform:uppercase;letter-spacing:.03em;line-height:1.2;position:relative}
 .snav-btn:hover:not(.active){background:var(--hover);color:var(--ink)}
 .snav-btn.active{color:var(--g);border-left-color:var(--g);background:var(--gbg)}
-.snav-btn .sn-icon{font-size:16px;line-height:1}
-.sidebar-body{background:var(--card);border-right:1px solid var(--border);overflow-y:auto;padding:18px 16px}
+.snav-btn .sn-icon{font-size:18px;line-height:1}
+.snav-btn .sn-dot{position:absolute;top:8px;right:8px;width:6px;height:6px;border-radius:50%;background:var(--y);display:none}
+.snav-btn.has-changes .sn-dot{display:block}
+
+/* SIDEBAR BODY (Editor column) */
+.sidebar-body{background:var(--card);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
 .sidebar-body::-webkit-scrollbar{width:4px}
 .sidebar-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
+/* PANEL HEADER (fixed in sidebar) */
+.panel-head{padding:14px 18px 12px;border-bottom:1px solid var(--border);background:var(--card);position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px}
+.panel-head-icon{font-size:18px;line-height:1}
+.panel-head-title{font-size:14px;font-weight:700;color:var(--ink);flex:1}
+.panel-head-pin{appearance:none;border:1px solid var(--border);background:var(--bg);width:28px;height:28px;border-radius:6px;font-size:11px;display:flex;align-items:center;justify-content:center;transition:.12s;color:var(--muted)}
+.panel-head-pin:hover{color:var(--ink)}
+.panel-head-pin.active{background:var(--gbg);border-color:var(--g);color:var(--g)}
+.panel-head-pin::after{content:'📌'}
+.panel-body{padding:16px 18px 60px;flex:1}
+
 /* PANELS */
 .spanel{display:none}
-.spanel.active{display:block}
-.sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;display:flex;align-items:center;gap:6px}
+.spanel.active{display:block;animation:fadeIn .15s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:translateY(0)}}
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:18px 0 9px;display:flex;align-items:center;gap:8px}
 .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
 .sec-label:first-child{margin-top:0}
 
 /* FIELD */
-.field{margin-bottom:12px}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.fl{font-size:11px;font-weight:600;color:var(--ink);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:5px}
+.field{margin-bottom:13px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px}
+.fl{font-size:11px;font-weight:600;color:var(--ink);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:6px}
 .fi,.fa,.fs{width:100%;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:13px;color:var(--ink);background:#fff;outline:none;transition:.12s}
 .fi:focus,.fa:focus,.fs:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(47,134,21,.08)}
 .fi:hover:not(:focus),.fa:hover:not(:focus){border-color:#c8d5c8}
 .fa{resize:vertical;min-height:68px;line-height:1.5}
 .fh{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
 
+/* COMPACT COLOR PICKER */
+.color-field{position:relative}
+.color-row{display:flex;gap:6px;align-items:center;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:4px 4px 4px 6px;transition:.12s}
+.color-row:focus-within{border-color:var(--g);box-shadow:0 0 0 3px rgba(47,134,21,.08)}
+.color-row input[type=color]{appearance:none;-webkit-appearance:none;width:30px;height:30px;border-radius:6px;border:none;padding:0;background:none;flex-shrink:0;overflow:hidden}
+.color-row input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+.color-row input[type=color]::-webkit-color-swatch{border:1px solid var(--border);border-radius:6px}
+.color-row input[type=text]{border:none;background:none;flex:1;font-size:13px;font-family:'SF Mono',Menlo,monospace;color:var(--ink);outline:none;padding:0 4px;min-width:0}
+
 /* INFO TOOLTIP */
-.info-btn{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--border);color:var(--muted);font-size:9px;font-weight:700;cursor:help;border:none;position:relative;transition:.12s;flex-shrink:0;font-style:italic;line-height:1}
+.info-btn{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--border);color:var(--muted);font-size:9px;font-weight:700;border:none;position:relative;transition:.12s;flex-shrink:0;font-style:italic;line-height:1}
 .info-btn::before{content:'i'}
 .info-btn:hover{background:var(--g);color:#fff}
 .info-btn:hover .tip,.info-btn:focus .tip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-2px)}
-.tip{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--ink);color:#fff;font-size:11px;font-weight:400;line-height:1.5;padding:9px 12px;border-radius:8px;width:220px;text-align:left;letter-spacing:0;text-transform:none;opacity:0;visibility:hidden;transition:.18s;box-shadow:var(--shadow-lg);z-index:200;pointer-events:none;white-space:normal;font-style:normal}
+.tip{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%) translateY(4px);background:var(--ink);color:#fff;font-size:11px;font-weight:400;line-height:1.5;padding:9px 12px;border-radius:8px;width:220px;text-align:left;letter-spacing:0;text-transform:none;opacity:0;visibility:hidden;transition:.18s;box-shadow:var(--shadow-lg);z-index:200;pointer-events:none;white-space:normal;font-style:normal;cursor:default}
 .tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--ink)}
 .tip strong{color:#fff;display:block;margin-bottom:2px;font-weight:700}
 .tip em{color:#95c11f;font-style:normal;background:rgba(255,255,255,.1);padding:1px 4px;border-radius:3px;font-size:10.5px}
 
 /* TOGGLE */
-.tog-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;margin-bottom:12px}
+.tog-row{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--bg);border:1px solid var(--border);border-radius:9px;margin-bottom:13px}
 .tog{position:relative;width:38px;height:22px;flex-shrink:0}
 .tog input{opacity:0;width:0;height:0;position:absolute}
 .tog-track{position:absolute;inset:0;background:#c8d5c8;border-radius:100px;cursor:pointer;transition:.22s}
@@ -114,11 +148,17 @@ button,input,select,textarea{font-family:inherit}
 .badge-off{background:#fef2f2;color:var(--r)}
 
 /* ITEMS (reviews, goals, tags) */
-.item{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:14px;margin-bottom:10px;position:relative}
+.item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;position:relative;transition:.15s}
 .item:hover{border-color:#c8d5c8}
-.item-del{position:absolute;top:10px;right:10px;background:var(--card);border:1px solid var(--border);color:var(--muted);width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:.12s}
+.item-handle{position:absolute;top:10px;left:10px;color:var(--muted);font-size:14px;cursor:grab;user-select:none;width:18px;height:18px;display:none;align-items:center;justify-content:center;line-height:1}
+.item.draggable .item-handle{display:flex}
+.item.draggable{padding-left:32px}
+.item-handle:active{cursor:grabbing}
+.item-del{position:absolute;top:10px;right:10px;background:var(--card);border:1px solid var(--border);color:var(--muted);width:26px;height:26px;border-radius:50%;font-size:13px;display:flex;align-items:center;justify-content:center;transition:.12s}
 .item-del:hover{color:var(--r);border-color:var(--r);background:#fef2f2}
-.add-btn{width:100%;padding:11px;background:var(--gbg);color:var(--g);border:1.5px dashed var(--g);border-radius:9px;font-size:12px;font-weight:600;cursor:pointer;transition:.12s;display:flex;align-items:center;justify-content:center;gap:6px}
+.item.dragging{opacity:.4}
+.item.drop-target{border-color:var(--g);border-style:dashed}
+.add-btn{width:100%;padding:11px;background:var(--gbg);color:var(--g);border:1.5px dashed var(--g);border-radius:9px;font-size:12px;font-weight:600;transition:.12s;display:flex;align-items:center;justify-content:center;gap:6px}
 .add-btn:hover{background:var(--gbg2);border-style:solid}
 
 /* STATS */
@@ -131,38 +171,41 @@ button,input,select,textarea{font-family:inherit}
 .img-spec-bar{display:flex;align-items:center;flex-wrap:wrap;gap:4px;padding:7px 10px;background:var(--bg);border:1px solid var(--border);border-radius:7px;font-size:11px;color:var(--muted);margin-bottom:8px}
 .img-spec-px{font-family:monospace;font-size:11px;font-weight:700;color:var(--g);background:var(--gbg);padding:2px 6px;border-radius:4px}
 .upl-row{display:flex;gap:7px;flex-wrap:wrap}
-.upl-btn{background:var(--card);color:var(--g);border:1.5px solid var(--g);border-radius:7px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:.12s}
+.upl-btn{background:var(--card);color:var(--g);border:1.5px solid var(--g);border-radius:7px;padding:8px 14px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:.12s}
 .upl-btn:hover{background:var(--gbg);transform:translateY(-1px)}
 .upl-btn:disabled{opacity:.6;cursor:wait;transform:none}
 .upl-btn::before{content:'\2191';font-weight:900}
+.upl-btn.alt::before{content:''}
 .upl-input{display:none}
-.upl-clr{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:12px;color:var(--muted);cursor:pointer;transition:.12s}
+.upl-clr{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-size:12px;color:var(--muted);transition:.12s}
 .upl-clr:hover{color:var(--r);border-color:var(--r)}
 .upl-prog{position:absolute;inset:0;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;color:var(--g);font-size:12px;font-weight:600;gap:8px;backdrop-filter:blur(4px)}
 .upl-prog::before{content:'';width:20px;height:20px;border:2.5px solid var(--border);border-top-color:var(--g);border-radius:50%;animation:upspin .7s linear infinite}
 @keyframes upspin{to{transform:rotate(360deg)}}
 
 /* CTA ITEM */
-.cta-item{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:14px;margin-bottom:10px}
+.cta-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;transition:.15s}
+.cta-item.inactive{opacity:.55}
+.cta-item.inactive:hover{opacity:.85}
 .cta-num{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .cta-num span{background:var(--g);color:#fff;width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
 
 /* PREVIEW PANE */
-.preview-pane{background:#d4dfd4;overflow-y:auto;display:flex;justify-content:flex-end;padding:0;position:relative}
-.preview-pane::-webkit-scrollbar{width:5px}
-.preview-pane::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px}
-.preview-frame-wrap{width:100%;transition:max-width .3s;position:relative}
-.preview-frame-wrap.mobile{max-width:420px;margin-left:auto}
+.preview-pane{background:#d4dfd4;overflow:hidden;display:flex;justify-content:center;padding:0;position:relative}
+.preview-frame-wrap{width:100%;transition:max-width .25s;position:relative;display:flex;flex-direction:column}
+.preview-frame-wrap.mobile{max-width:420px}
 .preview-frame-wrap.desktop{max-width:100%}
-.preview-browser{background:#fff;height:calc(100vh - 46px);display:flex;flex-direction:column}
+.preview-browser{background:#fff;height:100%;display:flex;flex-direction:column;box-shadow:0 0 20px rgba(0,0,0,.06)}
 .preview-bar{background:#f3f4f6;padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e5e7eb;flex-shrink:0}
 .preview-dots{display:flex;gap:5px}
 .preview-dot{width:10px;height:10px;border-radius:50%}
-.preview-url{flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:5px 10px;font-size:11px;color:#6b7280;font-family:monospace}
-.preview-iframe{width:100%;border:none;flex:1;display:block}
-.preview-loading{position:absolute;inset:0;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--g);gap:10px;pointer-events:none;opacity:0;transition:.3s}
-.preview-loading.show{opacity:1;pointer-events:all}
-.preview-loading::before{content:'';width:20px;height:20px;border:2.5px solid #d1fae5;border-top-color:var(--g);border-radius:50%;animation:upspin .7s linear infinite}
+.preview-url{flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:5px 10px;font-size:11px;color:#6b7280;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.preview-iframe{width:100%;border:none;flex:1;display:block;background:#fff}
+.preview-loading{position:absolute;top:0;left:0;right:0;background:linear-gradient(90deg,transparent,rgba(149,193,31,.4),transparent);height:2px;animation:loadbar 1s linear infinite;display:none}
+.preview-loading.show{display:block}
+@keyframes loadbar{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.preview-off{position:absolute;inset:0;background:rgba(255,255,255,.6);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--muted);z-index:5}
+.preview-off.show{display:flex}
 
 /* TOAST */
 .toast-wrap{position:fixed;top:60px;right:16px;z-index:999;display:flex;flex-direction:column;gap:7px}
@@ -171,9 +214,40 @@ button,input,select,textarea{font-family:inherit}
 .toast.ok::before{content:'✓';font-weight:900}
 .toast.err{border-color:#fca5a5;color:var(--r)}
 .toast.err::before{content:'!';font-weight:900}
+.toast.info{border-color:#7dd3fc;color:var(--info)}
+.toast.info::before{content:'i';font-weight:900;font-style:italic}
 @keyframes tIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-@media(max-width:900px){.workspace{grid-template-columns:260px 1fr}.preview-pane{display:none}}
+/* KEYBOARD HINT */
+kbd{display:inline-block;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.25);font-family:'SF Mono',Menlo,monospace;font-size:10px;line-height:1.3}
+
+/* HISTORY MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:14px;width:min(560px,100%);max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-weight:700;font-size:15px}
+.modal-close{background:none;border:none;font-size:20px;color:var(--muted);line-height:1;width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{background:var(--bg);color:var(--ink)}
+.modal-body{padding:14px 20px;overflow-y:auto;flex:1}
+.history-item{padding:11px 13px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;display:flex;align-items:center;gap:12px;transition:.12s;background:var(--bg)}
+.history-item:hover{border-color:var(--g);background:var(--gbg)}
+.history-time{font-size:13px;font-weight:600;flex:1}
+.history-desc{font-size:11px;color:var(--muted);margin-top:2px;font-weight:400}
+.history-btn{font-size:11px;font-weight:700;padding:6px 12px;background:var(--g);color:#fff;border:none;border-radius:6px}
+.history-empty{padding:30px 20px;text-align:center;color:var(--muted);font-size:13px}
+
+/* SIDEBAR TOGGLE */
+.sb-toggle{position:absolute;top:60px;width:18px;height:42px;background:var(--card);border:1px solid var(--border);border-left:none;border-radius:0 8px 8px 0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);z-index:30;transition:.15s;left:60px}
+.sb-toggle:hover{background:var(--gbg);color:var(--g)}
+.workspace.sidebar-collapsed .sb-toggle{left:60px}
+.workspace:not(.sidebar-collapsed) .sb-toggle{left:420px}
+
+@media(max-width:980px){
+  .workspace{grid-template-columns:60px 1fr}
+  .workspace:not(.preview-only){grid-template-columns:60px 1fr}
+  .preview-pane{display:none}
+}
 </style>
 </head>
 <body>
@@ -200,45 +274,66 @@ button,input,select,textarea{font-family:inherit}
   <div class="topbar">
     <img class="tb-logo" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox">
     <div class="tb-div"></div>
-    <span class="tb-title">Landing Page Admin</span>
-    <div class="tb-space"></div>
-    <div class="save-status" id="saveStatus">
-      <div class="save-dot saved" id="saveDot"></div>
-      <span id="saveLabel">Gespeichert</span>
+    <span class="tb-title">Landing Admin</span>
+
+    <div class="tb-div"></div>
+    <div class="dirty-status" id="dirtyStatus">
+      <div class="dirty-dot"></div>
+      <span id="dirtyLabel">Synchron</span>
     </div>
+
+    <div class="tb-space"></div>
+
+    <button class="tb-btn icon" id="undoBtn" type="button" title="Letzte Änderung rückgängig (Ctrl+Z)" disabled>↶</button>
+    <button class="tb-btn icon" id="historyBtn" type="button" title="Verlauf">🕐</button>
+
     <div class="tb-div"></div>
     <div class="tb-preview-wrap">
       <button class="tb-preview-btn active" id="prevDesk" type="button">🖥 Desktop</button>
       <button class="tb-preview-btn" id="prevMob" type="button">📱 Mobile</button>
     </div>
-    <button class="tb-btn" id="openSiteBtn" type="button">🔗 Seite öffnen</button>
-    <button class="tb-btn primary" id="saveBtn" type="button">💾 Speichern</button>
+
+    <div class="tb-div"></div>
+    <button class="tb-btn" id="openSiteBtn" type="button" title="Live-Seite in neuem Tab öffnen">🔗 Live</button>
+    <button class="tb-btn danger" id="discardBtn" type="button" title="Ungespeicherte Änderungen verwerfen" disabled>Verwerfen</button>
+    <button class="tb-btn primary" id="saveBtn" type="button" title="Speichern (Ctrl+S)" disabled>💾 Speichern</button>
     <button class="tb-btn" id="logoutBtn" type="button">Abmelden</button>
   </div>
 
   <!-- WORKSPACE -->
-  <div class="workspace">
+  <div class="workspace" id="workspace">
 
     <!-- SIDEBAR NAV -->
-    <div class="sidebar-nav">
-        <button class="snav-btn active" data-panel="banner" type="button"><span class="sn-icon">📢</span>Banner</button>
-        <button class="snav-btn" data-panel="hero" type="button"><span class="sn-icon">🏠</span>Hero</button>
-        <button class="snav-btn" data-panel="quiz" type="button"><span class="sn-icon">🎯</span>Quiz</button>
-        <button class="snav-btn" data-panel="goals" type="button"><span class="sn-icon">💪</span>Ziele</button>
-        <button class="snav-btn" data-panel="ctas" type="button"><span class="sn-icon">🔘</span>CTAs</button>
-        <button class="snav-btn" data-panel="stats" type="button"><span class="sn-icon">📊</span>Stats</button>
-        <button class="snav-btn" data-panel="video" type="button"><span class="sn-icon">🎬</span>Video</button>
-        <button class="snav-btn" data-panel="reviews" type="button"><span class="sn-icon">⭐</span>Reviews</button>
-        <button class="snav-btn" data-panel="studios" type="button"><span class="sn-icon">📍</span>Studios</button>
-        <button class="snav-btn" data-panel="brand" type="button"><span class="sn-icon">🔥</span>Brand</button>
-        <button class="snav-btn" data-panel="design" type="button"><span class="sn-icon">🎨</span>Design</button>
-        <button class="snav-btn" data-panel="benefits" type="button"><span class="sn-icon">✅</span>Vorteile</button>
-        <button class="snav-btn" data-panel="trust" type="button"><span class="sn-icon">🏅</span>Trust</button>
-        <button class="snav-btn" data-panel="steps" type="button"><span class="sn-icon">👣</span>Schritte</button>
-        <button class="snav-btn" data-panel="form" type="button"><span class="sn-icon">📝</span>Form</button>
-        <button class="snav-btn" data-panel="links" type="button"><span class="sn-icon">🔗</span>Links</button>
+    <div class="sidebar-nav" id="sidebarNav">
+      <button class="snav-btn active" data-panel="banner" type="button"><span class="sn-icon">📢</span>Banner<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="hero" type="button"><span class="sn-icon">🏠</span>Hero<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="quiz" type="button"><span class="sn-icon">🎯</span>Quiz<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="goals" type="button"><span class="sn-icon">💪</span>Ziele<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="ctas" type="button"><span class="sn-icon">🔘</span>CTAs<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="stats" type="button"><span class="sn-icon">📊</span>Stats<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="video" type="button"><span class="sn-icon">🎬</span>Video<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="benefits" type="button"><span class="sn-icon">✅</span>Vorteile<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="trust" type="button"><span class="sn-icon">🏅</span>Trust<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="reviews" type="button"><span class="sn-icon">⭐</span>Reviews<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="steps" type="button"><span class="sn-icon">👣</span>Schritte<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="studios" type="button"><span class="sn-icon">📍</span>Studios<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="brand" type="button"><span class="sn-icon">🔥</span>Brand<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="form" type="button"><span class="sn-icon">📝</span>Form<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="design" type="button"><span class="sn-icon">🎨</span>Design<span class="sn-dot"></span></button>
+      <button class="snav-btn" data-panel="links" type="button"><span class="sn-icon">🔗</span>Links<span class="sn-dot"></span></button>
+    </div>
+
+    <!-- Sidebar Toggle -->
+    <button class="sb-toggle" id="sbToggle" type="button" title="Editor ein/ausblenden">◀</button>
+
+    <!-- SIDEBAR BODY -->
+    <div class="sidebar-body" id="sidebarBody">
+      <div class="panel-head">
+        <span class="panel-head-icon" id="phIcon">📢</span>
+        <div class="panel-head-title" id="phTitle">Banner</div>
+        <button class="panel-head-pin" id="pinBtn" type="button" title="Panel fixieren – verhindert automatisches Wechseln beim Scrollen der Vorschau"></button>
       </div>
-      <div class="sidebar-body">
+      <div class="panel-body">
 
         <!-- BANNER -->
         <div class="spanel active" id="spanel-banner">
@@ -248,12 +343,12 @@ button,input,select,textarea{font-family:inherit}
             <span class="badge badge-off" id="badge-banner" style="margin-left:auto">Aus</span>
           </div>
           <div class="field">
-            <label class="fl">Banner-Text <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hinweis-Streifen oben</strong>Erscheint in Grün ganz oben auf der Seite. Emojis erlaubt. Beispiel: <em>🎉 Sommer-Aktion!</em></span></button></label>
+            <label class="fl">Banner-Text <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hinweis-Streifen oben</strong>Erscheint ganz oben auf der Seite. Emojis erlaubt. Beispiel: <em>🎉 Sommer-Aktion!</em></span></button></label>
             <input type="text" class="fi" id="cfg-banner_text" placeholder="🎉 Sommer-Aktion: ...">
           </div>
           <div class="field-row">
             <div class="field">
-              <label class="fl">Link-Text <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Klickbarer Zusatz</strong>Erscheint unterstrichen nach dem Text. Leer = kein Link. Beispiel: <em>Jetzt sichern</em></span></button></label>
+              <label class="fl">Link-Text</label>
               <input type="text" class="fi" id="cfg-banner_link_text" placeholder="Jetzt sichern">
             </div>
             <div class="field">
@@ -267,20 +362,20 @@ button,input,select,textarea{font-family:inherit}
         <div class="spanel" id="spanel-hero">
           <div class="sec-label">Headline</div>
           <div class="field">
-            <label class="fl">Zeile 1 (klein) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Einleitungszeile</strong>Schwarze kleinere Schrift über der grünen Hauptbotschaft. Beispiel: <em>Sichere dir deinen Gutschein für ein</em></span></button></label>
+            <label class="fl">Zeile 1 (klein) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Einleitungszeile</strong>Schwarze kleinere Schrift über der grünen Hauptbotschaft.</span></button></label>
             <input type="text" class="fi" id="cfg-hero_title" placeholder="Sichere dir deinen Gutschein für ein">
           </div>
           <div class="field">
-            <label class="fl">Zeile 2 – grün, groß <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hauptbotschaft</strong>Groß, fett, in fitbox-Grün. Das Erste was auffällt.</span></button></label>
+            <label class="fl">Zeile 2 – grün, groß <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hauptbotschaft</strong>Groß, fett, in fitbox-Grün.</span></button></label>
             <input type="text" class="fi" id="cfg-hero_sub" placeholder="GRATIS EMS-Probetraining!">
           </div>
           <div class="field">
-            <label class="fl">Check-Zeile ✓ <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Vertrauenssignal</strong>Erscheint mit grünem Häkchen davor. Beispiel: <em>100% kostenlos und unverbindlich!</em></span></button></label>
+            <label class="fl">Check-Zeile ✓</label>
             <input type="text" class="fi" id="cfg-hero_check" placeholder="100% kostenlos und unverbindlich testen!">
           </div>
           <div class="field">
-            <label class="fl">Beschreibung <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Erklärender Absatz</strong>1-2 Sätze unter dem Hauptheader. HTML erlaubt: <em>&lt;strong&gt;</em> für Fettschrift.</span></button></label>
-            <textarea class="fa" id="cfg-hero_desc" placeholder="In nur &lt;strong&gt;20 Minuten&lt;/strong&gt;..."></textarea>
+            <label class="fl">Beschreibung <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>1-2 Sätze</strong>HTML erlaubt: <em>&lt;strong&gt;</em> für Fettschrift.</span></button></label>
+            <textarea class="fa" id="cfg-hero_desc"></textarea>
           </div>
           <div class="sec-label">Bild</div>
           <div class="field">
@@ -295,8 +390,8 @@ button,input,select,textarea{font-family:inherit}
           </div>
           <div class="sec-label">Extras</div>
           <div class="field">
-            <label class="fl">Scarcity (gelbe Box) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Dringlichkeits-Hinweis</strong>Erscheint in gelber Box im Hero. Erzeugt FOMO. Beispiel: <em>⚠️ Nur wenige Plätze!</em></span></button></label>
-            <input type="text" class="fi" id="cfg-scarcity_text" placeholder="⚠️ Nur wenige Plätze pro Monat verfügbar!">
+            <label class="fl">Scarcity (gelbe Box) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Dringlichkeit</strong>Erzeugt FOMO. Beispiel: <em>⚠️ Nur wenige Plätze!</em></span></button></label>
+            <input type="text" class="fi" id="cfg-scarcity_text">
           </div>
           <div class="field">
             <label class="fl">Nav-Button (oben rechts)</label>
@@ -307,16 +402,16 @@ button,input,select,textarea{font-family:inherit}
         <!-- QUIZ -->
         <div class="spanel" id="spanel-quiz">
           <div class="field">
-            <label class="fl">Kleiner Text drüber <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Eyebrow-Text</strong>Kleiner Hinweis über dem Quiz-Titel in Großbuchstaben. Beispiel: <em>Klicke auf dein Ziel</em></span></button></label>
+            <label class="fl">Kleiner Text drüber</label>
             <input type="text" class="fi" id="cfg-quiz_cta" placeholder="Klicke auf dein Ziel">
           </div>
           <div class="field">
-            <label class="fl">Quiz-Titel <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hauptfrage</strong>Direkte Ansprache in großer Bebas-Schrift. Beispiel: <em>Was ist dein Ziel?</em></span></button></label>
+            <label class="fl">Quiz-Titel</label>
             <input type="text" class="fi" id="cfg-quiz_title" placeholder="Was ist dein Ziel?">
           </div>
           <div class="field">
             <label class="fl">Untertitel</label>
-            <input type="text" class="fi" id="cfg-quiz_sub" placeholder="Klicke HIER auf dein Ziel...">
+            <input type="text" class="fi" id="cfg-quiz_sub">
           </div>
         </div>
 
@@ -329,7 +424,7 @@ button,input,select,textarea{font-family:inherit}
 
         <!-- CTAs -->
         <div class="spanel" id="spanel-ctas">
-          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">4 Conversion-Buttons verteilt über die Seite. Schalte sie ein/aus und passe den Text an.</p>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">6 Conversion-Buttons verteilt über die Seite. Inaktive Buttons werden grau dargestellt.</p>
           <div id="ctas-container"></div>
         </div>
 
@@ -341,18 +436,17 @@ button,input,select,textarea{font-family:inherit}
 
         <!-- VIDEO -->
         <div class="spanel" id="spanel-video">
-          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Video-Sektion nach den Stats. Bei mehreren Videos wird beim Seitenaufruf zufällig eines abgespielt.</p>
-          <div class="tog-row" style="margin-bottom:16px">
+          <div class="tog-row">
             <label class="tog"><input type="checkbox" id="cfg-video_active"><span class="tog-track"></span></label>
             <span class="tog-lbl">Sektion anzeigen</span>
           </div>
           <div class="field">
-            <label class="fl">Videos (Rotation)</label>
+            <label class="fl">Videos (Rotation) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Mehrere Videos</strong>Bei jedem Seitenaufruf wird zufällig eines abgespielt.</span></button></label>
             <div id="video-playlist" style="margin-bottom:8px"></div>
             <div class="upl-row">
               <input type="file" class="upl-input" id="upl-video_url" accept="video/mp4,video/webm,video/quicktime">
               <button class="upl-btn" id="upl-video-btn" type="button">Hochladen</button>
-              <button class="upl-btn" id="upl-video-lib-btn" type="button" style="background:var(--gbg);color:var(--g)">📂 Bibliothek</button>
+              <button class="upl-btn alt" id="upl-video-lib-btn" type="button" style="background:var(--gbg);color:var(--g);border-color:var(--g)">📂 Bibliothek</button>
             </div>
             <div id="video-progress-wrap" style="display:none;margin-top:8px">
               <div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden">
@@ -371,15 +465,39 @@ button,input,select,textarea{font-family:inherit}
           </div>
           <div class="field">
             <label class="fl">Beschreibung (optional)</label>
-            <textarea class="fa" id="cfg-video_desc" placeholder="Kurzer Text unter der Überschrift..."></textarea>
+            <textarea class="fa" id="cfg-video_desc"></textarea>
           </div>
+        </div>
+
+        <!-- BENEFITS -->
+        <div class="spanel" id="spanel-benefits">
+          <div class="field"><label class="fl">Abschnitt-Label (klein)</label><input type="text" class="fi" id="cfg-benefits_label" placeholder="Deine Vorteile"></div>
+          <div class="field"><label class="fl">Abschnitt-Titel</label><input type="text" class="fi" id="cfg-benefits_title" placeholder="Warum fitbox?"></div>
+          <div class="sec-label">Vorteile-Karten</div>
+          <div id="benefits-container"></div>
+          <button class="add-btn" id="add-benefit-btn" type="button">+ Vorteil hinzufügen</button>
+        </div>
+
+        <!-- TRUST -->
+        <div class="spanel" id="spanel-trust">
+          <div class="field"><label class="fl">Label über den Badges</label><input type="text" class="fi" id="cfg-trust_label" placeholder="Ausgestattet mit professioneller Technologie"></div>
+          <div class="sec-label">Technologie-Badges</div>
+          <div id="trust-container"></div>
         </div>
 
         <!-- REVIEWS -->
         <div class="spanel" id="spanel-reviews">
-          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Echte Kundenstimmen. <strong>3-6 Reviews</strong> sind optimal. Vorname + Ort wirkt glaubwürdiger.</p>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Echte Kundenstimmen. <strong>3-6 Reviews</strong> sind optimal.</p>
           <div id="reviews-container"></div>
           <button class="add-btn" id="add-review-btn" type="button">+ Bewertung hinzufügen</button>
+        </div>
+
+        <!-- STEPS -->
+        <div class="spanel" id="spanel-steps">
+          <div class="field"><label class="fl">Abschnitt-Label</label><input type="text" class="fi" id="cfg-steps_label" placeholder="Nächste Schritte"></div>
+          <div class="field"><label class="fl">Abschnitt-Titel</label><input type="text" class="fi" id="cfg-steps_title" placeholder="In 3 Schritten zum Probetraining"></div>
+          <div class="sec-label">Schritte</div>
+          <div id="steps-container"></div>
         </div>
 
         <!-- STUDIOS -->
@@ -399,7 +517,7 @@ button,input,select,textarea{font-family:inherit}
           <div class="field"><label class="fl">Adresse</label><input type="text" class="fi" id="cfg-mem_adresse"></div>
           <div class="field"><label class="fl">Öffnungszeiten</label><input type="text" class="fi" id="cfg-mem_zeiten"></div>
           <div class="field">
-            <label class="fl">WhatsApp <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Format: 49151...</strong>Mit Ländervorwahl, ohne + oder führende 0. Beispiel: <em>4915730024124</em></span></button></label>
+            <label class="fl">WhatsApp <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Format: 49151...</strong>Mit Ländervorwahl, ohne + oder 0.</span></button></label>
             <input type="text" class="fi" id="cfg-mem_wa" placeholder="4915730024124">
           </div>
           <div class="sec-label">fitbox Senden</div>
@@ -420,158 +538,50 @@ button,input,select,textarea{font-family:inherit}
           <div class="sec-label">Unteres Formular</div>
           <div class="field"><label class="fl">Titel</label><input type="text" class="fi" id="cfg-form_title" placeholder="Gutschein sichern"></div>
           <div class="field"><label class="fl">Untertitel</label><input type="text" class="fi" id="cfg-form_subtitle"></div>
-          <div class="sec-label">Sticky CTA (Mobile) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Grüner Balken unten</strong>Erscheint auf Smartphones wenn man nach unten scrollt. Sehr starker Conversion-Treiber.</span></button></div>
+          <div class="sec-label">Sticky CTA (Mobile) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Grüner Balken unten</strong>Erscheint auf Smartphones beim Scrollen.</span></button></div>
           <div class="field"><label class="fl">Titel</label><input type="text" class="fi" id="cfg-sticky_title" placeholder="Gratis EMS-Probetraining"></div>
           <div class="field"><label class="fl">Untertitel</label><input type="text" class="fi" id="cfg-sticky_sub"></div>
         </div>
 
         <!-- DESIGN -->
         <div class="spanel" id="spanel-design">
-          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Farben und Schriftgrößen der Landing Page. Änderungen wirken sich sofort auf die Vorschau aus.</p>
-          <div class="sec-label">Farben</div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Farben und Schriftgrößen. Änderungen wirken sofort in der Vorschau.</p>
+          <div class="sec-label">Hauptfarben</div>
           <div class="field-row">
-            <div class="field">
-              <label class="fl">Primärfarbe <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hauptfarbe der Seite</strong>Wird für Nav-Button, Stats-Balken, grüne Elemente verwendet. Standard: <em>#2f8614</em></span></button></label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-primary_color" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-primary_color_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
-              </div>
-            </div>
-            <div class="field">
-              <label class="fl">CTA-Button-Farbe <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Farbe der großen CTA-Buttons</strong>Die Conversion-Buttons auf der Seite. Kann von der Primärfarbe abweichen.</span></button></label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-cta_bg" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-cta_bg_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
-              </div>
-            </div>
+            <div class="field"><label class="fl">Primär</label><div class="color-row"><input type="color" data-color="primary_color" value="#2f8614"><input type="text" data-color-hex="primary_color" value="#2f8614"></div></div>
+            <div class="field"><label class="fl">CTA-Buttons</label><div class="color-row"><input type="color" data-color="cta_bg" value="#2f8614"><input type="text" data-color-hex="cta_bg" value="#2f8614"></div></div>
           </div>
-          <div class="field">
-            <label class="fl">Hero-Hintergrundfarbe</label>
-            <div style="display:flex;gap:6px;align-items:center">
-              <input type="color" id="cfg-design-hero_bg" value="#ffffff" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-              <input type="text" class="fi" id="cfg-design-hero_bg_hex" value="#ffffff" placeholder="#ffffff" style="flex:1;font-family:monospace">
-            </div>
-          </div>
+          <div class="field"><label class="fl">Hero-Hintergrund</label><div class="color-row"><input type="color" data-color="hero_bg" value="#ffffff"><input type="text" data-color-hex="hero_bg" value="#ffffff"></div></div>
           <div class="sec-label">Banner</div>
           <div class="field-row">
-            <div class="field">
-              <label class="fl">Banner-Hintergrund</label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-banner_bg" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-banner_bg_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
-              </div>
-            </div>
-            <div class="field">
-              <label class="fl">Banner-Schriftfarbe</label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-banner_color" value="#ffffff" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-banner_color_hex" value="#ffffff" placeholder="#ffffff" style="flex:1;font-family:monospace">
-              </div>
-            </div>
+            <div class="field"><label class="fl">Hintergrund</label><div class="color-row"><input type="color" data-color="banner_bg" value="#2f8614"><input type="text" data-color-hex="banner_bg" value="#2f8614"></div></div>
+            <div class="field"><label class="fl">Schrift</label><div class="color-row"><input type="color" data-color="banner_color" value="#ffffff"><input type="text" data-color-hex="banner_color" value="#ffffff"></div></div>
           </div>
-          <div class="sec-label">Scarcity-Box (gelbe Warn-Box)</div>
+          <div class="sec-label">Scarcity-Box</div>
           <div class="field-row">
-            <div class="field">
-              <label class="fl">Hintergrund</label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-scarcity_bg" value="#fff3cd" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-scarcity_bg_hex" value="#fff3cd" placeholder="#fff3cd" style="flex:1;font-family:monospace">
-              </div>
-            </div>
-            <div class="field">
-              <label class="fl">Schriftfarbe</label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-scarcity_color" value="#856404" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-scarcity_color_hex" value="#856404" placeholder="#856404" style="flex:1;font-family:monospace">
-              </div>
-            </div>
+            <div class="field"><label class="fl">Hintergrund</label><div class="color-row"><input type="color" data-color="scarcity_bg" value="#fff3cd"><input type="text" data-color-hex="scarcity_bg" value="#fff3cd"></div></div>
+            <div class="field"><label class="fl">Schrift</label><div class="color-row"><input type="color" data-color="scarcity_color" value="#856404"><input type="text" data-color-hex="scarcity_color" value="#856404"></div></div>
           </div>
           <div class="sec-label">Stats-Leiste</div>
           <div class="field-row">
-            <div class="field">
-              <label class="fl">Hintergrund</label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-stats_bg" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-stats_bg_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
-              </div>
-            </div>
-            <div class="field">
-              <label class="fl">Schriftfarbe</label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-stats_color" value="#ffffff" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-stats_color_hex" value="#ffffff" placeholder="#ffffff" style="flex:1;font-family:monospace">
-              </div>
-            </div>
+            <div class="field"><label class="fl">Hintergrund</label><div class="color-row"><input type="color" data-color="stats_bg" value="#2f8614"><input type="text" data-color-hex="stats_bg" value="#2f8614"></div></div>
+            <div class="field"><label class="fl">Schrift</label><div class="color-row"><input type="color" data-color="stats_color" value="#ffffff"><input type="text" data-color-hex="stats_color" value="#ffffff"></div></div>
           </div>
-          <div class="sec-label">Brand-Hashtags Block</div>
+          <div class="sec-label">Brand-Hashtags</div>
           <div class="field-row">
-            <div class="field">
-              <label class="fl">Hintergrund</label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-brand_bg" value="#111111" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-brand_bg_hex" value="#111111" placeholder="#111111" style="flex:1;font-family:monospace">
-              </div>
-            </div>
-            <div class="field">
-              <label class="fl">Schriftfarbe</label>
-              <div style="display:flex;gap:6px;align-items:center">
-                <input type="color" id="cfg-design-brand_color" value="#ffffff" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-                <input type="text" class="fi" id="cfg-design-brand_color_hex" value="#ffffff" placeholder="#ffffff" style="flex:1;font-family:monospace">
-              </div>
-            </div>
+            <div class="field"><label class="fl">Hintergrund</label><div class="color-row"><input type="color" data-color="brand_bg" value="#111111"><input type="text" data-color-hex="brand_bg" value="#111111"></div></div>
+            <div class="field"><label class="fl">Schrift</label><div class="color-row"><input type="color" data-color="brand_color" value="#ffffff"><input type="text" data-color-hex="brand_color" value="#ffffff"></div></div>
           </div>
-          <div class="field">
-            <label class="fl">Hashtag-Akzentfarbe (#)</label>
-            <div style="display:flex;gap:6px;align-items:center">
-              <input type="color" id="cfg-design-brand_accent" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
-              <input type="text" class="fi" id="cfg-design-brand_accent_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
-            </div>
-          </div>
+          <div class="field"><label class="fl">Hashtag-Akzent (#)</label><div class="color-row"><input type="color" data-color="brand_accent" value="#2f8614"><input type="text" data-color-hex="brand_accent" value="#2f8614"></div></div>
           <div class="sec-label">Schriftgrößen (px)</div>
           <div class="field-row">
-            <div class="field">
-              <label class="fl">Hero Zeile 1 <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Größe der ersten Hero-Zeile</strong>"Sichere dir deinen Gutschein..." — Standard: <em>32</em></span></button></label>
-              <input type="number" class="fi" id="cfg-design-hero_title_size" value="32" min="20" max="80" style="font-family:monospace">
-            </div>
-            <div class="field">
-              <label class="fl">Hero Zeile 2 (grün) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Größe der grünen Hauptzeile</strong>"GRATIS EMS-Probetraining!" — Standard: <em>42</em></span></button></label>
-              <input type="number" class="fi" id="cfg-design-hero_sub_size" value="42" min="24" max="100" style="font-family:monospace">
-            </div>
+            <div class="field"><label class="fl">Hero Zeile 1</label><input type="number" class="fi" id="cfg-design-hero_title_size" value="32" min="20" max="80" style="font-family:monospace"></div>
+            <div class="field"><label class="fl">Hero Zeile 2</label><input type="number" class="fi" id="cfg-design-hero_sub_size" value="42" min="24" max="100" style="font-family:monospace"></div>
           </div>
           <div class="field-row">
-            <div class="field">
-              <label class="fl">Abschnitt-Titel <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Größe der Abschnitts-Überschriften</strong>"Warum fitbox?", "Echte Ergebnisse." etc. — Standard: <em>30</em></span></button></label>
-              <input type="number" class="fi" id="cfg-design-section_title_size" value="30" min="20" max="60" style="font-family:monospace">
-            </div>
-            <div class="field">
-              <label class="fl">Fließtext <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Basis-Schriftgröße der Seite</strong>Gilt für Beschreibungen, Vorteile-Texte etc. — Standard: <em>14</em></span></button></label>
-              <input type="number" class="fi" id="cfg-design-body_size" value="14" min="12" max="18" style="font-family:monospace">
-            </div>
+            <div class="field"><label class="fl">Abschnitt-Titel</label><input type="number" class="fi" id="cfg-design-section_title_size" value="30" min="20" max="60" style="font-family:monospace"></div>
+            <div class="field"><label class="fl">Fließtext</label><input type="number" class="fi" id="cfg-design-body_size" value="14" min="12" max="18" style="font-family:monospace"></div>
           </div>
-        </div>
-
-        <!-- VORTEILE -->
-        <div class="spanel" id="spanel-benefits">
-          <div class="field"><label class="fl">Abschnitt-Label (klein)</label><input type="text" class="fi" id="cfg-benefits_label" placeholder="Deine Vorteile"></div>
-          <div class="field"><label class="fl">Abschnitt-Titel</label><input type="text" class="fi" id="cfg-benefits_title" placeholder="Warum fitbox?"></div>
-          <div class="sec-label">Vorteile-Karten <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>6 Karten im 2-3 Spalten-Grid</strong>Jede Karte hat ein Emoji-Icon, einen Titel und einen kurzen Text. Emoji direkt eingeben oder Unicode: <em>⏱️ 💪 ❤️</em></span></button></div>
-          <div id="benefits-container"></div>
-          <button class="add-btn" id="add-benefit-btn" type="button">+ Vorteil hinzufügen</button>
-        </div>
-
-        <!-- TRUST -->
-        <div class="spanel" id="spanel-trust">
-          <div class="field"><label class="fl">Label über den Badges</label><input type="text" class="fi" id="cfg-trust_label" placeholder="Ausgestattet mit professioneller Technologie"></div>
-          <div class="sec-label">Technologie-Badges (3 Stück)</div>
-          <div id="trust-container"></div>
-        </div>
-
-        <!-- SCHRITTE -->
-        <div class="spanel" id="spanel-steps">
-          <div class="field"><label class="fl">Abschnitt-Label</label><input type="text" class="fi" id="cfg-steps_label" placeholder="Nächste Schritte"></div>
-          <div class="field"><label class="fl">Abschnitt-Titel</label><input type="text" class="fi" id="cfg-steps_title" placeholder="In 3 Schritten zum Probetraining"></div>
-          <div class="sec-label">Schritte</div>
-          <div id="steps-container"></div>
         </div>
 
         <!-- LINKS -->
@@ -582,6 +592,7 @@ button,input,select,textarea{font-family:inherit}
         </div>
 
       </div>
+    </div>
 
     <!-- PREVIEW PANE -->
     <div class="preview-pane" id="previewPane">
@@ -597,12 +608,61 @@ button,input,select,textarea{font-family:inherit}
           </div>
           <iframe id="previewIframe" src="ems-training.html?preview=admin" class="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
         </div>
-        <div class="preview-loading" id="previewLoading">Vorschau wird aktualisiert...</div>
+        <div class="preview-loading" id="previewLoading"></div>
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- HISTORY MODAL -->
+<div class="modal-overlay" id="historyModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">🕐 Versions-Verlauf (lokal)</div>
+      <button class="modal-close" id="historyClose" type="button">✕</button>
+    </div>
+    <div class="modal-body" id="historyBody">
+      <div class="history-empty">Noch keine Snapshots vorhanden.</div>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO BIBLIOTHEK MODAL -->
+<div class="modal-overlay" id="video-lib-overlay">
+  <div class="modal" style="width:min(760px,100%);max-height:88vh">
+    <div class="modal-head">
+      <div class="modal-title">🎬 Video-Bibliothek</div>
+      <button class="modal-close" id="video-lib-close" type="button">✕</button>
+    </div>
+    <div style="padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap">
+      <div id="video-lib-status" style="font-size:12px;color:var(--muted);flex:1;min-width:100px"></div>
+      <button id="vlib-selall-btn" type="button" style="font-size:11px;font-weight:600;background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--ink)">Alle auswählen</button>
+      <button id="vlib-add-btn" type="button" disabled style="font-size:11px;font-weight:700;background:var(--g);color:#fff;border:none;border-radius:6px;padding:5px 12px;opacity:.5">+ Hinzufügen</button>
+      <button id="vlib-del-btn" type="button" disabled style="font-size:11px;font-weight:700;background:var(--r);color:#fff;border:none;border-radius:6px;padding:5px 12px;opacity:.5">🗑 Löschen</button>
+    </div>
+    <div id="video-lib-grid" style="padding:14px 18px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;flex:1"></div>
+  </div>
+</div>
+<style>
+.vlib-card{background:var(--bg);border:2px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:.15s;position:relative;user-select:none}
+.vlib-card:hover{border-color:var(--g)}
+.vlib-card.in-playlist{border-color:var(--g)}
+.vlib-card.checked{border-color:var(--g);background:var(--gbg);box-shadow:0 0 0 2px var(--g)}
+.vlib-check-wrap{position:absolute;top:7px;left:7px;z-index:2;cursor:pointer}
+.vlib-check-wrap input{position:absolute;opacity:0;width:0;height:0}
+.vlib-check-box{display:block;width:20px;height:20px;border-radius:5px;background:rgba(255,255,255,.9);border:2px solid var(--border);transition:.12s}
+.vlib-card.checked .vlib-check-box{background:var(--g);border-color:var(--g)}
+.vlib-card.checked .vlib-check-box::after{content:'✓';display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900;height:100%}
+.vlib-card.in-playlist::before{content:'✓ In Rotation';position:absolute;top:7px;right:7px;background:var(--g);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;z-index:2}
+.vlib-thumb{width:100%;aspect-ratio:16/9;background:#000;overflow:hidden}
+.vlib-thumb video{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.vlib-info{padding:7px 9px}
+.vlib-name{font-size:10px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vlib-size{font-size:10px;color:var(--muted);margin-top:2px}
+#vlib-add-btn:not(:disabled){opacity:1;cursor:pointer}
+#vlib-del-btn:not(:disabled){opacity:1;cursor:pointer}
+</style>
 
 <div class="toast-wrap" id="toastWrap"></div>
 
@@ -613,30 +673,62 @@ var PW = 'fitbox2025!';
 var SUPA_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
 var SUPA_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
 var BUCKET = 'landing';
-var cfg = {};
-var saveTimer = null;
-var previewTimer = null;
-var PREVIEW_DELAY = 900; // ms nach letzter Änderung
+var MAX_HISTORY = 20;
+var HISTORY_KEY = 'fitbox_admin_history_v1';
+
+var savedCfg = {};     // letzter persistierter Stand (DB)
+var currentCfg = {};   // aktueller (un-)gespeicherter Stand
+var undoStack = [];    // lokale Undo-Historie (in-memory + sessionStorage)
+var iframeReady = false;
+var pinned = false;
+var pendingApply = null;
+var applyTimer = null;
+
+var PANEL_META = {
+  banner:{icon:'📢',title:'Banner',sec:'sec-hero'},
+  hero:{icon:'🏠',title:'Hero',sec:'sec-hero'},
+  quiz:{icon:'🎯',title:'Quiz',sec:'sec-quiz'},
+  goals:{icon:'💪',title:'Ziele (Quiz-Buttons)',sec:'sec-quiz'},
+  ctas:{icon:'🔘',title:'CTAs',sec:'sec-benefits'},
+  stats:{icon:'📊',title:'Stats',sec:'sec-stats'},
+  video:{icon:'🎬',title:'Video',sec:'sec-video'},
+  benefits:{icon:'✅',title:'Vorteile',sec:'sec-benefits'},
+  trust:{icon:'🏅',title:'Trust-Badges',sec:'sec-trust'},
+  reviews:{icon:'⭐',title:'Reviews',sec:'sec-reviews'},
+  steps:{icon:'👣',title:'Schritte',sec:'sec-steps'},
+  studios:{icon:'📍',title:'Studios',sec:'sec-studios'},
+  brand:{icon:'🔥',title:'Brand-Hashtags',sec:'sec-brand'},
+  form:{icon:'📝',title:'Formular & Sticky',sec:'sec-steps'},
+  design:{icon:'🎨',title:'Design',sec:'sec-hero'},
+  links:{icon:'🔗',title:'Rechtliche Links',sec:'sec-brand'}
+};
 
 function $(id){ return document.getElementById(id); }
 function q(sel){ return document.querySelector(sel); }
 function qa(sel){ return document.querySelectorAll(sel); }
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function ea(s){ return String(s==null?'':s).replace(/"/g,'&quot;'); }
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+function eqDeep(a,b){ return JSON.stringify(a)===JSON.stringify(b); }
 
 // ── AUTH ──
 function doLogin(){
   if($('loginPw').value === PW){
     sessionStorage.setItem('adm','1');
     $('login').style.display = 'none';
-    $('app').style.display = 'block';
+    $('app').style.display = 'flex';
+    loadHistory();
     loadConfig();
   } else {
     $('loginErr').classList.add('show');
     setTimeout(function(){ $('loginErr').classList.remove('show'); }, 3000);
   }
 }
-function doLogout(){ sessionStorage.removeItem('adm'); location.reload(); }
+function doLogout(){
+  if(isDirty() && !confirm('Du hast ungespeicherte Änderungen. Trotzdem abmelden?')) return;
+  sessionStorage.removeItem('adm');
+  location.reload();
+}
 
 // ── TOAST ──
 function toast(msg, type){
@@ -644,17 +736,64 @@ function toast(msg, type){
   d.className = 'toast ' + (type||'ok');
   d.textContent = msg;
   $('toastWrap').appendChild(d);
-  setTimeout(function(){ d.remove(); }, 3500);
+  setTimeout(function(){ d.style.opacity='0'; d.style.transform='translateY(-6px)'; }, 2700);
+  setTimeout(function(){ d.remove(); }, 3200);
 }
 
-// ── SAVE STATUS ──
-function setSaveStatus(s){
-  var dot = $('saveDot'), lbl = $('saveLabel');
-  dot.className = 'save-dot ' + s;
-  lbl.textContent = s === 'saving' ? 'Speichert...' : s === 'saved' ? 'Gespeichert' : 'Fehler';
+// ── DIRTY STATE ──
+function isDirty(){ return !eqDeep(savedCfg, currentCfg); }
+
+function setDirtyStatus(state){
+  var box = $('dirtyStatus');
+  var lbl = $('dirtyLabel');
+  box.classList.remove('dirty','saving','error');
+  if(state === 'saving'){ box.classList.add('saving'); lbl.textContent = 'Speichert…'; }
+  else if(state === 'error'){ box.classList.add('error'); lbl.textContent = 'Fehler'; }
+  else if(state === 'dirty'){ box.classList.add('dirty'); lbl.textContent = 'Ungespeicherte Änderungen'; }
+  else { lbl.textContent = 'Synchron'; }
 }
 
-// ── SUPABASE HELPERS ──
+function refreshDirtyUI(){
+  var dirty = isDirty();
+  setDirtyStatus(dirty ? 'dirty' : 'saved');
+  $('saveBtn').disabled = !dirty;
+  $('discardBtn').disabled = !dirty;
+  // Markiere Panel-Tabs mit Änderungen
+  qa('.snav-btn').forEach(function(btn){
+    var p = btn.getAttribute('data-panel');
+    var hasChanges = panelHasChanges(p, savedCfg, currentCfg);
+    btn.classList.toggle('has-changes', hasChanges);
+  });
+}
+
+// Welche Felder gehören zu welchem Panel? (für Dirty-Dot pro Tab)
+var PANEL_FIELDS = {
+  banner:['banner_active','banner_text','banner_link_text','banner_link_url'],
+  hero:['hero_title','hero_sub','hero_check','hero_desc','hero_img','scarcity_text','nav_cta_text'],
+  quiz:['quiz_cta','quiz_title','quiz_sub'],
+  goals:['goals'],
+  ctas:['ctas'],
+  stats:['stats'],
+  video:['video_active','video_urls','video_label','video_title','video_desc'],
+  benefits:['benefits_label','benefits_title','benefits'],
+  trust:['trust_label','trust'],
+  reviews:['reviews'],
+  steps:['steps_label','steps_title','steps'],
+  studios:['studio_banner_img','mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa'],
+  brand:['brand_tags'],
+  form:['form_title','form_subtitle','sticky_title','sticky_sub'],
+  design:['design'],
+  links:['impressum_url','datenschutz_url']
+};
+function panelHasChanges(panel, a, b){
+  var fields = PANEL_FIELDS[panel] || [];
+  for(var i=0; i<fields.length; i++){
+    if(!eqDeep(a[fields[i]], b[fields[i]])) return true;
+  }
+  return false;
+}
+
+// ── SUPABASE ──
 function supaHeaders(){
   return {'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY};
 }
@@ -664,53 +803,67 @@ function loadConfig(){
   fetch(SUPA_URL+'/rest/v1/landing_config?id=eq.main&select=config', {headers:supaHeaders()})
     .then(function(r){ return r.ok ? r.json() : []; })
     .then(function(rows){
-      cfg = (rows && rows[0] && rows[0].config) ? rows[0].config : {};
-      renderAll();
-      setSaveStatus('saved');
+      savedCfg = (rows && rows[0] && rows[0].config) ? rows[0].config : {};
+      currentCfg = clone(savedCfg);
+      renderAll(currentCfg);
+      refreshDirtyUI();
     })
     .catch(function(){ toast('Konfiguration konnte nicht geladen werden','err'); });
 }
 
 // ── SAVE ──
 function saveConfig(){
-  var config = readAll();
-  setSaveStatus('saving');
+  if(!isDirty()){ toast('Nichts zu speichern', 'info'); return; }
+  // Snapshot ins Undo bevor wir speichern
+  pushHistory(savedCfg, 'Vor Speichern');
+  var toSave = clone(currentCfg);
+  setDirtyStatus('saving');
   $('saveBtn').disabled = true;
   fetch(SUPA_URL+'/rest/v1/landing_config?id=eq.main', {
     method:'PATCH',
     headers:Object.assign(supaHeaders(),{'Prefer':'return=minimal'}),
-    body:JSON.stringify({config:config, updated_at:new Date().toISOString()})
+    body:JSON.stringify({config:toSave, updated_at:new Date().toISOString()})
   }).then(function(r){
     if(!r.ok) throw new Error('HTTP '+r.status);
-    cfg = config;
-    setSaveStatus('saved');
-    toast('Gespeichert! Seite ist sofort aktualisiert.');
-    refreshPreview();
+    savedCfg = toSave;
+    refreshDirtyUI();
+    toast('Gespeichert – Live-Seite ist aktualisiert');
   }).catch(function(err){
-    setSaveStatus('error');
+    setDirtyStatus('error');
     toast('Fehler beim Speichern: '+err.message,'err');
-  }).then(function(){ $('saveBtn').disabled = false; });
+  }).then(function(){ $('saveBtn').disabled = !isDirty(); });
 }
 
-// ── PREVIEW ──
-function schedulePreview(){
-  clearTimeout(previewTimer);
-  setSaveStatus('saving');
-  previewTimer = setTimeout(function(){
-    saveConfig();
-  }, PREVIEW_DELAY);
+function discardChanges(){
+  if(!isDirty()) return;
+  if(!confirm('Alle ungespeicherten Änderungen verwerfen?')) return;
+  currentCfg = clone(savedCfg);
+  renderAll(currentCfg);
+  applyToPreview();
+  refreshDirtyUI();
+  toast('Änderungen verworfen', 'info');
 }
 
-function refreshPreview(){
+// ── LIVE PREVIEW PIPE ──
+function applyToPreview(){
+  // Debounce für Performance (mehrere Tastenanschläge in Folge)
+  clearTimeout(applyTimer);
+  pendingApply = clone(currentCfg);
+  applyTimer = setTimeout(sendToIframe, 80);
+}
+
+function sendToIframe(){
+  if(!pendingApply) return;
+  if(!iframeReady){ return; } // wird beim ready-Event nachgeholt
   var iframe = $('previewIframe');
-  if(!iframe) return;
-  $('previewLoading').classList.add('show');
-  iframe.src = 'ems-training.html?preview=admin&t=' + Date.now();
-  iframe.onload = function(){ $('previewLoading').classList.remove('show'); };
+  if(iframe && iframe.contentWindow){
+    iframe.contentWindow.postMessage({type:'fitbox-apply-config', config:pendingApply}, '*');
+  }
+  pendingApply = null;
 }
 
-// ── READ ALL ──
-function readAll(){
+// ── READ FROM DOM (für currentCfg) ──
+function readSimple(){
   var c = {};
   var simpleFields = [
     'banner_text','banner_link_text','banner_link_url',
@@ -721,9 +874,7 @@ function readAll(){
     'benefits_label','benefits_title','trust_label','steps_label','steps_title',
     'video_label','video_title','video_desc'
   ];
-  simpleFields.forEach(function(k){
-    var el = $('cfg-'+k); if(el) c[k] = el.value.trim();
-  });
+  simpleFields.forEach(function(k){ var el=$('cfg-'+k); if(el) c[k] = el.value.trim(); });
   c.banner_active = $('cfg-banner_active').checked;
   c.video_active = $('cfg-video_active') ? $('cfg-video_active').checked : false;
   c.video_urls = readVideoUrls();
@@ -739,8 +890,15 @@ function readAll(){
   return c;
 }
 
-// ── RENDER ALL ──
-function renderAll(){
+// Wird bei JEDER Änderung aufgerufen
+function onAnyChange(){
+  currentCfg = readSimple();
+  applyToPreview();
+  refreshDirtyUI();
+}
+
+// ── RENDER ──
+function renderAll(c){
   var simpleFields = [
     'banner_text','banner_link_text','banner_link_url',
     'nav_cta_text','hero_title','hero_sub','hero_check','hero_desc','hero_img','scarcity_text',
@@ -752,47 +910,50 @@ function renderAll(){
   ];
   simpleFields.forEach(function(k){
     var el = $('cfg-'+k);
-    if(el && cfg[k] != null) el.value = cfg[k];
+    if(el) el.value = c[k] != null ? c[k] : '';
   });
   var ba = $('cfg-banner_active');
-  if(ba){ ba.checked = !!cfg.banner_active; updateBannerBadge(); }
+  if(ba){ ba.checked = !!c.banner_active; updateBannerBadge(); }
   var va = $('cfg-video_active');
-  if(va) va.checked = !!cfg.video_active;
-  if(cfg.hero_img) previewImg('hero-preview', cfg.hero_img);
-  if(cfg.studio_banner_img) previewImg('studio-preview', cfg.studio_banner_img);
-  renderVideoPlaylist(cfg.video_urls || (cfg.video_url ? [cfg.video_url] : []));
-  renderGoals(cfg.goals || []);
-  renderStats(cfg.stats || [{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}]);
-  renderReviews(cfg.reviews || []);
-  renderTags(cfg.brand_tags || ['#ImmermitSpaß','#ImmermitTermin','#ImmermitTrainer']);
-  renderCtas(cfg.ctas || Array(6).fill({active:false,title:'',btn:'Gutschein sichern →'}));
-  renderDesign(cfg.design || {primary_color:'#2f8614',cta_bg:'#2f8614',hero_bg:'#ffffff',hero_title_size:'32',hero_sub_size:'42',body_size:'14',section_title_size:'30'});
-  renderBenefits(cfg.benefits || []);
-  renderTrust(cfg.trust || [{sub:'EMS-Anzug',name:'SYMBIONT',desc:'by schwa-medico'},{sub:'EMS-Gerät',name:'MIHA BODYTEC',desc:'Marktführer seit 2007'},{sub:'Qualität',name:'MADE IN GERMANY',desc:'Medizinisch zertifiziert'}]);
-  renderSteps(cfg.steps || [{title:'Gutschein online sichern',text:'Klick auf dein Ziel...'},{title:'Termin vereinbaren',text:'Wir melden uns persönlich.'},{title:'EMS-Training + Infos',text:'Erlebe EMS kostenlos.'}]);
+  if(va) va.checked = !!c.video_active;
+  previewImg('hero-preview', c.hero_img || '');
+  previewImg('studio-preview', c.studio_banner_img || '');
+  renderVideoPlaylist(c.video_urls || (c.video_url ? [c.video_url] : []));
+  renderGoals(c.goals || []);
+  renderStats(c.stats || [{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}]);
+  renderReviews(c.reviews || []);
+  renderTags(c.brand_tags || ['#ImmermitSpaß','#ImmermitTermin','#ImmermitTrainer']);
+  renderCtas(c.ctas || []);
+  renderDesign(c.design || {});
+  renderBenefits(c.benefits || []);
+  renderTrust(c.trust || []);
+  renderSteps(c.steps || []);
 }
 
 // ── DESIGN ──
 function renderDesign(d){
-  if(!d) return;
-  var allColors = ['primary_color','cta_bg','hero_bg','banner_bg','banner_color','scarcity_bg','scarcity_color','stats_bg','stats_color','brand_bg','brand_color','brand_accent'];
-  allColors.forEach(function(k){
-    var col = $('cfg-design-'+k); var hex = $('cfg-design-'+k+'_hex');
-    if(col && d[k]) col.value = d[k];
-    if(hex && d[k]) hex.value = d[k];
+  if(!d) d = {};
+  qa('[data-color]').forEach(function(col){
+    var key = col.getAttribute('data-color');
+    if(d[key]) col.value = d[key];
   });
-  var numFields = ['hero_title_size','hero_sub_size','body_size','section_title_size'];
-  numFields.forEach(function(k){
+  qa('[data-color-hex]').forEach(function(hex){
+    var key = hex.getAttribute('data-color-hex');
+    if(d[key]) hex.value = d[key];
+  });
+  ['hero_title_size','hero_sub_size','body_size','section_title_size'].forEach(function(k){
     var el = $('cfg-design-'+k); if(el && d[k] != null) el.value = d[k];
   });
 }
 function readDesign(){
   var d = {};
-  var allColors = ['primary_color','cta_bg','hero_bg','banner_bg','banner_color','scarcity_bg','scarcity_color','stats_bg','stats_color','brand_bg','brand_color','brand_accent'];
-  allColors.forEach(function(k){
-    var hex = $('cfg-design-'+k+'_hex');
-    var col = $('cfg-design-'+k);
-    d[k] = (hex && hex.value.trim()) || (col && col.value) || '';
+  qa('[data-color-hex]').forEach(function(hex){
+    var key = hex.getAttribute('data-color-hex');
+    d[key] = hex.value.trim();
+  });
+  qa('[data-color]').forEach(function(col){
+    var key = col.getAttribute('data-color');
+    if(!d[key]) d[key] = col.value;
   });
   ['hero_title_size','hero_sub_size','body_size','section_title_size'].forEach(function(k){
     var el = $('cfg-design-'+k); if(el) d[k] = el.value;
@@ -801,19 +962,19 @@ function readDesign(){
 }
 
 // ── BENEFITS ──
-function renderBenefits(benefits){ var c = $('benefits-container'); c.innerHTML = ''; benefits.forEach(function(b){ addBenefitEl(b); }); }
+function renderBenefits(arr){ var c = $('benefits-container'); c.innerHTML=''; arr.forEach(function(b){ addBenefitEl(b); }); }
 function addBenefitEl(b){
   var c = $('benefits-container');
   var d = document.createElement('div'); d.className = 'item';
   d.innerHTML =
     '<button class="item-del" type="button">&times;</button>'+
     '<div class="field-row">'+
-      '<div class="field" style="max-width:70px"><label class="fl">Icon</label><input type="text" class="fi" data-b-icon value="'+ea((b&&b.icon)||'')+'" placeholder="⏱️" style="font-size:18px;text-align:center"></div>'+
+      '<div class="field" style="max-width:70px"><label class="fl">Icon</label><input type="text" class="fi" data-b-icon value="'+ea((b&&b.icon)||'')+'" style="font-size:18px;text-align:center"></div>'+
       '<div class="field" style="flex:1"><label class="fl">Titel</label><input type="text" class="fi" data-b-title value="'+ea((b&&b.title)||'')+'" placeholder="Zeiteffizient"></div>'+
     '</div>'+
-    '<div class="field"><label class="fl">Text</label><textarea class="fa" data-b-text rows="2" placeholder="Kurze Erklärung...">'+esc((b&&b.text)||'')+'</textarea></div>';
-  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); schedulePreview(); });
-  d.querySelectorAll('input,textarea').forEach(function(i){ i.addEventListener('input', schedulePreview); });
+    '<div class="field"><label class="fl">Text</label><textarea class="fa" data-b-text rows="2">'+esc((b&&b.text)||'')+'</textarea></div>';
+  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); onAnyChange(); });
+  d.querySelectorAll('input,textarea').forEach(function(i){ i.addEventListener('input', onAnyChange); });
   c.appendChild(d);
 }
 function readBenefits(){
@@ -825,17 +986,22 @@ function readBenefits(){
 }
 
 // ── TRUST ──
-function renderTrust(trust){ var c = $('trust-container'); c.innerHTML = ''; trust.forEach(function(t){ addTrustEl(t); }); }
+function renderTrust(arr){
+  var c = $('trust-container'); c.innerHTML='';
+  // Default falls leer
+  if(!arr.length) arr = [{sub:'EMS-Anzug',name:'SYMBIONT',desc:'by schwa-medico'},{sub:'EMS-Gerät',name:'MIHA BODYTEC',desc:'Marktführer seit 2007'},{sub:'Qualität',name:'MADE IN GERMANY',desc:'Medizinisch zertifiziert'}];
+  arr.forEach(function(t){ addTrustEl(t); });
+}
 function addTrustEl(t){
   var c = $('trust-container');
   var d = document.createElement('div'); d.className = 'item';
   d.innerHTML =
     '<div class="field-row" style="margin-bottom:8px">'+
-      '<div class="field"><label class="fl">Label (klein)</label><input type="text" class="fi" data-t-sub value="'+ea((t&&t.sub)||'')+'" placeholder="EMS-Anzug"></div>'+
-      '<div class="field"><label class="fl">Name (groß)</label><input type="text" class="fi" data-t-name value="'+ea((t&&t.name)||'')+'" placeholder="SYMBIONT"></div>'+
+      '<div class="field"><label class="fl">Label (klein)</label><input type="text" class="fi" data-t-sub value="'+ea((t&&t.sub)||'')+'"></div>'+
+      '<div class="field"><label class="fl">Name (groß)</label><input type="text" class="fi" data-t-name value="'+ea((t&&t.name)||'')+'"></div>'+
     '</div>'+
-    '<div class="field" style="margin:0"><label class="fl">Beschreibung</label><input type="text" class="fi" data-t-desc value="'+ea((t&&t.desc)||'')+'" placeholder="by schwa-medico"></div>';
-  d.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', schedulePreview); });
+    '<div class="field" style="margin:0"><label class="fl">Beschreibung</label><input type="text" class="fi" data-t-desc value="'+ea((t&&t.desc)||'')+'"></div>';
+  d.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', onAnyChange); });
   c.appendChild(d);
 }
 function readTrust(){
@@ -847,16 +1013,19 @@ function readTrust(){
 }
 
 // ── STEPS ──
-function renderSteps(steps){ var c = $('steps-container'); c.innerHTML = ''; steps.forEach(function(s,i){ addStepEl(s,i); }); }
+function renderSteps(arr){
+  var c = $('steps-container'); c.innerHTML='';
+  if(!arr.length) arr = [{title:'Gutschein online sichern',text:''},{title:'Termin vereinbaren',text:''},{title:'EMS-Training + Infos',text:''}];
+  arr.forEach(function(s,i){ addStepEl(s,i); });
+}
 function addStepEl(s, i){
   var c = $('steps-container');
   var d = document.createElement('div'); d.className = 'item';
-  var num = $('steps-container').children.length + 1;
   d.innerHTML =
-    '<div class="cta-num"><span>'+(i!==undefined?i+1:num)+'</span></div>'+
-    '<div class="field"><label class="fl">Titel</label><input type="text" class="fi" data-s-title value="'+ea((s&&s.title)||'')+'" placeholder="Gutschein sichern"></div>'+
-    '<div class="field" style="margin:0"><label class="fl">Beschreibung</label><textarea class="fa" data-s-text rows="2" placeholder="Klick auf dein Ziel...">'+esc((s&&s.text)||'')+'</textarea></div>';
-  d.querySelectorAll('input,textarea').forEach(function(i){ i.addEventListener('input', schedulePreview); });
+    '<div class="cta-num"><span>'+(i+1)+'</span></div>'+
+    '<div class="field"><label class="fl">Titel</label><input type="text" class="fi" data-s-title value="'+ea((s&&s.title)||'')+'"></div>'+
+    '<div class="field" style="margin:0"><label class="fl">Beschreibung</label><textarea class="fa" data-s-text rows="2">'+esc((s&&s.text)||'')+'</textarea></div>';
+  d.querySelectorAll('input,textarea').forEach(function(i){ i.addEventListener('input', onAnyChange); });
   c.appendChild(d);
 }
 function readSteps(){
@@ -880,17 +1049,13 @@ function previewImg(id, src){
   c.innerHTML = src ? '<img src="'+ea(src)+'" onerror="this.parentElement.innerHTML=\'<div class=img-ph>Bild nicht ladbar</div>\'" alt="">' : '<div class="img-ph">Kein Bild hochgeladen</div>';
 }
 
-// ── VIDEO UPLOAD (via Edge Function) ──
+// ── VIDEO UPLOAD ──
 function uploadVideo(file, onDone){
   var allowed = ['video/mp4','video/webm','video/quicktime'];
   if(allowed.indexOf(file.type) === -1){ toast('Nur MP4, WebM oder MOV erlaubt', 'err'); onDone(null); return; }
-  var btn  = $('upl-video-btn');
-  var wrap = $('video-progress-wrap');
-  var bar  = $('video-progress-bar');
-  var lbl  = $('video-progress-label');
+  var btn=$('upl-video-btn'),wrap=$('video-progress-wrap'),bar=$('video-progress-bar'),lbl=$('video-progress-label');
   if(btn){ btn.disabled = true; btn.textContent = 'Lädt...'; }
   if(wrap) wrap.style.display = '';
-
   var xhr = new XMLHttpRequest();
   xhr.upload.addEventListener('progress', function(e){
     if(e.lengthComputable){
@@ -905,19 +1070,15 @@ function uploadVideo(file, onDone){
     if(xhr.status === 200){
       try {
         var res = JSON.parse(xhr.responseText);
-        if(res.url){ toast('Video hochgeladen!'); onDone(res.url); }
-        else { toast('Upload fehlgeschlagen: ' + (res.error||'Unbekannter Fehler'), 'err'); onDone(null); }
-      } catch(e){ toast('Upload fehlgeschlagen', 'err'); onDone(null); }
-    } else {
-      toast('Upload fehlgeschlagen (' + xhr.status + ')', 'err');
-      onDone(null);
-    }
+        if(res.url){ toast('Video hochgeladen'); onDone(res.url); }
+        else { toast('Upload fehlgeschlagen: '+(res.error||'Unbekannt'), 'err'); onDone(null); }
+      } catch(e){ toast('Upload fehlgeschlagen','err'); onDone(null); }
+    } else { toast('Upload fehlgeschlagen ('+xhr.status+')','err'); onDone(null); }
   });
   xhr.addEventListener('error', function(){
     if(wrap) wrap.style.display = 'none';
     if(btn){ btn.disabled = false; btn.textContent = 'Hochladen'; }
-    toast('Upload fehlgeschlagen', 'err');
-    onDone(null);
+    toast('Upload fehlgeschlagen','err'); onDone(null);
   });
   xhr.open('POST', SUPA_URL + '/functions/v1/upload-video');
   xhr.setRequestHeader('x-file-name', file.name);
@@ -925,14 +1086,6 @@ function uploadVideo(file, onDone){
   xhr.setRequestHeader('Content-Type', file.type);
   xhr.send(file);
 }
-
-function previewVideo(url){
-  var box = $('video-preview');
-  if(!box) return;
-  if(!url){ box.innerHTML = '<div class="img-ph">Kein Video hochgeladen</div>'; return; }
-  box.innerHTML = '<video src="'+ea(url)+'" controls playsinline preload="metadata" style="width:100%;border-radius:6px;max-height:160px;background:#000"></video>';
-}
-
 
 function bindUpload(key, prevId){
   var fileInput = $('upl-'+key);
@@ -945,11 +1098,12 @@ function bindUpload(key, prevId){
   fileInput.addEventListener('change', function(){
     var file = this.files[0]; if(!file) return;
     uploadFile(file, function(url){
-      if(url){ hidden.value = url; previewImg(prevId, url); schedulePreview(); }
+      if(url){ hidden.value = url; previewImg(prevId, url); onAnyChange(); }
     }, prevBox, uploadBtn);
+    fileInput.value = ''; // damit gleiche Datei nochmal upload-bar
   });
   if(clearBtn) clearBtn.addEventListener('click', function(){
-    hidden.value = ''; previewImg(prevId, ''); schedulePreview();
+    hidden.value = ''; previewImg(prevId, ''); onAnyChange();
   });
 }
 
@@ -969,7 +1123,7 @@ function uploadFile(file, onDone, prevBox, btn){
   }).then(function(r){ if(!r.ok) return r.json().then(function(e){ throw new Error(e.message||'HTTP '+r.status); }); return r.json(); })
   .then(function(){
     var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+name;
-    toast('Bild hochgeladen!');
+    toast('Bild hochgeladen');
     onDone(url);
   }).catch(function(err){
     toast('Upload fehlgeschlagen: '+err.message,'err');
@@ -981,7 +1135,7 @@ function uploadFile(file, onDone, prevBox, btn){
 }
 
 // ── GOALS ──
-function renderGoals(goals){ var c = $('goals-container'); c.innerHTML = ''; goals.forEach(function(g){ addGoalEl(g); }); }
+function renderGoals(arr){ var c = $('goals-container'); c.innerHTML=''; arr.forEach(function(g){ addGoalEl(g); }); }
 function addGoalEl(g){
   var c = $('goals-container');
   var d = document.createElement('div'); d.className = 'item';
@@ -991,7 +1145,7 @@ function addGoalEl(g){
     '<button class="item-del" type="button">&times;</button>'+
     '<div class="field-row">'+
       '<div class="field"><label class="fl">Key (intern)</label><input type="text" class="fi" data-goal-key value="'+ea((g&&g.key)||'')+'" placeholder="abnehmen"></div>'+
-      '<div class="field"><label class="fl">Label</label><input type="text" class="fi" data-goal-label value="'+ea((g&&g.label)||'')+'" placeholder="Abnehmen &amp; Figur straffen"></div>'+
+      '<div class="field"><label class="fl">Label</label><input type="text" class="fi" data-goal-label value="'+ea((g&&g.label)||'')+'"></div>'+
     '</div>'+
     '<div class="field"><label class="fl">Bild</label>'+
     '<div class="img-box" style="height:80px" data-prev-box>'+( img ? '<img src="'+ea(img)+'">' : '<div class="img-ph">Kein Bild</div>' )+'</div>'+
@@ -1000,7 +1154,7 @@ function addGoalEl(g){
     '<input type="file" class="upl-input" id="'+uid+'" accept="image/jpeg,image/png,image/webp">'+
     '<div class="upl-row"><button class="upl-btn" data-gi-upl="'+uid+'" type="button">Hochladen</button><button class="upl-clr" data-gi-clr type="button">Löschen</button></div>'+
     '</div>';
-  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); schedulePreview(); });
+  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); onAnyChange(); });
   var fi = d.querySelector('#'+uid);
   var ub = d.querySelector('[data-gi-upl]');
   var cb = d.querySelector('[data-gi-clr]');
@@ -1009,10 +1163,11 @@ function addGoalEl(g){
   ub.addEventListener('click', function(){ fi.click(); });
   fi.addEventListener('change', function(){
     var f = this.files[0]; if(!f) return;
-    uploadFile(f, function(url){ if(url){ hi.value = url; pb.innerHTML = '<img src="'+ea(url)+'">'; schedulePreview(); } }, pb, ub);
+    uploadFile(f, function(url){ if(url){ hi.value = url; pb.innerHTML = '<img src="'+ea(url)+'">'; onAnyChange(); } }, pb, ub);
+    fi.value='';
   });
-  cb.addEventListener('click', function(){ hi.value = ''; pb.innerHTML = '<div class="img-ph">Kein Bild</div>'; schedulePreview(); });
-  d.querySelectorAll('input[type=text]').forEach(function(inp){ inp.addEventListener('input', schedulePreview); });
+  cb.addEventListener('click', function(){ hi.value = ''; pb.innerHTML = '<div class="img-ph">Kein Bild</div>'; onAnyChange(); });
+  d.querySelectorAll('input[type=text]').forEach(function(inp){ inp.addEventListener('input', onAnyChange); });
   c.appendChild(d);
 }
 function readGoals(){
@@ -1027,30 +1182,28 @@ function readGoals(){
 }
 
 // ── CTAS ──
-var CTA_POS = [
-  'Nach Vorteilen',        // cta-1
-  'Nach Trust-Badges',     // cta-2
-  'Nach Bewertungen',      // cta-3
-  'Nach 3-Schritt-Anleitung', // cta-4
-  'Nach Studios',          // cta-5
-  'Vor unterem Formular'   // cta-6
-];
+var CTA_POS = ['Nach Vorteilen','Nach Trust-Badges','Nach Bewertungen','Nach 3-Schritt-Anleitung','Nach Studios','Vor unterem Formular'];
 function renderCtas(ctas){
   var c = $('ctas-container'); c.innerHTML = '';
   for(var i=0; i<6; i++){ addCtaEl(i, ctas[i] || {active:false,title:'',btn:'Gutschein sichern →'}); }
 }
 function addCtaEl(idx, cta){
   var c = $('ctas-container');
-  var d = document.createElement('div'); d.className = 'cta-item';
+  var d = document.createElement('div'); d.className = 'cta-item' + (cta.active?'':' inactive');
   d.innerHTML =
-    '<div class="cta-num"><span>'+(idx+1)+'</span> Position: '+CTA_POS[idx]+'</div>'+
+    '<div class="cta-num"><span>'+(idx+1)+'</span> '+CTA_POS[idx]+'</div>'+
     '<div class="tog-row" style="margin-bottom:10px">'+
       '<label class="tog"><input type="checkbox" data-cta-active '+(cta.active?'checked':'')+'><span class="tog-track"></span></label>'+
       '<span class="tog-lbl">Anzeigen</span>'+
     '</div>'+
-    '<div class="field"><label class="fl">Überschrift (optional)</label><input type="text" class="fi" data-cta-title value="'+ea(cta.title||'')+'" placeholder="Jetzt kostenloses Probetraining vereinbaren!"></div>'+
-    '<div class="field"><label class="fl">Button-Text *</label><input type="text" class="fi" data-cta-btn value="'+ea(cta.btn||'')+'" placeholder="Gutschein sichern →"></div>';
-  d.querySelectorAll('input').forEach(function(inp){ inp.addEventListener('change', schedulePreview); inp.addEventListener('input', schedulePreview); });
+    '<div class="field"><label class="fl">Überschrift (optional)</label><input type="text" class="fi" data-cta-title value="'+ea(cta.title||'')+'"></div>'+
+    '<div class="field"><label class="fl">Button-Text</label><input type="text" class="fi" data-cta-btn value="'+ea(cta.btn||'')+'"></div>';
+  var activeCb = d.querySelector('[data-cta-active]');
+  activeCb.addEventListener('change', function(){
+    d.classList.toggle('inactive', !this.checked);
+    onAnyChange();
+  });
+  d.querySelectorAll('input[type=text]').forEach(function(inp){ inp.addEventListener('input', onAnyChange); });
   c.appendChild(d);
 }
 function readCtas(){
@@ -1067,12 +1220,12 @@ function readCtas(){
 
 // ── STATS ──
 function renderStats(stats){
-  var c = $('stats-container'); c.innerHTML = '';
+  var c = $('stats-container'); c.innerHTML='';
   stats.forEach(function(s,i){
     var d = document.createElement('div'); d.className = 'stat-row';
-    d.innerHTML = '<div class="field"><label class="fl">Zahl</label><input type="text" class="fi" data-stat="'+i+'" data-fld="num" value="'+ea(s.num)+'" placeholder="20"></div>'+
-                  '<div class="field"><label class="fl">Beschriftung</label><input type="text" class="fi" data-stat="'+i+'" data-fld="label" value="'+ea(s.label)+'" placeholder="Min. pro Session"></div>';
-    d.querySelectorAll('input').forEach(function(inp){ inp.addEventListener('input', schedulePreview); });
+    d.innerHTML = '<div class="field"><label class="fl">Zahl</label><input type="text" class="fi" data-stat="'+i+'" data-fld="num" value="'+ea(s.num)+'"></div>'+
+                  '<div class="field"><label class="fl">Beschriftung</label><input type="text" class="fi" data-stat="'+i+'" data-fld="label" value="'+ea(s.label)+'"></div>';
+    d.querySelectorAll('input').forEach(function(inp){ inp.addEventListener('input', onAnyChange); });
     c.appendChild(d);
   });
 }
@@ -1087,16 +1240,16 @@ function readStats(){
 }
 
 // ── REVIEWS ──
-function renderReviews(reviews){ var c = $('reviews-container'); c.innerHTML = ''; reviews.forEach(function(r){ addReviewEl(r); }); }
+function renderReviews(arr){ var c = $('reviews-container'); c.innerHTML=''; arr.forEach(function(r){ addReviewEl(r); }); }
 function addReviewEl(r){
   var c = $('reviews-container');
-  var d = document.createElement('div'); d.className = 'item';
+  var d = document.createElement('div'); d.className='item';
   var img = (r && r.img) || '';
   var uid = 'rev-img-'+Math.random().toString(36).substr(2,8);
   d.innerHTML = '<button class="item-del" type="button">&times;</button>'+
     '<div class="field"><label class="fl">Text</label><textarea class="fa" data-rev-text rows="2">'+esc((r&&r.text)||'')+'</textarea></div>'+
-    '<div class="field"><label class="fl">Autor</label><input type="text" class="fi" data-rev-author value="'+ea((r&&r.author)||'')+'" placeholder="Max M. aus Memmingen"></div>'+
-    '<div class="field" style="margin-top:8px"><label class="fl">Profilbild (optional) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Quadratisches Foto</strong>Erscheint als rundes Profilbild neben den Sternen. Max 5MB, JPG/PNG/WEBP.</span></button></label>'+
+    '<div class="field"><label class="fl">Autor</label><input type="text" class="fi" data-rev-author value="'+ea((r&&r.author)||'')+'"></div>'+
+    '<div class="field" style="margin-top:8px"><label class="fl">Profilbild (optional)</label>'+
     '<div style="display:flex;align-items:center;gap:10px">'+
       '<div data-rev-prev style="width:44px;height:44px;border-radius:50%;overflow:hidden;background:var(--bg);border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px">'+(img?'<img src="'+ea(img)+'" style="width:100%;height:100%;object-fit:cover">':'👤')+'</div>'+
       '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
@@ -1106,8 +1259,8 @@ function addReviewEl(r){
         '<button class="upl-clr" data-rev-clr type="button">Entfernen</button>'+
       '</div>'+
     '</div></div>';
-  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); schedulePreview(); });
-  d.querySelectorAll('input[type=text],textarea').forEach(function(inp){ inp.addEventListener('input', schedulePreview); });
+  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); onAnyChange(); });
+  d.querySelectorAll('input[type=text],textarea').forEach(function(inp){ inp.addEventListener('input', onAnyChange); });
   var fi = d.querySelector('#'+uid);
   var ub = d.querySelector('[data-rev-upl]');
   var cb = d.querySelector('[data-rev-clr]');
@@ -1117,10 +1270,11 @@ function addReviewEl(r){
   fi.addEventListener('change', function(){
     var f = this.files[0]; if(!f) return;
     uploadFile(f, function(url){
-      if(url){ hi.value = url; pb.innerHTML = '<img src="'+ea(url)+'" style="width:100%;height:100%;object-fit:cover">'; schedulePreview(); }
+      if(url){ hi.value = url; pb.innerHTML = '<img src="'+ea(url)+'" style="width:100%;height:100%;object-fit:cover">'; onAnyChange(); }
     }, pb, ub);
+    fi.value='';
   });
-  cb.addEventListener('click', function(){ hi.value = ''; pb.innerHTML = '👤'; schedulePreview(); });
+  cb.addEventListener('click', function(){ hi.value = ''; pb.innerHTML = '👤'; onAnyChange(); });
   c.appendChild(d);
 }
 function readReviews(){
@@ -1135,14 +1289,14 @@ function readReviews(){
 }
 
 // ── TAGS ──
-function renderTags(tags){ var c = $('tags-container'); c.innerHTML = ''; tags.forEach(function(t){ addTagEl(t); }); }
+function renderTags(arr){ var c = $('tags-container'); c.innerHTML=''; arr.forEach(function(t){ addTagEl(t); }); }
 function addTagEl(t){
   var c = $('tags-container');
-  var d = document.createElement('div'); d.className = 'item'; d.style.padding = '10px 12px';
+  var d = document.createElement('div'); d.className='item'; d.style.padding='10px 12px';
   d.innerHTML = '<button class="item-del" type="button">&times;</button>'+
     '<div class="field" style="margin:0"><label class="fl">Hashtag</label><input type="text" class="fi" data-tag value="'+ea(t||'')+'" placeholder="#ImmermitSpaß"></div>';
-  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); schedulePreview(); });
-  d.querySelector('[data-tag]').addEventListener('input', schedulePreview);
+  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); onAnyChange(); });
+  d.querySelector('[data-tag]').addEventListener('input', onAnyChange);
   c.appendChild(d);
 }
 function readTags(){
@@ -1154,280 +1308,16 @@ function readTags(){
   return r;
 }
 
-// ── PREVIEW MODE ──
-function setPreviewMode(mode){
-  var wrap = $('previewWrap');
-  wrap.className = 'preview-frame-wrap ' + mode;
-  $('prevDesk').classList.toggle('active', mode === 'desktop');
-  $('prevMob').classList.toggle('active', mode === 'mobile');
-}
-
-// ── PANEL → SECTION MAPPING ──
-var PANEL_SEC = {
-  'hero':'sec-hero','quiz':'sec-quiz','stats':'sec-stats',
-  'benefits':'sec-benefits','trust':'sec-trust','reviews':'sec-reviews',
-  'steps':'sec-steps','studios':'sec-studios','brand':'sec-brand',
-  'goals':'sec-quiz','ctas':'sec-benefits','form':'anmeldung',
-  'links':'anmeldung','design':'sec-hero','banner':'sec-hero'
-};
-
-// ── NAV ──
-function showPanel(name, fromIframe){
-  qa('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-panel') === name); });
-  qa('.spanel').forEach(function(p){ p.classList.toggle('active', p.id === 'spanel-'+name); });
-  // Vorschau zur passenden Section scrollen (außer wenn der Klick vom Iframe kam)
-  if(!fromIframe){
-    var secId = PANEL_SEC[name];
-    if(secId) scrollIframeTo(secId);
-  }
-}
-
-function scrollIframeTo(secId){
-  var iframe = $('previewIframe');
-  if(!iframe || !iframe.contentWindow) return;
-  try {
-    var el = iframe.contentWindow.document.getElementById(secId)
-           || iframe.contentWindow.document.querySelector('[data-sec="'+secId+'"]');
-    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
-  } catch(e){}
-}
-
-// ── POSTMESSAGE FROM IFRAME ──
-window.addEventListener('message', function(e){
-  if(!e.data) return;
-  // Iframe sagt: dieser Panel wurde sichtbar (scroll-getriggert)
-  if(e.data.type === 'fitbox-section-visible' && e.data.panel){
-    qa('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-panel') === e.data.panel); });
-    qa('.spanel').forEach(function(p){ p.classList.toggle('active', p.id === 'spanel-'+e.data.panel); });
-    // Sidebar-Nav sichtbar scrollen
-    var activeBtn = document.querySelector('.snav-btn.active');
-    if(activeBtn) activeBtn.scrollIntoView({behavior:'smooth', block:'nearest'});
-  }
-  // Iframe sagt: Edit-Button geklickt → Panel öffnen
-  if(e.data.type === 'fitbox-panel-select' && e.data.panel){
-    showPanel(e.data.panel, true);
-  }
-});
-
-// ── BINDINGS ──
-function bindAll(){
-  $('loginBtn').addEventListener('click', doLogin);
-  $('loginPw').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
-  $('logoutBtn').addEventListener('click', doLogout);
-  $('saveBtn').addEventListener('click', saveConfig);
-  $('openSiteBtn').addEventListener('click', function(){ window.open('ems-training.html','_blank'); });
-  $('prevDesk').addEventListener('click', function(){ setPreviewMode('desktop'); });
-  $('prevMob').addEventListener('click', function(){ setPreviewMode('mobile'); });
-  $('cfg-banner_active').addEventListener('change', function(){ updateBannerBadge(); schedulePreview(); });
-  qa('.snav-btn').forEach(function(b){
-    b.addEventListener('click', function(){ showPanel(b.getAttribute('data-panel')); });
-  });
-  $('add-goal-btn').addEventListener('click', function(){ addGoalEl({}); });
-  $('add-review-btn').addEventListener('click', function(){ addReviewEl({}); });
-  $('add-tag-btn').addEventListener('click', function(){ addTagEl(''); });
-  $('add-benefit-btn').addEventListener('click', function(){ addBenefitEl({}); });
-  bindUpload('hero_img', 'hero-preview');
-  bindUpload('studio_banner_img', 'studio-preview');
-  // Video Upload
-  var vFileInput = $('upl-video_url');
-  var vBtn = $('upl-video-btn');
-  if(vBtn && vFileInput){
-    vBtn.addEventListener('click', function(){ vFileInput.click(); });
-    vFileInput.addEventListener('change', function(){
-      var file = this.files[0]; if(!file) return;
-      uploadVideo(file, function(url){
-        if(url){ addVideoUrl(url); schedulePreview(); }
-      });
-    });
-  }
-  var vLibBtn = $('upl-video-lib-btn');
-  if(vLibBtn) vLibBtn.addEventListener('click', openVideoLib);
-  $('video-lib-close').addEventListener('click', closeVideoLib);
-  $('video-lib-overlay').addEventListener('click', function(e){ if(e.target === this) closeVideoLib(); });
-  $('vlib-add-btn').addEventListener('click', vLibAddSelected);
-  $('vlib-del-btn').addEventListener('click', vLibDeleteSelected);
-  $('vlib-selall-btn').addEventListener('click', vLibToggleAll);
-
-
-  // Farb-Picker Sync (color ↔ hex text)
-  var allColorKeys = ['primary_color','cta_bg','hero_bg','banner_bg','banner_color','scarcity_bg','scarcity_color','stats_bg','stats_color','brand_bg','brand_color','brand_accent'];
-  allColorKeys.forEach(function(k){
-    var col = $('cfg-design-'+k);
-    var hex = $('cfg-design-'+k+'_hex');
-    if(col && hex){
-      col.addEventListener('input', function(){ hex.value = col.value; schedulePreview(); });
-      hex.addEventListener('input', function(){
-        if(/^#[0-9a-fA-F]{6}$/.test(hex.value)){ col.value = hex.value; }
-        schedulePreview();
-      });
-    }
-  });
-
-  // Zahlen-Felder Design
-  ['hero_title_size','hero_sub_size','body_size','section_title_size'].forEach(function(k){
-    var el = $('cfg-design-'+k);
-    if(el) el.addEventListener('input', schedulePreview);
-  });
-
-  // Auto-save on any simple field change
-  var autoFields = [
-    'banner_text','banner_link_text','banner_link_url',
-    'nav_cta_text','hero_title','hero_sub','hero_check','hero_desc','scarcity_text',
-    'quiz_cta','quiz_title','quiz_sub',
-    'mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
-    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
-    'benefits_label','benefits_title','trust_label','steps_label','steps_title',
-    'video_label','video_title','video_desc'
-  ];
-  autoFields.forEach(function(k){
-    var el = $('cfg-'+k);
-    if(el) el.addEventListener('input', schedulePreview);
-  });
-
-  // Listen for iframe loaded
-  $('previewIframe').addEventListener('load', function(){
-    $('previewLoading').classList.remove('show');
-  });
-}
-
-// ── VIDEO BIBLIOTHEK ──
-function openVideoLib(){
-  var overlay = $('video-lib-overlay');
-  overlay.style.display = 'flex';
-  loadVideoLib();
-}
-function closeVideoLib(){
-  $('video-lib-overlay').style.display = 'none';
-}
-function loadVideoLib(){
-  var grid = $('video-lib-grid');
-  var status = $('video-lib-status');
-  grid.innerHTML = '';
-  status.textContent = 'Lädt Videos...';
-  updateLibToolbar();
-  fetch(SUPA_URL+'/storage/v1/object/list/'+BUCKET, {
-    method:'POST',
-    headers:Object.assign({'Content-Type':'application/json'}, supaHeaders()),
-    body: JSON.stringify({prefix:'', limit:200, offset:0, sortBy:{column:'created_at', order:'desc'}})
-  })
-  .then(function(r){ return r.ok ? r.json() : Promise.reject(r.status); })
-  .then(function(files){
-    var videos = files.filter(function(f){
-      return f.name && /\.(mp4|webm|mov|m4v)$/i.test(f.name);
-    });
-    if(videos.length === 0){ status.textContent = 'Keine Videos im Bucket gefunden.'; return; }
-    status.textContent = videos.length + ' Video' + (videos.length !== 1 ? 's' : '') + ' gefunden';
-    var currentUrls = readVideoUrls();
-    videos.forEach(function(f){
-      var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+f.name;
-      var sizeMB = f.metadata && f.metadata.size ? (f.metadata.size/1024/1024).toFixed(1)+' MB' : '';
-      var inPlaylist = currentUrls.indexOf(url) !== -1;
-      var card = document.createElement('div');
-      card.className = 'vlib-card' + (inPlaylist ? ' in-playlist' : '');
-      card.setAttribute('data-url', url);
-      card.setAttribute('data-name', f.name);
-      card.innerHTML =
-        '<label class="vlib-check-wrap"><input type="checkbox" class="vlib-cb"'+(inPlaylist?' checked':'')+'>'+
-        '<span class="vlib-check-box"></span></label>'+
-        '<div class="vlib-thumb"><video src="'+ea(url)+'" preload="metadata" muted playsinline></video></div>'+
-        '<div class="vlib-info">'+
-          '<div class="vlib-name" title="'+ea(f.name)+'">'+ea(f.name)+'</div>'+
-          (sizeMB ? '<div class="vlib-size">'+sizeMB+'</div>' : '')+
-        '</div>';
-      card.querySelector('.vlib-cb').addEventListener('change', function(){
-        card.classList.toggle('checked', this.checked);
-        updateLibToolbar();
-      });
-      card.addEventListener('click', function(e){
-        if(e.target.closest('.vlib-check-wrap')) return;
-        var cb = card.querySelector('.vlib-cb');
-        cb.checked = !cb.checked;
-        cb.dispatchEvent(new Event('change'));
-      });
-      grid.appendChild(card);
-    });
-  })
-  .catch(function(err){ status.textContent = 'Fehler beim Laden (' + err + ')'; });
-}
-
-function getCheckedLib(){
-  return Array.from(document.querySelectorAll('#video-lib-grid .vlib-cb:checked')).map(function(cb){
-    return cb.closest('.vlib-card');
-  });
-}
-
-function updateLibToolbar(){
-  var checked = getCheckedLib();
-  var n = checked.length;
-  var addBtn = $('vlib-add-btn');
-  var delBtn = $('vlib-del-btn');
-  var selAll = $('vlib-selall-btn');
-  if(addBtn){ addBtn.textContent = n > 0 ? '+ Hinzufügen ('+n+')' : '+ Hinzufügen'; addBtn.disabled = n === 0; }
-  if(delBtn){ delBtn.textContent = n > 0 ? '🗑 Löschen ('+n+')' : '🗑 Löschen'; delBtn.disabled = n === 0; }
-  var total = document.querySelectorAll('#video-lib-grid .vlib-cb').length;
-  if(selAll) selAll.textContent = (n === total && total > 0) ? 'Alle abwählen' : 'Alle auswählen';
-}
-
-function vLibAddSelected(){
-  getCheckedLib().forEach(function(card){
-    addVideoUrl(card.getAttribute('data-url'));
-  });
-  schedulePreview();
-  closeVideoLib();
-  toast('Videos zur Rotation hinzugefügt');
-}
-
-function vLibDeleteSelected(){
-  var cards = getCheckedLib();
-  if(cards.length === 0) return;
-  var names = cards.map(function(c){ return c.getAttribute('data-name'); });
-  if(!confirm(names.length + ' Video(s) unwiderruflich aus dem Bucket löschen?')) return;
-  var delBtn = $('vlib-del-btn');
-  if(delBtn){ delBtn.disabled = true; delBtn.textContent = 'Löscht...'; }
-  fetch(SUPA_URL+'/storage/v1/object/'+BUCKET, {
-    method:'DELETE',
-    headers:Object.assign({'Content-Type':'application/json'}, supaHeaders()),
-    body: JSON.stringify({prefixes: names})
-  })
-  .then(function(r){
-    if(!r.ok) return r.text().then(function(t){ throw new Error(t); });
-    // Remove from playlist too
-    names.forEach(function(name){
-      var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+name;
-      qa('#video-playlist [data-video-url]').forEach(function(el){
-        if(el.getAttribute('data-video-url') === url) el.remove();
-      });
-    });
-    renderVideoPlaylist(readVideoUrls());
-    schedulePreview();
-    toast(names.length + ' Video(s) gelöscht');
-    loadVideoLib();
-  })
-  .catch(function(err){ toast('Löschen fehlgeschlagen: '+err.message,'err'); updateLibToolbar(); });
-}
-
-function vLibToggleAll(){
-  var cbs = document.querySelectorAll('#video-lib-grid .vlib-cb');
-  var allChecked = Array.from(cbs).every(function(cb){ return cb.checked; });
-  cbs.forEach(function(cb){
-    cb.checked = !allChecked;
-    cb.closest('.vlib-card').classList.toggle('checked', !allChecked);
-  });
-  updateLibToolbar();
-}
-
 // ── VIDEO PLAYLIST ──
 function readVideoUrls(){
   var urls = [];
   qa('#video-playlist [data-video-url]').forEach(function(el){
-    var u = el.getAttribute('data-video-url');
-    if(u) urls.push(u);
+    var u = el.getAttribute('data-video-url'); if(u) urls.push(u);
   });
   return urls;
 }
 function renderVideoPlaylist(urls){
-  var c = $('video-playlist');
-  if(!c) return;
+  var c = $('video-playlist'); if(!c) return;
   c.innerHTML = '';
   if(!urls || urls.length === 0){
     c.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:6px 0">Noch keine Videos hinzugefügt.</div>';
@@ -1441,11 +1331,9 @@ function renderVideoPlaylist(urls){
     row.innerHTML =
       '<span style="background:var(--gbg);color:var(--g);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+(i+1)+'</span>'+
       '<span style="font-size:11px;color:var(--ink);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+ea(url)+'">'+ea(name)+'</span>'+
-      '<button type="button" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0 2px;flex-shrink:0" data-remove-video>✕</button>';
+      '<button type="button" style="background:none;border:none;color:var(--muted);font-size:14px;padding:0 2px;flex-shrink:0" data-remove-video>✕</button>';
     row.querySelector('[data-remove-video]').addEventListener('click', function(){
-      row.remove();
-      renderVideoPlaylist(readVideoUrls());
-      schedulePreview();
+      row.remove(); renderVideoPlaylist(readVideoUrls()); onAnyChange();
     });
     c.appendChild(row);
   });
@@ -1457,11 +1345,367 @@ function addVideoUrl(url){
   renderVideoPlaylist(existing);
 }
 
+// ── VIDEO BIBLIOTHEK ──
+function openVideoLib(){ $('video-lib-overlay').classList.add('show'); loadVideoLib(); }
+function closeVideoLib(){ $('video-lib-overlay').classList.remove('show'); }
+function loadVideoLib(){
+  var grid = $('video-lib-grid'), status = $('video-lib-status');
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--muted);font-size:12px">Lädt...</div>';
+  status.textContent = '';
+  fetch(SUPA_URL+'/storage/v1/object/list/'+BUCKET, {
+    method:'POST',
+    headers:Object.assign(supaHeaders(),{'Content-Type':'application/json'}),
+    body: JSON.stringify({prefix:'', limit:100, sortBy:{column:'created_at',order:'desc'}})
+  })
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(files){
+      var videos = files.filter(function(f){
+        var n = (f.name||'').toLowerCase();
+        return /\.(mp4|webm|mov)$/.test(n);
+      });
+      status.textContent = videos.length + ' Videos in der Bibliothek';
+      var inPlaylist = readVideoUrls();
+      if(videos.length === 0){
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--muted);font-size:12px">Keine Videos vorhanden.</div>';
+        return;
+      }
+      grid.innerHTML = videos.map(function(f){
+        var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+f.name;
+        var inPL = inPlaylist.indexOf(url) !== -1;
+        var size = f.metadata && f.metadata.size ? (f.metadata.size/1024/1024).toFixed(1)+' MB' : '';
+        return '<div class="vlib-card '+(inPL?'in-playlist':'')+'" data-video-url="'+ea(url)+'" data-video-name="'+ea(f.name)+'">'+
+          '<label class="vlib-check-wrap"><input type="checkbox" class="vlib-cb"><span class="vlib-check-box"></span></label>'+
+          '<div class="vlib-thumb"><video src="'+ea(url)+'#t=0.5" preload="metadata" muted></video></div>'+
+          '<div class="vlib-info"><div class="vlib-name" title="'+ea(f.name)+'">'+ea(f.name)+'</div><div class="vlib-size">'+size+'</div></div>'+
+        '</div>';
+      }).join('');
+      qa('#video-lib-grid .vlib-card').forEach(function(card){
+        var cb = card.querySelector('.vlib-cb');
+        card.addEventListener('click', function(e){
+          if(e.target.closest('.vlib-check-wrap')) return;
+          cb.checked = !cb.checked;
+          card.classList.toggle('checked', cb.checked);
+          updateLibToolbar();
+        });
+        cb.addEventListener('change', function(){
+          card.classList.toggle('checked', cb.checked);
+          updateLibToolbar();
+        });
+      });
+    })
+    .catch(function(){ grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:var(--r);font-size:12px">Fehler beim Laden.</div>'; });
+}
+
+function updateLibToolbar(){
+  var checked = document.querySelectorAll('#video-lib-grid .vlib-cb:checked').length;
+  var add = $('vlib-add-btn'), del = $('vlib-del-btn');
+  add.disabled = del.disabled = checked === 0;
+}
+
+function vLibAddSelected(){
+  var checked = document.querySelectorAll('#video-lib-grid .vlib-cb:checked');
+  if(checked.length === 0) return;
+  var added = 0;
+  checked.forEach(function(cb){
+    var card = cb.closest('.vlib-card');
+    var url = card.getAttribute('data-video-url');
+    var existing = readVideoUrls();
+    if(existing.indexOf(url) === -1){ existing.push(url); renderVideoPlaylist(existing); added++; }
+  });
+  if(added > 0){ toast(added+' Video(s) hinzugefügt'); onAnyChange(); }
+  closeVideoLib();
+}
+
+function vLibDeleteSelected(){
+  var checked = document.querySelectorAll('#video-lib-grid .vlib-cb:checked');
+  if(checked.length === 0) return;
+  if(!confirm('Wirklich '+checked.length+' Video(s) dauerhaft aus der Bibliothek löschen?')) return;
+  var names = Array.from(checked).map(function(cb){ return cb.closest('.vlib-card').getAttribute('data-video-name'); });
+  fetch(SUPA_URL+'/storage/v1/object/'+BUCKET, {
+    method:'DELETE',
+    headers:Object.assign(supaHeaders(),{'Content-Type':'application/json'}),
+    body: JSON.stringify({prefixes: names})
+  }).then(function(r){
+    if(!r.ok) return r.text().then(function(t){ throw new Error(t); });
+    names.forEach(function(name){
+      var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+name;
+      qa('#video-playlist [data-video-url]').forEach(function(el){
+        if(el.getAttribute('data-video-url') === url) el.remove();
+      });
+    });
+    renderVideoPlaylist(readVideoUrls());
+    onAnyChange();
+    toast(names.length + ' Video(s) gelöscht');
+    loadVideoLib();
+  }).catch(function(err){ toast('Löschen fehlgeschlagen: '+err.message,'err'); updateLibToolbar(); });
+}
+
+function vLibToggleAll(){
+  var cbs = document.querySelectorAll('#video-lib-grid .vlib-cb');
+  var allChecked = Array.from(cbs).every(function(cb){ return cb.checked; });
+  cbs.forEach(function(cb){
+    cb.checked = !allChecked;
+    cb.closest('.vlib-card').classList.toggle('checked', !allChecked);
+  });
+  updateLibToolbar();
+}
+
+// ── PREVIEW MODE ──
+function setPreviewMode(mode){
+  $('previewWrap').className = 'preview-frame-wrap ' + mode;
+  $('prevDesk').classList.toggle('active', mode === 'desktop');
+  $('prevMob').classList.toggle('active', mode === 'mobile');
+  try { localStorage.setItem('fitbox_admin_prev_mode', mode); } catch(e){}
+}
+
+// ── NAVIGATION ──
+function showPanel(name, source){
+  if(!PANEL_META[name]) return;
+  qa('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-panel') === name); });
+  qa('.spanel').forEach(function(p){ p.classList.toggle('active', p.id === 'spanel-'+name); });
+  $('phIcon').textContent = PANEL_META[name].icon;
+  $('phTitle').textContent = PANEL_META[name].title;
+  // Sidebar-Body scroll zurücksetzen
+  $('sidebarBody').scrollTop = 0;
+  // Vorschau nur scrollen wenn nicht vom Iframe-Scroll-Observer ausgelöst
+  if(source !== 'iframe-scroll'){
+    var secId = PANEL_META[name].sec;
+    if(secId){
+      var iframe = $('previewIframe');
+      if(iframe && iframe.contentWindow){
+        iframe.contentWindow.postMessage({type:'fitbox-scroll-to', secId:secId}, '*');
+      }
+    }
+  }
+}
+
+// ── POSTMESSAGE FROM IFRAME ──
+window.addEventListener('message', function(e){
+  if(!e.data || typeof e.data !== 'object') return;
+  if(e.data.type === 'fitbox-ready'){
+    iframeReady = true;
+    // Initialer Push der Config
+    pendingApply = clone(currentCfg);
+    sendToIframe();
+    $('previewLoading').classList.remove('show');
+  }
+  if(e.data.type === 'fitbox-section-visible' && e.data.panel){
+    // Nicht wechseln wenn Panel gepinnt
+    if(pinned) return;
+    // Nur wechseln wenn das Panel überhaupt existiert
+    if(!PANEL_META[e.data.panel]) return;
+    // Nicht wechseln wenn wir gerade in einem verwandten Panel sind
+    // (z.B. Goals gehört zu Quiz → bei sichtbarem Quiz nicht auf Quiz wechseln wenn Goals aktiv)
+    var current = q('.snav-btn.active');
+    var currentPanel = current ? current.getAttribute('data-panel') : null;
+    if(currentPanel && PANEL_META[currentPanel] && PANEL_META[currentPanel].sec === PANEL_META[e.data.panel].sec){
+      return; // beide gehören zur selben Section → nicht wechseln
+    }
+    showPanel(e.data.panel, 'iframe-scroll');
+  }
+  if(e.data.type === 'fitbox-panel-select' && e.data.panel){
+    showPanel(e.data.panel, 'iframe-click');
+  }
+});
+
+// ── HISTORY (lokal in sessionStorage) ──
+function loadHistory(){
+  try {
+    var raw = sessionStorage.getItem(HISTORY_KEY);
+    undoStack = raw ? JSON.parse(raw) : [];
+  } catch(e){ undoStack = []; }
+  updateUndoUI();
+}
+function saveHistory(){
+  try { sessionStorage.setItem(HISTORY_KEY, JSON.stringify(undoStack.slice(-MAX_HISTORY))); } catch(e){}
+}
+function pushHistory(snapshot, label){
+  undoStack.push({ts:Date.now(), label:label||'Auto', cfg:clone(snapshot)});
+  if(undoStack.length > MAX_HISTORY) undoStack.shift();
+  saveHistory();
+  updateUndoUI();
+}
+function updateUndoUI(){
+  $('undoBtn').disabled = undoStack.length === 0;
+}
+function undoLast(){
+  if(undoStack.length === 0){ toast('Nichts zum Rückgängigmachen', 'info'); return; }
+  var last = undoStack.pop();
+  saveHistory();
+  currentCfg = clone(last.cfg);
+  renderAll(currentCfg);
+  applyToPreview();
+  refreshDirtyUI();
+  updateUndoUI();
+  toast('Rückgängig: '+last.label, 'info');
+}
+
+function openHistory(){
+  var body = $('historyBody');
+  if(undoStack.length === 0){
+    body.innerHTML = '<div class="history-empty">Noch keine Snapshots vorhanden.<br><small>Schnappschüsse werden vor jedem Speichern automatisch angelegt.</small></div>';
+  } else {
+    body.innerHTML = undoStack.slice().reverse().map(function(s, i){
+      var realIdx = undoStack.length - 1 - i;
+      var d = new Date(s.ts);
+      var time = d.toLocaleString('de-DE',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      return '<div class="history-item">'+
+        '<div style="flex:1"><div class="history-time">'+time+'</div><div class="history-desc">'+esc(s.label)+'</div></div>'+
+        '<button class="history-btn" data-restore="'+realIdx+'">Wiederherstellen</button>'+
+      '</div>';
+    }).join('');
+    body.querySelectorAll('[data-restore]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var idx = parseInt(btn.getAttribute('data-restore'),10);
+        var snap = undoStack[idx];
+        if(!snap) return;
+        if(isDirty() && !confirm('Du hast ungespeicherte Änderungen. Trotzdem wiederherstellen?')) return;
+        currentCfg = clone(snap.cfg);
+        renderAll(currentCfg);
+        applyToPreview();
+        refreshDirtyUI();
+        $('historyModal').classList.remove('show');
+        toast('Snapshot wiederhergestellt', 'info');
+      });
+    });
+  }
+  $('historyModal').classList.add('show');
+}
+
+// ── BINDINGS ──
+function bindAll(){
+  $('loginBtn').addEventListener('click', doLogin);
+  $('loginPw').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+  $('logoutBtn').addEventListener('click', doLogout);
+  $('saveBtn').addEventListener('click', saveConfig);
+  $('discardBtn').addEventListener('click', discardChanges);
+  $('undoBtn').addEventListener('click', undoLast);
+  $('historyBtn').addEventListener('click', openHistory);
+  $('historyClose').addEventListener('click', function(){ $('historyModal').classList.remove('show'); });
+  $('historyModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+
+  $('openSiteBtn').addEventListener('click', function(){ window.open('ems-training.html','_blank'); });
+  $('prevDesk').addEventListener('click', function(){ setPreviewMode('desktop'); });
+  $('prevMob').addEventListener('click', function(){ setPreviewMode('mobile'); });
+
+  // Sidebar collapse
+  $('sbToggle').addEventListener('click', function(){
+    var ws = $('workspace');
+    ws.classList.toggle('sidebar-collapsed');
+    $('sbToggle').textContent = ws.classList.contains('sidebar-collapsed') ? '▶' : '◀';
+  });
+
+  // Pin
+  $('pinBtn').addEventListener('click', function(){
+    pinned = !pinned;
+    $('pinBtn').classList.toggle('active', pinned);
+    $('pinBtn').setAttribute('title', pinned ? 'Panel ist fixiert – Vorschau-Scroll wechselt nicht' : 'Panel fixieren');
+    toast(pinned ? 'Panel fixiert' : 'Panel-Fixierung gelöst', 'info');
+  });
+
+  $('cfg-banner_active').addEventListener('change', function(){ updateBannerBadge(); onAnyChange(); });
+  if($('cfg-video_active')) $('cfg-video_active').addEventListener('change', onAnyChange);
+
+  qa('.snav-btn').forEach(function(b){
+    b.addEventListener('click', function(){ showPanel(b.getAttribute('data-panel'), 'click'); });
+  });
+
+  $('add-goal-btn').addEventListener('click', function(){ addGoalEl({}); onAnyChange(); });
+  $('add-review-btn').addEventListener('click', function(){ addReviewEl({}); onAnyChange(); });
+  $('add-tag-btn').addEventListener('click', function(){ addTagEl(''); onAnyChange(); });
+  $('add-benefit-btn').addEventListener('click', function(){ addBenefitEl({}); onAnyChange(); });
+
+  bindUpload('hero_img', 'hero-preview');
+  bindUpload('studio_banner_img', 'studio-preview');
+
+  // Video
+  var vFileInput = $('upl-video_url'), vBtn = $('upl-video-btn');
+  if(vBtn && vFileInput){
+    vBtn.addEventListener('click', function(){ vFileInput.click(); });
+    vFileInput.addEventListener('change', function(){
+      var file = this.files[0]; if(!file) return;
+      uploadVideo(file, function(url){ if(url){ addVideoUrl(url); onAnyChange(); } });
+      vFileInput.value='';
+    });
+  }
+  var vLibBtn = $('upl-video-lib-btn');
+  if(vLibBtn) vLibBtn.addEventListener('click', openVideoLib);
+  $('video-lib-close').addEventListener('click', closeVideoLib);
+  $('video-lib-overlay').addEventListener('click', function(e){ if(e.target === this) closeVideoLib(); });
+  $('vlib-add-btn').addEventListener('click', vLibAddSelected);
+  $('vlib-del-btn').addEventListener('click', vLibDeleteSelected);
+  $('vlib-selall-btn').addEventListener('click', vLibToggleAll);
+
+  // Color-Picker Sync
+  qa('[data-color]').forEach(function(col){
+    var key = col.getAttribute('data-color');
+    var hex = q('[data-color-hex="'+key+'"]');
+    col.addEventListener('input', function(){ if(hex) hex.value = col.value; onAnyChange(); });
+    if(hex) hex.addEventListener('input', function(){
+      if(/^#[0-9a-fA-F]{6}$/.test(hex.value)){ col.value = hex.value; }
+      onAnyChange();
+    });
+  });
+  ['hero_title_size','hero_sub_size','body_size','section_title_size'].forEach(function(k){
+    var el = $('cfg-design-'+k); if(el) el.addEventListener('input', onAnyChange);
+  });
+
+  // Auto-bind alle einfachen Felder
+  var autoFields = [
+    'banner_text','banner_link_text','banner_link_url',
+    'nav_cta_text','hero_title','hero_sub','hero_check','hero_desc','scarcity_text',
+    'quiz_cta','quiz_title','quiz_sub',
+    'mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
+    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
+    'benefits_label','benefits_title','trust_label','steps_label','steps_title',
+    'video_label','video_title','video_desc'
+  ];
+  autoFields.forEach(function(k){
+    var el = $('cfg-'+k); if(el) el.addEventListener('input', onAnyChange);
+  });
+
+  // Iframe load
+  $('previewIframe').addEventListener('load', function(){
+    iframeReady = false;
+    $('previewLoading').classList.add('show');
+    // Wenn keine Antwort vom iframe kommt, nach 2s als bereit annehmen
+    setTimeout(function(){
+      if(!iframeReady){
+        iframeReady = true;
+        if(currentCfg){ pendingApply = clone(currentCfg); sendToIframe(); }
+        $('previewLoading').classList.remove('show');
+      }
+    }, 2000);
+  });
+
+  // Keyboard shortcuts
+  window.addEventListener('keydown', function(e){
+    var mod = e.ctrlKey || e.metaKey;
+    if(mod && e.key === 's'){ e.preventDefault(); if(isDirty()) saveConfig(); }
+    else if(mod && e.key === 'z'){ e.preventDefault(); undoLast(); }
+    else if(e.key === 'Escape'){
+      qa('.modal-overlay.show').forEach(function(m){ m.classList.remove('show'); });
+    }
+  });
+
+  // Warnung beim Verlassen
+  window.addEventListener('beforeunload', function(e){
+    if(isDirty()){ e.preventDefault(); e.returnValue = ''; return ''; }
+  });
+
+  // Restore preview mode
+  try {
+    var mode = localStorage.getItem('fitbox_admin_prev_mode');
+    if(mode === 'mobile') setPreviewMode('mobile');
+  } catch(e){}
+}
+
 function init(){
   bindAll();
   if(sessionStorage.getItem('adm')==='1'){
     $('login').style.display='none';
-    $('app').style.display='block';
+    $('app').style.display='flex';
+    loadHistory();
     loadConfig();
   }
 }
@@ -1470,43 +1714,5 @@ if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded
 else { init(); }
 })();
 </script>
-<!-- VIDEO BIBLIOTHEK MODAL -->
-<div id="video-lib-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;align-items:center;justify-content:center">
-  <div style="background:var(--card);border-radius:12px;width:min(760px,96vw);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)">
-    <!-- Header -->
-    <div style="padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
-      <div style="font-weight:700;font-size:15px;color:var(--ink)">🎬 Video-Bibliothek</div>
-      <button id="video-lib-close" type="button" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1">✕</button>
-    </div>
-    <!-- Toolbar -->
-    <div style="padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0;flex-wrap:wrap">
-      <div id="video-lib-status" style="font-size:12px;color:var(--muted);flex:1;min-width:100px"></div>
-      <button id="vlib-selall-btn" type="button" style="font-size:11px;font-weight:600;background:none;border:1px solid var(--border);border-radius:6px;padding:5px 10px;cursor:pointer;color:var(--ink)">Alle auswählen</button>
-      <button id="vlib-add-btn" type="button" disabled style="font-size:11px;font-weight:700;background:var(--g);color:#fff;border:none;border-radius:6px;padding:5px 12px;cursor:pointer;opacity:.5">+ Hinzufügen</button>
-      <button id="vlib-del-btn" type="button" disabled style="font-size:11px;font-weight:700;background:var(--r);color:#fff;border:none;border-radius:6px;padding:5px 12px;cursor:pointer;opacity:.5">🗑 Löschen</button>
-    </div>
-    <!-- Grid -->
-    <div id="video-lib-grid" style="padding:14px 18px;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px"></div>
-  </div>
-</div>
-<style>
-.vlib-card{background:var(--bg);border:2px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:.15s;position:relative;user-select:none}
-.vlib-card:hover{border-color:var(--g)}
-.vlib-card.in-playlist{border-color:var(--g)}
-.vlib-card.checked{border-color:var(--g);background:var(--gbg);box-shadow:0 0 0 2px var(--g)}
-.vlib-check-wrap{position:absolute;top:7px;left:7px;z-index:2;cursor:pointer}
-.vlib-check-wrap input{position:absolute;opacity:0;width:0;height:0}
-.vlib-check-box{display:block;width:20px;height:20px;border-radius:5px;background:rgba(255,255,255,.9);border:2px solid var(--border);transition:.12s}
-.vlib-card.checked .vlib-check-box{background:var(--g);border-color:var(--g)}
-.vlib-card.checked .vlib-check-box::after{content:'✓';display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:900;height:100%}
-.vlib-card.in-playlist::before{content:'✓ In Rotation';position:absolute;top:7px;right:7px;background:var(--g);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;z-index:2}
-.vlib-thumb{width:100%;aspect-ratio:16/9;background:#000;overflow:hidden}
-.vlib-thumb video{width:100%;height:100%;object-fit:cover;pointer-events:none}
-.vlib-info{padding:7px 9px}
-.vlib-name{font-size:10px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vlib-size{font-size:10px;color:var(--muted);margin-top:2px}
-#vlib-add-btn:not(:disabled){opacity:1;cursor:pointer}
-#vlib-del-btn:not(:disabled){opacity:1;cursor:pointer}
-</style>
 </body>
 </html>
