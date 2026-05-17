@@ -2,6 +2,23 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1300074531588630');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1300074531588630&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#2f8614">
 <title>Gratis EMS-Probetraining Memmingen &amp; Senden – fitbox</title>
@@ -457,7 +474,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
         <div class="succ-step"><div class="succ-num">2</div><p data-succ-s2="A"><strong>Wir melden uns</strong></p></div>
         <div class="succ-step"><div class="succ-num">3</div><p><strong>EMS erleben</strong></p></div>
       </div>
-      <a data-wa-succ="A" href="#" target="_blank" rel="noopener" class="wabtn-s">Direkt per WhatsApp</a>
+      <a data-wa-succ="A" href="#" target="_blank" rel="noopener" class="wabtn-s" onclick="if(typeof fbq==='function') fbq('trackCustom','WhatsAppClick',{source:'success_form_A'});">Direkt per WhatsApp</a>
     </div>
   </div>
 </section>
@@ -707,7 +724,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
         <div class="succ-step"><div class="succ-num">2</div><p data-succ-s2="B"><strong>Wir melden uns</strong></p></div>
         <div class="succ-step"><div class="succ-num">3</div><p><strong>EMS erleben</strong></p></div>
       </div>
-      <a data-wa-succ="B" href="#" target="_blank" rel="noopener" class="wabtn-s">Direkt per WhatsApp</a>
+      <a data-wa-succ="B" href="#" target="_blank" rel="noopener" class="wabtn-s" onclick="if(typeof fbq==='function') fbq('trackCustom','WhatsAppClick',{source:'success_form_B'});">Direkt per WhatsApp</a>
     </div>
   </div>
 </section>
@@ -1265,6 +1282,8 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     qa('[data-goal-grid="'+formId+'"] .gbtn').forEach(function(b){ b.classList.remove('active'); });
     btn.classList.add('active');
     states[formId].goal = btn.getAttribute('data-goal');
+    // Meta Pixel: Ziel gewählt → Quiz gestartet
+    if(typeof fbq === 'function') fbq('trackCustom', 'QuizGoalSelected', { goal: states[formId].goal });
     setTimeout(function(){ showStep(formId, 2); }, 200);
   }
 
@@ -1276,6 +1295,8 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     st.studioCode = btn.getAttribute('data-code');
     st.studioName = st.studioCode === 'MEM' ? 'fitbox Memmingen' : 'fitbox Senden';
     if($('wa-float')) $('wa-float').href = 'https://wa.me/' + (st.studioCode === 'SEN' ? WA.SEN : WA.MEM);
+    // Meta Pixel: Studio gewählt
+    if(typeof fbq === 'function') fbq('trackCustom', 'StudioSelected', { studio: st.studioName, goal: st.goal });
     setTimeout(function(){ showStep(formId, 3); }, 150);
   }
 
@@ -1455,6 +1476,16 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     var waBtn = q('[data-wa-succ="'+formId+'"]');
     if(waBtn) waBtn.href = waLink;
     var succ = q('[data-succ="'+formId+'"]'); if(succ) succ.classList.add('show');
+    // Meta Pixel: Lead erfolgreich
+    if(typeof fbq === 'function'){
+      fbq('track', 'Lead', {
+        content_name: 'EMS Probetraining',
+        content_category: st.studioName || '',
+        value: 0,
+        currency: 'EUR'
+      });
+      if(st.slot) fbq('trackCustom', 'AppointmentBooked', { studio: st.studioName, goal: st.goal });
+    }
   }
 
   // ============ BINDINGS ============
@@ -1468,7 +1499,11 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     // Step 3 = Kontakt → earlyCapture + weiter zu Step 4
     var nextContact = q('[data-next-contact="'+formId+'"]');
     if(nextContact) nextContact.addEventListener('click', function(){
-      earlyCapture(formId, function(){ showStep(formId, 4); });
+      earlyCapture(formId, function(){
+        // Meta Pixel: Kontaktdaten eingegeben → Terminauswahl
+        if(typeof fbq === 'function') fbq('track', 'InitiateCheckout', { content_name: 'EMS Probetraining', content_category: states[formId].studioName });
+        showStep(formId, 4);
+      });
     });
     var sub = q('[data-submit="'+formId+'"]');
     if(sub) sub.addEventListener('click', function(){ submit(formId); });
