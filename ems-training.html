@@ -1214,7 +1214,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
       slotSec.style.display = 'none';
       wunschSec.style.display = 'block';
       if(t) t.textContent = 'Wann sollen wir dich anrufen?';
-      if(s) s.textContent = 'Unser Team in Senden meldet sich pers\u00f6nlich';
+      if(s) s.textContent = 'Unser Team in ' + (st.studioCode === 'MEM' ? 'Memmingen' : 'Senden') + ' meldet sich pers\u00f6nlich';
     }
   }
 
@@ -1264,11 +1264,13 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
       })
     })
     .then(function(r){
-      if(!r.ok) return null;
-      // ID per SELECT nachholen (anon hat kein return=representation)
-      return fetch(SUPA_URL+'/rest/v1/pt_leads?studio_id=eq.'+st.studioId+'&phone=eq.'+encodeURIComponent(phone)+'&source_code=eq.website&order=created_at.desc&limit=1&select=id', {
-        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Accept':'application/json'}
-      }).then(function(r2){ return r2.ok ? r2.json() : null; });
+      // Bei 200 (neu) oder 409 (bereits vorhanden) → ID per SELECT holen
+      if(r.ok || r.status === 409){
+        return fetch(SUPA_URL+'/rest/v1/pt_leads?studio_id=eq.'+st.studioId+'&phone=eq.'+encodeURIComponent(phone)+'&source_code=eq.website&order=created_at.desc&limit=1&select=id', {
+          headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Accept':'application/json'}
+        }).then(function(r2){ return r2.ok ? r2.json() : null; });
+      }
+      return null;
     })
     .then(function(rows){
       if(rows && rows[0] && rows[0].id) st.leadId = rows[0].id;
