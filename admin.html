@@ -56,16 +56,17 @@ button,input,select,textarea{font-family:inherit}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* WORKSPACE */
-.workspace{display:grid;grid-template-columns:280px 1fr;height:calc(100vh - 46px);overflow:hidden}
+.workspace{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 46px);overflow:hidden}
 
 /* SIDEBAR */
-.sidebar{background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
-.sidebar-nav{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+.sidebar{background:var(--card);border-right:1px solid var(--border);display:grid;grid-template-columns:48px 1fr;overflow:hidden}
+.sidebar-nav{display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--bg);padding:6px 0;gap:1px;overflow-y:auto}
 .sidebar-nav::-webkit-scrollbar{display:none}
-.snav-btn{flex:1;min-width:0;padding:11px 6px;font-size:11px;font-weight:600;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:.12s;white-space:nowrap}
-.snav-btn.active{color:var(--g);border-bottom-color:var(--g);background:var(--gbg)}
-.snav-btn:hover:not(.active){background:var(--hover)}
-.sidebar-body{flex:1;overflow-y:auto;padding:16px}
+.snav-btn{width:48px;min-height:44px;padding:6px 4px;font-size:9px;font-weight:700;color:var(--muted);border:none;background:none;cursor:pointer;border-left:2px solid transparent;transition:.12s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-transform:uppercase;letter-spacing:.04em;line-height:1.2}
+.snav-btn:hover:not(.active){background:var(--hover);color:var(--ink)}
+.snav-btn.active{color:var(--g);border-left-color:var(--g);background:var(--gbg)}
+.snav-btn .sn-icon{font-size:15px;line-height:1}
+.sidebar-body{flex:1;overflow-y:auto;padding:16px;min-width:0}
 .sidebar-body::-webkit-scrollbar{width:4px}
 .sidebar-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
@@ -221,17 +222,17 @@ button,input,select,textarea{font-family:inherit}
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sidebar-nav">
-        <button class="snav-btn active" data-panel="banner" type="button">Banner</button>
-        <button class="snav-btn" data-panel="hero" type="button">Hero</button>
-        <button class="snav-btn" data-panel="quiz" type="button">Quiz</button>
-        <button class="snav-btn" data-panel="goals" type="button">Ziele</button>
-        <button class="snav-btn" data-panel="ctas" type="button">CTAs</button>
-        <button class="snav-btn" data-panel="stats" type="button">Stats</button>
-        <button class="snav-btn" data-panel="reviews" type="button">Reviews</button>
-        <button class="snav-btn" data-panel="studios" type="button">Studios</button>
-        <button class="snav-btn" data-panel="brand" type="button">Brand</button>
-        <button class="snav-btn" data-panel="form" type="button">Formular</button>
-        <button class="snav-btn" data-panel="links" type="button">Links</button>
+        <button class="snav-btn active" data-panel="banner" type="button"><span class="sn-icon">📢</span>Banner</button>
+        <button class="snav-btn" data-panel="hero" type="button"><span class="sn-icon">🏠</span>Hero</button>
+        <button class="snav-btn" data-panel="quiz" type="button"><span class="sn-icon">🎯</span>Quiz</button>
+        <button class="snav-btn" data-panel="goals" type="button"><span class="sn-icon">💪</span>Ziele</button>
+        <button class="snav-btn" data-panel="ctas" type="button"><span class="sn-icon">🔘</span>CTAs</button>
+        <button class="snav-btn" data-panel="stats" type="button"><span class="sn-icon">📊</span>Stats</button>
+        <button class="snav-btn" data-panel="reviews" type="button"><span class="sn-icon">⭐</span>Reviews</button>
+        <button class="snav-btn" data-panel="studios" type="button"><span class="sn-icon">📍</span>Studios</button>
+        <button class="snav-btn" data-panel="brand" type="button"><span class="sn-icon">🔥</span>Brand</button>
+        <button class="snav-btn" data-panel="form" type="button"><span class="sn-icon">📝</span>Form</button>
+        <button class="snav-btn" data-panel="links" type="button"><span class="sn-icon">🔗</span>Links</button>
       </div>
       <div class="sidebar-body">
 
@@ -406,7 +407,7 @@ button,input,select,textarea{font-family:inherit}
             </div>
             <div class="preview-url">20minuten-fitbox.de</div>
           </div>
-          <iframe id="previewIframe" src="ems-training.html" class="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+          <iframe id="previewIframe" src="ems-training.html" class="preview-iframe" sandbox="allow-scripts"></iframe>
         </div>
         <div class="preview-loading" id="previewLoading">Vorschau wird aktualisiert...</div>
       </div>
@@ -516,7 +517,8 @@ function refreshPreview(){
   var iframe = $('previewIframe');
   if(!iframe) return;
   $('previewLoading').classList.add('show');
-  iframe.src = iframe.src.split('?')[0] + '?t=' + Date.now();
+  var base = iframe.src.split('?')[0];
+  iframe.src = base + '?t=' + Date.now();
   iframe.onload = function(){ $('previewLoading').classList.remove('show'); };
 }
 
@@ -786,16 +788,6 @@ function showPanel(name){
   qa('.spanel').forEach(function(p){ p.classList.toggle('active', p.id === 'spanel-'+name); });
 }
 
-// ── LIVE PREVIEW: inject config into iframe ──
-function injectConfigIntoPreview(){
-  var iframe = $('previewIframe');
-  if(!iframe || !iframe.contentWindow) return;
-  var config = readAll();
-  try {
-    iframe.contentWindow.postMessage({type:'fitbox-config-update', config:config}, '*');
-  } catch(e){}
-}
-
 // ── BINDINGS ──
 function bindAll(){
   $('loginBtn').addEventListener('click', doLogin);
@@ -828,10 +820,9 @@ function bindAll(){
     if(el) el.addEventListener('input', schedulePreview);
   });
 
-  // Listen for iframe loaded — inject config
+  // Listen for iframe loaded
   $('previewIframe').addEventListener('load', function(){
     $('previewLoading').classList.remove('show');
-    setTimeout(injectConfigIntoPreview, 300);
   });
 }
 

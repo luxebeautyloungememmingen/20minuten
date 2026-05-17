@@ -1190,13 +1190,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
   if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); }
   else { init(); }
-
-  // Live-Preview: Config-Updates vom Admin empfangen
-  window.addEventListener('message', function(e){
-    if(e.data && e.data.type === 'fitbox-config-update' && e.data.config){
-      applyConfig(e.data.config);
-    }
-  });
 })();
 </script>
 </body>
