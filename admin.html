@@ -415,6 +415,81 @@ button,input,select,textarea{font-family:inherit}
               <input type="text" class="fi" id="cfg-design-hero_bg_hex" value="#ffffff" placeholder="#ffffff" style="flex:1;font-family:monospace">
             </div>
           </div>
+          <div class="sec-label">Banner</div>
+          <div class="field-row">
+            <div class="field">
+              <label class="fl">Banner-Hintergrund</label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-banner_bg" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-banner_bg_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+            <div class="field">
+              <label class="fl">Banner-Schriftfarbe</label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-banner_color" value="#ffffff" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-banner_color_hex" value="#ffffff" placeholder="#ffffff" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+          </div>
+          <div class="sec-label">Scarcity-Box (gelbe Warn-Box)</div>
+          <div class="field-row">
+            <div class="field">
+              <label class="fl">Hintergrund</label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-scarcity_bg" value="#fff3cd" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-scarcity_bg_hex" value="#fff3cd" placeholder="#fff3cd" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+            <div class="field">
+              <label class="fl">Schriftfarbe</label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-scarcity_color" value="#856404" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-scarcity_color_hex" value="#856404" placeholder="#856404" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+          </div>
+          <div class="sec-label">Stats-Leiste</div>
+          <div class="field-row">
+            <div class="field">
+              <label class="fl">Hintergrund</label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-stats_bg" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-stats_bg_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+            <div class="field">
+              <label class="fl">Schriftfarbe</label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-stats_color" value="#ffffff" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-stats_color_hex" value="#ffffff" placeholder="#ffffff" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+          </div>
+          <div class="sec-label">Brand-Hashtags Block</div>
+          <div class="field-row">
+            <div class="field">
+              <label class="fl">Hintergrund</label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-brand_bg" value="#111111" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-brand_bg_hex" value="#111111" placeholder="#111111" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+            <div class="field">
+              <label class="fl">Schriftfarbe</label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-brand_color" value="#ffffff" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-brand_color_hex" value="#ffffff" placeholder="#ffffff" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="fl">Hashtag-Akzentfarbe (#)</label>
+            <div style="display:flex;gap:6px;align-items:center">
+              <input type="color" id="cfg-design-brand_accent" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+              <input type="text" class="fi" id="cfg-design-brand_accent_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
+            </div>
+          </div>
           <div class="sec-label">Schriftgrößen (px)</div>
           <div class="field-row">
             <div class="field">
@@ -647,12 +722,7 @@ function renderAll(){
   renderStats(cfg.stats || [{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}]);
   renderReviews(cfg.reviews || []);
   renderTags(cfg.brand_tags || ['#ImmermitSpaß','#ImmermitTermin','#ImmermitTrainer']);
-  renderCtas(cfg.ctas || [
-    {active:true, title:'Jetzt kostenloses Probetraining vereinbaren!', btn:'Gutschein sichern →'},
-    {active:true, title:'Starte noch diese Woche mit EMS!', btn:'Termin jetzt sichern →'},
-    {active:false, title:'', btn:''},
-    {active:true, title:'Jetzt kostenloses Probetraining vereinbaren!', btn:'Gutschein sichern →'}
-  ]);
+  renderCtas(cfg.ctas || Array(6).fill({active:false,title:'',btn:'Gutschein sichern →'}));
   renderDesign(cfg.design || {primary_color:'#2f8614',cta_bg:'#2f8614',hero_bg:'#ffffff',hero_title_size:'32',hero_sub_size:'42',body_size:'14',section_title_size:'30'});
   renderBenefits(cfg.benefits || []);
   renderTrust(cfg.trust || [{sub:'EMS-Anzug',name:'SYMBIONT',desc:'by schwa-medico'},{sub:'EMS-Gerät',name:'MIHA BODYTEC',desc:'Marktführer seit 2007'},{sub:'Qualität',name:'MADE IN GERMANY',desc:'Medizinisch zertifiziert'}]);
@@ -662,8 +732,8 @@ function renderAll(){
 // ── DESIGN ──
 function renderDesign(d){
   if(!d) return;
-  var fields = ['primary_color','cta_bg','hero_bg'];
-  fields.forEach(function(k){
+  var allColors = ['primary_color','cta_bg','hero_bg','banner_bg','banner_color','scarcity_bg','scarcity_color','stats_bg','stats_color','brand_bg','brand_color','brand_accent'];
+  allColors.forEach(function(k){
     var col = $('cfg-design-'+k); var hex = $('cfg-design-'+k+'_hex');
     if(col && d[k]) col.value = d[k];
     if(hex && d[k]) hex.value = d[k];
@@ -675,9 +745,11 @@ function renderDesign(d){
 }
 function readDesign(){
   var d = {};
-  ['primary_color','cta_bg','hero_bg'].forEach(function(k){
+  var allColors = ['primary_color','cta_bg','hero_bg','banner_bg','banner_color','scarcity_bg','scarcity_color','stats_bg','stats_color','brand_bg','brand_color','brand_accent'];
+  allColors.forEach(function(k){
     var hex = $('cfg-design-'+k+'_hex');
-    if(hex) d[k] = hex.value.trim() || $('cfg-design-'+k).value;
+    var col = $('cfg-design-'+k);
+    d[k] = (hex && hex.value.trim()) || (col && col.value) || '';
   });
   ['hero_title_size','hero_sub_size','body_size','section_title_size'].forEach(function(k){
     var el = $('cfg-design-'+k); if(el) d[k] = el.value;
@@ -859,10 +931,17 @@ function readGoals(){
 }
 
 // ── CTAS ──
-var CTA_POS = ['Nach Bewertungen','Nach 3-Schritt-Anleitung','Nach Studios','Vor unterem Formular'];
+var CTA_POS = [
+  'Nach Vorteilen',
+  'Nach Trust-Badges',
+  'Nach Bewertungen',
+  'Nach 3-Schritt-Anleitung',
+  'Nach Studios',
+  'Vor unterem Formular'
+];
 function renderCtas(ctas){
   var c = $('ctas-container'); c.innerHTML = '';
-  for(var i=0; i<4; i++){ addCtaEl(i, ctas[i] || {active:false,title:'',btn:''}); }
+  for(var i=0; i<6; i++){ addCtaEl(i, ctas[i] || {active:false,title:'',btn:'Gutschein sichern →'}); }
 }
 function addCtaEl(idx, cta){
   var c = $('ctas-container');
@@ -916,11 +995,36 @@ function renderReviews(reviews){ var c = $('reviews-container'); c.innerHTML = '
 function addReviewEl(r){
   var c = $('reviews-container');
   var d = document.createElement('div'); d.className = 'item';
+  var img = (r && r.img) || '';
+  var uid = 'rev-img-'+Math.random().toString(36).substr(2,8);
   d.innerHTML = '<button class="item-del" type="button">&times;</button>'+
     '<div class="field"><label class="fl">Text</label><textarea class="fa" data-rev-text rows="2">'+esc((r&&r.text)||'')+'</textarea></div>'+
-    '<div class="field"><label class="fl">Autor</label><input type="text" class="fi" data-rev-author value="'+ea((r&&r.author)||'')+'" placeholder="Max M. aus Memmingen"></div>';
+    '<div class="field"><label class="fl">Autor</label><input type="text" class="fi" data-rev-author value="'+ea((r&&r.author)||'')+'" placeholder="Max M. aus Memmingen"></div>'+
+    '<div class="field" style="margin-top:8px"><label class="fl">Profilbild (optional) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Quadratisches Foto</strong>Erscheint als rundes Profilbild neben den Sternen. Max 5MB, JPG/PNG/WEBP.</span></button></label>'+
+    '<div style="display:flex;align-items:center;gap:10px">'+
+      '<div data-rev-prev style="width:44px;height:44px;border-radius:50%;overflow:hidden;background:var(--bg);border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px">'+(img?'<img src="'+ea(img)+'" style="width:100%;height:100%;object-fit:cover">':'👤')+'</div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
+        '<input type="file" class="upl-input" id="'+uid+'" accept="image/jpeg,image/png,image/webp">'+
+        '<input type="hidden" data-rev-img value="'+ea(img)+'">'+
+        '<button class="upl-btn" data-rev-upl="'+uid+'" type="button">Hochladen</button>'+
+        '<button class="upl-clr" data-rev-clr type="button">Entfernen</button>'+
+      '</div>'+
+    '</div></div>';
   d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); schedulePreview(); });
-  d.querySelectorAll('input,textarea').forEach(function(inp){ inp.addEventListener('input', schedulePreview); });
+  d.querySelectorAll('input[type=text],textarea').forEach(function(inp){ inp.addEventListener('input', schedulePreview); });
+  var fi = d.querySelector('#'+uid);
+  var ub = d.querySelector('[data-rev-upl]');
+  var cb = d.querySelector('[data-rev-clr]');
+  var pb = d.querySelector('[data-rev-prev]');
+  var hi = d.querySelector('[data-rev-img]');
+  ub.addEventListener('click', function(){ fi.click(); });
+  fi.addEventListener('change', function(){
+    var f = this.files[0]; if(!f) return;
+    uploadFile(f, function(url){
+      if(url){ hi.value = url; pb.innerHTML = '<img src="'+ea(url)+'" style="width:100%;height:100%;object-fit:cover">'; schedulePreview(); }
+    }, pb, ub);
+  });
+  cb.addEventListener('click', function(){ hi.value = ''; pb.innerHTML = '👤'; schedulePreview(); });
   c.appendChild(d);
 }
 function readReviews(){
@@ -928,7 +1032,8 @@ function readReviews(){
   qa('#reviews-container .item').forEach(function(el){
     var t = el.querySelector('[data-rev-text]').value.trim();
     var a = el.querySelector('[data-rev-author]').value.trim();
-    if(t||a) r.push({text:t, author:a});
+    var img = el.querySelector('[data-rev-img]') ? el.querySelector('[data-rev-img]').value.trim() : '';
+    if(t||a) r.push({text:t, author:a, img:img||undefined});
   });
   return r;
 }
@@ -988,7 +1093,8 @@ function bindAll(){
   bindUpload('studio_banner_img', 'studio-preview');
 
   // Farb-Picker Sync (color ↔ hex text)
-  ['primary_color','cta_bg','hero_bg'].forEach(function(k){
+  var allColorKeys = ['primary_color','cta_bg','hero_bg','banner_bg','banner_color','scarcity_bg','scarcity_color','stats_bg','stats_color','brand_bg','brand_color','brand_accent'];
+  allColorKeys.forEach(function(k){
     var col = $('cfg-design-'+k);
     var hex = $('cfg-design-'+k+'_hex');
     if(col && hex){
