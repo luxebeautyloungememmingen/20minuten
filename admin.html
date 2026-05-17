@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>fitbox Landing Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #2f8614;
+  --dark-green: #246610;
+  --green-light: #e8f5e0;
+  --black: #111;
+  --text: #1a1a1a;
+  --muted: #6b7280;
+  --bg: #f9f9f6;
+  --bg-alt: #f2f2ee;
+  --white: #fff;
+  --border: #e2e2dc;
+  --red: #dc2626;
+  --yellow: #d97706;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* LOGIN */
+#login-screen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg);
+}
+.login-box {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%; max-width: 380px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+.login-logo { text-align: center; margin-bottom: 24px; }
+.login-logo img { height: 36px; }
+.login-title { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 24px; color: var(--black); }
+.login-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.login-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+.login-input {
+  padding: 12px 14px; border: 1.5px solid var(--border);
+  border-radius: 6px; font-family: 'DM Sans', sans-serif;
+  font-size: 15px; outline: none; transition: border-color .2s;
+}
+.login-input:focus { border-color: var(--green); }
+.login-btn {
+  width: 100%; padding: 13px; background: var(--green);
+  color: #fff; border: none; border-radius: 6px;
+  font-family: 'DM Sans', sans-serif; font-weight: 700;
+  font-size: 15px; cursor: pointer; transition: background .2s;
+}
+.login-btn:hover { background: var(--dark-green); }
+.login-error { color: var(--red); font-size: 13px; text-align: center; margin-top: 10px; display: none; }
+.login-error.show { display: block; }
+
+/* ADMIN LAYOUT */
+#admin-screen { display: none; min-height: 100vh; }
+
+.adm-topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.adm-topbar-left { display: flex; align-items: center; gap: 12px; }
+.adm-topbar-left img { height: 30px; }
+.adm-topbar-title { font-size: 14px; font-weight: 700; color: var(--black); }
+.adm-topbar-right { display: flex; gap: 10px; align-items: center; }
+.adm-preview-btn {
+  background: var(--green-light); color: var(--dark-green);
+  border: 1px solid var(--green); border-radius: 6px;
+  padding: 8px 16px; font-size: 13px; font-weight: 600;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+}
+.adm-save-btn {
+  background: var(--green); color: #fff;
+  border: none; border-radius: 6px;
+  padding: 9px 20px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: 'DM Sans', sans-serif;
+  transition: background .2s; display: inline-flex; align-items: center; gap: 6px;
+}
+.adm-save-btn:hover { background: var(--dark-green); }
+.adm-save-btn:disabled { opacity: .6; cursor: not-allowed; }
+.adm-logout {
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 14px;
+  font-size: 13px; color: var(--muted); cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.adm-body { display: flex; gap: 0; }
+
+/* SIDEBAR */
+.adm-sidebar {
+  width: 220px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  background: var(--white);
+  padding: 16px 0;
+  min-height: calc(100vh - 57px);
+  position: sticky; top: 57px;
+  height: calc(100vh - 57px);
+  overflow-y: auto;
+}
+.adm-nav-section { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 12px 20px 6px; }
+.adm-nav-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 20px; font-size: 13px; font-weight: 500;
+  color: var(--text); cursor: pointer; transition: background .15s;
+  border-left: 3px solid transparent;
+}
+.adm-nav-item:hover { background: var(--bg); }
+.adm-nav-item.active { background: var(--green-light); color: var(--dark-green); border-left-color: var(--green); font-weight: 600; }
+.adm-nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+
+/* CONTENT */
+.adm-content { flex: 1; padding: 28px; max-width: 860px; }
+.adm-panel { display: none; }
+.adm-panel.active { display: block; }
+.adm-panel-title { font-size: 20px; font-weight: 700; color: var(--black); margin-bottom: 4px; }
+.adm-panel-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+/* Cards */
+.adm-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px 22px; margin-bottom: 16px;
+}
+.adm-card-title { font-size: 13px; font-weight: 700; color: var(--black); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.adm-card-title .badge {
+  font-size: 10px; font-weight: 600; padding: 2px 8px;
+  border-radius: 100px; letter-spacing: .5px; text-transform: uppercase;
+}
+.badge-green { background: var(--green-light); color: var(--dark-green); }
+.badge-red { background: #fef2f2; color: var(--red); }
+.badge-yellow { background: #fffbeb; color: var(--yellow); }
+
+/* Form elements */
+.adm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.adm-row.single { grid-template-columns: 1fr; }
+.adm-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+.adm-field { display: flex; flex-direction: column; gap: 5px; }
+.adm-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+.adm-input, .adm-select, .adm-textarea {
+  padding: 10px 12px; border: 1.5px solid var(--border);
+  border-radius: 6px; font-family: 'DM Sans', sans-serif;
+  font-size: 14px; color: var(--text); background: var(--white);
+  outline: none; transition: border-color .2s; width: 100%;
+}
+.adm-input:focus, .adm-select:focus, .adm-textarea:focus { border-color: var(--green); }
+.adm-textarea { min-height: 80px; resize: vertical; }
+.adm-hint { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* Toggle */
+.adm-toggle-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.adm-toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+.adm-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.adm-toggle-slider {
+  position: absolute; inset: 0; background: var(--border);
+  border-radius: 100px; cursor: pointer; transition: background .2s;
+}
+.adm-toggle-slider::after {
+  content: ''; position: absolute;
+  left: 3px; top: 3px; width: 18px; height: 18px;
+  background: white; border-radius: 50%; transition: transform .2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.adm-toggle input:checked + .adm-toggle-slider { background: var(--green); }
+.adm-toggle input:checked + .adm-toggle-slider::after { transform: translateX(20px); }
+.adm-toggle-label { font-size: 14px; font-weight: 500; color: var(--text); }
+
+/* Reviews */
+.adm-review-item {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: 6px; padding: 14px; margin-bottom: 10px; position: relative;
+}
+.adm-review-del {
+  position: absolute; top: 10px; right: 10px;
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  font-size: 16px; padding: 2px 6px;
+}
+.adm-review-del:hover { color: var(--red); }
+.adm-add-btn {
+  background: var(--green-light); color: var(--dark-green);
+  border: 1px dashed var(--green); border-radius: 6px;
+  padding: 10px; width: 100%; font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background .2s;
+}
+.adm-add-btn:hover { background: #d4eec4; }
+
+/* Stats */
+.adm-stat-item { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; align-items: end; }
+
+/* Image preview */
+.adm-img-preview {
+  margin-top: 8px; border-radius: 6px; overflow: hidden;
+  height: 120px; background: var(--bg-alt); position: relative;
+}
+.adm-img-preview img { width: 100%; height: 100%; object-fit: cover; }
+.adm-img-preview .adm-img-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 13px; }
+
+/* Toast */
+#adm-toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  background: var(--black); color: #fff;
+  padding: 12px 20px; border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  transform: translateY(100px); opacity: 0;
+  transition: all .3s; pointer-events: none;
+}
+#adm-toast.show { transform: translateY(0); opacity: 1; }
+#adm-toast.success { background: var(--green); }
+#adm-toast.error { background: var(--red); }
+
+/* Status bar */
+.adm-status-bar {
+  background: var(--green-light); border: 1px solid var(--green);
+  border-radius: 6px; padding: 10px 14px;
+  font-size: 13px; color: var(--dark-green); font-weight: 500;
+  margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
+}
+.adm-status-bar.warn { background: #fffbeb; border-color: #fbbf24; color: var(--yellow); }
+
+@media (max-width: 768px) {
+  .adm-sidebar { display: none; }
+  .adm-row { grid-template-columns: 1fr; }
+  .adm-row.triple { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox">
+    </div>
+    <div class="login-title">Landing Page Admin</div>
+    <div class="login-field">
+      <label class="login-label">Passwort</label>
+      <input type="password" class="login-input" id="loginPw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Einloggen</button>
+    <div class="login-error" id="loginError">Falsches Passwort</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <div class="adm-topbar">
+    <div class="adm-topbar-left">
+      <img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox">
+      <span class="adm-topbar-title">Landing Page Admin</span>
+    </div>
+    <div class="adm-topbar-right">
+      <a href="ems-training.html" target="_blank" class="adm-preview-btn">👁 Vorschau</a>
+      <button class="adm-save-btn" id="saveBtn" onclick="saveConfig()">💾 Speichern</button>
+      <button class="adm-logout" onclick="doLogout()">Abmelden</button>
+    </div>
+  </div>
+
+  <div class="adm-body">
+    <!-- SIDEBAR -->
+    <div class="adm-sidebar">
+      <div class="adm-nav-section">Seite</div>
+      <div class="adm-nav-item active" data-panel="banner" onclick="showPanel('banner')"><span class="icon">📢</span> Aktions-Banner</div>
+      <div class="adm-nav-item" data-panel="hero" onclick="showPanel('hero')"><span class="icon">🏠</span> Hero-Bereich</div>
+      <div class="adm-nav-item" data-panel="stats" onclick="showPanel('stats')"><span class="icon">📊</span> Stats-Leiste</div>
+      <div class="adm-nav-item" data-panel="reviews" onclick="showPanel('reviews')"><span class="icon">⭐</span> Bewertungen</div>
+      <div class="adm-nav-section">Studios</div>
+      <div class="adm-nav-item" data-panel="studios" onclick="showPanel('studios')"><span class="icon">📍</span> Standorte</div>
+      <div class="adm-nav-section">Formular</div>
+      <div class="adm-nav-item" data-panel="form" onclick="showPanel('form')"><span class="icon">📋</span> Formular & CTA</div>
+      <div class="adm-nav-section">Links</div>
+      <div class="adm-nav-item" data-panel="links" onclick="showPanel('links')"><span class="icon">🔗</span> Footer-Links</div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="adm-content">
+
+      <!-- PANEL: BANNER -->
+      <div class="adm-panel active" id="panel-banner">
+        <div class="adm-panel-title">Aktions-Banner</div>
+        <div class="adm-panel-sub">Zeigt einen farbigen Banner ganz oben — ideal für zeitlich begrenzte Aktionen.</div>
+        <div class="adm-card">
+          <div class="adm-card-title">Banner-Status <span class="badge badge-red" id="badge-banner">Deaktiviert</span></div>
+          <div class="adm-toggle-row">
+            <label class="adm-toggle">
+              <input type="checkbox" id="cfg-banner_active" onchange="updateBannerBadge()">
+              <span class="adm-toggle-slider"></span>
+            </label>
+            <span class="adm-toggle-label">Banner anzeigen</span>
+          </div>
+          <div class="adm-row single">
+            <div class="adm-field">
+              <label class="adm-label">Banner-Text</label>
+              <input type="text" class="adm-input" id="cfg-banner_text" placeholder="🎉 Sommer-Aktion: 2 Monate zum Preis von 1 — nur bis 31.07.!">
+              <div class="adm-hint">Emojis erlaubt. Wird fett und grün angezeigt.</div>
+            </div>
+          </div>
+          <div class="adm-row">
+            <div class="adm-field">
+              <label class="adm-label">Link-Text (optional)</label>
+              <input type="text" class="adm-input" id="cfg-banner_link_text" placeholder="Jetzt sichern">
+            </div>
+            <div class="adm-field">
+              <label class="adm-label">Link-URL (optional)</label>
+              <input type="text" class="adm-input" id="cfg-banner_link_url" placeholder="#fb-anmeldung oder https://...">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: HERO -->
+      <div class="adm-panel" id="panel-hero">
+        <div class="adm-panel-title">Hero-Bereich</div>
+        <div class="adm-panel-sub">Der erste Eindruck — Hauptbild, Scarcity-Hinweis und CTA-Texte.</div>
+        <div class="adm-card">
+          <div class="adm-card-title">Hero-Bild</div>
+          <div class="adm-row single">
+            <div class="adm-field">
+              <label class="adm-label">Bild-URL</label>
+              <input type="text" class="adm-input" id="cfg-hero_img" placeholder="https://..." oninput="previewImg('hero-preview', this.value)">
+              <div class="adm-hint">Supabase Storage URL oder externes HTTPS-Bild. Empfohlen: 1200×800px.</div>
+              <div class="adm-img-preview" id="hero-preview">
+                <div class="adm-img-placeholder">Bild-URL eingeben</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-title">Texte & CTA</div>
+          <div class="adm-row single">
+            <div class="adm-field">
+              <label class="adm-label">Scarcity-Text (gelber Hinweis)</label>
+              <input type="text" class="adm-input" id="cfg-scarcity_text" placeholder="⚠️ Nur noch wenige Plätze pro Monat verfügbar!">
+            </div>
+          </div>
+          <div class="adm-row">
+            <div class="adm-field">
+              <label class="adm-label">Hero CTA-Button</label>
+              <input type="text" class="adm-input" id="cfg-hero_cta_text" placeholder="🎯 Kostenloses Probetraining sichern">
+            </div>
+            <div class="adm-field">
+              <label class="adm-label">Vertrauens-Hinweis unter Button</label>
+              <input type="text" class="adm-input" id="cfg-hero_note" placeholder="100% kostenlos & unverbindlich">
+            </div>
+          </div>
+          <div class="adm-row single">
+            <div class="adm-field">
+              <label class="adm-label">Nav-CTA (oben rechts)</label>
+              <input type="text" class="adm-input" id="cfg-nav_cta_text" placeholder="Jetzt ausprobieren →">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: STATS -->
+      <div class="adm-panel" id="panel-stats">
+        <div class="adm-panel-title">Stats-Leiste</div>
+        <div class="adm-panel-sub">Die 4 Kennzahlen im grünen Balken unter dem Hero.</div>
+        <div class="adm-card">
+          <div class="adm-card-title">Kennzahlen</div>
+          <div id="stats-container"></div>
+        </div>
+      </div>
+
+      <!-- PANEL: REVIEWS -->
+      <div class="adm-panel" id="panel-reviews">
+        <div class="adm-panel-title">Bewertungen</div>
+        <div class="adm-panel-sub">Echte Kundenstimmen — max. 6 Bewertungen empfohlen.</div>
+        <div class="adm-card">
+          <div class="adm-card-title">Bewertungen verwalten</div>
+          <div id="reviews-container"></div>
+          <button class="adm-add-btn" onclick="addReview()">+ Bewertung hinzufügen</button>
+        </div>
+      </div>
+
+      <!-- PANEL: STUDIOS -->
+      <div class="adm-panel" id="panel-studios">
+        <div class="adm-panel-title">Standorte</div>
+        <div class="adm-panel-sub">Adresse, Öffnungszeiten und WhatsApp-Nummern der Studios.</div>
+        <div class="adm-card">
+          <div class="adm-card-title">Studio-Banner-Bild</div>
+          <div class="adm-row single">
+            <div class="adm-field">
+              <label class="adm-label">Bild-URL</label>
+              <input type="text" class="adm-input" id="cfg-studio_banner_img" placeholder="https://..." oninput="previewImg('studio-preview', this.value)">
+              <div class="adm-img-preview" id="studio-preview">
+                <div class="adm-img-placeholder">Bild-URL eingeben</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-title">fitbox Memmingen</div>
+          <div class="adm-row">
+            <div class="adm-field">
+              <label class="adm-label">Adresse</label>
+              <input type="text" class="adm-input" id="cfg-mem_adresse" placeholder="Memmingen Amendingen">
+            </div>
+            <div class="adm-field">
+              <label class="adm-label">Öffnungszeiten</label>
+              <input type="text" class="adm-input" id="cfg-mem_zeiten" placeholder="Mo–Fr & nach Vereinbarung">
+            </div>
+          </div>
+          <div class="adm-row single">
+            <div class="adm-field">
+              <label class="adm-label">WhatsApp-Nummer (nur Ziffern, mit Ländervorwahl)</label>
+              <input type="text" class="adm-input" id="cfg-mem_wa" placeholder="4915730024124">
+              <div class="adm-hint">Format: 49151... (ohne + oder 0)</div>
+            </div>
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-title">fitbox Senden</div>
+          <div class="adm-row">
+            <div class="adm-field">
+              <label class="adm-label">Adresse</label>
+              <input type="text" class="adm-input" id="cfg-sen_adresse" placeholder="Senden (Iller)">
+            </div>
+            <div class="adm-field">
+              <label class="adm-label">Öffnungszeiten</label>
+              <input type="text" class="adm-input" id="cfg-sen_zeiten" placeholder="Mo–Fr & nach Vereinbarung">
+            </div>
+          </div>
+          <div class="adm-row single">
+            <div class="adm-field">
+              <label class="adm-label">WhatsApp-Nummer (nur Ziffern, mit Ländervorwahl)</label>
+              <input type="text" class="adm-input" id="cfg-sen_wa" placeholder="4915561206719">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: FORM -->
+      <div class="adm-panel" id="panel-form">
+        <div class="adm-panel-title">Formular & CTA</div>
+        <div class="adm-panel-sub">Überschrift und Untertext des Anmeldeformulars sowie der mobilen Sticky-Bar.</div>
+        <div class="adm-card">
+          <div class="adm-card-title">Formular-Kopf</div>
+          <div class="adm-row">
+            <div class="adm-field">
+              <label class="adm-label">Formular-Titel</label>
+              <input type="text" class="adm-input" id="cfg-form_title" placeholder="Probetraining sichern">
+            </div>
+            <div class="adm-field">
+              <label class="adm-label">Formular-Untertitel</label>
+              <input type="text" class="adm-input" id="cfg-form_subtitle" placeholder="In 60 Sekunden zum kostenlosen Termin">
+            </div>
+          </div>
+        </div>
+        <div class="adm-card">
+          <div class="adm-card-title">Sticky CTA (Mobile)</div>
+          <div class="adm-row">
+            <div class="adm-field">
+              <label class="adm-label">Titel</label>
+              <input type="text" class="adm-input" id="cfg-sticky_title" placeholder="Kostenloses Probetraining">
+            </div>
+            <div class="adm-field">
+              <label class="adm-label">Untertitel</label>
+              <input type="text" class="adm-input" id="cfg-sticky_sub" placeholder="Nur noch wenige Plätze frei!">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL: LINKS -->
+      <div class="adm-panel" id="panel-links">
+        <div class="adm-panel-title">Footer-Links</div>
+        <div class="adm-panel-sub">URLs für Impressum und Datenschutzerklärung.</div>
+        <div class="adm-card">
+          <div class="adm-card-title">Rechtliche Links</div>
+          <div class="adm-row">
+            <div class="adm-field">
+              <label class="adm-label">Impressum-URL</label>
+              <input type="text" class="adm-input" id="cfg-impressum_url" placeholder="https://fitbox-memmingen.de/impressum">
+            </div>
+            <div class="adm-field">
+              <label class="adm-label">Datenschutz-URL</label>
+              <input type="text" class="adm-input" id="cfg-datenschutz_url" placeholder="https://fitbox-memmingen.de/datenschutz">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end adm-content -->
+  </div><!-- end adm-body -->
+</div><!-- end admin-screen -->
+
+<div id="adm-toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// AUTH — Passwort wird nur client-seitig geprüft.
+// Für produktiven Einsatz: Vercel Password Protection nutzen.
+// ═══════════════════════════════════════
+var ADMIN_PW = 'fitbox2025!';
+
+function doLogin() {
+  var pw = document.getElementById('loginPw').value;
+  if (pw === ADMIN_PW) {
+    sessionStorage.setItem('adm_auth', '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    loadAndRender();
+  } else {
+    document.getElementById('loginError').classList.add('show');
+    setTimeout(() => document.getElementById('loginError').classList.remove('show'), 3000);
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('adm_auth');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-screen').style.display = 'none';
+}
+
+// Auto-login wenn Session aktiv
+if (sessionStorage.getItem('adm_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-screen').style.display = 'block';
+}
+
+// ═══════════════════════════════════════
+// PANEL NAVIGATION
+// ═══════════════════════════════════════
+function showPanel(name) {
+  document.querySelectorAll('.adm-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.adm-nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelector('[data-panel="' + name + '"]').classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// CONFIG LOAD & RENDER
+// ═══════════════════════════════════════
+var currentConfig = {};
+
+async function loadAndRender() {
+  try {
+    const res = await fetch('./config.json?t=' + Date.now());
+    if (res.ok) currentConfig = await res.json();
+    else currentConfig = {};
+  } catch(e) { currentConfig = {}; }
+  renderForm();
+}
+
+function renderForm() {
+  var c = currentConfig;
+
+  // Simple text fields — map config key (dots→underscore) → input id
+  var fields = [
+    'banner_text','banner_link_text','banner_link_url',
+    'hero_img','scarcity_text','hero_cta_text','hero_note','nav_cta_text',
+    'studio_banner_img',
+    'mem_adresse','mem_zeiten','mem_wa',
+    'sen_adresse','sen_zeiten','sen_wa',
+    'sticky_title','sticky_sub',
+    'impressum_url','datenschutz_url',
+    'form_title','form_subtitle'
+  ];
+  fields.forEach(k => {
+    var el = document.getElementById('cfg-' + k.replace(/\./g,'_'));
+    if (el && c[k] != null) el.value = c[k];
+  });
+
+  // Toggle
+  var ba = document.getElementById('cfg-banner_active');
+  if (ba) { ba.checked = !!c.banner_active; updateBannerBadge(); }
+
+  // Image previews
+  if (c.hero_img) previewImg('hero-preview', c.hero_img);
+  if (c.studio_banner_img) previewImg('studio-preview', c.studio_banner_img);
+
+  // Stats
+  renderStats(c.stats || [
+    { num: '20', label: 'Min. pro Session' },
+    { num: '90%', label: 'Muskelfasern aktiv' },
+    { num: '200+', label: 'Zufriedene Mitglieder' },
+    { num: '2', label: 'Studios Region' }
+  ]);
+
+  // Reviews
+  renderReviews(c.reviews || []);
+}
+
+// ── STATS ──
+function renderStats(stats) {
+  var c = document.getElementById('stats-container');
+  c.innerHTML = '';
+  stats.forEach((s, i) => {
+    var div = document.createElement('div');
+    div.className = 'adm-stat-item';
+    div.innerHTML = `
+      <div class="adm-field">
+        <label class="adm-label">Zahl ${i+1}</label>
+        <input type="text" class="adm-input" data-stat="${i}" data-field="num" value="${escHtml(s.num)}" placeholder="20">
+      </div>
+      <div class="adm-field">
+        <label class="adm-label">Beschriftung ${i+1}</label>
+        <input type="text" class="adm-input" data-stat="${i}" data-field="label" value="${escHtml(s.label)}" placeholder="Min. pro Session">
+      </div>`;
+    c.appendChild(div);
+  });
+}
+
+function readStats() {
+  var result = [];
+  document.querySelectorAll('[data-stat]').forEach(el => {
+    var i = parseInt(el.dataset.stat);
+    if (!result[i]) result[i] = {};
+    result[i][el.dataset.field] = el.value.trim();
+  });
+  return result.filter(Boolean);
+}
+
+// ── REVIEWS ──
+function renderReviews(reviews) {
+  var c = document.getElementById('reviews-container');
+  c.innerHTML = '';
+  reviews.forEach((r, i) => addReviewEl(r, i));
+}
+
+function addReviewEl(r, i) {
+  var c = document.getElementById('reviews-container');
+  var idx = i ?? c.children.length;
+  var div = document.createElement('div');
+  div.className = 'adm-review-item';
+  div.dataset.idx = idx;
+  div.innerHTML = `
+    <button class="adm-review-del" title="Entfernen" onclick="removeReview(this)">✕</button>
+    <div class="adm-field" style="margin-bottom:8px;">
+      <label class="adm-label">Bewertungstext</label>
+      <textarea class="adm-textarea" data-review-text rows="3" placeholder="„Toller Text..."">${escHtml(r?.text || '')}</textarea>
+    </div>
+    <div class="adm-field">
+      <label class="adm-label">Autor</label>
+      <input type="text" class="adm-input" data-review-author value="${escHtml(r?.author || '')}" placeholder="Max M. aus Memmingen">
+    </div>`;
+  c.appendChild(div);
+}
+
+function addReview() { addReviewEl({}, null); }
+
+function removeReview(btn) {
+  btn.closest('.adm-review-item').remove();
+}
+
+function readReviews() {
+  return Array.from(document.querySelectorAll('.adm-review-item')).map(el => ({
+    text: el.querySelector('[data-review-text]').value.trim(),
+    author: el.querySelector('[data-review-author]').value.trim()
+  })).filter(r => r.text || r.author);
+}
+
+// ── BANNER BADGE ──
+function updateBannerBadge() {
+  var active = document.getElementById('cfg-banner_active').checked;
+  var badge = document.getElementById('badge-banner');
+  badge.textContent = active ? 'Aktiv' : 'Deaktiviert';
+  badge.className = 'badge ' + (active ? 'badge-green' : 'badge-red');
+}
+
+// ── IMAGE PREVIEW ──
+function previewImg(containerId, src) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  if (src) {
+    container.innerHTML = `<img src="${escAttr(src)}" onerror="this.parentElement.innerHTML='<div class=adm-img-placeholder>Bild nicht ladbar</div>'" alt="">`;
+  } else {
+    container.innerHTML = '<div class="adm-img-placeholder">Bild-URL eingeben</div>';
+  }
+}
+
+// ═══════════════════════════════════════
+// SAVE CONFIG
+// ═══════════════════════════════════════
+async function saveConfig() {
+  var btn = document.getElementById('saveBtn');
+  btn.disabled = true; btn.textContent = '⏳ Speichern...';
+
+  var config = {
+    banner_active: document.getElementById('cfg-banner_active').checked,
+    banner_text: document.getElementById('cfg-banner_text').value.trim(),
+    banner_link_text: document.getElementById('cfg-banner_link_text').value.trim(),
+    banner_link_url: document.getElementById('cfg-banner_link_url').value.trim(),
+    hero_img: document.getElementById('cfg-hero_img').value.trim(),
+    scarcity_text: document.getElementById('cfg-scarcity_text').value.trim(),
+    hero_cta_text: document.getElementById('cfg-hero_cta_text').value.trim(),
+    hero_note: document.getElementById('cfg-hero_note').value.trim(),
+    nav_cta_text: document.getElementById('cfg-nav_cta_text').value.trim(),
+    stats: readStats(),
+    studio_banner_img: document.getElementById('cfg-studio_banner_img').value.trim(),
+    mem_adresse: document.getElementById('cfg-mem_adresse').value.trim(),
+    mem_zeiten: document.getElementById('cfg-mem_zeiten').value.trim(),
+    mem_wa: document.getElementById('cfg-mem_wa').value.trim(),
+    sen_adresse: document.getElementById('cfg-sen_adresse').value.trim(),
+    sen_zeiten: document.getElementById('cfg-sen_zeiten').value.trim(),
+    sen_wa: document.getElementById('cfg-sen_wa').value.trim(),
+    reviews: readReviews(),
+    sticky_title: document.getElementById('cfg-sticky_title').value.trim(),
+    sticky_sub: document.getElementById('cfg-sticky_sub').value.trim(),
+    impressum_url: document.getElementById('cfg-impressum_url').value.trim(),
+    datenschutz_url: document.getElementById('cfg-datenschutz_url').value.trim(),
+    form_title: document.getElementById('cfg-form_title').value.trim(),
+    form_subtitle: document.getElementById('cfg-form_subtitle').value.trim()
+  };
+
+  try {
+    const res = await fetch('/api/save-config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': ADMIN_PW },
+      body: JSON.stringify(config)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    currentConfig = config;
+    showToast('✓ Gespeichert! Seite wird sofort aktualisiert.', 'success');
+  } catch(err) {
+    // Fallback: JSON download
+    downloadJson(config);
+    showToast('⚠️ API nicht verfügbar — config.json heruntergeladen. Bitte manuell deployen.', 'error');
+  }
+
+  btn.disabled = false; btn.textContent = '💾 Speichern';
+}
+
+function downloadJson(obj) {
+  var blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'config.json'; document.body.appendChild(a); a.click(); a.remove();
+}
+
+// ── TOAST ──
+function showToast(msg, type) {
+  var t = document.getElementById('adm-toast');
+  t.textContent = msg; t.className = 'show ' + (type || '');
+  setTimeout(() => t.className = '', 4000);
+}
+
+// ── UTILS ──
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s).replace(/"/g,'&quot;'); }
+
+// Init
+if (sessionStorage.getItem('adm_auth') === '1') loadAndRender();
+</script>
+</body>
+</html>

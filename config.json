@@ -1,0 +1,51 @@
+{
+  "banner_active": false,
+  "banner_text": "🎉 Sommer-Aktion: 2 Monate zum Preis von 1 — nur bis 31.07.!",
+  "banner_link_text": "Jetzt sichern",
+  "banner_link_url": "#fb-anmeldung",
+
+  "hero_img": "https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg",
+  "scarcity_text": "⚠️ Nur noch wenige Plätze pro Monat verfügbar!",
+  "hero_cta_text": "🎯 Kostenloses Probetraining sichern",
+  "hero_note": "100% kostenlos & unverbindlich",
+  "nav_cta_text": "Jetzt ausprobieren →",
+
+  "stats": [
+    { "num": "20",   "label": "Min. pro Session" },
+    { "num": "90%",  "label": "Muskelfasern aktiv" },
+    { "num": "200+", "label": "Zufriedene Mitglieder" },
+    { "num": "2",    "label": "Studios Region" }
+  ],
+
+  "studio_banner_img": "https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg",
+  "mem_adresse": "Memmingen Amendingen",
+  "mem_zeiten": "Mo–Fr & nach Vereinbarung",
+  "mem_wa": "4915730024124",
+  "sen_adresse": "Senden (Iller)",
+  "sen_zeiten": "Mo–Fr & nach Vereinbarung",
+  "sen_wa": "4915561206719",
+
+  "reviews": [
+    {
+      "text": "„Tolles Studio und ein super Trainerteam! Die Betreuung ist aufmerksam, professionell und immer motivierend. Seit fünf Jahren dabei und immer noch begeistert."",
+      "author": "Bettina L. aus Memmingen"
+    },
+    {
+      "text": "„Endlich ein Training, das sich in meinen Alltag integrieren lässt. Seit über einem Jahr dabei: fitter Körper, bessere Haltung und keine Rückenschmerzen mehr."",
+      "author": "Susanne H. aus Buxheim"
+    },
+    {
+      "text": "„Die Trainer sind motivierend und holen das Beste aus einem heraus. Termine lassen sich schnell abstimmen, dazu ein modernes und gepflegtes Studio."",
+      "author": "Hermann K. aus Kirchdorf"
+    }
+  ],
+
+  "sticky_title": "Kostenloses Probetraining",
+  "sticky_sub": "Nur noch wenige Plätze frei!",
+
+  "impressum_url": "#",
+  "datenschutz_url": "#",
+
+  "form_title": "Probetraining sichern",
+  "form_subtitle": "In 60 Sekunden zum kostenlosen Termin — wir melden uns persönlich."
+}
