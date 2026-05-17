@@ -706,6 +706,9 @@ var iframeReady = false;
 var pinned = false;
 var pendingApply = null;
 var applyTimer = null;
+// Während Bearbeitung: Auto-Panel-Switch durch Iframe-Scroll unterdrücken
+// (Layout-Shifts durch Größen-Änderung sollen nicht das Panel wegspringen lassen)
+var suppressAutoSwitchUntil = 0;
 
 var PANEL_META = {
   banner:{icon:'📢',title:'Banner',sec:'sec-hero'},
@@ -1147,6 +1150,9 @@ function onAnyChange(){
   currentCfg = readSimple();
   applyToPreview();
   refreshDirtyUI();
+  // Jede Änderung pausiert den Auto-Panel-Switch für 1,5s
+  // (Layout-Shifts durch das Update könnten sonst das Panel weg-scrollen)
+  suppressAutoSwitchUntil = Date.now() + 1500;
 }
 
 // ── RENDER ──
@@ -1756,6 +1762,8 @@ window.addEventListener('message', function(e){
   if(e.data.type === 'fitbox-section-visible' && e.data.panel){
     // Nicht wechseln wenn Panel gepinnt
     if(pinned) return;
+    // Nicht wechseln direkt nach einer Bearbeitung (Layout-Shifts würden sonst springen)
+    if(Date.now() < suppressAutoSwitchUntil) return;
     // Nur wechseln wenn das Panel überhaupt existiert
     if(!PANEL_META[e.data.panel]) return;
     // Nicht wechseln wenn wir gerade in einem verwandten Panel sind
