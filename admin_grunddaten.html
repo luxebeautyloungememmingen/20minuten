@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Grunddaten · fitbox Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --fit:#2f8615;--fit2:#95c11f;--fit-dunkel:#236010;
+  --tinte:#0f172a;--gedaempft:#64748b;
+  --linie:#dde5dd;--weich:#eef5ea;
+  --schatten:0 4px 20px rgba(15,23,42,.07);
+  --schatten-stark:0 18px 40px rgba(15,23,42,.14);
+  --ok:#166534;--ok-hg:#f0fdf4;
+  --warn-hg:#fffbeb;
+  --radius:16px;
+}
+html,body{font-family:'DM Sans',system-ui,sans-serif;color:var(--tinte);background:radial-gradient(900px 380px at 10% 0%,rgba(47,134,21,.08),transparent 55%),linear-gradient(180deg,#fff 0%,#f2f6f0 60%,#f5f7f6 100%);min-height:100vh}
+
+/* TOPBAR (fitbox green) */
+.topbar-new{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);
+  padding:0 18px;height:46px;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  position:sticky;top:0;z-index:200;
+}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0;}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.tb-space{flex:1;}
+.topbar-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:600 12px/1 inherit;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.topbar-btn:hover{background:rgba(255,255,255,.25)}
+
+/* conn-dot */
+.conn-dot{width:9px;height:9px;border-radius:50%;background:#6b7280;flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(255,255,255,.15);transition:background .4s,box-shadow .4s;}
+.conn-dot.connecting{background:#f59e0b;animation:connPulse 1.2s ease-in-out infinite;}
+.conn-dot.ok{background:#95c11f;box-shadow:0 0 0 3px rgba(149,193,31,.3);animation:none;}
+.conn-dot.err{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.3);animation:none;}
+@keyframes connPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.conn-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);transition:color .3s;}
+.conn-label.ok{color:rgba(255,255,255,.9);}
+.conn-label.err{color:rgba(255,255,255,.9);}
+#connStatus{display:flex;align-items:center;gap:6px;}
+
+/* iframe mode */
+.in-iframe .topbar-new{display:flex}
+.in-iframe .seite{padding-top:18px!important}
+body.in-iframe{padding:0!important;margin:0!important}
+
+/* ─── INFO MODAL ─── */
+.info-backdrop{
+  position:fixed;inset:0;background:rgba(13,27,42,.55);backdrop-filter:blur(8px);
+  z-index:2000;display:none;align-items:flex-start;justify-content:center;
+  padding:50px 20px;overflow-y:auto;
+}
+.info-backdrop.show{display:flex;animation:infoFadeIn .2s ease;}
+@keyframes infoFadeIn{from{opacity:0}to{opacity:1}}
+.info-card{
+  background:#fff;border-radius:18px;max-width:620px;width:100%;
+  box-shadow:0 24px 80px rgba(0,0,0,.3);overflow:hidden;
+  animation:infoSlideUp .25s cubic-bezier(.4,0,.2,1);
+}
+@keyframes infoSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.info-head{
+  background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);
+  color:#fff;padding:18px 22px;display:flex;align-items:center;gap:14px;
+}
+.info-head-icon{font-size:28px;flex-shrink:0;}
+.info-head-title{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+.info-head-sub{font-size:12px;opacity:.85;margin-top:2px;}
+.info-head > div:nth-child(2){flex:1;min-width:0;}
+.info-close{
+  appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);
+  color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;
+  font-weight:700;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;flex-shrink:0;
+}
+.info-close:hover{background:rgba(255,255,255,.28);}
+.info-body{padding:20px 24px 24px;max-height:65vh;overflow-y:auto;}
+.info-section{margin-bottom:18px;}
+.info-section:last-child{margin-bottom:0;}
+.info-section-title{
+  font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+  color:#2f8615;margin-bottom:7px;
+}
+.info-section p{font-size:13px;line-height:1.6;color:#334155;}
+.info-list{margin:0;padding-left:0;list-style:none;}
+.info-list li{
+  font-size:13px;line-height:1.6;color:#334155;padding:7px 0 7px 22px;
+  position:relative;border-bottom:1px solid #f1f5f0;
+}
+.info-list li:last-child{border-bottom:none;}
+.info-list li::before{
+  content:'';position:absolute;left:6px;top:14px;width:6px;height:6px;
+  border-radius:50%;background:#95c11f;
+}
+.info-list li b{color:#0d1b2a;font-weight:700;}
+
+#ladeOverlay{position:fixed;inset:0;background:rgba(15,23,42,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000}
+.ladeKarte{background:#fff;border-radius:18px;padding:16px 20px;box-shadow:var(--schatten-stark);display:flex;align-items:center;gap:12px;font-weight:900;min-width:260px;justify-content:center}
+.spinner{width:18px;height:18px;border-radius:50%;border:3px solid rgba(15,23,42,.16);border-top-color:var(--fit);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+#toastContainer{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:#0d1b2a;color:#fff;border-radius:14px;padding:12px 18px;font-size:13px;font-weight:800;box-shadow:0 14px 36px rgba(0,0,0,.25);max-width:460px;animation:toastEin .22s ease}
+.toast.ok{border-left:4px solid #4ade80}
+.toast.err{border-left:4px solid #f87171}
+@keyframes toastEin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* DIALOG */
+#dialogOverlay{position:fixed;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:500;padding:20px}
+#dialogOverlay.offen{display:flex}
+.dialog{background:#fff;border-radius:22px;box-shadow:var(--schatten-stark);width:100%;max-width:600px;overflow:hidden;animation:dialogEin .2s ease;max-height:90vh;display:flex;flex-direction:column}
+@keyframes dialogEin{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.dialog-kopf{padding:20px 24px 16px;border-bottom:1px solid var(--linie);display:flex;align-items:flex-start;gap:14px;flex-shrink:0}
+.dialog-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.dialog-icon.gruen{background:#f0fdf4}
+.dialog-icon.blau{background:#eff6ff}
+.dialog-icon.lila{background:#f5f3ff}
+.dialog-icon.orange{background:#fff7ed}
+.dialog-kopf-text h2{font-size:17px;font-weight:900;margin-bottom:3px}
+.dialog-kopf-text p{font-size:12px;color:var(--gedaempft);line-height:1.5}
+.dialog-koerper{padding:20px 24px;overflow-y:auto;flex:1}
+.dialog-fuss{padding:14px 24px;border-top:1px solid var(--linie);background:#f9fafb;display:flex;justify-content:flex-end;gap:8px;flex-shrink:0}
+
+/* FORMULAR */
+.formRaster{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:12px}
+.s12{grid-column:span 12}.s9{grid-column:span 9}.s8{grid-column:span 8}
+.s6{grid-column:span 6}.s5{grid-column:span 5}.s4{grid-column:span 4}
+.s3{grid-column:span 3}.s2{grid-column:span 2}
+.feld-label{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px;font-weight:900;color:#374151;text-transform:uppercase;letter-spacing:.04em}
+.feld-hinweis{font-size:11px;color:var(--gedaempft);margin-top:4px}
+.steuerung{width:100%;appearance:none;border:1px solid #d1d5db;background:#fff;color:var(--tinte);border-radius:10px;min-height:40px;padding:9px 12px;font:inherit;font-size:13px;transition:border-color .15s,box-shadow .15s}
+.steuerung:focus{outline:none;border-color:rgba(47,134,21,.6);box-shadow:0 0 0 3px rgba(47,134,21,.12)}
+.steuerung[readonly]{background:#f8faf7;color:var(--gedaempft)}
+.steuerung::placeholder{color:#9ca3af}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.abschnitt-kopf{grid-column:span 12;display:flex;align-items:center;gap:8px;margin-top:6px}
+.abschnitt-kopf-linie{flex:1;height:1px;background:var(--linie)}
+.abschnitt-kopf-text{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--gedaempft);white-space:nowrap}
+.checkboxen{display:flex;flex-wrap:wrap;gap:8px}
+.checkbox-item{display:flex;align-items:flex-start;gap:9px;padding:10px 13px;border:1px solid var(--linie);border-radius:10px;background:#fff;cursor:pointer;transition:.12s;user-select:none}
+.checkbox-item:hover{border-color:#bfd3bc;background:#fbfdfb}
+.checkbox-item input{width:16px;height:16px;accent-color:var(--fit);cursor:pointer;margin:0;flex-shrink:0;margin-top:1px}
+.cb-label{font-weight:800;font-size:12px;display:block}
+.cb-hint{font-size:10px;color:var(--gedaempft);margin-top:2px;display:block}
+.info-box{background:#f8faf8;border:1px solid var(--linie);border-radius:10px;padding:10px 13px;font-size:12px;color:var(--gedaempft);line-height:1.55;grid-column:span 12}
+
+/* BUTTONS */
+.btn{appearance:none;border-radius:10px;min-height:38px;padding:8px 16px;font:inherit;font-weight:800;cursor:pointer;font-size:13px;display:inline-flex;align-items:center;gap:7px;transition:.15s;border:1px solid transparent;white-space:nowrap}
+.btn.primaer{background:linear-gradient(180deg,var(--fit),#256a10);color:#fff;border-color:rgba(47,134,21,.3);box-shadow:0 4px 14px rgba(47,134,21,.2)}
+.btn.primaer:hover{filter:brightness(1.07)}
+.btn.sekundaer{background:#fff;color:#374151;border-color:#d1d5db}
+.btn.sekundaer:hover{background:#f9fafb;border-color:#bfd3bc}
+.btn.klein{min-height:32px;padding:5px 12px;font-size:12px;border-radius:8px}
+
+/* SEITE */
+.seite{max-width:1400px;margin:0 auto;padding:24px 20px 60px}
+
+/* KPIs */
+.kpi-reihe{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.kpi{background:#fff;border:1px solid var(--linie);border-radius:var(--radius);box-shadow:var(--schatten);padding:16px 18px;display:flex;align-items:center;gap:14px}
+.kpi-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.kpi-icon.gruen{background:#f0fdf4}
+.kpi-icon.blau{background:#eff6ff}
+.kpi-icon.lila{background:#f5f3ff}
+.kpi-icon.orange{background:#fff7ed}
+.kpi-wert{font-size:28px;font-weight:950;line-height:1;letter-spacing:-.03em}
+.kpi-label{font-size:11px;font-weight:800;color:var(--gedaempft);text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+
+/* MODULE */
+.module-raster{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.modul-karte{background:#fff;border:1px solid var(--linie);border-radius:var(--radius);box-shadow:var(--schatten);padding:22px 24px;cursor:pointer;transition:.18s;display:flex;align-items:flex-start;gap:18px}
+.modul-karte:hover{box-shadow:0 8px 32px rgba(47,134,21,.12);border-color:#bfd3bc;transform:translateY(-1px)}
+.modul-karte-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.modul-karte-icon.gruen{background:#f0fdf4}
+.modul-karte-icon.blau{background:#eff6ff}
+.modul-karte-icon.lila{background:#f5f3ff}
+.modul-karte-icon.orange{background:#fff7ed}
+.modul-karte h3{font-size:15px;font-weight:900;margin-bottom:5px}
+.modul-karte p{font-size:12px;color:var(--gedaempft);line-height:1.55;margin-bottom:10px}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;border:1px solid transparent}
+.tag.gruen{background:#f0fdf4;color:var(--ok);border-color:#bbf7d0}
+.tag.grau{background:#f3f4f6;color:#6b7280;border-color:#e5e7eb}
+.tag.blau{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.tag.lila{background:#f5f3ff;color:#6d28d9;border-color:#c4b5fd}
+.tag.orange{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+
+/* BEREICHS-ANSICHT */
+.bereich-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.bereich-zurueck{appearance:none;border:none;background:none;padding:0;cursor:pointer;color:var(--gedaempft);font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;font-family:inherit}
+.bereich-zurueck:hover{color:var(--fit)}
+.bereich-titel{font-size:20px;font-weight:900}
+
+/* LISTE */
+.liste-kopf{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.liste-kopf-links{display:flex;align-items:center;gap:10px;flex:1;flex-wrap:wrap}
+.suche-wrap{position:relative;flex:1;min-width:200px;max-width:340px}
+.suche-wrap input{width:100%;border:1px solid #d1d5db;border-radius:10px;padding:8px 12px 8px 36px;font:inherit;font-size:13px;background:#f9fafb;color:var(--tinte);transition:.15s;min-height:38px}
+.suche-wrap input:focus{outline:none;border-color:rgba(47,134,21,.5);box-shadow:0 0 0 3px rgba(47,134,21,.08);background:#fff}
+.suche-wrap::before{content:'🔍';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none}
+.filter-inaktive{appearance:none;border:1px solid #d1d5db;background:#fff;color:var(--gedaempft);border-radius:10px;padding:7px 12px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:38px;transition:.12s}
+.filter-inaktive.aktiv{background:var(--weich);border-color:#c3ddb8;color:var(--fit)}
+
+/* TABELLE */
+.tabellen-wrap{background:#fff;border:1px solid var(--linie);border-radius:var(--radius);box-shadow:var(--schatten);overflow:auto}
+.tabellen-wrap table{width:100%;border-collapse:collapse}
+.tabellen-wrap th{background:#f8faf8;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:var(--gedaempft);padding:10px 14px;text-align:left;border-bottom:1px solid var(--linie);white-space:nowrap}
+.tabellen-wrap td{padding:11px 14px;border-bottom:1px solid #f0f4f0;vertical-align:middle;font-size:13px}
+.tabellen-wrap tr:last-child td{border-bottom:none}
+.tabellen-wrap tr:hover td{background:#f9fbf9}
+.versteckt{display:none!important}
+.person-name{font-weight:800;font-size:13px}
+.person-sub{font-size:11px;color:var(--gedaempft);margin-top:1px}
+
+/* STATUS */
+.status{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap}
+.status.aktiv{background:var(--ok-hg);color:var(--ok);border:1px solid #bbf7d0}
+.status.inaktiv{background:#f3f4f6;color:#6b7280;border:1px solid #e5e7eb}
+.status-punkt{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+/* RECHTE */
+.rechte{display:flex;flex-wrap:wrap;gap:3px}
+.rechte-chip{padding:2px 7px;border-radius:999px;font-size:10px;font-weight:900;border:1px solid transparent;white-space:nowrap}
+.rc-pt{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+.rc-walkin{background:#fce7f3;color:#9d174d;border-color:#f9a8d4}
+.rc-reinigung{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
+.rc-kasse{background:#fef9c3;color:#854d0e;border-color:#fde047}
+.rc-mtt{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
+.rc-grunddaten{background:#ffedd5;color:#9a3412;border-color:#fdba74}
+.rc-plaene{background:#cffafe;color:#164e63;border-color:#67e8f9}
+
+/* LEER */
+.leer-hinweis{padding:40px;text-align:center;color:var(--gedaempft)}
+.leer-emoji{font-size:32px;display:block;margin-bottom:10px}
+.leer-text{font-size:13px}
+
+@media(max-width:900px){.kpi-reihe{grid-template-columns:repeat(2,1fr)}.module-raster{grid-template-columns:1fr}}
+@media(max-width:600px){.kpi-reihe{grid-template-columns:1fr 1fr}.s6,.s5,.s4,.s3,.s2{grid-column:span 6}.s9,.s8{grid-column:span 12}}
+</style><script>
+function showNoAccessFallback(){
+  try {
+    if (window.self !== window.top) {
+      window.parent.postMessage({ type: 'fitbox-no-access', path: location.pathname }, '*');
+      return;
+    }
+  } catch (e) {}
+  var html = '<head><meta charset="utf-8"><title>Kein Zugriff</title></head>' +
+    '<body style="margin:0;font-family:system-ui,sans-serif;background:#f5f6f4;min-height:100vh;display:flex;align-items:center;justify-content:center;">' +
+    '<div style="background:#fff;border-radius:14px;padding:40px;max-width:480px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08);">' +
+    '<div style="font-size:64px;margin-bottom:16px;">🔒</div>' +
+    '<h1 style="font-size:22px;font-weight:800;margin:0 0 12px;color:#0f172a;">Kein Zugriff auf diese Seite</h1>' +
+    '<p style="color:#64748b;line-height:1.6;margin:0 0 24px;">Dieser Bereich ist nur für den <strong style="color:#2f8615">Owner</strong> zugänglich.</p>' +
+    '<a href="admin_index.html" style="display:inline-block;background:linear-gradient(180deg,#2f8615,#256a10);color:#fff;text-decoration:none;border-radius:11px;padding:12px 24px;font:900 13px/1 system-ui;">← Zurück zum Admin</a>' +
+    '</div></body>';
+  document.documentElement.innerHTML = html;
+}
+</script>
+
+</head>
+<body>
+
+<script>
+(function(){
+  var KEY='fitbox_session';var s;try{s=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){localStorage.removeItem(KEY);location.replace('login.html?next='+encodeURIComponent(location.pathname+location.search));throw new Error('AUTH');}
+  var rc=s.employee&&s.employee.roles?s.employee.roles.code:'';var ri=s.employee?s.employee.role_id:'';
+  if(ri!=='80f04245-ee93-45e8-9861-121778b5ff84'&&rc!=='admin'){showNoAccessFallback();throw new Error('ROLLE');}
+  window._fbSitzung=s;window._fbToken=s.access_token;
+})();
+</script>
+
+<!-- TOPBAR -->
+<!-- ═══════════ TOPBAR ═══════════ -->
+<div class="topbar-new" id="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">🏢</span> Grunddaten</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="tbStudios">–</span> Studios</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="tbMitarbeiter">–</span> Mitarbeiter</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="tbRollen">–</span> Rollen</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="tbZuordnungen">–</span> Zuordnungen</span>
+  </div>
+  <div class="tb-space"></div>
+  <span id="connStatus"><span class="conn-dot" id="connDot"></span><span class="conn-label" id="connLabel">Verbinde…</span></span>
+  <button class="topbar-btn" id="infoBtnTop" title="Was kann ich auf dieser Seite?">ℹ️ Info</button>
+  <button class="topbar-btn" id="reloadBtnTop">↻ Neu laden</button>
+</div>
+
+<!-- iframe-Modus -->
+<script>(function(){if(window.self===window.top)return;document.documentElement.classList.add('in-iframe');document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('in-iframe');});})();</script>
+
+<!-- ═══════════ INFO MODAL ═══════════ -->
+<div class="info-backdrop" id="infoModal">
+  <div class="info-card">
+    <div class="info-head">
+      <span class="info-head-icon">🏢</span>
+      <div>
+        <div class="info-head-title">Grunddaten</div>
+        <div class="info-head-sub">Studios, Rollen, Mitarbeiter &amp; Zuordnungen</div>
+      </div>
+      <button class="info-close" id="infoClose" aria-label="Schließen">✕</button>
+    </div>
+    <div class="info-body">
+
+      <div class="info-section">
+        <div class="info-section-title">Wozu diese Seite?</div>
+        <p>Hier verwaltest du die <b>Grundkonfiguration</b> deines fitbox Studio OS: welche Studios existieren, welche Rollen es gibt, welche Mitarbeiter angelegt sind und welcher Mitarbeiter in welchem Studio mit welchen Rechten arbeitet.</p>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Die vier Bereiche</div>
+        <ul class="info-list">
+          <li><b>🏢 Studios</b> — fitbox Memmingen &amp; fitbox Senden. Studio-Code, Name, Adresse und Sortierreihenfolge pflegen.</li>
+          <li><b>🏷️ Rollen</b> — Trainer, Studioleitung, Admin, Promoter. Rollen steuern, welche Bereiche im Admin sichtbar sind.</li>
+          <li><b>👤 Mitarbeiter</b> — Stammdaten aller Mitarbeiter: Name, Anzeigename, Rolle, Geburtsdatum, Planungsparameter.</li>
+          <li><b>🔗 Zuordnungen</b> — Welcher Mitarbeiter arbeitet in welchem Studio? Mit welchen Rechten (PT, Walkin, Reinigung, Kasse, MTT)?</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Rechte in Zuordnungen</div>
+        <ul class="info-list">
+          <li><b>PT</b> — darf PT-Termine durchführen und in Lead-Listen erscheinen</li>
+          <li><b>Walkin</b> — darf Walk-in-Beratungen annehmen</li>
+          <li><b>Reinigung</b> — wird im Reinigungsplan eingeplant</li>
+          <li><b>Kasse</b> — darf den POS bedienen</li>
+          <li><b>MTT</b> — darf MTT-Sessions führen</li>
+          <li><b>Stammdaten-Management</b> — darf in diesem Studio Stammdaten ändern</li>
+          <li><b>Reinigungspläne-Management</b> — darf Reinigungspläne erstellen/ändern</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Wichtig zu wissen</div>
+        <ul class="info-list">
+          <li>Jeder Mitarbeiter kann in <b>mehreren Studios</b> zugeordnet sein — nur ein Studio ist „primär".</li>
+          <li>Inaktive Zuordnungen (Toggle aus) verstecken den Mitarbeiter aus Live-Listen, ohne ihn zu löschen.</li>
+          <li>Beim Löschen eines Mitarbeiters werden zugehörige Zeitdaten <b>nicht</b> gelöscht — sie bleiben als Historie erhalten.</li>
+          <li>Studio-Codes (z. B. „fbmm", „fbs") werden im System für Kundennummern und Identifikation genutzt — nach dem Anlegen besser nicht mehr ändern.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="ladeOverlay"><div class="ladeKarte"><div class="spinner"></div><span id="ladeText">Lade …</span></div></div>
+<div id="toastContainer"></div>
+
+<!-- DIALOG -->
+<div id="dialogOverlay">
+  <div class="dialog">
+    <div class="dialog-kopf">
+      <div class="dialog-icon" id="dialogIcon">✏️</div>
+      <div class="dialog-kopf-text"><h2 id="dialogTitel">Bearbeiten</h2><p id="dialogBeschreibung"></p></div>
+    </div>
+    <div class="dialog-koerper" id="dialogInhalt"></div>
+    <div class="dialog-fuss">
+      <button class="btn sekundaer" id="dialogAbbrechenBtn">Abbrechen</button>
+      <button class="btn primaer" id="dialogSpeichernBtn">💾 Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- SEITE -->
+<div class="seite">
+
+  <!-- KPIs -->
+  <div class="kpi-reihe">
+    <div class="kpi"><div class="kpi-icon gruen">🏢</div><div><div class="kpi-wert" id="kpiStudios">–</div><div class="kpi-label">Studios</div></div></div>
+    <div class="kpi"><div class="kpi-icon blau">👤</div><div><div class="kpi-wert" id="kpiMitarbeiter">–</div><div class="kpi-label">Mitarbeiter</div></div></div>
+    <div class="kpi"><div class="kpi-icon lila">🔗</div><div><div class="kpi-wert" id="kpiZuordnungen">–</div><div class="kpi-label">Zuordnungen</div></div></div>
+    <div class="kpi"><div class="kpi-icon orange">🏷️</div><div><div class="kpi-wert" id="kpiRollen">–</div><div class="kpi-label">Rollen</div></div></div>
+  </div>
+
+  <!-- START -->
+  <div id="ansichtStart">
+    <p style="font-size:13px;color:var(--gedaempft);margin-bottom:16px">Wähle einen Bereich:</p>
+    <div class="module-raster">
+      <div class="modul-karte" onclick="bereichOeffnen('Studios')">
+        <div class="modul-karte-icon gruen">🏢</div>
+        <div>
+          <h3>Studios</h3>
+          <p>Standorte anlegen und pflegen. Name, Ort, Bundesland und Feiertagsregion werden hier hinterlegt — wichtig für die automatische Feiertagsberechnung und korrekte Urlaubsplanung.</p>
+          <div class="tags"><span class="tag gruen">Name & Ort</span><span class="tag gruen">Bundesland</span><span class="tag gruen">Feiertagsregion</span><span class="tag grau">Sortierung</span></div>
+        </div>
+      </div>
+      <div class="modul-karte" onclick="bereichOeffnen('Mitarbeiter')">
+        <div class="modul-karte-icon blau">👤</div>
+        <div>
+          <h3>Mitarbeiter</h3>
+          <p>Stammdaten aller Mitarbeiter verwalten: Name, Kontakt, Rolle und Planungsparameter wie Urlaubstage und Soll-Stunden. Inaktive Mitarbeiter bleiben im System erhalten.</p>
+          <div class="tags"><span class="tag blau">Stammdaten</span><span class="tag blau">Urlaubstage</span><span class="tag blau">Soll-Stunden</span><span class="tag blau">Rolle</span></div>
+        </div>
+      </div>
+      <div class="modul-karte" onclick="bereichOeffnen('Zuordnungen')">
+        <div class="modul-karte-icon lila">🔗</div>
+        <div>
+          <h3>Zuordnungen</h3>
+          <p>Welcher Mitarbeiter arbeitet in welchem Studio — und was darf er dort? Studio-Zugehörigkeit und Berechtigungen (PT, Kasse, MTT, Reinigung …) werden pro Kombination festgelegt.</p>
+          <div class="tags"><span class="tag lila">Studio-Zugehörigkeit</span><span class="tag lila">Berechtigungen</span><span class="tag lila">Hauptstudio</span></div>
+        </div>
+      </div>
+      <div class="modul-karte" onclick="bereichOeffnen('Rollen')">
+        <div class="modul-karte-icon orange">🏷️</div>
+        <div>
+          <h3>Rollen</h3>
+          <p>Systemrollen steuern den Zugriff auf Admin-Bereiche. Jeder Mitarbeiter hat genau eine Rolle (z. B. Trainer, Studioleitung, Admin). Die Rolle <strong>admin</strong> darf nicht gelöscht werden.</p>
+          <div class="tags"><span class="tag orange">Zugriffssteuerung</span><span class="tag orange">Code & Name</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDIOS -->
+  <div id="ansichtStudios" class="versteckt">
+    <div class="bereich-header">
+      <button class="bereich-zurueck" onclick="bereichSchliessen()">← Zurück</button>
+      <div style="width:1px;height:16px;background:var(--linie)"></div>
+      <span class="bereich-titel">🏢 Studios</span>
+    </div>
+    <div class="liste-kopf">
+      <div class="liste-kopf-links">
+        <div class="suche-wrap"><input id="studioSuche" placeholder="Studios suchen …"/></div>
+        <button class="filter-inaktive" id="studioInaktiveBtn">👁 Inaktive anzeigen</button>
+      </div>
+      <button class="btn primaer" onclick="studioNeu()">＋ Neues Studio</button>
+    </div>
+    <div class="tabellen-wrap">
+      <table><thead><tr><th>Code</th><th>Name & Ort</th><th>Bundesland / Feiertage</th><th>Status</th><th style="width:120px"></th></tr></thead>
+      <tbody id="studiosTabelle"></tbody></table>
+    </div>
+  </div>
+
+  <!-- MITARBEITER -->
+  <div id="ansichtMitarbeiter" class="versteckt">
+    <div class="bereich-header">
+      <button class="bereich-zurueck" onclick="bereichSchliessen()">← Zurück</button>
+      <div style="width:1px;height:16px;background:var(--linie)"></div>
+      <span class="bereich-titel">👤 Mitarbeiter</span>
+    </div>
+    <div class="liste-kopf">
+      <div class="liste-kopf-links">
+        <div class="suche-wrap"><input id="mitarbeiterSuche" placeholder="Mitarbeiter suchen …"/></div>
+        <button class="filter-inaktive" id="mitarbeiterInaktiveBtn">👁 Inaktive anzeigen</button>
+      </div>
+      <button class="btn primaer" onclick="mitarbeiterNeu()">＋ Neuer Mitarbeiter</button>
+    </div>
+    <div class="tabellen-wrap">
+      <table><thead><tr><th>Nr.</th><th>Name</th><th>Rolle</th><th>Kontakt</th><th>Urlaub/J.</th><th>Status</th><th style="width:120px"></th></tr></thead>
+      <tbody id="mitarbeiterTabelle"></tbody></table>
+    </div>
+  </div>
+
+  <!-- ZUORDNUNGEN -->
+  <div id="ansichtZuordnungen" class="versteckt">
+    <div class="bereich-header">
+      <button class="bereich-zurueck" onclick="bereichSchliessen()">← Zurück</button>
+      <div style="width:1px;height:16px;background:var(--linie)"></div>
+      <span class="bereich-titel">🔗 Zuordnungen</span>
+    </div>
+    <div class="liste-kopf">
+      <div class="liste-kopf-links">
+        <div class="suche-wrap"><input id="zuordnungSuche" placeholder="Mitarbeiter oder Studio suchen …"/></div>
+        <button class="filter-inaktive" id="zuordnungInaktiveBtn">👁 Inaktive anzeigen</button>
+      </div>
+      <button class="btn primaer" onclick="zuordnungNeu()">＋ Neue Zuordnung</button>
+    </div>
+    <div class="tabellen-wrap">
+      <table><thead><tr><th>Mitarbeiter</th><th>Studio</th><th>Berechtigungen</th><th>Status</th><th style="width:120px"></th></tr></thead>
+      <tbody id="zuordnungenTabelle"></tbody></table>
+    </div>
+  </div>
+
+  <!-- ROLLEN -->
+  <div id="ansichtRollen" class="versteckt">
+    <div class="bereich-header">
+      <button class="bereich-zurueck" onclick="bereichSchliessen()">← Zurück</button>
+      <div style="width:1px;height:16px;background:var(--linie)"></div>
+      <span class="bereich-titel">🏷️ Rollen</span>
+    </div>
+    <div class="liste-kopf">
+      <div class="liste-kopf-links">
+        <div class="suche-wrap"><input id="rolleSuche" placeholder="Rollen suchen …"/></div>
+        <button class="filter-inaktive" id="rolleInaktiveBtn">👁 Inaktive anzeigen</button>
+      </div>
+      <button class="btn primaer" onclick="rolleNeu()">＋ Neue Rolle</button>
+    </div>
+    <div class="tabellen-wrap">
+      <table><thead><tr><th>Code</th><th>Name</th><th>Beschreibung</th><th>Status</th><th style="width:120px"></th></tr></thead>
+      <tbody id="rollenTabelle"></tbody></table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var SUPABASE_URL='https://jypbyywxfjniafuygxci.supabase.co';
+var SUPABASE_KEY='sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+var sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{storageKey:'sb-jypbyywxfjniafuygxci-auth-token',autoRefreshToken:true,persistSession:true}});
+window._sbBereit=sb.auth.setSession({access_token:window._fbToken,refresh_token:window._fbSitzung.refresh_token||''}).then(function(){return true;});
+
+function el(id){return document.getElementById(id);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function ladeBeginn(msg){el('ladeText').textContent=msg||'Lade …';el('ladeOverlay').style.display='flex';}
+function ladeEnde(){el('ladeOverlay').style.display='none';}
+function toast(msg,typ){var t=document.createElement('div');t.className='toast '+(typ||'ok');t.textContent=msg;el('toastContainer').appendChild(t);setTimeout(function(){t.remove();},3200);}
+function statusBadge(a){return '<span class="status '+(a?'aktiv':'inaktiv')+'"><span class="status-punkt"></span>'+(a?'Aktiv':'Inaktiv')+'</span>';}
+function vollName(m){return m.display_name||[m.first_name,m.last_name].filter(Boolean).join(' ');}
+
+var Z={studios:[],rollen:[],mitarbeiter:[],zuordnungen:[]};
+
+async function allesLaden(){
+  ladeBeginn('Grunddaten werden geladen …');
+  var dot=document.getElementById('connDot'),lbl=document.getElementById('connLabel');
+  if(dot){dot.className='conn-dot connecting';}if(lbl){lbl.textContent='Verbinde…';}
+  try{
+    await Promise.all([studiosLaden(),rollenLaden(),mitarbeiterLaden(),zuordnungenLaden()]);
+    if(dot){dot.className='conn-dot ok';}if(lbl){lbl.className='conn-label ok';lbl.textContent='Verbunden';}
+    try{
+      kpisAktualisieren();
+      // Topbar-Stats
+      var t1=document.getElementById('tbStudios');if(t1)t1.textContent=Z.studios.length;
+      var t2=document.getElementById('tbMitarbeiter');if(t2)t2.textContent=Z.mitarbeiter.length;
+      var t3=document.getElementById('tbRollen');if(t3)t3.textContent=Z.rollen.length;
+      var t4=document.getElementById('tbZuordnungen');if(t4)t4.textContent=Z.zuordnungen.length;
+      studiosRendern();rollenRendern();mitarbeiterRendern();zuordnungenRendern();
+    }catch(rerr){console.error('[render]',rerr);}
+  }catch(err){
+    toast('Fehler: '+err.message,'err');
+    if(dot){dot.className='conn-dot err';}if(lbl){lbl.className='conn-label err';lbl.textContent='Fehler';}
+  }finally{ladeEnde();}
+}
+async function studiosLaden(){var{data,error}=await sb.from('studios').select('*').order('sort_order').order('name');if(error)throw error;Z.studios=data||[];}
+async function rollenLaden(){var{data,error}=await sb.from('roles').select('*').order('sort_order').order('name');if(error)throw error;Z.rollen=data||[];}
+async function mitarbeiterLaden(){var{data,error}=await sb.from('employees').select('*,roles!employees_role_id_fkey(name)').order('last_name').order('first_name');if(error)throw error;Z.mitarbeiter=data||[];}
+async function zuordnungenLaden(){
+  var{data,error}=await sb.from('employee_studios').select('id,employee_id,studio_id,is_primary,is_active,can_do_pt,can_do_walkin,can_do_cleaning,can_do_kasse,can_do_mtt,can_manage_masterdata,can_manage_cleaning_plans,employees!employee_studios_employee_id_fkey(id,first_name,last_name,display_name),studios!employee_studios_studio_id_fkey(id,code,name)').order('created_at');
+  if(error)throw error;
+  var empMap=new Map();var stuMap=new Map();
+  (data||[]).forEach(function(z){if(z.employees)empMap.set(z.employee_id,z.employees);if(z.studios)stuMap.set(z.studio_id,z.studios);});
+  Z.zuordnungen=(data||[]).map(function(z){
+    var emp=empMap.get(z.employee_id)||{};var stu=stuMap.get(z.studio_id)||{};
+    return{id:z.id,mitarbeiter_id:z.employee_id,studio_id:z.studio_id,
+      mitarbeiter_name:emp.display_name||[emp.first_name,emp.last_name].filter(Boolean).join(' '),
+      studio_name:stu.name||'',ist_hauptstudio:!!z.is_primary,ist_aktiv:!!z.is_active,
+      kann_pt:!!z.can_do_pt,kann_walkin:!!z.can_do_walkin,kann_reinigung:!!z.can_do_cleaning,
+      kann_kasse:!!z.can_do_kasse,kann_mtt:!!z.can_do_mtt,kann_grunddaten:!!z.can_manage_masterdata,kann_plaene:!!z.can_manage_cleaning_plans};
+  });
+}
+async function speichern(tabelle,id,nutzdaten){
+  var mid=window._fbSitzung?.employee?.id||null;
+  if(id){var{error}=await sb.from(tabelle).update({...nutzdaten,updated_by:mid}).eq('id',id);if(error)throw error;}
+  else{var{error}=await sb.from(tabelle).insert({...nutzdaten,created_by:mid,updated_by:mid});if(error)throw error;}
+}
+
+function kpisAktualisieren(){el('kpiStudios').textContent=Z.studios.length;el('kpiMitarbeiter').textContent=Z.mitarbeiter.length;el('kpiZuordnungen').textContent=Z.zuordnungen.length;el('kpiRollen').textContent=Z.rollen.length;}
+
+function bereichOeffnen(name){
+  el('ansichtStart').classList.add('versteckt');
+  ['Studios','Mitarbeiter','Zuordnungen','Rollen'].forEach(function(b){el('ansicht'+b).classList.add('versteckt');});
+  el('ansicht'+name).classList.remove('versteckt');
+}
+function bereichSchliessen(){
+  ['Studios','Mitarbeiter','Zuordnungen','Rollen'].forEach(function(b){el('ansicht'+b).classList.add('versteckt');});
+  el('ansichtStart').classList.remove('versteckt');
+}
+window.bereichOeffnen=bereichOeffnen;window.bereichSchliessen=bereichSchliessen;
+
+var filterZustand={};
+function filterSetup(sucheId,btnId,tbodyId){
+  filterZustand[tbodyId]=false;
+  el(sucheId).addEventListener('input',function(){filterAnwenden(sucheId,tbodyId);});
+  el(btnId).addEventListener('click',function(){
+    filterZustand[tbodyId]=!filterZustand[tbodyId];
+    el(btnId).classList.toggle('aktiv',filterZustand[tbodyId]);
+    el(btnId).textContent=filterZustand[tbodyId]?'🙈 Inaktive ausblenden':'👁 Inaktive anzeigen';
+    filterAnwenden(sucheId,tbodyId);
+  });
+}
+function filterAnwenden(sucheId,tbodyId){
+  var q=(el(sucheId)?.value||'').trim().toLowerCase();var zeige=filterZustand[tbodyId]||false;
+  document.querySelectorAll('#'+tbodyId+' tr[data-aktiv]').forEach(function(tr){
+    var istAktiv=tr.dataset.aktiv==='true';
+    tr.classList.toggle('versteckt',!( (!q||(tr.textContent||'').toLowerCase().includes(q))&&(zeige||istAktiv) ));
+  });
+}
+
+function studiosRendern(){
+  el('studiosTabelle').innerHTML=Z.studios.map(function(s){
+    return '<tr data-aktiv="'+s.is_active+'"><td><span class="mono" style="font-weight:800">'+esc(s.code)+'</span></td>' +
+    '<td><div class="person-name">'+esc(s.name)+'</div>'+(s.city?'<div class="person-sub">📍 '+esc(s.city)+'</div>':'')+'</td>' +
+    '<td><span style="font-size:12px">'+esc(s.state_code||'–')+'</span>'+(s.holiday_region_code?'<div class="person-sub">🗓 '+esc(s.holiday_region_code)+'</div>':'')+'</td>' +
+    '<td>'+statusBadge(s.is_active)+'</td>' +
+    '<td><button class="btn sekundaer klein" data-studio-bearbeiten="'+s.id+'">✏️ Bearbeiten</button></td></tr>';
+  }).join('')||'<tr><td colspan="5"><div class="leer-hinweis"><span class="leer-emoji">🏢</span><span class="leer-text">Noch keine Studios.</span></div></td></tr>';
+  filterAnwenden('studioSuche','studiosTabelle');
+}
+function rollenRendern(){
+  el('rollenTabelle').innerHTML=Z.rollen.map(function(r){
+    return '<tr data-aktiv="'+r.is_active+'"><td><code style="background:#f3f4f6;padding:2px 7px;border-radius:6px;font-size:12px;font-weight:800">'+esc(r.code)+'</code></td>' +
+    '<td><div class="person-name">'+esc(r.name)+'</div></td>' +
+    '<td><span style="font-size:12px;color:var(--gedaempft)">'+esc(r.description||'–')+'</span></td>' +
+    '<td>'+statusBadge(r.is_active)+'</td>' +
+    '<td><button class="btn sekundaer klein" data-rolle-bearbeiten="'+r.id+'">✏️ Bearbeiten</button></td></tr>';
+  }).join('')||'<tr><td colspan="5"><div class="leer-hinweis"><span class="leer-emoji">🏷️</span><span class="leer-text">Noch keine Rollen.</span></div></td></tr>';
+  filterAnwenden('rolleSuche','rollenTabelle');
+}
+function mitarbeiterRendern(){
+  el('mitarbeiterTabelle').innerHTML=Z.mitarbeiter.map(function(m){
+    return '<tr data-aktiv="'+m.is_active+'"><td><span class="mono" style="font-size:12px;color:var(--gedaempft)">'+esc(String(m.employee_no||'–'))+'</span></td>' +
+    '<td><div class="person-name">'+esc(vollName(m))+'</div>'+(m.email?'<div class="person-sub">'+esc(m.email)+'</div>':'')+'</td>' +
+    '<td><span style="font-size:12px">'+esc(m.roles?.name||'–')+'</span></td>' +
+    '<td><span style="font-size:12px;color:var(--gedaempft)">'+esc(m.phone||'–')+'</span></td>' +
+    '<td><span style="font-size:12px">'+esc(String(m.vacation_days_per_year??30))+' T</span></td>' +
+    '<td>'+statusBadge(m.is_active)+'</td>' +
+    '<td><button class="btn sekundaer klein" data-mitarbeiter-bearbeiten="'+m.id+'">✏️ Bearbeiten</button></td></tr>';
+  }).join('')||'<tr><td colspan="7"><div class="leer-hinweis"><span class="leer-emoji">👤</span><span class="leer-text">Noch keine Mitarbeiter.</span></div></td></tr>';
+  filterAnwenden('mitarbeiterSuche','mitarbeiterTabelle');
+}
+function rechteChips(z){
+  var c=[];
+  if(z.kann_pt)c.push('<span class="rechte-chip rc-pt">PT</span>');
+  if(z.kann_walkin)c.push('<span class="rechte-chip rc-walkin">Walk-in</span>');
+  if(z.kann_reinigung)c.push('<span class="rechte-chip rc-reinigung">Reinigung</span>');
+  if(z.kann_kasse)c.push('<span class="rechte-chip rc-kasse">Kasse</span>');
+  if(z.kann_mtt)c.push('<span class="rechte-chip rc-mtt">MTT</span>');
+  if(z.kann_grunddaten)c.push('<span class="rechte-chip rc-grunddaten">Grunddaten</span>');
+  if(z.kann_plaene)c.push('<span class="rechte-chip rc-plaene">Pläne</span>');
+  return c.length?'<div class="rechte">'+c.join('')+'</div>':'<span style="font-size:11px;color:var(--gedaempft)">–</span>';
+}
+function zuordnungenRendern(){
+  el('zuordnungenTabelle').innerHTML=Z.zuordnungen.map(function(z){
+    return '<tr data-aktiv="'+z.ist_aktiv+'"><td><div class="person-name">'+esc(z.mitarbeiter_name)+'</div></td>' +
+    '<td><div class="person-name">'+esc(z.studio_name)+'</div>'+(z.ist_hauptstudio?'<div class="person-sub">⭐ Hauptstudio</div>':'')+'</td>' +
+    '<td>'+rechteChips(z)+'</td><td>'+statusBadge(z.ist_aktiv)+'</td>' +
+    '<td><button class="btn sekundaer klein" data-zuordnung-bearbeiten="'+z.id+'">✏️ Bearbeiten</button></td></tr>';
+  }).join('')||'<tr><td colspan="5"><div class="leer-hinweis"><span class="leer-emoji">🔗</span><span class="leer-text">Noch keine Zuordnungen.</span></div></td></tr>';
+  filterAnwenden('zuordnungSuche','zuordnungenTabelle');
+}
+
+/* ── DIALOG ── */
+function dialogOeffnen(icon,iconKls,titel,beschr,html,speichernFn){
+  el('dialogIcon').textContent=icon;el('dialogIcon').className='dialog-icon '+iconKls;
+  el('dialogTitel').textContent=titel;el('dialogBeschreibung').textContent=beschr;
+  el('dialogInhalt').innerHTML=html;el('dialogOverlay').classList.add('offen');
+  el('dialogSpeichernBtn').onclick=speichernFn;
+}
+function dialogSchliessen(){el('dialogOverlay').classList.remove('offen');}
+el('dialogAbbrechenBtn').addEventListener('click',dialogSchliessen);
+el('dialogOverlay').addEventListener('click',function(e){if(e.target===el('dialogOverlay'))dialogSchliessen();});
+function dEl(id){return el('dialogInhalt').querySelector('#'+id)||el(id);}
+
+function inp(id,typ,ph,val,ro){return '<input id="'+id+'" class="steuerung'+(typ==='mono'?' mono':'')+'" type="'+(typ==='mono'?'text':typ||'text')+'" placeholder="'+esc(ph||'')+'" value="'+esc(val||'')+'"'+(ro?' readonly':'')+'/>';}
+function sel(id,opts,cur){return '<select id="'+id+'" class="steuerung">'+opts.map(function(o){return '<option value="'+esc(o.v)+'"'+(String(o.v)===String(cur||'')?' selected':'')+'>'+esc(o.l)+'</option>';}).join('')+'</select>';}
+function cb(id,label,hint,chk){return '<label class="checkbox-item" style="width:auto"><input type="checkbox" id="'+id+'"'+(chk?' checked':'')+'><div><span class="cb-label">'+label+'</span>'+(hint?'<span class="cb-hint">'+hint+'</span>':'')+'</div></label>';}
+function abschn(txt){return '<div class="abschnitt-kopf s12"><div class="abschnitt-kopf-linie"></div><div class="abschnitt-kopf-text">'+txt+'</div><div class="abschnitt-kopf-linie"></div></div>';}
+function infoBox(txt){return '<div class="info-box s12">'+txt+'</div>';}
+function feld(kls,label,hint,inputHtml){return '<div class="'+kls+'"><div class="feld-label">'+label+'</div>'+inputHtml+(hint?'<div class="feld-hinweis">'+hint+'</div>':'')+'</div>';}
+
+/* ── STUDIO DIALOG ── */
+function studioDialog(s){
+  s=s||{};
+  var html='<div class="formRaster">'+
+    feld('s3','Code *','Kürzel, min. 2 Zeichen',inp('studioCode','mono','z. B. MEM',s.code))+
+    feld('s5','Name *','Offizieller Standortname',inp('studioName','text','z. B. fitbox Memmingen',s.name))+
+    feld('s4','Ort','Stadt oder Gemeinde',inp('studioOrt','text','z. B. Memmingen',s.city))+
+    feld('s3','Sortierung','Reihenfolge in Listen',inp('studioSortierung','number','100',s.sort_order??100))+
+    feld('s9','Notizen','Intern, nur für Admins',inp('studioNotizen','text','optional',s.notes))+
+    abschn('Feiertagsregion')+
+    infoBox('📅 Bestimmt welche gesetzlichen Feiertage für dieses Studio gelten — relevant für Urlaubsplanung und automatische Kalender.')+
+    feld('s3','Bundesland-Code','z. B. BY für Bayern',inp('studioBundesland','mono','BY',s.state_code))+
+    feld('s3','Landkreis','optional',inp('studioLandkreis','text','optional',s.district))+
+    feld('s3','Gemeinde','optional',inp('studioGemeinde','text','optional',s.municipality))+
+    feld('s3','Feiertagsregion','optional',inp('studioFeiertag','text','optional',s.holiday_region_code))+
+    abschn('Status')+
+    '<div class="s12 checkboxen">'+cb('studioAktiv','Studio ist aktiv','Inaktive Studios erscheinen nicht in der Planung',s.id?!!s.is_active:true)+'</div>'+
+  '</div>';
+  dialogOeffnen('🏢','gruen',s.id?'Studio bearbeiten':'Neues Studio','Standortdaten anlegen oder aktualisieren.',html,async function(){
+    ladeBeginn('Studio wird gespeichert …');
+    try{
+      await speichern('studios',s.id||null,{code:dEl('studioCode').value.trim(),name:dEl('studioName').value.trim(),city:dEl('studioOrt').value.trim()||null,sort_order:Number(dEl('studioSortierung').value||100),notes:dEl('studioNotizen').value.trim()||null,is_active:dEl('studioAktiv').checked,state_code:dEl('studioBundesland').value.trim().toUpperCase()||null,district:dEl('studioLandkreis').value.trim()||null,municipality:dEl('studioGemeinde').value.trim()||null,holiday_region_code:dEl('studioFeiertag').value.trim()||null});
+      await studiosLaden();kpisAktualisieren();studiosRendern();dialogSchliessen();toast('Studio gespeichert ✓');
+    }catch(err){toast(err.message,'err');}finally{ladeEnde();}
+  });
+}
+window.studioNeu=function(){studioDialog();};
+
+/* ── ROLLE DIALOG ── */
+function rolleDialog(r){
+  r=r||{};
+  var html='<div class="formRaster">'+
+    feld('s4','Code *','Eindeutig, nur Kleinbuchstaben',inp('rolleCode','mono','z. B. trainer',r.code))+
+    feld('s8','Name *','Anzeigename der Rolle',inp('rolleName','text','z. B. Trainer',r.name))+
+    feld('s12','Beschreibung','Wofür ist diese Rolle gedacht?',inp('rolleBeschreibung','text','optional',r.description))+
+    feld('s4','Sortierung','Reihenfolge in Auswahllisten',inp('rolleSortierung','number','100',r.sort_order??100))+
+    abschn('Status')+
+    '<div class="s12 checkboxen">'+cb('rolleAktiv','Rolle ist aktiv','Inaktive Rollen können nicht mehr vergeben werden',r.id?!!r.is_active:true)+'</div>'+
+  '</div>';
+  dialogOeffnen('🏷️','orange',r.id?'Rolle bearbeiten':'Neue Rolle','Systemrollen steuern den Zugriff auf Admin-Bereiche.',html,async function(){
+    ladeBeginn('Rolle wird gespeichert …');
+    try{
+      await speichern('roles',r.id||null,{code:dEl('rolleCode').value.trim(),name:dEl('rolleName').value.trim(),description:dEl('rolleBeschreibung').value.trim()||null,sort_order:Number(dEl('rolleSortierung').value||100),is_active:dEl('rolleAktiv').checked});
+      await rollenLaden();await mitarbeiterLaden();kpisAktualisieren();rollenRendern();mitarbeiterRendern();dialogSchliessen();toast('Rolle gespeichert ✓');
+    }catch(err){toast(err.message,'err');}finally{ladeEnde();}
+  });
+}
+window.rolleNeu=function(){rolleDialog();};
+
+/* ── MITARBEITER DIALOG ── */
+function mitarbeiterDialog(m){
+  m=m||{};
+  var rollenOpts=[{v:'',l:'Keine Rolle'}].concat(Z.rollen.map(function(r){return{v:r.id,l:r.name};}));
+  var html='<div class="formRaster">'+
+    feld('s2','Nr.','Automatisch vergeben',inp('mitarbeiterNr','text','auto',m.employee_no,'readonly'))+
+    feld('s5','Vorname *','',inp('mitarbeiterVorname','text','',m.first_name))+
+    feld('s5','Nachname *','',inp('mitarbeiterNachname','text','',m.last_name))+
+    feld('s12','Anzeigename','Optional — überschreibt Vor- + Nachname in allen Ansichten',inp('mitarbeiterAnzeigename','text','optional',m.display_name))+
+    feld('s6','E-Mail','Für Benachrichtigungen und Login',inp('mitarbeiterEmail','email','name@email.de',m.email))+
+    feld('s6','Telefon','',inp('mitarbeiterTelefon','text','',m.phone))+
+    '<div class="s12"><div class="feld-label">Rolle <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gedaempft)">— bestimmt den Zugriff auf Admin-Bereiche</span></div>'+sel('mitarbeiterRolle',rollenOpts,m.role_id)+'</div>'+
+    abschn('Urlaub & Arbeitszeit')+
+    infoBox('📅 Wird für Urlaubsplanung und Zeitkonten verwendet. Soll-Stunden und Soll-Tage sind für die Sollzeit-Berechnung notwendig.')+
+    feld('s3','Urlaubstage / Jahr','Gesetzlich + vertraglich',inp('urlaubstage','number','30',m.vacation_days_per_year??30))+
+    feld('s3','Übertrag-Standard','Tage die ins nächste Jahr übertragen werden',inp('urlaubUebertrag','number','0',m.vacation_carryover_default??0))+
+    feld('s3','Soll-Tage / Woche','z. B. 5 = Vollzeit, 3 = Teilzeit',inp('sollTage','number','5',m.weekly_work_days))+
+    feld('s3','Soll-Stunden / Woche','z. B. 40 = Vollzeit',inp('sollStunden','number','40',m.weekly_hours))+
+    feld('s12','Notizen','Interne Anmerkungen',inp('mitarbeiterNotizen','text','optional',m.notes))+
+    abschn('Status')+
+    '<div class="s12 checkboxen">'+
+      cb('mitarbeiterAktiv','Mitarbeiter ist aktiv','Inaktiv = kein Login, kein Stempelzugang',m.id?!!m.is_active:true)+
+      cb('mitarbeiterPlanung','In Planung berücksichtigen','Deaktiviert = wird in der Schichtplanung ignoriert',m.id?(m.planning_enabled!==false):true)+
+    '</div>'+
+  '</div>';
+  dialogOeffnen('👤','blau',m.id?'Mitarbeiter bearbeiten':'Neuer Mitarbeiter','Stammdaten, Rolle und Planungsparameter pflegen.',html,async function(){
+    ladeBeginn('Mitarbeiter wird gespeichert …');
+    try{
+      await speichern('employees',m.id||null,{first_name:dEl('mitarbeiterVorname').value.trim(),last_name:dEl('mitarbeiterNachname').value.trim(),display_name:dEl('mitarbeiterAnzeigename').value.trim()||null,email:dEl('mitarbeiterEmail').value.trim()||null,phone:dEl('mitarbeiterTelefon').value.trim()||null,role_id:dEl('mitarbeiterRolle').value||null,notes:dEl('mitarbeiterNotizen').value.trim()||null,is_active:dEl('mitarbeiterAktiv').checked,vacation_days_per_year:Number(dEl('urlaubstage').value||30),vacation_carryover_default:Number(dEl('urlaubUebertrag').value||0),weekly_work_days:dEl('sollTage').value?Number(dEl('sollTage').value):null,weekly_hours:dEl('sollStunden').value?Number(dEl('sollStunden').value):null,planning_enabled:dEl('mitarbeiterPlanung').checked});
+      await mitarbeiterLaden();await zuordnungenLaden();kpisAktualisieren();mitarbeiterRendern();zuordnungenRendern();dialogSchliessen();toast('Mitarbeiter gespeichert ✓');
+    }catch(err){toast(err.message,'err');}finally{ladeEnde();}
+  });
+}
+window.mitarbeiterNeu=function(){mitarbeiterDialog();};
+
+/* ── ZUORDNUNG DIALOG ── */
+function zuordnungDialog(z){
+  z=z||{};
+  var mitOpts=Z.mitarbeiter.map(function(m){return{v:m.id,l:vollName(m)};});
+  var stuOpts=Z.studios.map(function(s){return{v:s.id,l:s.name};});
+  var html='<div class="formRaster">'+
+    '<div class="s6"><div class="feld-label">Mitarbeiter</div>'+sel('zuordnungMitarbeiter',mitOpts,z.mitarbeiter_id)+'</div>'+
+    '<div class="s6"><div class="feld-label">Studio</div>'+sel('zuordnungStudio',stuOpts,z.studio_id)+'</div>'+
+    abschn('Studio-Einstellung')+
+    '<div class="s12 checkboxen">'+
+      cb('zuordnungHauptstudio','Hauptstudio','Primäres Studio — relevant für Auswertungen und Standard-Ansichten',!!z.ist_hauptstudio)+
+      cb('zuordnungAktiv','Zuordnung aktiv','Inaktiv = Mitarbeiter erscheint nicht in der Studioplanung',z.id?!!z.ist_aktiv:true)+
+    '</div>'+
+    abschn('Berechtigungen in diesem Studio')+
+    infoBox('🔐 Diese Berechtigungen gelten nur für das oben gewählte Studio. Ein Mitarbeiter kann in zwei Studios unterschiedliche Rechte haben.')+
+    '<div class="s12 checkboxen">'+
+      cb('kannPt','🎯 PT','Persönliches Training — Leads und Probetrainings',!!z.kann_pt)+
+      cb('kannWalkin','🚶 Walk-in','Laufkundschaft und spontane Buchungen',!!z.kann_walkin)+
+      cb('kannReinigung','🧼 Reinigung','Reinigungsaufgaben sehen und bestätigen',!!z.kann_reinigung)+
+      cb('kannKasse','💰 Kasse','Kassenfunktionen nutzen (Verkauf, Abschluss …)',!!z.kann_kasse)+
+      cb('kannMtt','🏥 MTT','Medizinische Trainingstherapie',!!z.kann_mtt)+
+      cb('kannGrunddaten','⚙️ Grunddaten','Stammdaten und Einstellungen bearbeiten',!!z.kann_grunddaten)+
+      cb('kannPlaene','📋 Reinigungspläne','Reinigungspläne erstellen und verwalten',!!z.kann_plaene)+
+    '</div>'+
+  '</div>';
+  dialogOeffnen('🔗','lila',z.id?'Zuordnung bearbeiten':'Neue Zuordnung','Mitarbeiter einem Studio zuordnen und Rechte festlegen.',html,async function(){
+    ladeBeginn('Zuordnung wird gespeichert …');
+    try{
+      await speichern('employee_studios',z.id||null,{employee_id:dEl('zuordnungMitarbeiter').value,studio_id:dEl('zuordnungStudio').value,is_primary:dEl('zuordnungHauptstudio').checked,is_active:dEl('zuordnungAktiv').checked,can_do_pt:dEl('kannPt').checked,can_do_walkin:dEl('kannWalkin').checked,can_do_cleaning:dEl('kannReinigung').checked,can_do_kasse:dEl('kannKasse').checked,can_do_mtt:dEl('kannMtt').checked,can_manage_masterdata:dEl('kannGrunddaten').checked,can_manage_cleaning_plans:dEl('kannPlaene').checked});
+      await zuordnungenLaden();kpisAktualisieren();zuordnungenRendern();dialogSchliessen();toast('Zuordnung gespeichert ✓');
+    }catch(err){toast(err.message,'err');}finally{ladeEnde();}
+  });
+}
+window.zuordnungNeu=function(){zuordnungDialog();};
+
+/* ── CLICK DELEGATION ── */
+document.addEventListener('click',function(e){
+  var sb=e.target.closest('[data-studio-bearbeiten]');if(sb){var s=Z.studios.find(function(x){return x.id===sb.dataset.studioBearbeiten;});if(s)studioDialog(s);return;}
+  var rb=e.target.closest('[data-rolle-bearbeiten]');if(rb){var r=Z.rollen.find(function(x){return x.id===rb.dataset.rolleBearbeiten;});if(r)rolleDialog(r);return;}
+  var mb=e.target.closest('[data-mitarbeiter-bearbeiten]');if(mb){var m=Z.mitarbeiter.find(function(x){return x.id===mb.dataset.mitarbeiterBearbeiten;});if(m)mitarbeiterDialog(m);return;}
+  var zb=e.target.closest('[data-zuordnung-bearbeiten]');if(zb){var z=Z.zuordnungen.find(function(x){return x.id===zb.dataset.zuordnungBearbeiten;});if(z)zuordnungDialog(z);return;}
+});
+
+filterSetup('studioSuche','studioInaktiveBtn','studiosTabelle');
+filterSetup('rolleSuche','rolleInaktiveBtn','rollenTabelle');
+filterSetup('mitarbeiterSuche','mitarbeiterInaktiveBtn','mitarbeiterTabelle');
+filterSetup('zuordnungSuche','zuordnungInaktiveBtn','zuordnungenTabelle');
+
+// Topbar-Buttons (Info-Modal + Reload)
+(function(){
+  var infoBtn=document.getElementById('infoBtnTop');
+  var infoModal=document.getElementById('infoModal');
+  var infoClose=document.getElementById('infoClose');
+  if(infoBtn&&infoModal){
+    infoBtn.addEventListener('click',function(){infoModal.classList.add('show');});
+    infoClose&&infoClose.addEventListener('click',function(){infoModal.classList.remove('show');});
+    infoModal.addEventListener('click',function(e){if(e.target===infoModal)infoModal.classList.remove('show');});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&infoModal.classList.contains('show'))infoModal.classList.remove('show');});
+  }
+  var rb=document.getElementById('reloadBtnTop');
+  if(rb)rb.addEventListener('click',allesLaden);
+})();
+
+window._sbBereit.then(function(){allesLaden();});
+</script>
+</body>
+</html>

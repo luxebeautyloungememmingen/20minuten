@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gesundheitsanamnese – fitbox</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@700;800&display=swap');
+
+  :root {
+    --fit: #2f8615;
+    --fit2: #95c11f;
+    --fit-light: #eaf5e1;
+    --fit-border: #c8e6a0;
+    --red: #e53e3e;
+    --red-light: #fff5f5;
+    --red-border: #feb2b2;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --white: #ffffff;
+    --radius: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+    --shadow-lg: 0 4px 24px rgba(0,0,0,.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Barlow', sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-800);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--white);
+    border-bottom: 3px solid var(--fit2);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+  .header-logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--fit2);
+    letter-spacing: -0.5px;
+  }
+  .header-logo span { color: var(--fit); }
+  .header-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-600);
+    border-left: 2px solid var(--gray-200);
+    padding-left: 16px;
+    margin-left: 4px;
+  }
+  .header-badge {
+    margin-left: auto;
+    background: var(--fit-light);
+    color: var(--fit);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--fit-border);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  /* LAYOUT */
+  .container {
+    max-width: 900px;
+    margin: 28px auto;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .card-header.green { background: var(--fit-light); border-bottom-color: var(--fit-border); }
+  .card-header.red   { background: var(--red-light); border-bottom-color: var(--red-border); }
+  .card-header.amber { background: var(--amber-light); border-bottom-color: #fde68a; }
+  .card-header.gray  { background: var(--gray-50); }
+
+  .card-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .card-icon.green { background: var(--fit2); }
+  .card-icon.red   { background: var(--red); }
+  .card-icon.amber { background: var(--amber); }
+  .card-icon.gray  { background: var(--gray-200); }
+
+  .card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: .3px;
+  }
+  .card-title.green { color: var(--fit); }
+  .card-title.red   { color: var(--red); }
+  .card-title.amber { color: var(--amber); }
+  .card-title.gray  { color: var(--gray-700); }
+
+  .card-body { padding: 20px; }
+
+  /* STAMMDATEN GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .col-span-2 { grid-column: span 2; }
+  .col-span-3 { grid-column: span 3; }
+
+  label.field-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+  }
+  input[type=text], input[type=email], input[type=date], input[type=tel], select, textarea {
+    width: 100%;
+    border: 1.5px solid var(--gray-300);
+    border-radius: 7px;
+    padding: 9px 12px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    color: var(--gray-800);
+    background: var(--white);
+    transition: border-color .15s, box-shadow .15s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--fit2);
+    box-shadow: 0 0 0 3px rgba(149,193,31,.15);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* KUNDE SEARCH */
+  .kunde-search-wrap {
+    position: relative;
+  }
+  .kunde-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: var(--white);
+    border: 1.5px solid var(--fit-border);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    z-index: 50;
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+  }
+  .kunde-dropdown.open { display: block; }
+  .kunde-option {
+    padding: 10px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid var(--gray-100);
+    transition: background .1s;
+  }
+  .kunde-option:hover { background: var(--fit-light); }
+  .kunde-option .name { font-weight: 600; color: var(--gray-800); }
+  .kunde-option .meta { font-size: 12px; color: var(--gray-400); margin-top: 1px; }
+  .kunde-option:last-child { border-bottom: none; }
+  .kunde-clear {
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%);
+    background: var(--gray-200);
+    border: none;
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--gray-600);
+    display: none;
+    align-items: center; justify-content: center;
+  }
+  .kunde-clear.visible { display: flex; }
+  .kunde-selected-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--fit-light);
+    border: 1px solid var(--fit-border);
+    color: var(--fit);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
+  .kunde-selected-badge button {
+    background: none; border: none; cursor: pointer;
+    color: var(--fit); font-size: 14px; line-height: 1;
+    padding: 0; margin-left: 2px;
+  }
+
+  /* CHECKBOX GRID */
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--gray-200);
+    cursor: pointer;
+    transition: all .15s;
+    background: var(--white);
+  }
+  .checkbox-item:hover { border-color: var(--gray-400); background: var(--gray-50); }
+  .checkbox-item.checked-red   { border-color: var(--red); background: var(--red-light); }
+  .checkbox-item.checked-amber { border-color: var(--amber); background: var(--amber-light); }
+
+  .checkbox-item input[type=checkbox] {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    accent-color: var(--red);
+    cursor: pointer;
+  }
+  .checkbox-item.amber-cb input[type=checkbox] { accent-color: var(--amber); }
+
+  .checkbox-item label {
+    font-size: 13px;
+    line-height: 1.4;
+    cursor: pointer;
+    color: var(--gray-700);
+  }
+
+  /* NISV TEXT */
+  .nisv-info {
+    background: var(--fit-light);
+    border-left: 4px solid var(--fit2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--gray-700);
+    margin-bottom: 18px;
+  }
+
+  /* HINWEISE */
+  .hinweise-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .hinweise-list li {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--gray-700);
+    padding: 8px 10px;
+    background: var(--gray-50);
+    border-radius: 7px;
+    border: 1px solid var(--gray-200);
+  }
+  .hinweise-list li::before {
+    content: '●';
+    color: var(--fit2);
+    font-size: 10px;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  /* DATENSCHUTZ / CONFIRM */
+  .confirm-box {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1.5px solid var(--gray-200);
+    cursor: pointer;
+    transition: border-color .15s;
+    margin-top: 10px;
+  }
+  .confirm-box:hover { border-color: var(--fit2); }
+  .confirm-box input[type=checkbox] {
+    width: 20px; height: 20px;
+    accent-color: var(--fit);
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+  .confirm-box label {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--gray-700);
+    cursor: pointer;
+  }
+
+  /* UNTERSCHRIFT */
+  .sig-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .sig-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .sig-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--gray-600);
+  }
+  .sig-canvas-wrap {
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    background: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .sig-canvas-wrap canvas {
+    display: block;
+    width: 100%;
+    height: 130px;
+    cursor: crosshair;
+    touch-action: none;
+  }
+  .sig-canvas-wrap .sig-placeholder {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 13px;
+    color: var(--gray-300);
+    pointer-events: none;
+    user-select: none;
+    font-style: italic;
+  }
+  .sig-date-line {
+    border-top: 1px solid var(--gray-300);
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--gray-500);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sig-date-line input[type=date] {
+    border: none;
+    font-size: 12px;
+    padding: 2px 6px;
+    color: var(--gray-700);
+    width: auto;
+    background: transparent;
+  }
+  .sig-clear-btn {
+    background: none;
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--gray-500);
+    cursor: pointer;
+    font-family: 'Barlow', sans-serif;
+    transition: all .15s;
+  }
+  .sig-clear-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
+
+  /* SUBMIT */
+  .submit-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .btn-submit {
+    background: linear-gradient(135deg, var(--fit2), var(--fit));
+    color: white;
+    border: none;
+    border-radius: 9px;
+    padding: 14px 32px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    cursor: pointer;
+    transition: opacity .15s, transform .1s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 14px rgba(47,134,21,.3);
+  }
+  .btn-submit:hover { opacity: .92; transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn-secondary {
+    background: var(--gray-100);
+    color: var(--gray-700);
+    border: 1.5px solid var(--gray-300);
+    border-radius: 9px;
+    padding: 13px 22px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-secondary:hover { border-color: var(--gray-400); background: var(--gray-200); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 28px; right: 24px;
+    background: var(--gray-800);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: var(--fit); }
+  .toast.error   { background: var(--red); }
+
+  /* SUCCESS OVERLAY */
+  .success-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .success-overlay.show { display: flex; }
+  .success-modal {
+    background: white;
+    border-radius: 16px;
+    padding: 40px 48px;
+    text-align: center;
+    max-width: 440px;
+    box-shadow: var(--shadow-lg);
+  }
+  .success-icon {
+    width: 72px; height: 72px;
+    background: var(--fit-light);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px;
+  }
+  .success-modal h2 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--fit);
+    margin-bottom: 10px;
+  }
+  .success-modal p {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  /* SECTION DIVIDER */
+  .section-note {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+
+
+  /* ZIEL-BUTTONS */
+  .ziel-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 14px 10px;
+    border-radius: 9px;
+    border: 2px solid var(--gray-200);
+    cursor: pointer;
+    text-align: center;
+    transition: all .15s;
+    background: var(--white);
+    user-select: none;
+  }
+  .ziel-btn:hover { border-color: var(--fit2); background: var(--fit-light); }
+  .ziel-btn.selected { border-color: var(--fit); background: var(--fit-light); box-shadow: 0 0 0 3px rgba(47,134,21,.12); }
+  .ziel-icon { font-size: 22px; line-height: 1; }
+  .ziel-text { font-size: 12px; font-weight: 600; color: var(--gray-700); line-height: 1.35; }
+  .ziel-btn.selected .ziel-text { color: var(--fit); }
+
+  /* KEINE-KONTRAINDIKATION BANNER */
+  .keine-kontra-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 11px 16px;
+    background: #f0fdf4;
+    border: 1.5px solid #86efac;
+    border-radius: 8px;
+    font-size: 13.5px;
+    color: #166534;
+    font-weight: 500;
+    transition: opacity .2s;
+  }
+  .keine-kontra-banner.amber {
+    background: #fffbeb;
+    border-color: #fcd34d;
+    color: #92400e;
+  }
+
+  /* STUDIO SELECTOR */
+  .studio-bar {
+    background: var(--fit);
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .studio-bar select {
+    background: rgba(255,255,255,.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    font-family: 'Barlow', sans-serif;
+    cursor: pointer;
+  }
+  .studio-bar select option { color: var(--gray-800); background: white; }
+
+  @media (max-width: 640px) {
+    .grid-2, .grid-3, .checkbox-grid, .hinweise-list, .sig-wrapper { grid-template-columns: 1fr; }
+    .col-span-2, .col-span-3 { grid-column: span 1; }
+    .card-body { padding: 14px; }
+  }
+
+  @media print {
+    /* Grundlayout */
+    @page { margin: 12mm 14mm; }
+    body { background: #fff !important; padding: 0 !important; margin: 0; font-size: 10px; font-family: Arial, sans-serif; }
+
+    /* Elemente ausblenden */
+    .header, .studio-bar, .submit-area, .kunde-search-wrap,
+    .kunde-selected-badge button, .sig-clear-btn,
+    #employeeBadge, .success-overlay, .toast { display: none !important; }
+
+    /* Kein Screen-Hintergrund */
+    .container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; gap: 8px !important; background: none !important; }
+    .card { box-shadow: none !important; border: 1px solid #d1d5db !important; break-inside: avoid; border-radius: 6px !important; margin-bottom: 6px; }
+
+    /* Card-Header: grüner Balken wie PDF */
+    .card-header { padding: 6px 12px !important; }
+    .card-header.green { background: #eaf5e1 !important; border-bottom: 1px solid #c8e6a0 !important; }
+    .card-header.red   { background: #fff5f5 !important; border-bottom: 1px solid #feb2b2 !important; }
+    .card-header.amber { background: #fffbeb !important; border-bottom: 1px solid #fde68a !important; }
+    .card-header.gray  { background: #f9fafb !important; }
+    .card-icon { width: 22px !important; height: 22px !important; font-size: 11px !important; }
+    .card-title { font-size: 11px !important; font-weight: 700 !important; }
+
+    /* Card Body */
+    .card-body { padding: 8px 12px !important; }
+
+    /* Stammdaten Grid */
+    .grid-3 { grid-template-columns: 1fr 1fr 1fr !important; gap: 8px !important; }
+    .field-label { font-size: 8px !important; margin-bottom: 2px !important; }
+    input, select, textarea {
+      border: none !important; border-bottom: 1px solid #d1d5db !important;
+      border-radius: 0 !important; padding: 2px 4px !important;
+      font-size: 10px !important; background: transparent !important;
+    }
+    textarea { min-height: 30px !important; }
+
+    /* NiSV-Infobox */
+    .nisv-info { font-size: 9px !important; padding: 6px 10px !important; line-height: 1.5 !important; }
+
+    /* Badge-Labels für Abs/Rel */
+    .checkbox-grid { grid-template-columns: 1fr 1fr !important; gap: 3px !important; }
+    .checkbox-item {
+      padding: 3px 7px !important;
+      border: 1px solid #e5e7eb !important;
+      border-radius: 4px !important;
+      font-size: 9px !important;
+    }
+    .checkbox-item label { font-size: 9px !important; line-height: 1.3 !important; }
+    .checkbox-item input[type=checkbox] { width: 11px !important; height: 11px !important; }
+    .checkbox-item.checked-red   { border-color: #e53e3e !important; background: #fff5f5 !important; }
+    .checkbox-item.checked-amber { border-color: #d97706 !important; background: #fffbeb !important; }
+
+    /* Keine-Kontraindikation Banner */
+    .keine-kontra-banner {
+      margin-top: 8px !important; padding: 7px 12px !important;
+      font-size: 9.5px !important; border-radius: 5px !important;
+    }
+
+    /* Hinweise */
+    .hinweise-list { grid-template-columns: 1fr 1fr !important; gap: 4px !important; }
+    .hinweise-list li { font-size: 9px !important; padding: 4px 7px !important; }
+
+    /* Confirm-Boxen */
+    .confirm-box { padding: 6px 10px !important; border: 1px solid #d1d5db !important; }
+    .confirm-box label { font-size: 9.5px !important; }
+
+    /* Unterschriften */
+    .sig-wrapper { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+    .sig-canvas-wrap { border: 1px solid #d1d5db !important; border-radius: 5px !important; }
+    .sig-canvas-wrap canvas { height: 80px !important; }
+    .sig-label { font-size: 8px !important; }
+    .sig-date-line { font-size: 9px !important; padding: 3px 8px !important; }
+    .sig-date-line input[type=date] { font-size: 9px !important; }
+
+    /* Trainer-Box (kein Canvas) */
+    .sig-canvas-wrap div#trainerNameDisplay { font-size: 16px !important; }
+
+    /* Buttons weg */
+    .btn-submit, .btn-secondary, .sig-clear-btn { display: none !important; }
+    #versionBadge { display: none !important; }
+
+    /* Section-Note */
+    .section-note { font-size: 8.5px !important; margin-bottom: 6px !important; }
+
+    /* Print-Header sichtbar */
+    .print-header {
+      display: flex !important;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0 10px;
+      border-bottom: 3px solid #2f8615;
+      margin-bottom: 10px;
+    }
+    .print-header-logo { font-size: 22px; font-weight: 900; color: #2f8615; }
+    .print-header-logo span { color: #95c11f; }
+    .print-header-right { text-align: right; font-size: 9px; color: #6b7280; }
+    .print-header-right strong { color: #1f2937; }
+  }
+  .print-header { display: none; }
+</style>
+</head>
+<body>
+
+<!-- Nur im Druck sichtbar -->
+<div class="print-header">
+  <div>
+    <div class="print-header-logo">fit<span>box</span></div>
+    <div style="font-size:10px;color:#6b7280;margin-top:2px;">Gesundheitsanamnese &amp; NiSV-Aufklärung · EMS Training</div>
+  </div>
+  <div class="print-header-right">
+    <div id="print-studio" style="font-weight:700;color:#1f2937;font-size:11px;"></div>
+    <div id="print-datum"></div>
+    <div id="print-trainer" style="margin-top:2px;"></div>
+    <div style="margin-top:3px;font-size:8px;color:#9ca3af;">v1.5-kiosk</div>
+  </div>
+</div>
+
+<!-- KIOSK-BANNER -->
+<div id="kioskBanner" style="background:linear-gradient(135deg,#2f8615,#256a10);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px;font-family:'Barlow',sans-serif;">
+  <div style="font-size:26px;flex-shrink:0">📋</div>
+  <div>
+    <div style="font-size:15px;font-weight:800;letter-spacing:.01em;">Bitte Formular vollständig ausfüllen</div>
+    <div style="font-size:13px;opacity:.85;margin-top:2px;">Danach Tablet an deinen Trainer zurückgeben. Alle Angaben bleiben vertraulich.</div>
+  </div>
+  <div id="kioskStudioName" style="margin-left:auto;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700;white-space:nowrap;flex-shrink:0;"></div>
+</div>
+
+<div class="header" style="display:none!important"></div>
+
+<!-- Studio-Bar ausgeblendet im Kiosk -->
+<div class="studio-bar" style="display:none!important"></div>
+
+<div class="container">
+
+  <!-- 1. STAMMDATEN -->
+  <div class="card">
+    <div class="card-header green">
+      <div class="card-icon green">👤</div>
+      <div class="card-title green">Persönliche Daten</div>
+    </div>
+    <div class="card-body">
+      <div class="grid-3">
+        <div>
+          <label class="field-label" for="vorname">Vorname *</label>
+          <input type="text" id="vorname" placeholder="Max" required>
+        </div>
+        <div>
+          <label class="field-label" for="nachname">Nachname *</label>
+          <input type="text" id="nachname" placeholder="Mustermann" required>
+        </div>
+        <div>
+          <label class="field-label" for="geschlecht">Geschlecht *</label>
+          <select id="geschlecht" required>
+            <option value="">– bitte wählen –</option>
+            <option value="m">Männlich</option>
+            <option value="w">Weiblich</option>
+            <option value="d">Divers</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" for="geburtsdatum">Geburtsdatum *</label>
+          <input type="date" id="geburtsdatum" required>
+        </div>
+        <div>
+          <label class="field-label" for="telefon">Telefon *</label>
+          <input type="tel" id="telefon" placeholder="+49 …" required>
+        </div>
+        <div>
+          <label class="field-label" for="email">E-Mail *</label>
+          <input type="email" id="email" placeholder="max@beispiel.de" required>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ZIELE & TRAININGSHINTERGRUND -->
+  <div class="card">
+    <div class="card-header green">
+      <div class="card-icon green">🎯</div>
+      <div class="card-title green">Ziele &amp; Trainingshintergrund</div>
+    </div>
+    <div class="card-body">
+
+      <!-- Hauptziel -->
+      <div style="margin-bottom:18px;">
+        <label class="field-label">Was ist dein Hauptziel?</label>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" id="zielGrid">
+          <label class="ziel-btn" data-val="abnehmen">
+            <input type="radio" name="hauptziel" value="abnehmen" style="display:none">
+            <span class="ziel-icon">⚡</span>
+            <span class="ziel-text">Abnehmen / Fett reduzieren</span>
+          </label>
+          <label class="ziel-btn" data-val="muskelaufbau">
+            <input type="radio" name="hauptziel" value="muskelaufbau" style="display:none">
+            <span class="ziel-icon">💪</span>
+            <span class="ziel-text">Muskelaufbau / Körperdefinition</span>
+          </label>
+          <label class="ziel-btn" data-val="ruecken">
+            <input type="radio" name="hauptziel" value="ruecken" style="display:none">
+            <span class="ziel-icon">🦴</span>
+            <span class="ziel-text">Rücken / Körperhaltung verbessern</span>
+          </label>
+          <label class="ziel-btn" data-val="gesundheit">
+            <input type="radio" name="hauptziel" value="gesundheit" style="display:none">
+            <span class="ziel-icon">🏥</span>
+            <span class="ziel-text">Gesundheit &amp; Wohlbefinden</span>
+          </label>
+          <label class="ziel-btn" data-val="leistung">
+            <input type="radio" name="hauptziel" value="leistung" style="display:none">
+            <span class="ziel-icon">🏆</span>
+            <span class="ziel-text">Leistungssteigerung / Sport</span>
+          </label>
+          <label class="ziel-btn" data-val="sonstiges_ziel">
+            <input type="radio" name="hauptziel" value="sonstiges_ziel" style="display:none">
+            <span class="ziel-icon">✏️</span>
+            <span class="ziel-text">Sonstiges</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Aktivitätslevel & EMS-Erfahrung nebeneinander -->
+      <div class="grid-2" style="margin-bottom:18px;">
+        <div>
+          <label class="field-label" for="aktivitaetslevel">Aktuelles Aktivitätslevel</label>
+          <select id="aktivitaetslevel">
+            <option value="">– bitte wählen –</option>
+            <option value="kaum">Kaum aktiv (Schreibtischjob, wenig Bewegung)</option>
+            <option value="gelegentlich">Gelegentlich aktiv (1–2× / Woche)</option>
+            <option value="regelmaessig">Regelmäßig aktiv (3–4× / Woche)</option>
+            <option value="sehr_aktiv">Sehr aktiv (täglich / Leistungssport)</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" for="ems_erfahrung">EMS-Trainingserfahrung</label>
+          <select id="ems_erfahrung">
+            <option value="">– bitte wählen –</option>
+            <option value="keine">Keine – erstes Mal</option>
+            <option value="wenig">Wenig (1–5 Einheiten)</option>
+            <option value="etwas">Etwas Erfahrung (6–20 Einheiten)</option>
+            <option value="erfahren">Erfahren (mehr als 20 Einheiten)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Gewünschte Trainingshäufigkeit & Wunschtrainingszeit nebeneinander -->
+      <div class="grid-2" style="margin-bottom:18px;">
+        <div>
+          <label class="field-label" for="trainingsfrequenz">Gewünschte Häufigkeit pro Woche</label>
+          <select id="trainingsfrequenz">
+            <option value="">– bitte wählen –</option>
+            <option value="1x">1× pro Woche</option>
+            <option value="2x">2× pro Woche</option>
+            <option value="mehr">Mehr als 2× (nach Absprache)</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label" for="wunschziel">Wunschziel</label>
+          <select id="wunschziel">
+            <option value="">– wird geladen –</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Personal Training + Motivation nebeneinander -->
+      <div class="grid-2" style="margin-bottom:18px;">
+        <div>
+          <label class="field-label" for="personal_training_erfahrung">Personal Training bereits gemacht?</label>
+          <select id="personal_training_erfahrung">
+            <option value="">– bitte wählen –</option>
+            <option value="nein">Nein, noch nie</option>
+            <option value="wenig">Ja, ein paarmal</option>
+            <option value="regelmaessig">Ja, regelmäßig</option>
+          </select>
+        </div>
+        <div><!-- Spacer --></div>
+      </div>
+
+      <!-- Motivation / Erwartung Freitext -->
+      <div>
+        <label class="field-label" for="motivation">Was motiviert dich / Was erhoffst du dir vom EMS Training? <span style="font-weight:400;color:var(--gray-400)">(optional)</span></label>
+        <textarea id="motivation" placeholder="z.B. Ich möchte nach einer langen Pause wieder in Form kommen und schnell sichtbare Ergebnisse erzielen…" style="min-height:70px;"></textarea>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. NISV AUFKLÄRUNG -->
+  <div class="card">
+    <div class="card-header green">
+      <div class="card-icon green">⚡</div>
+      <div class="card-title green">Aufklärung zum EMS Training gemäß NiSV</div>
+    </div>
+    <div class="card-body">
+      <div class="nisv-info">
+        Beim konventionellen Training werden die Muskeln über elektrische Signale vom Gehirn gesteuert. Bei unserem Ganzkörper EMS Training aktivieren elektrische Impulse von außen zeitgleich nahezu alle Muskelgruppen. Diese effektive Trainingsform generiert eine sehr hohe Reizintensität für den Körper. Es können Überlastungserscheinungen auftreten. Um den optimalen Einstieg und eine sichere Anwendung zu gewährleisten, sind nachfolgende Hinweise zu beachten.
+      </div>
+
+      <!-- ABSOLUTE KONTRAINDIKATIONEN -->
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <div style="background:var(--red);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;">Absolut</div>
+          <div style="font-size:14px;font-weight:600;color:var(--red);">Kontraindikationen – kein EMS Training</div>
+        </div>
+        <p class="section-note">Bitte alle zutreffenden Punkte ankreuzen:</p>
+        <div class="checkbox-grid" id="absGrid">
+          <label class="checkbox-item" for="cb_kontra_abs_akute_erkrankung" id="ci-abs-1">
+            <input type="checkbox" id="cb_kontra_abs_akute_erkrankung" data-field="kontra_abs_akute_erkrankung">
+            <span>Akute Erkrankungen, bakterielle Infektionen, entzündliche Prozesse</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_operation" id="ci-abs-2">
+            <input type="checkbox" id="cb_kontra_abs_operation" data-field="kontra_abs_operation">
+            <span>Kürzlich vorgenommene Operationen</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_arteriosklerose" id="ci-abs-3">
+            <input type="checkbox" id="cb_kontra_abs_arteriosklerose" data-field="kontra_abs_arteriosklerose">
+            <span>Arteriosklerose, arterielle Durchblutungsstörungen</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_stents_bypass" id="ci-abs-4">
+            <input type="checkbox" id="cb_kontra_abs_stents_bypass" data-field="kontra_abs_stents_bypass">
+            <span>Stents oder Bypässe, die weniger als 6 Monate aktiv sind</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_schwangerschaft" id="ci-abs-5">
+            <input type="checkbox" id="cb_kontra_abs_schwangerschaft" data-field="kontra_abs_schwangerschaft">
+            <span>Schwangerschaft</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_elektr_implantate" id="ci-abs-6">
+            <input type="checkbox" id="cb_kontra_abs_elektr_implantate" data-field="kontra_abs_elektr_implantate">
+            <span>Elektrische Implantate, Herzschrittmacher</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_bluthochdruck" id="ci-abs-7">
+            <input type="checkbox" id="cb_kontra_abs_bluthochdruck" data-field="kontra_abs_bluthochdruck">
+            <span>Unbehandelter Bluthochdruck</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_herzrhythmus" id="ci-abs-8">
+            <input type="checkbox" id="cb_kontra_abs_herzrhythmus" data-field="kontra_abs_herzrhythmus">
+            <span>Herz-Rhythmus-Störung</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_blutungsst" id="ci-abs-9">
+            <input type="checkbox" id="cb_kontra_abs_blutungsst" data-field="kontra_abs_blutungsst">
+            <span>Blutungsstörung, Blutungsneigung (Hämophilie)</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_neurologisch" id="ci-abs-10">
+            <input type="checkbox" id="cb_kontra_abs_neurologisch" data-field="kontra_abs_neurologisch">
+            <span>Neuronale Erkrankungen, Epilepsie, schwere Sensitivitätsstörungen</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_bauchhernie" id="ci-abs-11">
+            <input type="checkbox" id="cb_kontra_abs_bauchhernie" data-field="kontra_abs_bauchhernie">
+            <span>Bauchwand- und Leistenhernien</span>
+          </label>
+          <label class="checkbox-item" for="cb_kontra_abs_alkohol_drogen" id="ci-abs-12">
+            <input type="checkbox" id="cb_kontra_abs_alkohol_drogen" data-field="kontra_abs_alkohol_drogen">
+            <span>Akuter Einfluss von Alkohol, Drogen, Rauschmittel</span>
+          </label>
+        </div>
+        <!-- Banner: keine absoluten Kontraindikationen -->
+        <div id="absKeineBanner" class="keine-kontra-banner" style="display:none;">
+          ✅&nbsp; Ich bestätige: <strong>Keine</strong> der genannten absoluten Kontraindikationen trifft auf mich zu.
+        </div>
+      </div>
+
+      <!-- RELATIVE KONTRAINDIKATIONEN -->
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <div style="background:var(--amber);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;">Relativ</div>
+          <div style="font-size:14px;font-weight:600;color:var(--amber);">Kontraindikationen – nur mit ärztlicher Erlaubnis</div>
+        </div>
+        <p class="section-note">Bitte alle zutreffenden Punkte ankreuzen:</p>
+        <div class="checkbox-grid" id="relGrid">
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_akuter_ruecken" id="ci-rel-1">
+            <input type="checkbox" id="cb_kontra_rel_akuter_ruecken" data-field="kontra_rel_akuter_ruecken">
+            <span>Akute Rückenbeschwerden ohne Diagnose</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_bandscheibe" id="ci-rel-2">
+            <input type="checkbox" id="cb_kontra_rel_bandscheibe" data-field="kontra_rel_bandscheibe">
+            <span>Akute Bandscheibenvorfälle</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_neuralgien" id="ci-rel-3">
+            <input type="checkbox" id="cb_kontra_rel_neuralgien" data-field="kontra_rel_neuralgien">
+            <span>Akute Neuralgien (Nervenschmerzen)</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_implantate_6m" id="ci-rel-4">
+            <input type="checkbox" id="cb_kontra_rel_implantate_6m" data-field="kontra_rel_implantate_6m">
+            <span>Implantate, die vor weniger als 6 Monaten eingesetzt wurden</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_innere_organe" id="ci-rel-5">
+            <input type="checkbox" id="cb_kontra_rel_innere_organe" data-field="kontra_rel_innere_organe">
+            <span>Erkrankungen der Inneren Organe und insb. Nierenerkrankungen</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_kardiovask" id="ci-rel-6">
+            <input type="checkbox" id="cb_kontra_rel_kardiovask" data-field="kontra_rel_kardiovask">
+            <span>Kardiovaskuläre Erkrankungen</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_bewegungskinetosen" id="ci-rel-7">
+            <input type="checkbox" id="cb_kontra_rel_bewegungskinetosen" data-field="kontra_rel_bewegungskinetosen">
+            <span>Bewegungskinetosen</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_fluessigkeit_haut" id="ci-rel-8">
+            <input type="checkbox" id="cb_kontra_rel_fluessigkeit_haut" data-field="kontra_rel_fluessigkeit_haut">
+            <span>Größere Flüssigkeitsansammlungen im Körper, Ödeme, offene Hautverletzungen, Wunden, Ekzeme, Verbrennungen</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_schmerzmittel" id="ci-rel-9">
+            <input type="checkbox" id="cb_kontra_rel_schmerzmittel" data-field="kontra_rel_schmerzmittel">
+            <span>Einnahme von Schmerzmitteln o.ä. Medikamente</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_diabetes" id="ci-rel-10">
+            <input type="checkbox" id="cb_kontra_rel_diabetes" data-field="kontra_rel_diabetes">
+            <span>Diabetes Mellitus</span>
+          </label>
+          <label class="checkbox-item amber-cb" for="cb_kontra_rel_tumor" id="ci-rel-11">
+            <input type="checkbox" id="cb_kontra_rel_tumor" data-field="kontra_rel_tumor">
+            <span>Tumor- und Krebserkrankung</span>
+          </label>
+        </div>
+        <!-- Banner: keine relativen Kontraindikationen -->
+        <div id="relKeineBanner" class="keine-kontra-banner amber" style="display:none;">
+          ✅&nbsp; Ich bestätige: <strong>Keine</strong> der genannten relativen Kontraindikationen trifft auf mich zu.
+        </div>
+      </div>
+
+      <!-- Freitext -->
+      <div>
+        <label class="field-label" for="einschraenkungen">Körperliche / orthopädische Einschränkungen oder persönliche Schonzonen</label>
+        <textarea id="einschraenkungen" placeholder="Liegen andere körperliche bzw. orthopädische Einschränkungen vor oder gibt es persönliche Schonzonen, auf die wir achten müssen?"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. WEITERE HINWEISE -->
+  <div class="card">
+    <div class="card-header gray">
+      <div class="card-icon gray" style="font-size:18px;">ℹ️</div>
+      <div class="card-title gray">Weitere Hinweise beachten</div>
+    </div>
+    <div class="card-body">
+      <ul class="hinweise-list">
+        <li>Etwa 2 Stunden vor dem Training kohlenhydratreiche Nahrung (ca. 250–500 kcal) und ausreichend Flüssigkeit zuführen (ca. 500 ml)</li>
+        <li>Verbinden/Lösen der Elektrodenkabel beim Training nicht gestattet</li>
+        <li>Bei Unwohls­ein, Schwindelgefühl oder Herzschmerzen das Training sofort abbrechen</li>
+        <li>Training ausschließlich unter Aufsicht eines ausgebildeten Trainers in unmittelbarer Nähe</li>
+        <li>Bei Hitzeentwicklung auf der Haut das Training sofort abbrechen</li>
+        <li>Eine Alternative zum EMS Training ist das normale Personal Fitness Training</li>
+      </ul>
+
+      <div class="confirm-box" style="margin-top:16px;" onclick="toggleConfirm('hinweiseCheck')">
+        <input type="checkbox" id="hinweiseCheck">
+        <label for="hinweiseCheck">Ich habe alle oben genannten Hinweise gelesen und verstanden.</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. ABSCHLIESSENDE INFORMATIONEN -->
+  <div class="card">
+    <div class="card-header green">
+      <div class="card-icon green">✅</div>
+      <div class="card-title green">Abschließende Informationen & Bestätigung</div>
+    </div>
+    <div class="card-body">
+      <div class="nisv-info">
+        Mit meiner Unterschrift bestätige ich, dass keine oben genannte absolute Kontraindikation oder relative Kontraindikation vorliegt, bzw. bei Vorliegen einer relativen Kontraindikation eine ärztliche Erlaubnis für die Durchführung des EMS Trainings eingeholt wurde.<br><br>
+        Ich verpflichte mich im Falle eines Vertragsabschlusses das Studio über Änderungen meines Gesundheits- bzw. ärztlichen Behandlungszustandes umgehend zu informieren. Außerdem habe ich alle Fragen nach bestem Wissen beantwortet und alle Hinweise gelesen und verstanden.
+      </div>
+
+      <div class="confirm-box" onclick="toggleConfirm('datenschutzCheck')">
+        <input type="checkbox" id="datenschutzCheck">
+        <label for="datenschutzCheck">Ich stimme der Verarbeitung meiner Gesundheitsdaten gemäß DSGVO zu. Die Daten werden ausschließlich zur Trainingsplanung und Sicherheit verwendet und nicht an Dritte weitergegeben.</label>
+      </div>
+
+      <!-- UNTERSCHRIFTEN -->
+      <div class="sig-wrapper" style="margin-top:24px;">
+        <div class="sig-box">
+          <div class="sig-label">Unterschrift Mitglied / Kunde</div>
+          <div class="sig-canvas-wrap">
+            <canvas id="sigKunde" width="400" height="130"></canvas>
+            <div class="sig-placeholder" id="sigKundePlaceholder">Hier unterschreiben</div>
+          </div>
+          <div class="sig-date-line">
+            <span>Datum:</span>
+            <input type="date" id="datumKunde">
+            <button class="sig-clear-btn" onclick="clearSig('sigKunde','sigKundePlaceholder')">Löschen</button>
+          </div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-label">Trainer / Mitarbeiter</div>
+          <div class="sig-canvas-wrap" style="border-color:var(--gray-200);background:var(--gray-50);display:flex;align-items:center;justify-content:center;min-height:80px;">
+            <div id="trainerNameDisplay" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--fit);letter-spacing:.5px;">– nicht eingeloggt –</div>
+          </div>
+          <div class="sig-date-line">
+            <span>Datum:</span>
+            <input type="date" id="datumTrainer">
+            <input type="hidden" id="trainerName">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="card">
+    <div class="card-body">
+      <div class="submit-area">
+        <button class="btn-submit" id="submitBtn" onclick="submitForm()">
+          <span>💾</span> Anamnese speichern
+        </button>
+        <button class="btn-secondary" onclick="druckeFormular()">🖨️ Drucken</button>
+        <button class="btn-secondary" onclick="resetForm()">Formular zurücksetzen</button>
+        <div id="submitNote" style="font-size:13px;color:var(--gray-400);"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- SUCCESS OVERLAY -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-modal">
+    <div class="success-icon">✅</div>
+    <h2>Gespeichert!</h2>
+    <p>Die Gesundheitsanamnese wurde erfolgreich mit Unterschrift in der Datenbank hinterlegt.</p>
+    <p id="successMailInfo" style="font-size:13px;color:#2f8615;margin-top:-8px;margin-bottom:20px;min-height:18px;line-height:1.5;"></p>
+    <button class="btn-submit" onclick="startNew()" style="margin:0 auto;">Neue Anamnese</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// =====================
+// KIOSK CONFIG — kein Login, nur anon key
+// =====================
+const SUPABASE_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+
+// Studio-ID aus URL
+const KIOSK_STUDIO_ID   = new URLSearchParams(window.location.search).get('studio_id')   || null;
+const KIOSK_TRAINER_NAME = new URLSearchParams(window.location.search).get('trainer_name') || '';
+const KIOSK_TRAINER_ID   = new URLSearchParams(window.location.search).get('trainer_id')   || null;
+
+// =====================
+// STATE
+// =====================
+let sb;
+let currentStudios = [];
+let selectedKundeId = null; // wird im Kiosk nie gesetzt, aber Code referenziert es
+let kioskStudioName = '';
+
+// =====================
+// INIT
+// =====================
+async function init() {
+  if (!KIOSK_STUDIO_ID) {
+    document.body.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:system-ui;background:#f3f4f6;">
+        <div style="background:#fff;border-radius:16px;padding:40px 48px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.12);max-width:400px">
+          <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+          <h2 style="font-size:20px;font-weight:800;color:#1f2937;margin-bottom:8px">Kein Studio angegeben</h2>
+          <p style="font-size:14px;color:#6b7280;line-height:1.6">Dieser Link ist ungültig. Bitte wende dich an deinen Trainer.</p>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Anon-Client — kein Auth-Token
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+
+  // Studio-Name laden
+  const { data: studioData } = await sb
+    .from('studios')
+    .select('id, name, city')
+    .eq('id', KIOSK_STUDIO_ID)
+    .eq('is_active', true)
+    .single();
+
+  if (!studioData) {
+    showToast('⚠️ Studio nicht gefunden', 'error');
+  } else {
+    kioskStudioName = studioData.name;
+    const nameEl = document.getElementById('kioskStudioName');
+    if (nameEl) nameEl.textContent = '📍 ' + studioData.name;
+    const printStudio = document.getElementById('print-studio');
+    if (printStudio) printStudio.textContent = studioData.name;
+  }
+
+  // Trainer aus URL-Parameter setzen
+  if (KIOSK_TRAINER_NAME) {
+    const tnInput = document.getElementById('trainerName');
+    if (tnInput) tnInput.value = KIOSK_TRAINER_NAME;
+    const display = document.getElementById('trainerNameDisplay');
+    if (display) display.textContent = KIOSK_TRAINER_NAME;
+  }
+
+  // Wunschziel aus lookup_items laden (pt_goal)
+  const PT_GOAL_LIST_ID = '56b8aad0-4931-4b06-b8eb-062cda67abc6';
+  const { data: goalItems } = await sb
+    .from('lookup_items')
+    .select('code, label')
+    .eq('list_id', PT_GOAL_LIST_ID)
+    .eq('is_active', true)
+    .order('sort_order');
+  const wunschzielSel = document.getElementById('wunschziel');
+  if (wunschzielSel && goalItems?.length) {
+    wunschzielSel.innerHTML = '<option value="">– bitte wählen –</option>'
+      + goalItems.map(i => `<option value="${i.code}">${i.label}</option>`).join('');
+  }
+
+  // Heute als default
+  const today = new Date().toISOString().split('T')[0];
+  const dk = document.getElementById('datumKunde');
+  if (dk) dk.value = today;
+  const dt = document.getElementById('datumTrainer');
+  if (dt) dt.value = today;
+
+  // Geburtsdatum constraints
+  const maxGeb = new Date();
+  maxGeb.setFullYear(maxGeb.getFullYear() - 18);
+  const minGeb = new Date();
+  minGeb.setFullYear(minGeb.getFullYear() - 120);
+  const gebField = document.getElementById('geburtsdatum');
+  if (gebField) {
+    gebField.max = maxGeb.toISOString().split('T')[0];
+    gebField.min = minGeb.toISOString().split('T')[0];
+    gebField.addEventListener('change', () => {
+      const val = gebField.value;
+      if (!val) return;
+      const geb   = new Date(val);
+      const limit = new Date(geb.getFullYear() + 18, geb.getMonth(), geb.getDate());
+      if (new Date() < limit) {
+        gebField.style.borderColor = 'var(--red)';
+        gebField.style.boxShadow   = '0 0 0 3px rgba(229,62,62,.15)';
+        showToast('❌ Mindestalter: 18 Jahre', 'error');
+      } else {
+        gebField.style.borderColor = 'var(--fit2)';
+        gebField.style.boxShadow   = '0 0 0 3px rgba(149,193,31,.15)';
+      }
+    });
+  }
+
+  // Canvas
+  initCanvas('sigKunde', 'sigKundePlaceholder');
+
+  // Checkbox-Farben + Banner
+  function updateKeineBanner() {
+    const absChecked = [...document.querySelectorAll('#absGrid input[type=checkbox]')].some(c => c.checked);
+    const relChecked = [...document.querySelectorAll('#relGrid input[type=checkbox]')].some(c => c.checked);
+    document.getElementById('absKeineBanner').style.display = absChecked ? 'none' : 'flex';
+    document.getElementById('relKeineBanner').style.display = relChecked ? 'none' : 'flex';
+  }
+  document.querySelectorAll('.checkbox-item input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const item = cb.closest('.checkbox-item');
+      const isAmber = item.classList.contains('amber-cb');
+      if (cb.checked) item.classList.add(isAmber ? 'checked-amber' : 'checked-red');
+      else item.classList.remove('checked-red', 'checked-amber');
+      updateKeineBanner();
+    });
+  });
+  updateKeineBanner();
+
+  // Ziel-Buttons
+  document.querySelectorAll('.ziel-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.ziel-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const radio = btn.querySelector('input[type=radio]');
+      if (radio) radio.checked = true;
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+// ── Studio-ID im Kiosk immer aus URL ──────────────────────────────────────
+function getStudioId() {
+  return KIOSK_STUDIO_ID;
+}
+
+// =====================
+// CANVAS
+// =====================
+const sigStates = {};
+function initCanvas(id, placeholderId) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  sigStates[id] = { hasDrawn: false };
+  const ph = document.getElementById(placeholderId);
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - r.left) * (canvas.width / r.width), y: (src.clientY - r.top) * (canvas.height / r.height) };
+  }
+  function start(e) { e.preventDefault(); drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); if (ph) ph.style.display = 'none'; }
+  function move(e)  { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.strokeStyle = '#1f2937'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.stroke(); sigStates[id].hasDrawn = true; }
+  function end(e)   { e.preventDefault(); drawing = false; }
+  canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); canvas.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, { passive: false }); canvas.addEventListener('touchmove', move, { passive: false }); canvas.addEventListener('touchend', end);
+}
+function clearSig(id, placeholderId) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  sigStates[id] = { hasDrawn: false };
+  const ph = document.getElementById(placeholderId);
+  if (ph) ph.style.display = '';
+}
+function getSigData(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas || !sigStates[id]?.hasDrawn) return null;
+  return canvas.toDataURL('image/png');
+}
+
+// =====================
+// TOGGLE CONFIRM
+// =====================
+function toggleConfirm(id) {
+  const cb = document.getElementById(id);
+  if (cb) cb.checked = !cb.checked;
+}
+
+// =====================
+// CLIENT INFO
+// =====================
+async function getClientInfo() {
+  let ip_adresse = 'nicht erfasst';
+  try {
+    const r = await fetch('https://api.ipify.org?format=json');
+    const d = await r.json();
+    ip_adresse = d.ip || 'nicht erfasst';
+  } catch(e) {}
+  return { ip_adresse, user_agent: navigator.userAgent };
+}
+
+// =====================
+// SUBMIT — anon insert
+// =====================
+async function submitForm() {
+  const btn  = document.getElementById('submitBtn');
+  const note = document.getElementById('submitNote');
+
+  if (!document.getElementById('vorname').value.trim())        { showToast('❌ Bitte Vorname eingeben', 'error');                return; }
+  if (!document.getElementById('nachname').value.trim())       { showToast('❌ Bitte Nachname eingeben', 'error');               return; }
+  if (!document.getElementById('geschlecht').value)            { showToast('❌ Bitte Geschlecht auswählen', 'error');            return; }
+  if (!document.getElementById('telefon').value.trim())        { showToast('❌ Bitte Telefonnummer eingeben', 'error');          return; }
+  if (!document.getElementById('email').value.trim())          { showToast('❌ Bitte E-Mail-Adresse eingeben', 'error');         return; }
+
+  const gebVal = document.getElementById('geburtsdatum').value;
+  if (!gebVal) { showToast('❌ Bitte Geburtsdatum eingeben', 'error'); return; }
+  const gebDate  = new Date(gebVal);
+  const alter18  = new Date(gebDate.getFullYear() + 18, gebDate.getMonth(), gebDate.getDate());
+  if (new Date() < alter18) { showToast('❌ Mindestalter: 18 Jahre', 'error'); return; }
+
+  if (!document.getElementById('hinweiseCheck').checked)       { showToast('⚠️ Bitte Hinweise bestätigen', 'error');            return; }
+  if (!document.getElementById('datenschutzCheck').checked)    { showToast('⚠️ Datenschutz-Einwilligung erforderlich','error'); return; }
+  if (!sigStates['sigKunde']?.hasDrawn)                        { showToast('✍️ Unterschrift fehlt', 'error');                   return; }
+
+  btn.disabled     = true;
+  note.textContent = 'Wird gespeichert…';
+
+  const { ip_adresse, user_agent } = await getClientInfo();
+  const einwilligung_timestamp = new Date().toISOString();
+
+  const payload = {
+    studio_id:    KIOSK_STUDIO_ID,
+    kunden_id:    null,
+    lead_id:      null,
+    erstellt_von: KIOSK_TRAINER_ID,
+    vorname:      document.getElementById('vorname').value.trim(),
+    nachname:     document.getElementById('nachname').value.trim(),
+    geschlecht:   document.getElementById('geschlecht').value || null,
+    geburtsdatum: gebVal || null,
+    telefon:      document.getElementById('telefon').value.trim() || null,
+    email:        document.getElementById('email').value.trim() || null,
+    koerperliche_einschraenkungen: document.getElementById('einschraenkungen').value.trim() || null,
+    hinweise_gelesen:       document.getElementById('hinweiseCheck').checked,
+    datenschutz_akzeptiert: document.getElementById('datenschutzCheck').checked,
+    unterschrift_kunde:     getSigData('sigKunde'),
+    unterschrift_trainer:   null,
+    trainer_name:           KIOSK_TRAINER_NAME || null,
+    datum:                  document.getElementById('datumKunde').value || new Date().toISOString().split('T')[0],
+    // Ziele
+    hauptziel:          document.querySelector('input[name="hauptziel"]:checked')?.value || null,
+    aktivitaetslevel:   document.getElementById('aktivitaetslevel').value || null,
+    ems_erfahrung:      document.getElementById('ems_erfahrung').value || null,
+    trainingsfrequenz:  document.getElementById('trainingsfrequenz').value || null,
+    wunschziel:         document.getElementById('wunschziel').value || null,
+    personal_training_erfahrung: document.getElementById('personal_training_erfahrung').value || null,
+    motivation:         document.getElementById('motivation').value.trim() || null,
+    // DSGVO
+    einwilligung_timestamp,
+    ip_adresse,
+    user_agent,
+  };
+
+  // Kontraindikationen
+  document.querySelectorAll('[data-field]').forEach(cb => {
+    payload[cb.dataset.field] = cb.checked;
+  });
+
+  const { data: inserted, error } = await sb
+    .from('gesundheitsanamnese')
+    .insert(payload)
+    .select('id')
+    .single();
+
+  if (error) {
+    btn.disabled     = false;
+    note.textContent = '';
+    showToast('❌ Fehler beim Speichern: ' + error.message, 'error');
+    return;
+  }
+
+  // PDF + E-Mail
+  const recipientEmail = payload.email || null;
+  if (inserted?.id && recipientEmail) {
+    note.textContent = '📄 PDF wird erstellt…';
+    let pdfBase64 = null;
+    try { pdfBase64 = await generateAnamnesePDF(payload, kioskStudioName); } catch(e) { console.error(e); }
+
+    note.textContent = '📧 E-Mail wird versendet…';
+    try {
+      const res = await fetch(
+        'https://jypbyywxfjniafuygxci.supabase.co/functions/v1/send-gesundheitsanamnese-pdf',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            anamnese_id:     inserted.id,
+            pdf_base64:      pdfBase64,
+            recipient_email: recipientEmail,
+            vorname:         payload.vorname,
+            nachname:        payload.nachname,
+            studio_name:     kioskStudioName || 'fitbox',
+          }),
+        }
+      );
+      const result = await res.json();
+      document.getElementById('successMailInfo').innerHTML = result.success
+        ? `📧 Bestätigung + PDF wurde an <strong>${recipientEmail}</strong> gesendet.`
+        : `⚠️ Gespeichert, E-Mail fehlgeschlagen: ${result.error || ''}`;
+      if (!result.success) document.getElementById('successMailInfo').style.color = '#d97706';
+    } catch(e) {
+      document.getElementById('successMailInfo').innerHTML = '⚠️ Gespeichert. E-Mail-Versand fehlgeschlagen.';
+      document.getElementById('successMailInfo').style.color = '#d97706';
+    }
+  } else if (!recipientEmail) {
+    document.getElementById('successMailInfo').innerHTML = 'ℹ️ Keine E-Mail-Adresse – kein Mailversand.';
+    document.getElementById('successMailInfo').style.color = '#9ca3af';
+  }
+
+  btn.disabled     = false;
+  note.textContent = '';
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+function resetForm() {
+  if (!confirm('Formular wirklich zurücksetzen? Alle Eingaben gehen verloren.')) return;
+  location.reload();
+}
+
+function startNew() {
+  document.getElementById('successOverlay').classList.remove('show');
+  location.reload();
+}
+
+function druckeFormular() {
+  const datum   = document.getElementById('datumKunde').value;
+  document.getElementById('print-studio').textContent  = kioskStudioName || 'fitbox';
+  document.getElementById('print-datum').textContent   = 'Datum: ' + (datum ? new Date(datum).toLocaleDateString('de-DE') : new Date().toLocaleDateString('de-DE'));
+  document.getElementById('print-trainer').textContent = '';
+  window.print();
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+
+<!-- Versions-Badge -->
+<div id="versionBadge" style="position:fixed;bottom:10px;right:12px;background:rgba(31,41,55,.75);color:#9ca3af;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.4px;z-index:9999;pointer-events:none;font-family:monospace">v1.5-kiosk</div>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>fitbox Studio OS</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,sans-serif;background:linear-gradient(180deg,#fff 0%,#f2f6f0 100%);min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .card{background:#fff;border:1px solid #dde5dd;border-radius:20px;box-shadow:0 12px 32px rgba(15,23,42,.09);padding:32px;max-width:380px;width:100%;text-align:center}
+    .logo{height:32px;width:auto;margin-bottom:20px}
+    .spinner{width:24px;height:24px;border-radius:50%;border:3px solid rgba(47,134,21,.2);border-top-color:#2f8615;animation:spin .8s linear infinite;margin:0 auto 14px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .msg{font-size:13px;color:#64748b}
+    .err{color:#b91c1c;font-size:13px;margin-top:12px}
+    .btn{display:inline-block;margin-top:16px;background:linear-gradient(180deg,#2f8615,#256a10);color:#fff;border:none;border-radius:11px;padding:10px 20px;font:900 13px/1 system-ui;cursor:pointer;text-decoration:none}
+    .btn-secondary{background:#fff;color:#0f172a;border:1px solid #dde5dd;margin-left:8px}
+  </style>
+</head>
+<body>
+<div class="card">
+  <img class="logo" src="https://145725822.fs1.hubspotusercontent-eu1.net/hub/145725822/hubfs/fitbox/images/logo-fitbox.png?width=1500&height=575&name=logo-fitbox.png" alt="fitbox"/>
+  <div class="spinner" id="spinner"></div>
+  <div class="msg" id="msg">Anmeldung wird geprüft …</div>
+  <div class="err" id="err" style="display:none"></div>
+</div>
+
+<script>
+(function(){
+  var SESSION_KEY = 'fitbox_session';
+  var STUDIO_PREF_KEY = 'fitbox_last_studio';
+  var SB_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+  var SB_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+
+  var s;
+  try{
+    var _raw = localStorage.getItem(SESSION_KEY) || sessionStorage.getItem(SESSION_KEY);
+    s = JSON.parse(_raw);
+  }catch(e){}
+
+  // Kein Login → Login-Seite
+  if(!s || !s.access_token || s.expires_at < Date.now()){
+    localStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY);
+    window.location.replace('login.html');
+    return;
+  }
+
+  // Wenn User schon ein Studio zuletzt gewählt hat → direkt dahin
+  var lastStudio = localStorage.getItem(STUDIO_PREF_KEY);
+  if (lastStudio === 'memmingen') {
+    window.location.replace('index_memmingen.html');
+    return;
+  }
+  if (lastStudio === 'senden') {
+    window.location.replace('index_senden.html');
+    return;
+  }
+
+  document.getElementById('msg').textContent = 'Studio wird ermittelt …';
+
+  // Primary Studio des Users laden und weiterleiten
+  fetch(SB_URL+'/rest/v1/employees?auth_user_id=eq.'+s.user.id+'&select=id&limit=1', {
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+  })
+  .then(r=>r.json())
+  .then(function(empData){
+    var emp = empData && empData[0];
+    if(!emp){
+      // Kein Employee-Eintrag → wenn Admin, dann ins Admin-Panel
+      var roleCode = s.employee && s.employee.roles ? s.employee.roles.code : '';
+      if (roleCode === 'admin') {
+        window.location.replace('admin_index.html');
+        return;
+      }
+      showErr('Kein Mitarbeitereintrag gefunden.');
+      return;
+    }
+
+    return fetch(SB_URL+'/rest/v1/employee_studios?employee_id=eq.'+emp.id+'&is_active=eq.true&select=studio_id,is_primary,studios(name,code)&order=is_primary.desc&limit=5', {
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+    })
+    .then(r=>r.json())
+    .then(function(stData){
+      if(!stData || stData.length === 0){
+        // Kein Studio zugewiesen → wenn Admin, dann ins Admin-Panel
+        var roleCode = s.employee && s.employee.roles ? s.employee.roles.code : '';
+        if (roleCode === 'admin') {
+          window.location.replace('admin_index.html');
+          return;
+        }
+        showErr('Kein Studio zugewiesen. Bitte Administrator kontaktieren.');
+        return;
+      }
+
+      // Primary Studio (oder erstes) → Routing
+      var primary = stData[0];
+      var studioName = ((primary.studios && primary.studios.name) || '').toLowerCase();
+      var studioCode = ((primary.studios && primary.studios.code) || '').toLowerCase();
+      var target = (studioName.includes('senden') || studioCode === 'sen')
+        ? 'index_senden.html'
+        : 'index_memmingen.html';
+
+      // Speichern als zuletzt gewähltes Studio (für schnelleren Login nächstes Mal)
+      localStorage.setItem(STUDIO_PREF_KEY, target.includes('senden') ? 'senden' : 'memmingen');
+
+      window.location.replace(target);
+    });
+  })
+  .catch(function(err){
+    showErr('Fehler: '+(err.message||String(err)));
+  });
+
+  function showErr(msg){
+    document.getElementById('spinner').style.display='none';
+    document.getElementById('msg').textContent='';
+    var e=document.getElementById('err');
+    e.textContent=msg;
+    e.style.display='block';
+    var card = document.querySelector('.card');
+    var loginBtn=document.createElement('a');
+    loginBtn.href='login.html';
+    loginBtn.className='btn';
+    loginBtn.textContent='Zum Login';
+    card.appendChild(loginBtn);
+    // Auch direkt zum Admin-Panel anbieten falls User Admin ist
+    var roleCode = s && s.employee && s.employee.roles ? s.employee.roles.code : '';
+    if (roleCode === 'admin' || roleCode === 'studioleitung') {
+      var adminBtn=document.createElement('a');
+      adminBtn.href='admin_index.html';
+      adminBtn.className='btn btn-secondary';
+      adminBtn.textContent='Admin-Panel';
+      card.appendChild(adminBtn);
+    }
+  }
+})();
+</script>
+</body>
+</html>

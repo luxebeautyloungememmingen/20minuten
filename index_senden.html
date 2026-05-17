@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>fitbox Studio OS – Senden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --brand:#2f8615; --brand-dark:#236010; --brand-acc:#95c11f;
+  --brand-soft:#eef7e9; --brand-line:#d4eacc;
+  --bg:#f5f7f4; --card:#ffffff; --text:#111827; --muted:#6b7280; --line:#e4e9e2;
+  --sidebar-w:260px; --sidebar-coll:56px; --header-h:52px;
+  --shadow:0 2px 10px rgba(16,40,12,.07); --shadow-md:0 6px 22px rgba(16,40,12,.10);
+  --radius:14px; --font:'DM Sans',system-ui,sans-serif; --mono:'DM Mono',monospace;
+  --ok:#166534; --ok-bg:#dcfce7; --ok-line:#86efac; --ok-mid:#16a34a;
+  --warn:#92400e; --warn-bg:#fef3c7; --warn-line:#fcd34d; --warn-mid:#d97706;
+  --bad:#991b1b; --bad-bg:#fee2e2; --bad-line:#fca5a5; --bad-mid:#dc2626;
+  --grey:#374151; --grey-bg:#f3f4f6; --grey-line:#d1d5db;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;flex-direction:column;font-size:14px}
+
+/* TOPBAR */
+.topbar{height:var(--header-h);background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.15);z-index:200;position:relative}
+.topbar-hamburger{width:36px;height:36px;background:none;border:none;color:rgba(255,255,255,.85);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;flex-shrink:0;transition:background .15s}
+.topbar-hamburger:hover{background:rgba(255,255,255,.15);color:#fff}
+.topbar-logo{height:26px;width:auto;object-fit:contain;filter:brightness(0) invert(1);flex-shrink:0}
+.topbar-divider{width:1px;height:24px;background:rgba(255,255,255,.25);flex-shrink:0}
+.topbar-location{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.topbar-spacer{flex:1}
+.topbar-clock{font-family:var(--mono);font-size:13px;color:rgba(255,255,255,.8);letter-spacing:.04em;flex-shrink:0}
+.topbar-admin{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;font:700 11px/1 var(--font);padding:6px 11px;border-radius:8px;text-decoration:none;flex-shrink:0;transition:background .15s}
+.topbar-admin:hover{background:rgba(255,255,255,.22)}
+.topbar-user{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.topbar-user-info{text-align:right;line-height:1.25}
+.topbar-user-name{font-size:12px;font-weight:800;color:#fff}
+.topbar-user-role{font-size:10px;color:rgba(255,255,255,.6)}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.38);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0}
+.topbar-logout{appearance:none;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;border-radius:8px;padding:5px 10px;font:700 11px/1 var(--font);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background .15s}
+.topbar-logout:hover{background:rgba(255,255,255,.22)}
+
+/* SHELL */
+.shell{display:flex;flex:1;min-height:0}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;overflow-x:hidden;transition:width .22s cubic-bezier(.4,0,.2,1);position:relative;z-index:100}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.sidebar.collapsed{width:var(--sidebar-coll)}
+.nav-group-label{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:16px 16px 5px;white-space:nowrap;overflow:hidden;opacity:1;transition:opacity .15s}
+.sidebar.collapsed .nav-group-label{opacity:0;padding-top:10px;padding-bottom:2px}
+.nav-btn{display:flex;align-items:center;gap:11px;width:100%;padding:9px 16px;background:none;border:none;font:600 13px/1.3 var(--font);color:var(--muted);cursor:pointer;text-align:left;transition:background .12s,color .12s;text-decoration:none;white-space:nowrap;position:relative;min-height:38px}
+.nav-btn:hover{background:var(--brand-soft);color:var(--brand)}
+.nav-btn.active{background:var(--brand-soft);color:var(--brand);font-weight:800}
+.nav-btn.active::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:3px;background:var(--brand);border-radius:0 3px 3px 0}
+.nav-icon{font-size:17px;flex-shrink:0;width:24px;text-align:center;line-height:1;display:flex;align-items:center;justify-content:center}
+.nav-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:opacity .18s,max-width .22s;max-width:180px}
+.sidebar.collapsed .nav-label{opacity:0;max-width:0;pointer-events:none}
+.sidebar.collapsed .nav-btn{justify-content:center;padding:9px 0}
+.sidebar.collapsed .nav-btn.active::before{top:0;bottom:0}
+.sidebar.collapsed .nav-btn::after{content:attr(data-tooltip);position:absolute;left:calc(var(--sidebar-coll) + 8px);top:50%;transform:translateY(-50%);background:var(--text);color:#fff;font-size:12px;font-weight:700;padding:5px 10px;border-radius:8px;white-space:nowrap;pointer-events:none;opacity:0;z-index:999;transition:opacity .15s;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.sidebar.collapsed .nav-btn:hover::after{opacity:1}
+.nav-divider{border:none;border-top:1px solid var(--line);margin:6px 0}
+.sidebar-footer{margin-top:auto;padding:12px 14px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);line-height:1.5;transition:opacity .15s}
+.sidebar.collapsed .sidebar-footer{opacity:0;pointer-events:none}
+
+/* MAIN */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.main-wrapper{flex:1;position:relative;display:flex;flex-direction:column;min-height:0;background:var(--bg)}
+#page-frame{flex:1;border:none;width:100%;display:none;background:var(--bg)}
+#frame-loader{position:absolute;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;z-index:10}
+#frame-loader.show{display:flex}
+.frame-spinner{width:32px;height:32px;border:3px solid var(--brand-line);border-top-color:var(--brand);border-radius:50%;animation:spin .7s linear infinite}
+.frame-text{font-size:13px;color:var(--muted);font-weight:600}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SCROLLABLE PAGE */
+.page-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.page-scroll::-webkit-scrollbar{width:6px}
+.page-scroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.page-inner{padding:18px 20px 48px;display:flex;flex-direction:column;gap:18px}
+
+/* SECTION TITLE */
+.sec-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--line)}
+.sec-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;letter-spacing:0;text-transform:none}
+.sec-badge.red{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad-line)}
+.sec-badge.amber{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-line)}
+.sec-badge.brand{background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line)}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+
+/* KPI */
+.kpi-row{display:grid;gap:10px}
+.kpi-row.c3{grid-template-columns:repeat(3,1fr)}
+.kpi-row.c4{grid-template-columns:repeat(4,1fr)}
+.kpi-card{display:flex;flex-direction:column;gap:3px}
+.kpi-icon{font-size:20px;line-height:1;margin-bottom:2px}
+.kpi-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kpi-val{font-size:28px;font-weight:900;line-height:1.05;color:var(--text)}
+.kpi-val.green{color:var(--brand)}.kpi-val.amber{color:var(--warn-mid)}.kpi-val.red{color:var(--bad-mid)}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:1px;line-height:1.35}
+.kpi-btn{cursor:pointer;text-align:left;appearance:none;transition:transform .12s,box-shadow .12s,border-color .12s;position:relative}
+.kpi-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--brand-line)}
+.kpi-btn:active{transform:translateY(0)}
+.kpi-arrow{position:absolute;top:12px;right:12px;font-size:13px;color:var(--brand-line);transition:color .12s,transform .12s}
+.kpi-btn:hover .kpi-arrow{color:var(--brand);transform:translateX(2px)}
+
+/* LIST ROW */
+.list-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;background:#f9fafb;border:1px solid var(--line);margin-bottom:6px;transition:background .12s}
+.list-row:last-child{margin-bottom:0}
+.list-row:hover{background:var(--brand-soft);border-color:var(--brand-line)}
+.list-av{width:34px;height:34px;border-radius:50%;background:var(--brand-soft);border:1.5px solid var(--brand-line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--brand);flex-shrink:0}
+.list-av.warn{background:var(--warn-bg);border-color:var(--warn-line);color:var(--warn-mid)}
+.list-av.red{background:var(--bad-bg);border-color:var(--bad-line);color:var(--bad-mid)}
+.list-name{font-size:13px;font-weight:700}
+.list-meta{font-size:11px;color:var(--muted);margin-top:1px}
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0}
+.badge.red{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad-line)}
+.badge.amber{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-line)}
+.badge.green{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-line)}
+.badge.grey{background:var(--grey-bg);color:var(--grey);border:1px solid var(--grey-line)}
+.badge.brand{background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line)}
+
+/* PT ROW */
+.pt-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;background:#f9fafb;border:1px solid var(--line);margin-bottom:6px}
+.pt-row:last-child{margin-bottom:0}
+.pt-time{font-family:var(--mono);font-size:12px;color:var(--muted);min-width:44px;flex-shrink:0}
+.pt-name{font-size:13px;font-weight:700}
+.pt-trainer{font-size:11px;color:var(--muted);margin-top:1px}
+
+/* PROGRESS */
+.prog-wrap{margin-top:8px}
+.prog-labels{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px}
+.prog-bar{height:5px;background:var(--line);border-radius:999px;overflow:hidden}
+.prog-fill{height:100%;border-radius:999px;background:var(--brand);transition:width .4s ease}
+.prog-fill.amber{background:var(--warn-mid)}.prog-fill.red{background:var(--bad-mid)}
+
+/* PT STATS */
+.pt-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.pt-stat{text-align:center;padding:10px 6px;border-radius:10px;background:#f9fafb;border:1px solid var(--line)}
+.pt-stat-n{font-size:22px;font-weight:900;line-height:1}
+.pt-stat-l{font-size:10px;color:var(--muted);font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.04em}
+
+/* BETRIEB */
+.betrieb-row{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.betrieb-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:3px;position:relative}
+.betrieb-icon{font-size:18px;margin-bottom:2px}
+.betrieb-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.betrieb-val{font-size:22px;font-weight:900;line-height:1.1}
+.betrieb-val.green{color:var(--brand)}.betrieb-val.amber{color:var(--warn-mid)}.betrieb-val.red{color:var(--bad-mid)}
+.betrieb-sub{font-size:10px;color:var(--muted)}
+
+/* SKELETON / LOADING */
+.skel{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:skel 1.4s infinite;border-radius:8px;height:16px}
+@keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.overlay-loading{position:absolute;inset:0;background:rgba(245,247,244,.78);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:50;pointer-events:none}
+.overlay-loading.show{display:flex}
+.loading-card{background:var(--card);border-radius:14px;padding:12px 18px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;font-weight:900;font-size:13px}
+.spinner{width:16px;height:16px;border-radius:50%;border:2.5px solid rgba(0,0,0,.12);border-top-color:var(--brand);animation:spin .85s linear infinite;flex-shrink:0}
+
+/* RESPONSIVE */
+@media(max-width:1200px){.betrieb-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.kpi-row.c4{grid-template-columns:repeat(2,1fr)}.betrieb-row{grid-template-columns:repeat(3,1fr)}.info-grid{grid-template-columns:1fr}}
+@media(max-width:680px){.kpi-row.c3{grid-template-columns:repeat(2,1fr)}.betrieb-row{grid-template-columns:repeat(2,1fr)}.rag-grid,.rag-grid.wide{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.kpi-row.c3,.kpi-row.c4,.betrieb-row{grid-template-columns:1fr 1fr}}
+
+/* GEBURTSTAG */
+.gb-card{background:linear-gradient(135deg,#fff7f0,#fff);border:1.5px solid #fcd34d;border-radius:var(--radius);padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);min-width:180px;flex:1}
+.gb-avatar{width:38px;height:38px;border-radius:50%;background:#fef3c7;border:2px solid #fcd34d;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.gb-name{font-size:13px;font-weight:800;color:var(--text)}
+.gb-date{font-size:11px;color:var(--muted);margin-top:1px}
+.gb-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.gb-badge.today{background:#fef3c7;color:#92400e;border:1px solid #fcd34d}
+.gb-badge.soon{background:var(--grey-bg);color:var(--grey);border:1px solid var(--grey-line)}
+
+/* ─── AKKORDION SIDEBAR ─── */
+.acc-group { margin-bottom: 2px; }
+.acc-header {
+  width: 100%; display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; background: none; border: none; border-radius: 10px;
+  cursor: pointer; font: 700 12px/1.3 var(--font); color: var(--muted);
+  text-align: left; text-transform: uppercase; letter-spacing: .04em;
+  transition: background .12s, color .12s; margin-top: 4px;
+}
+.acc-header:hover { background: var(--brand-soft); color: var(--brand); }
+.acc-icon { font-size: 14px; flex-shrink: 0; }
+.acc-label { flex: 1; }
+.acc-chevron { font-size: 12px; transition: transform .2s ease; color: var(--muted); }
+.acc-group:not(.open) .acc-chevron { transform: rotate(-90deg); }
+.acc-body {
+  overflow: hidden; max-height: 600px;
+  transition: max-height .25s ease, opacity .2s ease;
+  opacity: 1; padding-left: 8px;
+}
+.acc-group:not(.open) .acc-body { max-height: 0; opacity: 0; }
+.nav-sub { padding-left: 20px !important; font-size: 13px !important; }
+.sidebar.collapsed .acc-header { justify-content: center; padding: 9px 0; }
+.sidebar.collapsed .acc-label,
+.sidebar.collapsed .acc-chevron { opacity: 0; max-width: 0; overflow: hidden; pointer-events: none; }
+.sidebar.collapsed .acc-body { max-height: 0 !important; opacity: 0; }
+</style>
+</head>
+<body>
+
+<script>
+/* AUTH GUARD */
+(function(){
+  var SK='fitbox_session',TM=8*60*60*1000,s;
+  try{var r=localStorage.getItem(SK)||sessionStorage.getItem(SK);s=JSON.parse(r);if(s&&!localStorage.getItem(SK))localStorage.setItem(SK,r);}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){localStorage.removeItem(SK);sessionStorage.removeItem(SK);window.location.replace('login.html');throw new Error('AUTH');}
+  window._fbSession=s;window._fbToken=s.access_token;
+  var _t;
+  function resetTimer(){clearTimeout(_t);_t=setTimeout(function(){localStorage.removeItem(SK);sessionStorage.removeItem(SK);window.location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet (8h Inaktivität).'));},TM);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+  // ── Auto Token-Refresh ──────────────────────────────────────
+  window._fbRefreshToken = async function(){
+    var KEY = 'fitbox_session';
+    var SB_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+    var SB_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+    try{
+      var raw = localStorage.getItem(KEY) || sessionStorage.getItem(KEY);
+      var sess = JSON.parse(raw);
+      if(!sess || !sess.refresh_token) return;
+      if(sess.expires_at - Date.now() > 10*60*1000) return;
+      var res = await fetch(SB_URL+'/auth/v1/token?grant_type=refresh_token', {
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+        body:JSON.stringify({refresh_token: sess.refresh_token})
+      });
+      if(!res.ok) return;
+      var data = await res.json();
+      if(!data.access_token) return;
+      sess.access_token = data.access_token;
+      sess.refresh_token = data.refresh_token || sess.refresh_token;
+      sess.expires_at = Date.now() + (data.expires_in * 1000);
+      var updated = JSON.stringify(sess);
+      localStorage.setItem(KEY, updated);
+      if(sessionStorage.getItem(KEY)) sessionStorage.setItem(KEY, updated);
+      window._fbToken = data.access_token;
+      if(window._fbSession) window._fbSession.access_token = data.access_token;
+    }catch(e){ console.warn('Token-Refresh fehlgeschlagen:', e); }
+  };
+  setInterval(window._fbRefreshToken, 5*60*1000);
+  // ────────────────────────────────────────────────────────────
+
+  window.addEventListener('DOMContentLoaded',function(){
+    var s=window._fbSession;if(!s)return;
+    var emp=s.employee||{},name=emp.display_name||emp.first_name||s.user.email||'User',role=emp.roles?emp.roles.name:'';
+    var roleCode=emp.roles?emp.roles.code:'';
+    var ini=((emp.first_name||'')[0]||'').toUpperCase()+((emp.last_name||'')[0]||'').toUpperCase()||'?';
+
+    // Speichere aktuelles Studio für späteres Routing
+    try { localStorage.setItem('fitbox_last_studio', 'senden'); } catch(e) {}
+
+    // Admin-Button nur für Admin/Studioleitung sichtbar
+    if (roleCode === 'admin' || roleCode === 'studioleitung') {
+      var adminLink = document.getElementById('topbar-admin-link');
+      if (adminLink) adminLink.style.display = '';
+    }
+
+    // Studio-Wechsel-Button: Nur wenn User in beiden Studios ist
+    fetch('https://jypbyywxfjniafuygxci.supabase.co/rest/v1/employee_studios?employee_id=eq.'+emp.id+'&is_active=eq.true&select=studio_id,studios(code)', {
+      headers: {'apikey':'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU','Authorization':'Bearer '+s.access_token}
+    })
+    .then(r=>r.json())
+    .then(function(studios){
+      if (studios && studios.length > 1) {
+        var switchBtn = document.getElementById('topbar-switch-studio');
+        if (switchBtn) {
+          switchBtn.style.display = '';
+          switchBtn.addEventListener('click', function() {
+            try { localStorage.setItem('fitbox_last_studio', 'memmingen'); } catch(e) {}
+          });
+        }
+      }
+    }).catch(function(){});
+
+    var c=document.getElementById('tb-user');if(!c)return;
+    c.innerHTML='<div class="topbar-user-info"><div class="topbar-user-name">'+name+'</div><div class="topbar-user-role">'+role+'</div></div>'
+      +'<div class="topbar-avatar">'+ini+'</div>'
+      +'<button class="topbar-logout" id="btn-logout">Abmelden</button>';
+    document.getElementById('btn-logout').addEventListener('click',function(){localStorage.removeItem(SK);sessionStorage.removeItem(SK);localStorage.removeItem('fb_sidebar_collapsed');localStorage.removeItem('fitbox_last_studio');window.location.href='login.html';});
+  });
+})();
+</script>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <button class="topbar-hamburger" id="sidebarToggle" title="Menü ein-/ausblenden">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect width="18" height="2" rx="1" fill="currentColor"/><rect y="6" width="18" height="2" rx="1" fill="currentColor"/><rect y="12" width="18" height="2" rx="1" fill="currentColor"/></svg>
+  </button>
+  <img class="topbar-logo" src="https://145725822.fs1.hubspotusercontent-eu1.net/hub/145725822/hubfs/fitbox/images/logo-fitbox.png?width=1500&height=575&name=logo-fitbox.png" alt="fitbox"/>
+  <div class="topbar-divider"></div>
+  <div class="topbar-location">
+    <svg width="11" height="14" viewBox="0 0 11 14" fill="none" style="opacity:.75"><path d="M5.5 0C3.02 0 1 2.02 1 4.5c0 3.38 4.5 8.5 4.5 8.5S10 7.88 10 4.5C10 2.02 7.98 0 5.5 0zm0 6.25A1.75 1.75 0 1 1 5.5 2.75a1.75 1.75 0 0 1 0 3.5z" fill="white"/></svg>
+    Senden
+  </div>
+  <div class="topbar-spacer"></div>
+  <span class="topbar-clock" id="clock">--:--:--</span>
+  <a href="admin_index.html" target="_blank" class="topbar-admin" id="topbar-admin-link" style="display:none">🔐 Admin</a>
+  <a href="index_memmingen.html" class="topbar-admin" id="topbar-switch-studio" style="display:none">🔄 Memmingen</a>
+  <div class="topbar-user" id="tb-user"></div>
+</div>
+
+<!-- SHELL -->
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar" id="sidebar">
+
+    <button class="nav-btn active" data-page="dashboard" data-tooltip="Übersicht"><span class="nav-icon">🏠</span><span class="nav-label">Übersicht</span></button>
+
+    <div class="acc-group open" data-group="betrieb">
+      <button class="acc-header" onclick="toggleGroup('betrieb')">
+        <span class="acc-icon">🏢</span>
+        <span class="acc-label">Betrieb</span>
+        <span class="acc-chevron">▾</span>
+      </button>
+      <div class="acc-body">
+        <button class="nav-btn nav-sub" data-page="cleaning" data-file="./cleaning_to_dos.html" data-tooltip="Reinigung"><span class="nav-icon">🧼</span><span class="nav-label">Reinigung</span></button>
+        <button class="nav-btn nav-sub" data-page="terminal" data-file="./stempeluhr_terminal.html" data-tooltip="Stempeluhr"><span class="nav-icon">⏱️</span><span class="nav-label">Stempeluhr</span></button>
+        <button class="nav-btn nav-sub" data-page="cash" data-file="./cash_pos.html" data-tooltip="Kasse POS"><span class="nav-icon">💳</span><span class="nav-label">Kasse POS</span></button>
+        <button class="nav-btn nav-sub" data-page="mtt" data-file="./mtt.html" data-tooltip="MTT"><span class="nav-icon">🏥</span><span class="nav-label">MTT</span></button>
+        <button class="nav-btn nav-sub" data-page="pt_manager" data-file="./pt_manager_senden.html" data-tooltip="Leads &amp; PTs"><span class="nav-icon">🎯</span><span class="nav-label">Leads &amp; PTs</span></button>
+      </div>
+    </div>
+
+    <div class="acc-group open" data-group="leads">
+      <button class="acc-header" onclick="toggleGroup('leads')">
+        <span class="acc-icon">🎯</span>
+        <span class="acc-label">Leads &amp; PT</span>
+        <span class="acc-chevron">▾</span>
+      </button>
+      <div class="acc-body">
+        <button class="nav-btn nav-sub" data-page="pt_manager" data-file="./pt_manager_senden.html" data-tooltip="Leads &amp; PTs"><span class="nav-icon">🎯</span><span class="nav-label">Leads &amp; PTs</span></button>
+        <button class="nav-btn nav-sub" data-page="interessenten" data-file="./interessenten.html" data-tooltip="Interessenten"><span class="nav-icon">👥</span><span class="nav-label">Interessenten</span></button>
+        <button class="nav-btn nav-sub" data-page="pt_dashboard" data-file="./admin_pt.html" data-tooltip="Leads Dashboard"><span class="nav-icon">📈</span><span class="nav-label">Leads Dashboard</span></button>
+      </div>
+    </div>
+
+    <div class="acc-group open" data-group="mitglieder">
+      <button class="acc-header" onclick="toggleGroup('mitglieder')">
+        <span class="acc-icon">👥</span>
+        <span class="acc-label">Mitglieder</span>
+        <span class="acc-chevron">▾</span>
+      </button>
+      <div class="acc-body">
+        <button class="nav-btn nav-sub" data-page="mitglieder" data-file="./mitglieder.html" data-tooltip="Mitglieder"><span class="nav-icon">👥</span><span class="nav-label">Mitglieder</span></button>
+        <button class="nav-btn nav-sub" data-page="koerperanalyse_start" data-file="./koerperanalyse.html" data-tooltip="Körperanalyse"><span class="nav-icon">📊</span><span class="nav-label">Körperanalyse</span></button>
+        <button class="nav-btn nav-sub" data-page="ernaehrung" data-file="./ernaehrungsanalyse.html" data-tooltip="Ernährungsanalyse"><span class="nav-icon">🥗</span><span class="nav-label">Ernährungsanalyse</span></button>
+        <button class="nav-btn nav-sub" data-page="ernaehrungsanamnese" data-file="./ernaehrungsanamnese.html" data-tooltip="Ernährungs-Fragebogen"><span class="nav-icon">🥦</span><span class="nav-label">Ernährungs-Fragebogen</span></button>
+        <button class="nav-btn nav-sub" data-page="gesundheitsanamnese" data-file="./gesundheitsanamnese.html" data-tooltip="Gesundheitsanamnese"><span class="nav-icon">🩺</span><span class="nav-label">Gesundheitsanamnese</span></button>
+        <button class="nav-btn nav-sub" data-page="aktionen" data-file="./aktionen.html" data-tooltip="Aktionen"><span class="nav-icon">🎁</span><span class="nav-label">Aktionen</span></button>
+      </div>
+    </div>
+
+    <div class="acc-group" data-group="feedback">
+      <button class="acc-header" onclick="toggleGroup('feedback')">
+        <span class="acc-icon">⭐</span>
+        <span class="acc-label">Feedback</span>
+        <span class="acc-chevron">▾</span>
+      </button>
+      <div class="acc-body">
+        <button class="nav-btn nav-sub" data-page="feedback" data-file="./feedback_studios.html" data-tooltip="Feedback Studios"><span class="nav-icon">⭐</span><span class="nav-label">Feedback Studios</span></button>
+      </div>
+    </div>
+
+    <div class="acc-group" data-group="mein-bereich">
+      <button class="acc-header" onclick="toggleGroup('mein-bereich')">
+        <span class="acc-icon">👤</span>
+        <span class="acc-label">Mein Bereich</span>
+        <span class="acc-chevron">▾</span>
+      </button>
+      <div class="acc-body">
+        <button class="nav-btn nav-sub" data-page="absence" data-file="./employee_absence.html" data-tooltip="Urlaub beantragen"><span class="nav-icon">🏖️</span><span class="nav-label">Urlaub beantragen</span></button>
+        <button class="nav-btn nav-sub" data-page="meine_schichten" data-file="./meine_schichten.html?studio_id=3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb" data-tooltip="Meine Schichten"><span class="nav-icon">📅</span><span class="nav-label">Meine Schichten</span></button>
+        <button class="nav-btn nav-sub" data-page="hours" data-file="./employee_hours_overview.html" data-tooltip="Stundenübersicht"><span class="nav-icon">📄</span><span class="nav-label">Stundenübersicht</span></button>
+        <button class="nav-btn nav-sub" data-page="fahrtkosten" data-file="./fahrtkosten.html" data-tooltip="Fahrtkosten"><span class="nav-icon">🚗</span><span class="nav-label">Fahrtkosten</span></button>
+        <button class="nav-btn nav-sub" data-page="meine_dokumente" data-file="./meine_dokumente.html" data-tooltip="Meine Dokumente"><span class="nav-icon">📁</span><span class="nav-label">Meine Dokumente</span></button>
+      </div>
+    </div>
+
+    <!-- Versteckte Seiten – werden per navigate() aus iframes aufgerufen -->
+    <button class="nav-btn" data-page="kunden_akte" data-file="./kunden_akte.html" style="display:none"><span class="nav-icon">📋</span><span class="nav-label">Kundenakte</span></button>
+    <button class="nav-btn" data-page="koerperanalyse_start" data-file="./koerperanalyse.html" style="display:none"><span class="nav-icon">📊</span><span class="nav-label">Körperanalyse</span></button>
+    <button class="nav-btn" data-page="mess_neu" data-file="./koerperanalyse_messung.html" style="display:none"><span class="nav-icon">➕</span><span class="nav-label">Messung</span></button>
+    <button class="nav-btn" data-page="mess_edit" data-file="./koerperanalyse_messung.html" style="display:none"><span class="nav-icon">✏️</span><span class="nav-label">Messung</span></button>
+
+    <hr class="nav-divider"/>
+    <div class="sidebar-footer">fitbox Studio OS<br/>Senden · #fitboxSenden</div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="main-wrapper">
+
+      <div id="frame-loader"><div class="frame-spinner"></div><div class="frame-text">Seite wird geladen …</div></div>
+      <iframe id="page-frame" title="Inhalt"></iframe>
+
+      <!-- ═══════════════════════════════════════
+           ÜBERSICHT (Dashboard)
+      ═══════════════════════════════════════ -->
+      <div id="page-dashboard" class="page-scroll">
+        <div id="dash-loading" class="overlay-loading"><div class="loading-card"><div class="spinner"></div><span>Daten werden geladen …</span></div></div>
+        <div class="page-inner">
+
+          <!-- ZONE 0: AKTUELLE AKTION (Banner) -->
+          <div id="aktion-banner" style="display:none">
+            <div onclick="navigate('aktionen','./aktionen.html')" style="background:linear-gradient(135deg,var(--brand-soft),#fff7e6);border:1.5px solid var(--brand-line);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);cursor:pointer;transition:box-shadow .15s,border-color .15s" onmouseover="this.style.boxShadow='var(--shadow-md)';this.style.borderColor='var(--brand)'" onmouseout="this.style.boxShadow='var(--shadow)';this.style.borderColor='var(--brand-line)'">
+              <div style="font-size:24px;flex-shrink:0">🎁</div>
+              <div style="flex:1">
+                <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--brand);margin-bottom:2px">Aktuelle Aktion</div>
+                <div style="font-size:14px;font-weight:800;color:var(--text)" id="aktion-name">–</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;white-space:pre-line" id="aktion-desc">–</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0">
+                <div style="font-size:11px;font-weight:700;color:var(--muted)">Gültig bis</div>
+                <div style="font-size:14px;font-weight:900;color:var(--brand)" id="aktion-bis">–</div>
+                <div style="margin-top:4px;background:var(--brand);color:#fff;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px" id="aktion-rabatt">–</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ZONE 0b: GEBURTSTAGE -->
+          <div id="geburtstag-banner" style="display:none">
+            <div class="sec-title">🎂 Geburtstage diese Woche</div>
+            <div id="geburtstag-list" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+          </div>
+
+          <!-- ZONE 1: SCHICHT HEUTE -->
+          <div>
+            <div class="sec-title">Schicht heute</div>
+            <div id="schicht-container">
+              <div class="betrieb-row" id="schicht-cards">
+                <div class="betrieb-card" style="grid-column:1/-1;color:var(--muted);font-size:13px;font-weight:600;padding:16px">Keine Schichten für heute eingetragen</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ZONE 2: BETRIEB -->
+          <div>
+            <div class="sec-title">Betrieb</div>
+            <div class="betrieb-row">
+              <button type="button" class="betrieb-card kpi-btn" onclick="navigate('terminal','./stempeluhr_terminal.html')">
+                <div class="betrieb-icon">⏱️</div>
+                <div class="betrieb-label">Eingestempelt</div>
+                <div class="betrieb-val green" id="b-stamped">–</div>
+                <div class="betrieb-sub" id="b-stamped-sub">–</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+              <button type="button" class="betrieb-card kpi-btn" onclick="navigate('absence','./employee_absence.html')">
+                <div class="betrieb-icon">🏖️</div>
+                <div class="betrieb-label">Abwesend heute</div>
+                <div class="betrieb-val amber" id="b-absent">–</div>
+                <div class="betrieb-sub" id="b-absent-sub">Urlaub / Krank</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+              <button type="button" class="betrieb-card kpi-btn" onclick="navigate('cash','./cash_pos.html')">
+                <div class="betrieb-icon">💰</div>
+                <div class="betrieb-label">Kassenabschluss</div>
+                <div class="betrieb-val" id="b-kasse">–</div>
+                <div class="betrieb-sub" id="b-kasse-sub">–</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+              <button type="button" class="betrieb-card kpi-btn" onclick="navigate('cleaning','./cleaning_to_dos.html')">
+                <div class="betrieb-icon">🧹</div>
+                <div class="betrieb-label">Reinigung Früh</div>
+                <div class="betrieb-val" id="b-clean-frueh">–</div>
+                <div class="betrieb-sub" id="b-clean-frueh-sub">–</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+              <button type="button" class="betrieb-card kpi-btn" onclick="navigate('cleaning','./cleaning_to_dos.html')">
+                <div class="betrieb-icon">🧼</div>
+                <div class="betrieb-label">Reinigung Mittel</div>
+                <div class="betrieb-val" id="b-clean-mittel">–</div>
+                <div class="betrieb-sub" id="b-clean-mittel-sub">–</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+              <button type="button" class="betrieb-card kpi-btn" onclick="navigate('cleaning','./cleaning_to_dos.html')">
+                <div class="betrieb-icon">✨</div>
+                <div class="betrieb-label">Reinigung Spät</div>
+                <div class="betrieb-val" id="b-clean-spaet">–</div>
+                <div class="betrieb-sub" id="b-clean-spaet-sub">–</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+              <button type="button" class="betrieb-card kpi-btn" onclick="openAnamneseTablet()">
+                <div class="betrieb-icon">🩺</div>
+                <div class="betrieb-label">Anamnese starten</div>
+                <div class="betrieb-val green" style="font-size:13px;font-weight:700">Tablet</div>
+                <div class="betrieb-sub">Formular für Kunden öffnen</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- ZONE 3: LEADS & FOLLOW-UPS -->
+          <div>
+            <div class="sec-title">
+              Überfällige Leads &amp; Follow-ups
+              <span class="sec-badge red" id="badge-fu" style="display:none"></span>
+            </div>
+            <div class="kpi-row c3" style="margin-bottom:12px">
+              <button type="button" class="card kpi-card kpi-btn" onclick="navigate('pt_manager','./pt_manager_senden.html')">
+                <div class="kpi-icon">📋</div>
+                <div class="kpi-label">Offene Leads</div>
+                <div class="kpi-val amber" id="kpi-leads">–</div>
+                <div class="kpi-sub" id="kpi-leads-sub">Aktive Interessenten</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+              <button type="button" class="card kpi-card kpi-btn" onclick="navigate('pt_manager','./pt_manager_senden.html')">
+                <div class="kpi-icon">📞</div>
+                <div class="kpi-label">Überfällige Follow-ups</div>
+                <div class="kpi-val red" id="kpi-fu">–</div>
+                <div class="kpi-sub" id="kpi-fu-sub">–</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+              <button type="button" class="card kpi-card kpi-btn" onclick="navigate('pt_manager','./pt_manager_senden.html')">
+                <div class="kpi-icon">✨</div>
+                <div class="kpi-label">Neue Leads diese Woche</div>
+                <div class="kpi-val green" id="kpi-leads-week">–</div>
+                <div class="kpi-sub">Neu diese Woche</div>
+                <div class="kpi-arrow">→</div>
+              </button>
+            </div>
+            <div class="card">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                <span style="font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Überfällige Leads &amp; Follow-ups</span>
+                <button type="button" onclick="navigate('pt_manager','./pt_manager_senden.html')" style="appearance:none;background:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;font:700 11px/1 var(--font);color:var(--brand);cursor:pointer;transition:background .12s">→ Leads &amp; PTs</button>
+              </div>
+              <div id="fu-list"><div style="color:var(--muted);font-size:13px">Lade Daten …</div></div>
+            </div>
+          </div>
+
+          <!-- ZONE 4: PROBETRAININGS -->
+          <div>
+            <div class="sec-title">
+              Probetrainings
+              <span class="sec-badge brand" id="badge-pt" style="display:none"></span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <div class="card">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                  <span style="font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Sessions diese Woche</span>
+                  <span class="badge brand" id="badge-pt-count">–</span>
+                </div>
+                <div id="pt-list"><div style="color:var(--muted);font-size:13px">Lade Daten …</div></div>
+              </div>
+              <div class="card">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                  <span style="font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Abschlussquote diese Woche</span>
+                  <button type="button" onclick="navigate('pt_dashboard','./admin_pt.html')" style="appearance:none;background:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;font:700 11px/1 var(--font);color:var(--brand);cursor:pointer;transition:background .12s">→ Dashboard</button>
+                </div>
+                <div class="kpi-val green" id="pt-pct" style="font-size:32px">–</div>
+                <div class="prog-wrap">
+                  <div class="prog-labels"><span>Mit Abschluss</span><span id="pt-pct-lbl">–</span></div>
+                  <div class="prog-bar"><div class="prog-fill" id="pt-pct-bar" style="width:0%"></div></div>
+                </div>
+                <div class="pt-stat-row">
+                  <div class="pt-stat"><div class="pt-stat-n" style="color:var(--brand)" id="pt-s-total">–</div><div class="pt-stat-l">Gesamt</div></div>
+                  <div class="pt-stat"><div class="pt-stat-n" style="color:var(--ok)" id="pt-s-done">–</div><div class="pt-stat-l">Abschluss</div></div>
+                  <div class="pt-stat"><div class="pt-stat-n" style="color:var(--muted)" id="pt-s-open">–</div><div class="pt-stat-l">Offen</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /page-dashboard -->
+
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPA_URL='https://jypbyywxfjniafuygxci.supabase.co';
+const SUPA_KEY='sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+const STUDIO_ID='3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb';
+window.STUDIO_ID=STUDIO_ID;
+
+// Einmaliger Client mit Token — gleich wie PT Manager Pattern
+const _dashSession = window._fbSession || JSON.parse(localStorage.getItem('fitbox_session')||'null');
+const _dashToken = _dashSession?.access_token || '';
+const _sbDash = supabase.createClient(SUPA_URL, SUPA_KEY, {
+  global: { headers: {
+    'apikey': SUPA_KEY,
+    ..._dashToken ? { Authorization: 'Bearer ' + _dashToken } : {}
+  }},
+  auth: { persistSession: false, autoRefreshToken: false }
+});
+function getSb(){ return _sbDash; }
+
+/* ANAMNESE TABLET */
+function openAnamneseTablet(){
+  const s = JSON.parse(localStorage.getItem('fitbox_session')||'null');
+  const emp = s?.employee;
+  const trainerName = emp?.display_name || [emp?.first_name,emp?.last_name].filter(Boolean).join(' ') || '';
+  const trainerId   = emp?.id || '';
+  const params = new URLSearchParams({
+    studio_id:    STUDIO_ID,
+    trainer_name: trainerName,
+    trainer_id:   trainerId,
+  });
+  window.open('./gesundheitsanamnese_kiosk.html?'+params.toString(), '_blank');
+}
+
+/* CLOCK */
+
+const frame=document.getElementById('page-frame');
+const pageDash=document.getElementById('page-dashboard');
+const frameLoader=document.getElementById('frame-loader');
+
+function setNav(p){document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));const b=document.querySelector(`.nav-btn[data-page="${p}"]`);if(b)b.classList.add('active');}
+function showDashboard(){frame.style.display='none';frame.src='about:blank';pageDash.style.display='flex';frameLoader.classList.remove('show');setNav('dashboard');}
+function navigate(page,file){pageDash.style.display='none';frame.style.display='block';frameLoader.classList.add('show');frame.style.visibility='hidden';const ts=Date.now();frame.src=file.includes('?')?file+'&_ts='+ts:file+'?_ts='+ts;frame.onload=()=>{frameLoader.classList.remove('show');frame.style.visibility='visible';};setNav(page);}
+
+document.querySelectorAll('.nav-btn[data-page]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const p=btn.dataset.page,f=btn.dataset.file;
+    if(p==='dashboard'){showDashboard();return;}
+    if(f)navigate(p,f);
+  });
+});
+
+/* ═══════════════════════════════════════
+   DASHBOARD DATA
+═══════════════════════════════════════ */
+function weekEndStr(){const n=new Date(),d=n.getDay()||7,m=new Date(n);m.setDate(n.getDate()-d+7);return m.toISOString().split('T')[0];}
+function todayStr(){return new Date().toISOString().split('T')[0];}
+function weekStartStr(){const n=new Date(),d=n.getDay()||7,m=new Date(n);m.setDate(n.getDate()-d+1);return m.toISOString().split('T')[0];}
+function ini(name){return(name||'').split(' ').map(p=>p[0]||'').join('').toUpperCase().slice(0,2)||'?';}
+function daysAgo(iso){return Math.floor((Date.now()-new Date(iso))/(864e5));}
+
+async function loadDashboard(){
+  document.getElementById('dash-loading').classList.add('show');
+  const sb=getSb(); // frischer Client mit aktuellem Token
+  const t=todayStr(),ws=weekStartStr(),we=weekEndStr();
+  try{
+    // Followups: erst IDs + due_at holen, dann Lead-Daten separat (kein nested select wegen RLS)
+    const[leadsRes,fuRes,leadsWkRes,ptTodayRes,ptWkRes,timeRes,absRes,cashRes,cleanRes,schichtRes,aktionRes,gebRes]=await Promise.all([
+      sb.from('pt_leads').select('id',{count:'exact',head:true}).eq('studio_id',STUDIO_ID).not('status_key','in','("abschluss","lost")'),
+      sb.from('pt_followups').select('id,due_at,lead_id').eq('studio_id',STUDIO_ID).is('done_at',null).lt('due_at',t).order('due_at',{ascending:true}).limit(8),
+      sb.from('pt_leads').select('id',{count:'exact',head:true}).eq('studio_id',STUDIO_ID).gte('created_at',ws+'T00:00:00Z'),
+      sb.from('pt_sessions').select('id,scheduled_at,closing_id,trainer_id').eq('studio_id',STUDIO_ID).gte('scheduled_at',ws+'T00:00:00Z').lte('scheduled_at',we+'T23:59:59Z').order('scheduled_at',{ascending:true}).limit(50),
+      sb.from('pt_sessions').select('id,closing_id').eq('studio_id',STUDIO_ID).gte('scheduled_at',ws+'T00:00:00Z').lte('scheduled_at',we+'T23:59:59Z').limit(200),
+      sb.from('time_events').select('employee_id,event_type,event_ts').eq('studio_id',STUDIO_ID).eq('event_date',t).order('event_ts',{ascending:false}).limit(100),
+      sb.from('employee_absences').select('absence_id,absence_type,employee_id').eq('studio_id',STUDIO_ID).neq('status','rejected').lte('date_from',t).gte('date_to',t),
+      sb.from('cash_closings').select('id,status').eq('studio_id',STUDIO_ID).eq('business_date',t).eq('closing_type','day'),
+      sb.from('cleaning_shift_submissions').select('shift_code,completion_percent,done_count,total_tasks').eq('studio_id',STUDIO_ID).eq('run_date',t).eq('is_latest',true),
+      sb.from('shift_assignments').select('shift_assignment_id,shift_date,start_time_override,end_time_override,status,shift_templates(name,start_time,end_time,color),employees(id,first_name,last_name)').eq('studio_id',STUDIO_ID).eq('shift_date',t).order('shift_date',{ascending:true}),
+      sb.from('aktionen').select('id,name,beschreibung,rabatt_prozent,gueltig_bis').eq('studio_id',STUDIO_ID).eq('is_active',true).lte('gueltig_von',t).gte('gueltig_bis',t),
+      sb.from('kunden').select('id,first_name,last_name,geburtsdatum').eq('studio_id',STUDIO_ID).eq('is_active',true).not('geburtsdatum','is',null),
+    ]);
+
+    // Lead-Details für Follow-ups separat laden (pt_leads hat first_name + last_name, kein contact_name)
+    const fus=fuRes.data||[];
+    let leadMap=new Map();
+    if(fus.length>0){
+      const leadIds=[...new Set(fus.map(f=>f.lead_id).filter(Boolean))];
+      if(leadIds.length>0){
+        const lRes=await sb.from('pt_leads').select('id,first_name,last_name,status_key').in('id',leadIds);
+        (lRes.data||[]).forEach(l=>leadMap.set(l.id,l));
+      }
+    }
+    // Pro Lead nur den ältesten (überfälligsten) Follow-up zeigen
+    // Leads mit status lost/abschluss ausblenden (Follow-up evtl. noch offen)
+    const INACTIVE_STATI=new Set(['lost','abschluss']);
+    const fuByLead=new Map();
+    for(const fu of fus){
+      if(!fu.lead_id) continue;
+      const lead=leadMap.get(fu.lead_id);
+      if(lead&&INACTIVE_STATI.has(lead.status_key)) continue;
+      if(!fuByLead.has(fu.lead_id)) fuByLead.set(fu.lead_id,fu); // bereits nach due_at asc sortiert
+    }
+    const fusDeduped=[...fuByLead.values()].slice(0,8);
+
+    /* Leads */
+    const lc=leadsRes.count??0;
+    document.getElementById('kpi-leads').textContent=lc;
+    document.getElementById('kpi-leads').className='kpi-val '+(lc>10?'red':lc>0?'amber':'green');
+
+    /* Follow-ups */
+    document.getElementById('kpi-fu').textContent=fusDeduped.length;
+    document.getElementById('kpi-fu').className='kpi-val '+(fusDeduped.length>0?'red':'green');
+    document.getElementById('kpi-fu-sub').textContent=fusDeduped.length>0?`${fusDeduped.length} Lead${fusDeduped.length>1?'s':''} warten`:'Alles erledigt';
+    const fBadge=document.getElementById('badge-fu');
+    if(fusDeduped.length>0){fBadge.textContent=fusDeduped.length+' überfällig';fBadge.style.display='inline-flex';}
+
+    const fuListEl=document.getElementById('fu-list');
+    if(fusDeduped.length===0){
+      fuListEl.innerHTML='<div class="empty-note">Keine überfälligen Leads &amp; Follow-ups 👍</div>';
+    } else {
+      const statusLabels={
+        'new':'Neu','kontakt':'Kontakt','termin_gesetzt':'Termin gesetzt',
+        'training_erfolgt':'Training erfolgt','kein_abschluss':'Kein Abschluss',
+        'abschluss':'Abschluss','lost':'Nicht gewonnen'
+      };
+      fuListEl.innerHTML=fusDeduped.map(fu=>{
+        const lead=leadMap.get(fu.lead_id);
+        const cname=lead?((lead.first_name||'')+' '+(lead.last_name||'')).trim():'Unbekannt';
+        const sk=lead?.status_key||'';
+        const due=fu.due_at?fu.due_at.split('T')[0]:'',days=due?daysAgo(due):0;
+        const avCls=days>=5?'red':days>=2?'warn':'';
+        const bdgCls=days>=5?'red':'amber';
+        const slabel=statusLabels[sk]||sk||'–';
+        return `<div class="list-row">
+          <div class="list-av ${avCls}">${ini(cname)}</div>
+          <div><div class="list-name">${cname}</div><div class="list-meta">${slabel}</div></div>
+          <div style="flex:1"></div>
+          <span class="badge ${bdgCls}">${days===1?'1 Tag':days+' Tage'}</span>
+        </div>`;
+      }).join('');
+    }
+
+    /* Leads Woche */
+    document.getElementById('kpi-leads-week').textContent=leadsWkRes.count??0;
+
+    /* PT diese Woche (war: heute) */
+    const ptToday=ptTodayRes.data||[];
+    document.getElementById('badge-pt-count').textContent=ptToday.length+' diese Woche';
+    const ptBadge=document.getElementById('badge-pt');
+    if(ptToday.length>0){ptBadge.textContent=ptToday.length+' diese Woche';ptBadge.style.display='inline-flex';}
+
+    /* Trainer Namen */
+    const tIds=[...new Set(ptToday.map(s=>s.trainer_id).filter(Boolean))];
+    let tMap=new Map();
+    if(tIds.length>0){const tr=await sb.from('employees').select('id,first_name,last_name').in('id',tIds);(tr.data||[]).forEach(e=>tMap.set(e.id,e.first_name+(e.last_name?' '+e.last_name:'')));}
+
+    const ptListEl=document.getElementById('pt-list');
+    if(ptToday.length===0){
+      ptListEl.innerHTML='<div class="empty-note">Keine PT-Sessions diese Woche</div>';
+    } else {
+      const days=['So','Mo','Di','Mi','Do','Fr','Sa'];
+      ptListEl.innerHTML=ptToday.map(s=>{
+        const d=new Date(s.scheduled_at);
+        const dayLabel=days[d.getDay()];
+        const timeStr=d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+        const trainer=s.trainer_id?(tMap.get(s.trainer_id)||'Trainer'):'–';
+        return `<div class="pt-row">
+          <span class="pt-time" style="min-width:60px">${dayLabel} ${timeStr}</span>
+          <div style="flex:1"><div class="pt-name">Probetraining</div><div class="pt-trainer">${trainer}</div></div>
+          <span class="badge ${s.closing_id?'green':'grey'}">${s.closing_id?'✓ Abschluss':'offen'}</span>
+        </div>`;
+      }).join('');
+    }
+
+    /* PT Abschlussquote */
+    const ptWk=ptWkRes.data||[],ptTotal=ptWk.length,ptDone=ptWk.filter(s=>s.closing_id).length,ptOpen=ptTotal-ptDone;
+    const pct=ptTotal>0?Math.round((ptDone/ptTotal)*100):0;
+    const pctCls=pct>=60?'green':pct>=30?'amber':'red';
+    document.getElementById('pt-pct').textContent=ptTotal>0?pct+'%':'–';
+    document.getElementById('pt-pct').className='kpi-val '+pctCls;
+    document.getElementById('pt-pct-lbl').textContent=`${ptDone} / ${ptTotal}`;
+    const bar=document.getElementById('pt-pct-bar');
+    bar.style.width=pct+'%';
+    bar.className='prog-fill'+(pct<30?' red':pct<60?' amber':'');
+    document.getElementById('pt-s-total').textContent=ptTotal;
+    document.getElementById('pt-s-done').textContent=ptDone;
+    document.getElementById('pt-s-open').textContent=ptOpen;
+
+    /* Eingestempelt */
+    const evts=timeRes.data||[],seen=new Map();
+    for(const ev of evts){if(!seen.has(ev.employee_id))seen.set(ev.employee_id,ev);}
+    const active=[...seen.values()].filter(ev=>ev.event_type==='clock_in'||ev.event_type==='break_end');
+    document.getElementById('b-stamped').textContent=active.length;
+    document.getElementById('b-stamped').className='betrieb-val '+(active.length>0?'green':'amber');
+    document.getElementById('b-stamped-sub').textContent=active.length>0?active.length+' aktuell aktiv':'Niemand eingestempelt';
+
+    /* Abwesend */
+    const abs=absRes.data||[];
+    document.getElementById('b-absent').textContent=abs.length;
+    document.getElementById('b-absent').className='betrieb-val '+(abs.length>0?'amber':'green');
+    if(abs.length>0){
+      const aIds=abs.map(a=>a.employee_id);
+      const aRes=await sb.from('employees').select('id,first_name').in('id',aIds);
+      const aMap=new Map((aRes.data||[]).map(e=>[e.id,e.first_name]));
+      document.getElementById('b-absent-sub').textContent=abs.map(a=>{
+        const typ=a.absence_type==='vacation'?'Urlaub':a.absence_type==='sick'?'Krank':'Abwesend';
+        return (aMap.get(a.employee_id)||'?')+' ('+typ+')';
+      }).join(' · ');
+    } else {document.getElementById('b-absent-sub').textContent='Alle verfügbar';}
+
+    /* Kasse */
+    const kasse=cashRes.data||[],kFin=kasse.find(c=>c.status==='finalized'),kOpen=kasse.find(c=>c.status==='open'||c.status==='reopened'),hr=new Date().getHours();
+    if(kFin){document.getElementById('b-kasse').textContent='✓';document.getElementById('b-kasse').className='betrieb-val green';document.getElementById('b-kasse-sub').textContent='Abgeschlossen';}
+    else if(kOpen?.status==='reopened'){document.getElementById('b-kasse').textContent='↻';document.getElementById('b-kasse').className='betrieb-val amber';document.getElementById('b-kasse-sub').textContent='Wiedereröffnet';}
+    else if(!kasse.length){document.getElementById('b-kasse').textContent=hr<12?'—':'!';document.getElementById('b-kasse').className='betrieb-val '+(hr<12?'amber':'red');document.getElementById('b-kasse-sub').textContent=hr<12?'Noch nicht fällig':'Kein Abschluss';}
+    else{document.getElementById('b-kasse').textContent='!';document.getElementById('b-kasse').className='betrieb-val amber';document.getElementById('b-kasse-sub').textContent='Offen';}
+
+    /* Reinigung — 3 Schichten (Früh / Mittel / Spät) */
+    const cl=cleanRes.data||[];
+    const nowHr=new Date().getHours();
+    const shifts=[
+      {code:'frueh', idVal:'b-clean-frueh', idSub:'b-clean-frueh-sub', minHour:0},
+      {code:'mittel',idVal:'b-clean-mittel',idSub:'b-clean-mittel-sub',minHour:11},
+      {code:'spaet', idVal:'b-clean-spaet', idSub:'b-clean-spaet-sub', minHour:17},
+    ];
+    shifts.forEach(sh=>{
+      const sub=cl.find(r=>r.shift_code===sh.code);
+      const pct=sub?Math.round(sub.completion_percent||0):null;
+      const expected=nowHr>=sh.minHour;
+      const valEl=document.getElementById(sh.idVal);
+      const subEl=document.getElementById(sh.idSub);
+      if(!expected){
+        valEl.textContent='–'; valEl.className='betrieb-val'; subEl.textContent='Noch nicht fällig';
+      } else if(pct===null){
+        valEl.textContent='!'; valEl.className='betrieb-val amber'; subEl.textContent='Keine Meldung';
+      } else {
+        valEl.textContent=pct+'%';
+        valEl.className='betrieb-val '+(pct>=90?'green':pct>=50?'amber':'red');
+        subEl.textContent=(sub.done_count||0)+' / '+(sub.total_tasks||0)+' Aufgaben';
+      }
+    });
+
+    /* ── Geburtstage diese Woche ── */
+    const heute=new Date(),hMD=String(heute.getMonth()+1).padStart(2,'0')+'-'+String(heute.getDate()).padStart(2,'0');
+    const in7=new Date(heute);in7.setDate(heute.getDate()+7);
+    const in7MD=String(in7.getMonth()+1).padStart(2,'0')+'-'+String(in7.getDate()).padStart(2,'0');
+    const kunden=gebRes.data||[];
+    const gebJetzt=kunden.filter(k=>{
+      if(!k.geburtsdatum)return false;
+      const md=k.geburtsdatum.slice(5); // MM-DD
+      return in7MD>=hMD ? (md>=hMD&&md<=in7MD) : (md>=hMD||md<=in7MD); // Jahreswechsel-safe
+    }).sort((a,b)=>a.geburtsdatum.slice(5).localeCompare(b.geburtsdatum.slice(5)));
+    const gebBanner=document.getElementById('geburtstag-banner');
+    const gebList=document.getElementById('geburtstag-list');
+    if(gebJetzt.length>0){
+      gebBanner.style.display='block';
+      const wochentage=['So','Mo','Di','Mi','Do','Fr','Sa'];
+      gebList.innerHTML=gebJetzt.map(k=>{
+        const md=k.geburtsdatum.slice(5);
+        const isHeute=md===hMD;
+        const gDate=new Date(heute.getFullYear(),parseInt(md.slice(0,2))-1,parseInt(md.slice(3,5)));
+        const tagLabel=isHeute?'🎉 Heute!':wochentage[gDate.getDay()]+', '+gDate.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
+        const alter=heute.getFullYear()-parseInt(k.geburtsdatum.slice(0,4));
+        const ini=((k.first_name||'')[0]||'').toUpperCase()+((k.last_name||'')[0]||'').toUpperCase();
+        return `<div class="gb-card">
+          <div class="gb-avatar">${isHeute?'🎂':ini}</div>
+          <div style="flex:1">
+            <div class="gb-name">${k.first_name} ${k.last_name}</div>
+            <div class="gb-date">wird ${alter} · ${tagLabel}</div>
+          </div>
+          <span class="gb-badge ${isHeute?'today':'soon'}">${tagLabel}</span>
+        </div>`;
+      }).join('');
+    } else {
+      gebBanner.style.display='none';
+    }
+
+    /* ── Schicht heute ── */
+    const schichten=schichtRes.data||[];
+    const schichtEl=document.getElementById('schicht-cards');
+    if(schichten.length===0){
+      schichtEl.innerHTML='<div class="betrieb-card" style="grid-column:1/-1;color:var(--muted);font-size:13px;font-weight:600">Keine Schichten für heute eingetragen</div>';
+    } else {
+      schichtEl.innerHTML=schichten.map(sa=>{
+        const tmpl=sa.shift_templates||{};
+        const emp=sa.employees||{};
+        const name=(emp.first_name||'')+(emp.last_name?' '+emp.last_name:'');
+        const von=sa.start_time_override||tmpl.start_time||'';
+        const bis=sa.end_time_override||tmpl.end_time||'';
+        const zeitStr=von&&bis?von.slice(0,5)+' – '+bis.slice(0,5):von?'ab '+von.slice(0,5):'';
+        const farbe=tmpl.color||'var(--brand)';
+        const abwesend=sa.status==='absent';
+        return `<div class="betrieb-card" style="border-top:3px solid ${farbe}">
+          <div class="betrieb-icon">👤</div>
+          <div class="betrieb-label">${tmpl.name||'Schicht'}</div>
+          <div class="betrieb-val" style="font-size:15px;font-weight:800;color:var(--text)">${name||'–'}</div>
+          <div class="betrieb-sub" style="font-size:11px">${zeitStr}</div>
+          ${abwesend?'<span class="badge amber" style="margin-top:4px;font-size:10px">Abwesend</span>':''}
+        </div>`;
+      }).join('');
+    }
+
+    /* ── Aktuelle Aktion ── */
+    const aktionen=aktionRes.data||[];
+    const aktionBanner=document.getElementById('aktion-banner');
+    if(aktionen.length>0){
+      const a=aktionen[0];
+      document.getElementById('aktion-name').textContent=a.name;
+      document.getElementById('aktion-desc').textContent=a.beschreibung||'';
+      const bis=a.gueltig_bis?new Date(a.gueltig_bis).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}):'–';
+      document.getElementById('aktion-bis').textContent=bis;
+      document.getElementById('aktion-rabatt').textContent=a.rabatt_prozent?a.rabatt_prozent+'% Rabatt':'Aktion aktiv';
+      aktionBanner.style.display='block';
+    } else {
+      aktionBanner.style.display='none';
+    }
+
+  } catch(err){console.error('Dashboard error:',err);}
+  finally{document.getElementById('dash-loading').classList.remove('show');}
+}
+
+/* INIT */
+loadDashboard();
+(function(){const pad=n=>String(n).padStart(2,'0');function t(){const n=new Date(),el=document.getElementById('clock');if(el)el.textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;}t();setInterval(t,1000);})();
+setInterval(loadDashboard,5*60*1000);
+
+function toggleGroup(name) {
+  const group = document.querySelector('.acc-group[data-group="' + name + '"]');
+  if (group) group.classList.toggle('open');
+}
+</script>
+<!-- Mitarbeiter-Aufgaben Pop-up -->
+<script src="aufgaben_popup.js"></script>
+</body>
+</html>

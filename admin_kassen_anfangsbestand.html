@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Startsaldo Verwaltung</title>
+  <style>
+    :root{
+      --bg:#f6f8f7;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#e5e7eb;
+      --green:#2f8615;
+      --red:#c0392b;
+      --yellow:#d97706;
+      --shadow:0 10px 24px rgba(0,0,0,.06);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--bg);color:var(--text);padding:24px}
+    .wrap{max-width:1250px;margin:0 auto}
+    h1{margin:0 0 8px;font-size:30px}
+    .sub{margin:0 0 20px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:420px 1fr;gap:18px}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+    .card h2{margin:0 0 14px;font-size:20px}
+    .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+    .field label{font-size:12px;color:var(--muted);font-weight:bold;text-transform:uppercase;letter-spacing:.04em}
+    .field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;background:#fff;font-size:14px;color:#111827}
+    .field select option{color:#111827;background:#ffffff}
+    .hint{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btnbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    button{border:none;border-radius:12px;padding:12px 16px;font-weight:bold;cursor:pointer}
+    .btn-primary{background:var(--green);color:white}
+    .btn-secondary{background:#374151;color:white}
+    .btn-danger{background:var(--red);color:white}
+    .btn-light{background:#eef2f7;color:#374151}
+    .status{margin-top:14px;padding:12px 14px;border-radius:12px;display:none;font-size:14px;line-height:1.45}
+    .status.ok{display:block;background:#ecfdf5;color:#166534}
+    .status.error{display:block;background:#fef2f2;color:#b91c1c}
+    .status.warn{display:block;background:#fff7ed;color:#c2410c}
+    .toolbar{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:14px}
+    .toolbar .field{margin-bottom:0; min-width:220px}
+    table{width:100%;border-collapse:collapse}
+    th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:middle}
+    th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+    tr:hover td{background:#fafafa}
+    .empty{color:var(--muted);font-style:italic;padding:10px 0}
+    .small-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .small-actions button{padding:8px 10px;border-radius:10px;font-size:12px}
+    .pos{color:var(--green);font-weight:bold}
+    .neg{color:var(--red);font-weight:bold}
+    @media (max-width:1000px){.grid{grid-template-columns:1fr}}
+    @media (max-width:700px){body{padding:14px}.row{grid-template-columns:1fr}}
+  
+body.in-iframe,
+html.in-iframe body {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+
+/* ─── TOPBAR-NEW ─── */
+.topbar-new{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);
+  padding:0 18px;height:46px;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  position:sticky;top:0;z-index:200;
+}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0;}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.tb-space{flex:1;}
+#connStatus{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);}
+#connStatus.ok{background:rgba(149,193,31,.25);color:#fff;border-color:rgba(149,193,31,.4);}
+#connStatus.err{background:rgba(220,38,38,.3);color:#fff;border-color:rgba(220,38,38,.5);}
+.topbar-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:600 12px/1 inherit;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.topbar-btn:hover{background:rgba(255,255,255,.25)}
+
+/* ─── IFRAME FULL-WIDTH ─── */
+.in-iframe .page,.in-iframe .wrap,.in-iframe .app,.in-iframe .container,.in-iframe main{
+  max-width:none!important;margin:0!important;padding:14px!important;
+}
+body.in-iframe,html.in-iframe body{padding:0!important;margin:0!important;}
+
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,900&display=swap" rel="stylesheet"/><script>
+function showNoAccessFallback(){
+  try {
+    if (window.self !== window.top) {
+      window.parent.postMessage({ type: 'fitbox-no-access', path: location.pathname }, '*');
+      return;
+    }
+  } catch (e) {}
+  var html = '<head><meta charset="utf-8"><title>Kein Zugriff</title></head>' +
+    '<body style="margin:0;font-family:system-ui,sans-serif;background:#f5f6f4;min-height:100vh;display:flex;align-items:center;justify-content:center;">' +
+    '<div style="background:#fff;border-radius:14px;padding:40px;max-width:480px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08);">' +
+    '<div style="font-size:64px;margin-bottom:16px;">🔒</div>' +
+    '<h1 style="font-size:22px;font-weight:800;margin:0 0 12px;color:#0f172a;">Kein Zugriff auf diese Seite</h1>' +
+    '<p style="color:#64748b;line-height:1.6;margin:0 0 24px;">Dieser Bereich ist nur für den <strong style="color:#2f8615">Owner</strong> zugänglich.</p>' +
+    '<a href="admin_index.html" style="display:inline-block;background:linear-gradient(180deg,#2f8615,#256a10);color:#fff;text-decoration:none;border-radius:11px;padding:12px 24px;font:900 13px/1 system-ui;">← Zurück zum Admin</a>' +
+    '</div></body>';
+  document.documentElement.innerHTML = html;
+}
+</script>
+
+</head>
+<body>
+<div class="topbar-new" id="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">🏦</span> Opening Balance</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-ma">–</span> Mitarbeiter</span>
+  </div>
+  <div class="tb-space"></div>
+  <span id="connStatus">Verbinde…</span>
+  <button class="topbar-btn" id="reloadBtnTop">↻ Neu laden</button>
+</div>
+<script>
+(function(){
+  var SESSION_KEY='fitbox_session';
+  var TIMEOUT_MS=8 * 60 * 60 * 1000;
+  var s;try{s=JSON.parse(localStorage.getItem(SESSION_KEY));}catch(e){}
+  // Kein Login → Login-Seite
+  if(!s||!s.access_token||s.expires_at<Date.now()){
+    var here=encodeURIComponent(location.pathname+location.search);
+    localStorage.removeItem(SESSION_KEY);
+    location.replace('login.html?next='+here);
+    throw new Error('AUTH');
+  }
+  // Rolle aus Session prüfen (gespeichert beim Login)
+  var roleId=s.employee?s.employee.role_id:'';
+  var roleCode=s.employee&&s.employee.roles?s.employee.roles.code:'';
+  var isAdmin=(roleId==='80f04245-ee93-45e8-9861-121778b5ff84'||roleCode==='admin');
+  if(!isAdmin){
+    showNoAccessFallback();return;
+    throw new Error('ROLE');
+  }
+  // Auto-Logout
+  var _timer;
+  function resetTimer(){clearTimeout(_timer);_timer=setTimeout(function(){localStorage.removeItem(SESSION_KEY);location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet.'));},TIMEOUT_MS);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+  window._fbSession=s;window._fbToken=s.access_token;
+  // User-Badge
+  window.addEventListener('DOMContentLoaded',function(){
+        var tb=document.getElementById('topbar');if(!tb||tb.querySelector('#fb-user'))return;
+    var sp=tb.querySelector('.tb-space');if(sp)sp.remove();
+    var emp=s.employee||{};
+    var name=emp.display_name||emp.first_name||s.user.email||'User';
+    var ini=((emp.first_name||'')[0]+(emp.last_name||'')[0]).toUpperCase()||'?';
+    var d=document.createElement('div');d.id='fb-user';d.style='display:flex;align-items:center;gap:8px;margin-left:auto';
+    d.innerHTML='<div style="text-align:right;line-height:1.3"><div style="font-size:12px;font-weight:800;color:#fff">'+name+'</div></div>'
+      +'<div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff">'+ini+'</div>'
+      +'<button id="fb-logout-btn" style="appearance:none;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:5px 10px;font:700 11px/1 inherit;cursor:pointer">Abmelden</button>';
+    tb.appendChild(d);
+    document.getElementById('fb-logout-btn').addEventListener('click',function(){localStorage.removeItem(SESSION_KEY);location.href='login.html';});
+  });
+})();
+</script>
+<div class="wrap">
+  <h1>Startsaldo Verwaltung</h1>
+  <p class="sub">Hier kannst du zum Systemwechsel pro Mitarbeiter Plus- oder Minusstunden als <strong>opening_balance</strong> buchen.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Startsaldo buchen</h2>
+
+      <div class="field">
+        <label for="studioSelect">Studio</label>
+        <select id="studioSelect"></select>
+      </div>
+
+      <div class="field">
+        <label for="employeeSelect">Mitarbeiter</label>
+        <select id="employeeSelect">
+          <option value="">Bitte zuerst Studio wählen</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="bookingDate">Buchungsdatum</label>
+          <input type="date" id="bookingDate" />
+        </div>
+        <div class="field">
+          <label for="minutesInput">Minuten</label>
+          <input type="number" id="minutesInput" placeholder="z. B. 480 oder -210" />
+          <div class="hint">Positiv = Plusstunden, negativ = Minusstunden</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="hoursInput">Alternativ in Stunden</label>
+        <input type="number" step="0.25" id="hoursInput" placeholder="z. B. 8 oder -3.5" />
+        <div class="hint">Wenn du hier etwas einträgst, werden die Minuten automatisch berechnet.</div>
+      </div>
+
+      <div class="field">
+        <label for="noteInput">Notiz</label>
+        <textarea id="noteInput" rows="3">Startsaldo Alt-System übernommen</textarea>
+      </div>
+
+      <div class="btnbar">
+        <button class="btn-primary" id="saveBtn">Startsaldo speichern</button>
+        <button class="btn-secondary" id="updateBtn">Vorhandenen Startsaldo überschreiben</button>
+        <button class="btn-danger" id="deleteBtn">Startsaldo löschen</button>
+        <button class="btn-light" id="resetBtn">Formular zurücksetzen</button>
+      </div>
+
+      <div class="status" id="statusBox"></div>
+    </div>
+
+    <div class="card">
+      <h2>Bereits gebuchte Startsalden</h2>
+
+      <div class="toolbar">
+        <div class="field">
+          <label for="filterStudio">Studiofilter</label>
+          <select id="filterStudio"></select>
+        </div>
+        <div class="field">
+          <label for="searchInput">Suche Mitarbeiter</label>
+          <input type="text" id="searchInput" placeholder="Name eingeben..." />
+        </div>
+        <button class="btn-light" id="reloadBtn">Liste neu laden</button>
+      </div>
+
+      <div id="emptyState" class="empty" style="display:none;">Keine opening_balance Einträge gefunden.</div>
+
+      <div style="overflow:auto">
+        <table id="balancesTable">
+          <thead>
+            <tr>
+              <th>Mitarbeiter</th>
+              <th>Studio</th>
+              <th>Datum</th>
+              <th>Minuten</th>
+              <th>Stunden</th>
+              <th>Notiz</th>
+              <th>Aktion</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+
+  let studios = [];
+  let employees = [];
+  let openingBalances = [];
+
+  const studioSelect = document.getElementById('studioSelect');
+  const employeeSelect = document.getElementById('employeeSelect');
+  const bookingDate = document.getElementById('bookingDate');
+  const minutesInput = document.getElementById('minutesInput');
+  const hoursInput = document.getElementById('hoursInput');
+  const noteInput = document.getElementById('noteInput');
+  const statusBox = document.getElementById('statusBox');
+  const filterStudio = document.getElementById('filterStudio');
+  const searchInput = document.getElementById('searchInput');
+  const balancesTableBody = document.querySelector('#balancesTable tbody');
+  const emptyState = document.getElementById('emptyState');
+
+  function todayStr(){
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,'0');
+    const day = String(d.getDate()).padStart(2,'0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function showStatus(type, text){
+    statusBox.className = `status ${type}`;
+    statusBox.textContent = text;
+  }
+
+  function clearStatus(){
+    statusBox.className = 'status';
+    statusBox.textContent = '';
+  }
+
+  function fmtMinutesToHours(min){
+    const val = Number(min || 0) / 60;
+    return `${val.toFixed(2)} h`;
+  }
+
+  function escapeHtml(str){
+    return String(str ?? '')
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'",'&#039;');
+  }
+
+  async function loadStudios(){
+    const { data, error } = await sb
+      .from('studios')
+      .select('id, name, code')
+      .eq('is_active', true)
+      .order('sort_order', { ascending:true })
+      .order('name', { ascending:true });
+
+    if(error){
+      showStatus('error', 'Studios konnten nicht geladen werden: ' + error.message);
+      return;
+    }
+
+    studios = data || [];
+    studioSelect.innerHTML = '';
+    filterStudio.innerHTML = '<option value="">Alle Studios</option>';
+
+    if(!studios.length){
+      studioSelect.innerHTML = '<option value="">Keine Studios gefunden</option>';
+      return;
+    }
+
+    studios.forEach((s, index) => {
+      const label = s.name || s.code || s.id;
+
+      const opt1 = document.createElement('option');
+      opt1.value = s.id;
+      opt1.textContent = label;
+      if(index === 0) opt1.selected = true;
+      studioSelect.appendChild(opt1);
+
+      const opt2 = document.createElement('option');
+      opt2.value = s.id;
+      opt2.textContent = label;
+      filterStudio.appendChild(opt2);
+    });
+
+    await loadEmployeesForStudio(studioSelect.value);
+  }
+
+  async function loadEmployeesForStudio(studioId){
+    employeeSelect.innerHTML = '<option value="">Mitarbeiter laden...</option>';
+    if(!studioId){
+      employeeSelect.innerHTML = '<option value="">Bitte Studio wählen</option>';
+      return;
+    }
+
+    const { data, error } = await sb
+      .from('employee_studios')
+      .select(`
+        employee_id,
+        employee:employees!employee_studios_employee_id_fkey (
+          id,
+          first_name,
+          last_name,
+          display_name,
+          is_active
+        )
+      `)
+      .eq('studio_id', studioId)
+      .eq('is_active', true)
+      .order('employee_id', { ascending:true });
+
+    if(error){
+      showStatus('error', 'Mitarbeiter konnten nicht geladen werden: ' + error.message);
+      employeeSelect.innerHTML = '<option value="">Fehler beim Laden</option>';
+      return;
+    }
+
+    employees = (data || [])
+      .map(r => ({
+        employee_id: r.employee_id,
+        name: r.employee?.display_name || `${r.employee?.first_name || ''} ${r.employee?.last_name || ''}`.trim(),
+        active: r.employee?.is_active
+      }))
+      .filter(e => e.active !== false)
+      .sort((a,b) => a.name.localeCompare(b.name, 'de'));
+
+    employeeSelect.innerHTML = '<option value="">Mitarbeiter wählen</option>';
+    employees.forEach(e => {
+      const opt = document.createElement('option');
+      opt.value = e.employee_id;
+      opt.textContent = e.name;
+      employeeSelect.appendChild(opt);
+    });
+  }
+
+  async function loadOpeningBalances(){
+    const { data, error } = await sb
+      .from('time_account_entries')
+      .select(`
+        time_account_entry_id,
+        studio_id,
+        employee_id,
+        booking_date,
+        entry_type,
+        minutes_delta,
+        note,
+        studio:studios ( name, code ),
+        employee:employees!time_account_entries_employee_id_fkey (
+          first_name,
+          last_name,
+          display_name
+        )
+      `)
+      .eq('entry_type', 'opening_balance')
+      .order('booking_date', { ascending:false })
+      .order('created_at', { ascending:false });
+
+    if(error){
+      showStatus('error', 'Startsalden konnten nicht geladen werden: ' + error.message);
+      return;
+    }
+
+    openingBalances = data || [];
+    renderOpeningBalances();
+    var sM=document.getElementById("stat-ma");if(sM)sM.textContent=openingBalances.length;
+    var cs=document.getElementById("connStatus");if(cs){cs.textContent="Verbunden";cs.className="ok";}
+  }
+
+  function renderOpeningBalances(){
+    const studioFilter = filterStudio.value;
+    const q = searchInput.value.trim().toLowerCase();
+
+    let rows = [...openingBalances];
+
+    if(studioFilter){
+      rows = rows.filter(r => r.studio_id === studioFilter);
+    }
+
+    if(q){
+      rows = rows.filter(r => {
+        const name = r.employee?.display_name || `${r.employee?.first_name || ''} ${r.employee?.last_name || ''}`.trim();
+        return name.toLowerCase().includes(q);
+      });
+    }
+
+    balancesTableBody.innerHTML = '';
+
+    if(!rows.length){
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+
+    rows.forEach(r => {
+      const name = r.employee?.display_name || `${r.employee?.first_name || ''} ${r.employee?.last_name || ''}`.trim();
+      const studioName = r.studio?.name || r.studio?.code || '-';
+      const minClass = Number(r.minutes_delta) >= 0 ? 'pos' : 'neg';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${escapeHtml(name)}</strong></td>
+        <td>${escapeHtml(studioName)}</td>
+        <td>${escapeHtml(r.booking_date)}</td>
+        <td class="${minClass}">${Number(r.minutes_delta)}</td>
+        <td class="${minClass}">${fmtMinutesToHours(r.minutes_delta)}</td>
+        <td>${escapeHtml(r.note || '')}</td>
+        <td>
+          <div class="small-actions">
+            <button class="btn-light" data-action="load" data-id="${r.time_account_entry_id}">Laden</button>
+          </div>
+        </td>
+      `;
+      balancesTableBody.appendChild(tr);
+    });
+  }
+
+  function syncHoursFromMinutes(){
+    const min = minutesInput.value.trim();
+    if(min === ''){
+      hoursInput.value = '';
+      return;
+    }
+    hoursInput.value = (Number(min) / 60).toFixed(2);
+  }
+
+  function syncMinutesFromHours(){
+    const h = hoursInput.value.trim();
+    if(h === ''){
+      return;
+    }
+    minutesInput.value = String(Math.round(Number(h) * 60));
+  }
+
+  function selectedEmployeeName(){
+    const opt = employeeSelect.options[employeeSelect.selectedIndex];
+    return opt ? opt.textContent : '';
+  }
+
+  async function getExistingOpeningBalance(studioId, employeeId){
+    const { data, error } = await sb
+      .from('time_account_entries')
+      .select('time_account_entry_id, minutes_delta, booking_date, note')
+      .eq('studio_id', studioId)
+      .eq('employee_id', employeeId)
+      .eq('entry_type', 'opening_balance')
+      .order('created_at', { ascending:false })
+      .limit(1);
+
+    if(error) throw error;
+    return (data || [])[0] || null;
+  }
+
+  async function saveOpeningBalance(mode){
+    clearStatus();
+
+    const studioId = studioSelect.value;
+    const employeeId = employeeSelect.value;
+    const dateVal = bookingDate.value;
+    const minutesVal = Number(minutesInput.value);
+    const noteVal = noteInput.value.trim();
+
+    if(!studioId){
+      showStatus('warn', 'Bitte zuerst ein Studio wählen.');
+      return;
+    }
+    if(!employeeId){
+      showStatus('warn', 'Bitte einen Mitarbeiter wählen.');
+      return;
+    }
+    if(!dateVal){
+      showStatus('warn', 'Bitte ein Buchungsdatum wählen.');
+      return;
+    }
+    if(Number.isNaN(minutesVal)){
+      showStatus('warn', 'Bitte Minuten oder Stunden korrekt eingeben.');
+      return;
+    }
+
+    try {
+      const existing = await getExistingOpeningBalance(studioId, employeeId);
+
+      if(mode === 'insert' && existing){
+        showStatus('warn', 'Für diesen Mitarbeiter existiert bereits ein Startsaldo. Nutze bitte „Vorhandenen Startsaldo überschreiben“.');
+        return;
+      }
+
+      if(mode === 'update' && !existing){
+        showStatus('warn', 'Für diesen Mitarbeiter existiert noch kein Startsaldo. Nutze bitte „Startsaldo speichern“.');
+        return;
+      }
+
+      if(mode === 'insert'){
+        const { error } = await sb
+          .from('time_account_entries')
+          .insert({
+            studio_id: studioId,
+            employee_id: employeeId,
+            booking_date: dateVal,
+            entry_type: 'opening_balance',
+            minutes_delta: minutesVal,
+            note: noteVal || 'Startsaldo Alt-System übernommen'
+          });
+
+        if(error) throw error;
+        showStatus('ok', `Startsaldo für ${selectedEmployeeName()} wurde gespeichert.`);
+      }
+
+      if(mode === 'update'){
+        const { error } = await sb
+          .from('time_account_entries')
+          .update({
+            booking_date: dateVal,
+            minutes_delta: minutesVal,
+            note: noteVal || 'Startsaldo Alt-System übernommen'
+          })
+          .eq('time_account_entry_id', existing.time_account_entry_id);
+
+        if(error) throw error;
+        showStatus('ok', `Startsaldo für ${selectedEmployeeName()} wurde überschrieben.`);
+      }
+
+      await loadOpeningBalances();
+    } catch (err){
+      showStatus('error', 'Fehler beim Speichern: ' + err.message);
+    }
+  }
+
+  async function deleteOpeningBalance(){
+    clearStatus();
+
+    const studioId = studioSelect.value;
+    const employeeId = employeeSelect.value;
+
+    if(!studioId || !employeeId){
+      showStatus('warn', 'Bitte Studio und Mitarbeiter wählen.');
+      return;
+    }
+
+    try{
+      const existing = await getExistingOpeningBalance(studioId, employeeId);
+
+      if(!existing){
+        showStatus('warn', 'Für diesen Mitarbeiter gibt es keinen Startsaldo zum Löschen.');
+        return;
+      }
+
+      const ok = confirm('Diesen Startsaldo wirklich löschen?');
+      if(!ok) return;
+
+      const { error } = await sb
+        .from('time_account_entries')
+        .delete()
+        .eq('time_account_entry_id', existing.time_account_entry_id);
+
+      if(error) throw error;
+
+      showStatus('ok', `Startsaldo für ${selectedEmployeeName()} wurde gelöscht.`);
+      await loadOpeningBalances();
+    } catch(err){
+      showStatus('error', 'Fehler beim Löschen: ' + err.message);
+    }
+  }
+
+  function resetForm(){
+    minutesInput.value = '';
+    hoursInput.value = '';
+    noteInput.value = 'Startsaldo Alt-System übernommen';
+    bookingDate.value = todayStr();
+    clearStatus();
+  }
+
+  async function loadExistingIntoForm(){
+    clearStatus();
+    const studioId = studioSelect.value;
+    const employeeId = employeeSelect.value;
+
+    if(!studioId || !employeeId){
+      showStatus('warn', 'Bitte Studio und Mitarbeiter wählen.');
+      return;
+    }
+
+    try{
+      const existing = await getExistingOpeningBalance(studioId, employeeId);
+      if(!existing){
+        showStatus('warn', 'Für diesen Mitarbeiter gibt es noch keinen Startsaldo.');
+        return;
+      }
+
+      bookingDate.value = existing.booking_date;
+      minutesInput.value = existing.minutes_delta;
+      syncHoursFromMinutes();
+      noteInput.value = existing.note || 'Startsaldo Alt-System übernommen';
+      showStatus('ok', 'Vorhandener Startsaldo ins Formular geladen.');
+    } catch(err){
+      showStatus('error', 'Fehler beim Laden: ' + err.message);
+    }
+  }
+
+  balancesTableBody.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button[data-action="load"]');
+    if(!btn) return;
+
+    const id = btn.dataset.id;
+    const row = openingBalances.find(r => r.time_account_entry_id === id);
+    if(!row) return;
+
+    filterStudio.value = row.studio_id || '';
+    studioSelect.value = row.studio_id || '';
+    await loadEmployeesForStudio(studioSelect.value);
+    employeeSelect.value = row.employee_id || '';
+    bookingDate.value = row.booking_date || todayStr();
+    minutesInput.value = row.minutes_delta ?? '';
+    syncHoursFromMinutes();
+    noteInput.value = row.note || 'Startsaldo Alt-System übernommen';
+    showStatus('ok', 'Eintrag wurde ins Formular geladen.');
+  });
+
+  studioSelect.addEventListener('change', async () => {
+    await loadEmployeesForStudio(studioSelect.value);
+    clearStatus();
+  });
+
+  filterStudio.addEventListener('change', renderOpeningBalances);
+  searchInput.addEventListener('input', renderOpeningBalances);
+
+  minutesInput.addEventListener('input', syncHoursFromMinutes);
+  hoursInput.addEventListener('input', syncMinutesFromHours);
+
+  document.getElementById('saveBtn').addEventListener('click', () => saveOpeningBalance('insert'));
+  document.getElementById('updateBtn').addEventListener('click', () => saveOpeningBalance('update'));
+  document.getElementById('deleteBtn').addEventListener('click', deleteOpeningBalance);
+  document.getElementById('resetBtn').addEventListener('click', resetForm);
+  document.getElementById('reloadBtn').addEventListener('click', loadOpeningBalances);
+    var rTop=document.getElementById('reloadBtnTop');if(rTop)rTop.addEventListener('click',loadOpeningBalances);
+  employeeSelect.addEventListener('change', loadExistingIntoForm);
+
+  (async function init(){
+    const emp = await requireAuth({ adminOnly: true });
+    if (!emp) return;
+    bookingDate.value = todayStr();
+    await loadStudios();
+    await loadOpeningBalances();
+  })();
+</script>
+<script>
+(function(){
+  if(window.self!==window.top){
+    document.documentElement.classList.add('in-iframe');
+    document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('in-iframe');});
+  }
+})();
+</script>
+</body>
+</html>

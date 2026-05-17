@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>PT WhatsApp Vorlagen · fitbox Admin</title>
+  <style>
+    :root{
+      --fit:#2f8615;--fit2:#95c11f;--ink:#0f172a;--muted:#64748b;
+      --card:#ffffff;--line:#dde5dd;--soft:#eef5ea;
+      --shadow:0 10px 24px rgba(15,23,42,.06);
+      --shadow-strong:0 20px 48px rgba(15,23,42,.18);
+      --danger:#b91c1c;--danger-bg:#fef2f2;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 380px at 10% 0%,rgba(47,134,21,.10),transparent 55%),
+        linear-gradient(180deg,#ffffff 0%,#f2f6f0 50%,#f5f7f6 100%);
+    }
+    .page{max-width:none;margin:0;padding:18px 22px 60px}
+
+    /* HEADER */
+    
+    
+    
+    
+    .title h1{margin:0;font-size:24px;line-height:1.1;letter-spacing:-.02em}
+    .title p{margin:3px 0 0;color:var(--muted);font-size:12px}
+    
+
+    /* BUTTONS */
+    .btn{appearance:none;border-radius:10px;min-height:38px;padding:8px 14px;font-weight:900;cursor:pointer;font-size:13px;border:none;transition:.15s ease;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+    .btn.secondary{background:#fff;color:#111827;border:1px solid rgba(15,23,42,.12);box-shadow:0 4px 14px rgba(2,6,23,.04)}
+    .btn.secondary:hover{background:#f5faf3;border-color:rgba(47,134,21,.3)}
+    .btn.primary{background:linear-gradient(180deg,var(--fit),#256a10);color:#fff;border:1px solid rgba(47,134,21,.35);box-shadow:0 8px 20px rgba(47,134,21,.18)}
+    .btn.primary:hover{filter:brightness(1.08)}
+    .btn.danger{background:var(--danger-bg);color:var(--danger);border:1px solid #fecaca}
+    .btn.danger:hover{background:#fee2e2}
+    .btn.ghost{background:transparent;color:var(--muted);border:1px solid transparent;padding:5px 8px;min-height:28px;font-size:13px;border-radius:8px}
+    .btn.ghost:hover{background:var(--soft);color:var(--fit)}
+    .btn:disabled{opacity:.4;cursor:not-allowed;filter:none}
+    .btn.small{min-height:30px;padding:5px 10px;font-size:12px;border-radius:8px}
+
+    /* NAV */
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    /* TOOLBAR */
+    .toolbar{background:rgba(255,255,255,.95);border:1px solid rgba(15,23,42,.08);border-radius:18px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:12px;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px}
+    .tg{display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px}
+    .tg label{font-size:11px;font-weight:900;color:#334155;text-transform:uppercase;letter-spacing:.05em}
+    .tDiv{width:1px;background:rgba(15,23,42,.09);align-self:stretch;margin:0 2px}
+    .control{width:100%;appearance:none;border:1px solid var(--line);background:#fff;color:#0f172a;border-radius:10px;min-height:40px;padding:9px 12px;font-size:14px;font-family:inherit;outline:none;transition:.15s ease}
+    .control:focus{border-color:rgba(47,134,21,.55);box-shadow:0 0 0 4px rgba(47,134,21,.10)}
+    textarea.control{min-height:140px;resize:vertical;line-height:1.5}
+
+    /* TABLE */
+    .tablePanel{background:var(--card);border:1px solid rgba(15,23,42,.08);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+    .tableMeta{display:flex;align-items:center;justify-content:space-between;padding:13px 16px 11px;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+    .tableMeta h2{margin:0;font-size:16px;letter-spacing:-.01em}
+    .tCount{font-size:13px;color:var(--muted);font-weight:700}
+    .tableWrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:860px}
+    th,td{padding:12px 13px;border-bottom:1px solid #eaf0ea;text-align:left;vertical-align:middle;font-size:13px}
+    thead th{background:#f4f8f4;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;font-weight:800;position:sticky;top:0;z-index:1;user-select:none}
+    thead th.sortable{cursor:pointer}
+    thead th.sortable:hover{color:var(--fit);background:#eef5ea}
+    .sortArrow{display:inline-block;margin-left:4px;opacity:.35;font-size:10px}
+    thead th.asc .sortArrow::after{content:'▲';opacity:1}
+    thead th.desc .sortArrow::after{content:'▼';opacity:1}
+    thead th:not(.asc):not(.desc) .sortArrow::after{content:'⇅'}
+    tbody tr:last-child td{border-bottom:none}
+    tbody tr:hover td{background:#f9fdf9}
+    tbody tr.is-editing td{background:#f0fdf4;border-left:3px solid var(--fit)}
+
+    /* PILLS */
+    .pill{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900;border:1px solid;white-space:nowrap}
+    .pill.green{background:rgba(34,197,94,.10);color:#166534;border-color:rgba(34,197,94,.22)}
+    .pill.gray{background:rgba(15,23,42,.05);color:#334155;border-color:rgba(15,23,42,.12)}
+    .pill.blue{background:rgba(29,78,216,.08);color:#1d4ed8;border-color:rgba(29,78,216,.18)}
+    .pill.orange{background:rgba(245,158,11,.10);color:#92400e;border-color:rgba(245,158,11,.22)}
+
+    /* STATUS TOGGLE */
+    .statusToggle{appearance:none;border:none;border-radius:999px;cursor:pointer;font-size:11px;font-weight:900;padding:4px 9px;font-family:inherit;transition:.15s;white-space:nowrap}
+    .statusToggle.active{background:rgba(34,197,94,.10);color:#166534;border:1px solid rgba(34,197,94,.22)}
+    .statusToggle.active:hover{background:rgba(34,197,94,.25)}
+    .statusToggle.inactive{background:rgba(15,23,42,.05);color:#64748b;border:1px solid rgba(15,23,42,.12)}
+    .statusToggle.inactive:hover{background:rgba(34,197,94,.08);color:#166534}
+
+    .textPreview{font-size:12px;color:#334155;line-height:1.5;max-width:340px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .small{font-size:11px;color:var(--muted)}
+    .hidden{display:none !important}
+    .empty{padding:28px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed rgba(15,23,42,.14);border-radius:14px;margin:14px 16px}
+
+    /* MODAL */
+    .overlay{position:fixed;inset:0;background:rgba(8,16,8,.50);backdrop-filter:blur(6px);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+    .overlay.open{display:flex}
+    .modal{background:#fff;border-radius:20px;box-shadow:var(--shadow-strong);width:min(800px,100%);max-height:92vh;display:flex;flex-direction:column;animation:mIn .2s ease}
+    @keyframes mIn{from{opacity:0;transform:translateY(-14px) scale(.97)}to{opacity:1;transform:none}}
+    .modalHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);flex-shrink:0}
+    .modalHead h3{margin:0;font-size:18px;letter-spacing:-.01em}
+    .modalSub{font-size:12px;color:var(--muted);margin-top:3px}
+    .mClose{appearance:none;border:none;background:transparent;cursor:pointer;font-size:22px;color:var(--muted);line-height:1;padding:4px 7px;border-radius:8px;transition:.12s}
+    .mClose:hover{background:#f1f5f9;color:var(--ink)}
+    .modalBody{overflow-y:auto;padding:20px;flex:1}
+    .modalFoot{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+    .spacer{flex:1}
+
+    /* FORM GRID */
+    .fg{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .fg .full{grid-column:1/-1}
+    .field{display:flex;flex-direction:column;gap:5px}
+    .field label{font-size:11px;font-weight:900;color:#334155;text-transform:uppercase;letter-spacing:.05em}
+    .req{color:#e11d48}
+
+    /* CHAR COUNTER */
+    .charCnt{font-size:11px;font-weight:700;text-align:right;margin-top:4px;transition:color .2s}
+    .charCnt.ok{color:var(--muted)}.charCnt.warn{color:#b45309}.charCnt.over{color:#dc2626}
+
+    /* PREVIEW */
+    .prevBox{border:1px solid var(--line);background:#f4f8f3;border-radius:12px;padding:12px 14px;min-height:80px;white-space:pre-wrap;line-height:1.55;font-size:13px;color:#1a2a1a}
+    .prevLabel{font-size:11px;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+
+    /* PLACEHOLDER TAGS */
+    .phGrid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+    .phTag{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:#f0f4ff;border:1px solid #c7d7ff;font-size:11px;font-weight:800;color:#1e40af;cursor:pointer;font-family:inherit;transition:.12s}
+    .phTag:hover{background:#dde8ff;border-color:#818cf8}
+
+    /* HINT */
+    .hint{background:#f8fbf8;border:1px solid var(--line);border-radius:10px;padding:9px 12px;font-size:12px;color:#475569;line-height:1.5;display:flex;gap:8px;margin-bottom:14px}
+
+    /* CONFIRM */
+    .confirmOverlay{position:fixed;inset:0;background:rgba(8,16,8,.55);backdrop-filter:blur(4px);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+    .confirmOverlay.open{display:flex}
+    .confirmCard{background:#fff;border-radius:18px;box-shadow:var(--shadow-strong);width:min(440px,100%);padding:24px;animation:mIn .18s ease}
+    .confirmCard h4{margin:0 0 8px;font-size:18px}
+    .confirmCard p{margin:0 0 20px;color:var(--muted);font-size:14px;line-height:1.5}
+    .cBtns{display:flex;gap:10px;justify-content:flex-end}
+
+    /* LOADING + TOAST */
+    #loading{position:fixed;inset:0;background:rgba(15,23,42,.28);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:400}
+    .loadingCard{background:#fff;border-radius:18px;padding:16px 22px;box-shadow:var(--shadow-strong);display:flex;align-items:center;gap:12px;font-weight:900;font-size:14px}
+    .spinner{width:18px;height:18px;border-radius:50%;border:3px solid rgba(15,23,42,.16);border-top-color:var(--fit);animation:spin .9s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);width:min(500px,92vw);background:#0b1220;color:#fff;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.3);padding:13px 16px;display:none;z-index:500;font-size:14px}
+    #toast b{display:block;margin-bottom:3px}
+
+    @media(max-width:640px){.fg{grid-template-columns:1fr}.fg .full{grid-column:1}}
+  
+body.in-iframe,
+html.in-iframe body {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+/* ─── TOPBAR-NEW ─── */
+.topbar-new{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);
+  padding:0 18px;height:46px;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  position:sticky;top:0;z-index:200;
+}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0;}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.tb-space{flex:1;}
+/* conn-dot */
+.conn-dot{width:9px;height:9px;border-radius:50%;background:#6b7280;flex-shrink:0;box-shadow:0 0 0 2px rgba(255,255,255,.15);transition:background .4s,box-shadow .4s}
+.conn-dot.connecting{background:#f59e0b;animation:connPulse 1.2s ease-in-out infinite}
+.conn-dot.ok{background:#95c11f;box-shadow:0 0 0 3px rgba(149,193,31,.3);animation:none}
+.conn-dot.err{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.3);animation:none}
+@keyframes connPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.conn-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.75)}
+.conn-label.ok{color:rgba(255,255,255,.9)}
+.conn-label.err{color:rgba(255,255,255,.9)}
+#connStatus{display:flex;align-items:center;gap:6px}
+
+/* INFO MODAL */
+.info-backdrop{position:fixed;inset:0;background:rgba(13,27,42,.55);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:flex-start;justify-content:center;padding:50px 20px;overflow-y:auto}
+.info-backdrop.show{display:flex;animation:infoFadeIn .2s ease}
+@keyframes infoFadeIn{from{opacity:0}to{opacity:1}}
+.info-card{background:#fff;border-radius:18px;max-width:640px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.3);overflow:hidden}
+.info-head{background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);color:#fff;padding:18px 22px;display:flex;align-items:center;gap:14px}
+.info-head-icon{font-size:28px;flex-shrink:0}
+.info-head-title{font-size:17px;font-weight:800;letter-spacing:-.01em}
+.info-head-sub{font-size:12px;opacity:.85;margin-top:2px}
+.info-head>div:nth-child(2){flex:1;min-width:0}
+.info-close{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;flex-shrink:0}
+.info-close:hover{background:rgba(255,255,255,.28)}
+.info-body{padding:20px 24px 24px;max-height:65vh;overflow-y:auto}
+.info-section{margin-bottom:18px}
+.info-section:last-child{margin-bottom:0}
+.info-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#2f8615;margin-bottom:7px}
+.info-section p{font-size:13px;line-height:1.6;color:#334155}
+.info-list{margin:0;padding-left:0;list-style:none}
+.info-list li{font-size:13px;line-height:1.6;color:#334155;padding:7px 0 7px 22px;position:relative;border-bottom:1px solid #f1f5f0}
+.info-list li:last-child{border-bottom:none}
+.info-list li::before{content:'';position:absolute;left:6px;top:14px;width:6px;height:6px;border-radius:50%;background:#95c11f}
+.info-list li b{color:#0d1b2a;font-weight:700}
+.info-list code{background:#f1f5f0;padding:1px 5px;border-radius:3px;font-size:12px;color:#2f8615;font-weight:700}
+.topbar-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:600 12px/1 inherit;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.topbar-btn:hover{background:rgba(255,255,255,.25)}
+
+/* ─── IFRAME FULL-WIDTH ─── */
+.in-iframe .page,.in-iframe .wrap,.in-iframe .app,.in-iframe .container,.in-iframe main{
+  max-width:none!important;margin:0!important;padding:14px!important;
+}
+body.in-iframe,html.in-iframe body{padding:0!important;margin:0!important;}
+
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+function showNoAccessFallback(){
+  try {
+    if (window.self !== window.top) {
+      window.parent.postMessage({ type: 'fitbox-no-access', path: location.pathname }, '*');
+      return;
+    }
+  } catch (e) {}
+  var html = '<head><meta charset="utf-8"><title>Kein Zugriff</title></head>' +
+    '<body style="margin:0;font-family:system-ui,sans-serif;background:#f5f6f4;min-height:100vh;display:flex;align-items:center;justify-content:center;">' +
+    '<div style="background:#fff;border-radius:14px;padding:40px;max-width:480px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08);">' +
+    '<div style="font-size:64px;margin-bottom:16px;">🔒</div>' +
+    '<h1 style="font-size:22px;font-weight:800;margin:0 0 12px;color:#0f172a;">Kein Zugriff auf diese Seite</h1>' +
+    '<p style="color:#64748b;line-height:1.6;margin:0 0 24px;">Dieser Bereich ist nur für den <strong style="color:#2f8615">Owner</strong> zugänglich.</p>' +
+    '<a href="admin_index.html" style="display:inline-block;background:linear-gradient(180deg,#2f8615,#256a10);color:#fff;text-decoration:none;border-radius:11px;padding:12px 24px;font:900 13px/1 system-ui;">← Zurück zum Admin</a>' +
+    '</div></body>';
+  document.documentElement.innerHTML = html;
+}
+</script>
+
+</head>
+<body>
+<div class="topbar-new" id="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">💬</span> PT WhatsApp Vorlagen</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-tmpl">–</span> Vorlagen</span>
+    <span class="tb-stat"><span class="tb-stat-dot" style="background:#4ade80"></span><span class="tb-stat-num" id="stat-active">–</span> aktiv</span>
+    <span class="tb-stat"><span class="tb-stat-dot" style="background:#60a5fa"></span><span class="tb-stat-num" id="stat-default">–</span> Standard</span>
+  </div>
+  <div class="tb-space"></div>
+  <span id="connStatus"><span class="conn-dot" id="connDot"></span><span class="conn-label" id="connLabel">Verbinde…</span></span>
+  <button class="topbar-btn" id="infoBtnTop" title="Was kann ich auf dieser Seite?">ℹ️ Info</button>
+  <button class="topbar-btn" id="reloadBtnTop">↻ Neu laden</button>
+  <button class="topbar-btn" style="background:rgba(255,255,255,.9);color:#2f8615;font-weight:700;border-color:rgba(255,255,255,.9)" id="newBtnTop">＋ Neue Vorlage</button>
+</div>
+
+<!-- ═══════════ INFO MODAL ═══════════ -->
+<div class="info-backdrop" id="infoModal">
+  <div class="info-card">
+    <div class="info-head">
+      <span class="info-head-icon">💬</span>
+      <div>
+        <div class="info-head-title">PT WhatsApp Vorlagen</div>
+        <div class="info-head-sub">Nachrichten-Vorlagen für Probetraining-Leads</div>
+      </div>
+      <button class="info-close" id="infoClose" aria-label="Schließen">✕</button>
+    </div>
+    <div class="info-body">
+
+      <div class="info-section">
+        <div class="info-section-title">Wozu diese Seite?</div>
+        <p>Hier verwaltest du die <b>WhatsApp-Vorlagen</b>, mit denen ihr eure Probetraining-Leads anschreibt — Begrüßung, Terminbestätigung, Nachfrage, Erinnerung usw. Im PT-Manager wählt der Trainer eine passende Vorlage aus und schickt sie mit einem Klick raus.</p>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Felder einer Vorlage</div>
+        <ul class="info-list">
+          <li><b>Studio</b> – jede Vorlage gehört zu Memmingen ODER Senden (zentrale Vorlagen können auf beide gelegt werden via mehrere Einträge).</li>
+          <li><b>Context-Key</b> – wann/wo die Vorlage erscheint: <code>welcome</code>, <code>booked</code>, <code>followup</code>, <code>reminder</code>, <code>after_pt</code>, <code>lost</code>.</li>
+          <li><b>Titel</b> – kurzer Name für die Auswahlliste im PT-Manager.</li>
+          <li><b>Text</b> – die Nachricht selbst. <b>Platzhalter</b> wie <code>{{name}}</code>, <code>{{datum}}</code>, <code>{{uhrzeit}}</code> werden automatisch ersetzt.</li>
+          <li><b>Standard</b> – pro Context-Key kann eine Vorlage als Default markiert sein. Diese wird im PT-Manager vorausgewählt.</li>
+          <li><b>Aktiv</b> – inaktive Vorlagen erscheinen nicht in der Auswahl, bleiben aber zur Wiederherstellung in der Liste.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Verfügbare Platzhalter</div>
+        <ul class="info-list">
+          <li><code>{{name}}</code> – Vorname des Leads</li>
+          <li><code>{{datum}}</code> – formatiertes Datum des Termins</li>
+          <li><code>{{uhrzeit}}</code> – Uhrzeit des Termins</li>
+          <li><code>{{trainer}}</code> – Name des zugewiesenen Trainers</li>
+          <li><code>{{studio}}</code> – Studio-Name (fitbox Memmingen / Senden)</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Tipps</div>
+        <ul class="info-list">
+          <li>Halte Vorlagen <b>kurz und freundlich</b> – WhatsApp-Tonalität, nicht E-Mail-Stil.</li>
+          <li><b>Eine Standard-Vorlage pro Context-Key</b> – dann tippt der Trainer nur "Senden", ohne lange auszuwählen.</li>
+          <li>Du kannst eine Vorlage testen, indem du sie im PT-Manager bei einem Test-Lead aufrufst.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var SESSION_KEY='fitbox_session';
+  var TIMEOUT_MS=8 * 60 * 60 * 1000;
+  var s;try{s=JSON.parse(localStorage.getItem(SESSION_KEY));}catch(e){}
+  // Kein Login → Login-Seite
+  if(!s||!s.access_token||s.expires_at<Date.now()){
+    var here=encodeURIComponent(location.pathname+location.search);
+    localStorage.removeItem(SESSION_KEY);
+    location.replace('login.html?next='+here);
+    throw new Error('AUTH');
+  }
+  // Rolle aus Session prüfen (gespeichert beim Login)
+  var roleId=s.employee?s.employee.role_id:'';
+  var roleCode=s.employee&&s.employee.roles?s.employee.roles.code:'';
+  var isAdmin=(roleId==='80f04245-ee93-45e8-9861-121778b5ff84'||roleCode==='admin');
+  if(!isAdmin){
+    showNoAccessFallback();return;
+    throw new Error('ROLE');
+  }
+  // Auto-Logout
+  var _timer;
+  function resetTimer(){clearTimeout(_timer);_timer=setTimeout(function(){localStorage.removeItem(SESSION_KEY);location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet.'));},TIMEOUT_MS);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+  window._fbSession=s;window._fbToken=s.access_token;
+
+})();
+</script>
+</div>
+
+<div class="page">
+
+  <!-- FILTER-TOOLBAR -->
+  <div class="toolbar">
+    <div class="tg">
+      <label for="filterStudio">Studio</label>
+      <select id="filterStudio" class="control">
+        <option value="">Alle Studios</option>
+        <option value="__global__">Nur globale</option>
+      </select>
+    </div>
+    <div class="tg">
+      <label for="filterContext">Kontext</label>
+      <select id="filterContext" class="control">
+        <option value="">Alle Kontexte</option>
+        <option value="lead">lead</option>
+        <option value="upcoming">upcoming</option>
+        <option value="followup">followup</option>
+        <option value="lost_reactivation">lost_reactivation</option>
+      </select>
+    </div>
+    <div class="tg">
+      <label for="filterActive">Status</label>
+      <select id="filterActive" class="control">
+        <option value="">Alle</option>
+        <option value="true">Nur aktiv</option>
+        <option value="false">Nur inaktiv</option>
+      </select>
+    </div>
+    <div class="tDiv"></div>
+    <div class="tg">
+      <label for="searchInput">Suche</label>
+      <input id="searchInput" class="control" placeholder="Label, Code, Text …" />
+    </div>
+  </div>
+
+  <!-- TABELLE (volle Breite) -->
+  <div class="tablePanel">
+    <div class="tableMeta">
+      <h2>Vorlagen</h2>
+      <div class="tCount">Gefunden: <strong id="rowCount">0</strong></div>
+    </div>
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th class="sortable" data-col="label">Bezeichnung <span class="sortArrow"></span></th>
+            <th class="sortable" data-col="context_key">Kontext <span class="sortArrow"></span></th>
+            <th class="sortable" data-col="studio">Studio <span class="sortArrow"></span></th>
+            <th class="sortable" data-col="sort_order" style="text-align:center">Sort <span class="sortArrow"></span></th>
+            <th>Status</th>
+            <th>Default</th>
+            <th>Nachricht</th>
+            <th style="min-width:130px">Aktionen</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div id="emptyState" class="empty hidden">Keine Vorlagen gefunden.</div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ══ MODAL: Vorlage erstellen / bearbeiten ══ -->
+<div class="overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modalHead">
+      <div>
+        <h3 id="modalTitle">Neue Vorlage</h3>
+        <div class="modalSub" id="modalSub">Pflichtfelder ausfüllen und speichern</div>
+      </div>
+      <button class="mClose" id="modalCloseBtn" type="button" aria-label="Schließen">✕</button>
+    </div>
+
+    <div class="modalBody">
+      <form id="templateForm" novalidate>
+        <input type="hidden" id="templateId" />
+
+        <div class="hint">
+          ℹ️ <span>Studio leer = <strong>globale Vorlage</strong>. Pro Studio &amp; Kontext darf nur <strong>eine</strong> Vorlage als Default gesetzt sein.</span>
+        </div>
+
+        <div class="fg">
+          <div class="field">
+            <label for="studioId">Studio</label>
+            <select id="studioId" class="control"><option value="">🌍 Global (alle Studios)</option></select>
+          </div>
+          <div class="field">
+            <label for="contextKey">Kontext <span class="req">*</span></label>
+            <select id="contextKey" class="control" required>
+              <option value="">Bitte wählen …</option>
+              <option value="lead">lead</option>
+              <option value="upcoming">upcoming</option>
+              <option value="followup">followup</option>
+              <option value="lost_reactivation">lost_reactivation</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="label">Bezeichnung <span class="req">*</span></label>
+            <input id="label" class="control" placeholder="z. B. Terminbestätigung" required />
+          </div>
+          <div class="field">
+            <label for="code">Code <span class="req">*</span></label>
+            <input id="code" class="control" placeholder="z. B. terminbestaetigung" required />
+          </div>
+
+          <div class="field">
+            <label for="sortOrder">Sortierung <span style="font-size:10px;color:var(--muted);font-weight:600;text-transform:none">(automatisch vorgeschlagen)</span></label>
+            <input id="sortOrder" class="control" type="number" step="10" min="0" />
+          </div>
+          <div class="field">
+            <label for="isActive">Status</label>
+            <select id="isActive" class="control">
+              <option value="true">✅ Aktiv</option>
+              <option value="false">⏸ Inaktiv</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label for="isDefault">Als Default markieren</label>
+            <select id="isDefault" class="control">
+              <option value="false">Nein</option>
+              <option value="true">Ja — Default für diesen Kontext &amp; Studio</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label for="templateText">Nachrichtentext <span class="req">*</span></label>
+            <textarea id="templateText" class="control" placeholder="Hallo {{first_name}}, …" required></textarea>
+            <div class="charCnt ok" id="charCnt">0 Zeichen</div>
+          </div>
+
+          <div class="field full">
+            <div class="prevLabel">Platzhalter einfügen</div>
+            <div class="phGrid">
+              <button type="button" class="phTag" data-ph="{{first_name}}">{{first_name}}</button>
+              <button type="button" class="phTag" data-ph="{{last_name}}">{{last_name}}</button>
+              <button type="button" class="phTag" data-ph="{{studio_name}}">{{studio_name}}</button>
+              <button type="button" class="phTag" data-ph="{{scheduled_date}}">{{scheduled_date}}</button>
+              <button type="button" class="phTag" data-ph="{{scheduled_time}}">{{scheduled_time}}</button>
+              <button type="button" class="phTag" data-ph="{{trainer_name}}">{{trainer_name}}</button>
+              <button type="button" class="phTag" data-ph="{{trainer_part}}">{{trainer_part}}</button>
+            </div>
+            <div class="small" style="margin-top:4px">Klick fügt den Platzhalter an der Cursorposition ein.</div>
+          </div>
+
+          <div class="field full">
+            <div class="prevLabel">Live-Vorschau (Beispieldaten)</div>
+            <div id="previewBox" class="prevBox">Noch keine Vorschau verfügbar.</div>
+          </div>
+
+          <div class="field full">
+            <label for="notes">Interne Notiz</label>
+            <textarea id="notes" class="control" style="min-height:68px" placeholder="Optional: Einsatz, Hinweise, Besonderheiten …"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modalFoot">
+      <button class="btn danger hidden" type="button" id="deleteBtn">🗑 Löschen</button>
+      <button class="btn secondary hidden" type="button" id="duplicateBtn">⎘ Duplizieren</button>
+      <div class="spacer"></div>
+      <button class="btn secondary" type="button" id="cancelBtn">Abbrechen</button>
+      <button class="btn primary" type="button" id="saveBtn">💾 Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONFIRM MODAL ══ -->
+<div class="confirmOverlay" id="confirmOverlay">
+  <div class="confirmCard">
+    <h4>Vorlage löschen?</h4>
+    <p id="confirmMsg">Diese Aktion kann nicht rückgängig gemacht werden.</p>
+    <div class="cBtns">
+      <button class="btn secondary" type="button" id="confirmCancel">Abbrechen</button>
+      <button class="btn danger" type="button" id="confirmOk">Ja, löschen</button>
+    </div>
+  </div>
+</div>
+
+<div id="loading"><div class="loadingCard"><div class="spinner"></div><span id="loadingTxt">Bitte warten …</span></div></div>
+<div id="toast"></div>
+
+<script>
+(async function(){
+  // AUTO-INJECTED
+  const sb = window.supabase.createClient('https://jypbyywxfjniafuygxci.supabase.co', 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU', { auth: { persistSession: false, storageKey: "sb_wa_templates" } });
+  const supabaseClient = sb; const client = sb;
+  try { const _s = JSON.parse(localStorage.getItem('fitbox_session')||'null'); if(_s&&_s.access_token) await sb.auth.setSession({access_token:_s.access_token,refresh_token:_s.refresh_token||_s.access_token}); } catch(e) {}
+  async function requireAuth(opts) {
+    const s = JSON.parse(localStorage.getItem('fitbox_session')||'null');
+    if(!s||!s.access_token||s.expires_at<Date.now()){location.replace('login.html');return null;}
+    if(opts&&opts.adminOnly){const rid=s.employee?s.employee.role_id:'';const rc=s.employee&&s.employee.roles?s.employee.roles.code:'';if(rid!=='80f04245-ee93-45e8-9861-121778b5ff84'&&rc!=='admin'){showNoAccessFallback();return null;}}
+    return s.employee||s;
+  }
+  // END INJECT
+
+
+  const state = { studios:[], templates:[], sortCol:'sort_order', sortDir:'asc', editingId:null };
+  const $ = id => document.getElementById(id);
+
+  // ── UTILS ──
+  function esc(v){ return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function showLoad(t='Bitte warten …'){ $('loadingTxt').textContent=t; $('loading').style.display='flex'; }
+  function hideLoad(){ $('loading').style.display='none'; }
+  function toast(title,text=''){
+    const el=$('toast');
+    el.innerHTML=text?`<b>${esc(title)}</b>${esc(text)}`:`<b>${esc(title)}</b>`;
+    el.style.display='block'; clearTimeout(el._t);
+    el._t=setTimeout(()=>el.style.display='none',3000);
+  }
+  function studioName(id){ return id ? (state.studios.find(s=>s.id===id)?.name||'Unbekannt') : 'Global'; }
+  function slugify(v){
+    return String(v||'').toLowerCase().normalize('NFD')
+      .replace(/[\u0300-\u036f]/g,'').replace(/ß/g,'ss')
+      .replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,80);
+  }
+  function nextSort(){
+    if(!state.templates.length) return 10;
+    const max = Math.max(...state.templates.map(t=>Number(t.sort_order)||0));
+    return Math.ceil((max+10)/10)*10;
+  }
+
+// ── PREVIEW ──
+  function prevPayload(){
+    return { first_name:'Max', last_name:'Mustermann',
+      studio_name:studioName($('studioId').value)||'fitbox Memmingen',
+      scheduled_date:'15.05.2026', scheduled_time:'18:00',
+      trainer_name:'Julia', trainer_part:' bei Julia' };
+  }
+  function applyTpl(text,payload){
+    let out=String(text||'');
+    Object.entries(payload).forEach(([k,v])=>{ out=out.replaceAll(`{{${k}}}`,v??''); });
+    return out;
+  }
+  function refreshPreview(){
+    const text=$('templateText').value||'';
+    $('previewBox').textContent=text?applyTpl(text,prevPayload()):'Noch keine Vorschau verfügbar.';
+    const len=text.length;
+    const el=$('charCnt');
+    el.textContent=`${len} Zeichen`;
+    el.className='charCnt '+(len>1000?'over':len>700?'warn':'ok');
+  }
+
+  // ── STUDIO SELECTS ──
+  function fillStudios(){
+    const opts=state.studios.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join('');
+    $('studioId').innerHTML=`<option value="">🌍 Global (alle Studios)</option>${opts}`;
+    $('filterStudio').innerHTML=`<option value="">Alle Studios</option><option value="__global__">Nur globale</option>${opts}`;
+  }
+
+  // ── LOAD ──
+  async function loadStudios(){
+    const {data,error}=await sb.from('studios').select('id,name,sort_order')
+      .eq('is_active',true).order('sort_order',{ascending:true}).order('name',{ascending:true});
+    if(error) throw error;
+    state.studios=data||[]; fillStudios();
+  }
+  async function loadTemplates(){
+    var _d=document.getElementById('connDot'),_l=document.getElementById('connLabel');
+    if(_d){_d.className='conn-dot connecting';}if(_l){_l.textContent='Verbinde…';}
+    const {data,error}=await sb.from('pt_whatsapp_templates').select('*')
+      .order('sort_order',{ascending:true}).order('label',{ascending:true});
+    if(error) throw error;
+    state.templates=data||[]; renderTable();
+    
+    var sT=document.getElementById("stat-tmpl");if(sT)sT.textContent=state.templates.length;
+    var sA=document.getElementById("stat-active");if(sA)sA.textContent=state.templates.filter(function(t){return t.is_active;}).length;
+    var sD=document.getElementById("stat-default");if(sD)sD.textContent=state.templates.filter(function(t){return t.is_default && t.is_active;}).length;
+    if(_d){_d.className='conn-dot ok';}if(_l){_l.className='conn-label ok';_l.textContent='Verbunden';}
+  }
+
+  // ── FILTER + SORT ──
+  function filteredSorted(){
+    const studio=$('filterStudio').value, context=$('filterContext').value;
+    const active=$('filterActive').value, search=($('searchInput').value||'').trim().toLowerCase();
+    let rows=state.templates.filter(t=>{
+      if(studio==='__global__'&&t.studio_id) return false;
+      if(studio&&studio!=='__global__'&&t.studio_id!==studio) return false;
+      if(context&&t.context_key!==context) return false;
+      if(active==='true'&&!t.is_active) return false;
+      if(active==='false'&&t.is_active) return false;
+      if(search){
+        const hay=[t.label,t.code,t.template_text,t.notes,t.context_key,studioName(t.studio_id)].join(' ').toLowerCase();
+        if(!hay.includes(search)) return false;
+      }
+      return true;
+    });
+    const col=state.sortCol, dir=state.sortDir==='asc'?1:-1;
+    rows.sort((a,b)=>{
+      let va=col==='studio'?studioName(a.studio_id):a[col];
+      let vb=col==='studio'?studioName(b.studio_id):b[col];
+      if(typeof va==='number'&&typeof vb==='number') return (va-vb)*dir;
+      return String(va??'').localeCompare(String(vb??''),'de')*dir;
+    });
+    return rows;
+  }
+
+  // ── RENDER TABLE ──
+  function renderTable(){
+    const rows=filteredSorted();
+    $('rowCount').textContent=rows.length;
+    $('emptyState').classList.toggle('hidden',rows.length>0);
+    document.querySelectorAll('thead th.sortable').forEach(th=>{
+      th.classList.remove('asc','desc');
+      if(th.dataset.col===state.sortCol) th.classList.add(state.sortDir);
+    });
+    $('tableBody').innerHTML=rows.map(t=>{
+      const isEdit=t.id===state.editingId;
+      const short=(t.template_text||'').length>200?t.template_text.slice(0,200)+' …':t.template_text||'';
+      return `<tr class="${isEdit?'is-editing':''}">
+        <td>
+          <strong>${esc(t.label)}</strong>
+          <div class="small" style="margin-top:2px">${esc(t.code)}</div>
+          ${t.notes?`<div class="small" style="margin-top:2px;font-style:italic">${esc(t.notes)}</div>`:''}
+        </td>
+        <td><span class="pill blue">${esc(t.context_key)}</span></td>
+        <td>${esc(studioName(t.studio_id))}</td>
+        <td style="text-align:center">${esc(t.sort_order)}</td>
+        <td>
+          <button class="statusToggle ${t.is_active?'active':'inactive'}"
+            type="button" data-toggle="${esc(t.id)}" data-active="${t.is_active}"
+            title="${t.is_active?'Klick zum Deaktivieren':'Klick zum Aktivieren'}">
+            ${t.is_active?'✓ aktiv':'⏸ inaktiv'}
+          </button>
+        </td>
+        <td>${t.is_default?'<span class="pill orange">⭐ Default</span>':'<span style="color:var(--muted);font-size:12px">–</span>'}</td>
+        <td><div class="textPreview">${esc(short)}</div></td>
+        <td>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+            <button class="btn secondary small" type="button" data-edit="${esc(t.id)}">✏️ Bearbeiten</button>
+            <button class="btn ghost small" type="button" data-dup="${esc(t.id)}" title="Duplizieren">⎘</button>
+            <button class="btn ghost small" type="button" data-wa-test="${esc(t.id)}" title="WA-Vorschau öffnen" style="color:#25d366">📲</button>
+            <button class="btn ghost small" type="button" data-del="${esc(t.id)}" data-del-label="${esc(t.label)}" title="Löschen" style="color:#b91c1c">🗑</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    document.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>openModal(b.dataset.edit)));
+    document.querySelectorAll('[data-dup]').forEach(b=>b.addEventListener('click',()=>dupFromTable(b.dataset.dup)));
+    document.querySelectorAll('[data-toggle]').forEach(b=>b.addEventListener('click',()=>toggleActive(b.dataset.toggle,b.dataset.active==='true')));
+    document.querySelectorAll('[data-wa-test]').forEach(b=>b.addEventListener('click',()=>waTest(b.dataset.waTest)));
+    document.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>askDeleteDirect(b.dataset.del, b.dataset.delLabel)));
+  }
+
+  // ── STATUS TOGGLE ──
+  async function toggleActive(id,wasActive){
+    try{
+      const {error}=await sb.from('pt_whatsapp_templates').update({is_active:!wasActive}).eq('id',id);
+      if(error) throw error;
+      const t=state.templates.find(x=>x.id===id);
+      if(t) t.is_active=!wasActive;
+      renderTable();
+      toast(wasActive?'⏸ Deaktiviert':'✅ Aktiviert');
+    }catch(err){ toast('Fehler',err.message); }
+  }
+
+  // ── MODAL HELPERS ──
+  function fillForm(row){
+    $('templateId').value   = row?.id||'';
+    $('studioId').value     = row?.studio_id||'';
+    $('contextKey').value   = row?.context_key||'';
+    $('code').value         = row?.code||'';
+    $('code').dataset.manual= row?'1':'';
+    $('label').value        = row?.label||'';
+    $('sortOrder').value    = row?.sort_order??nextSort();
+    $('isActive').value     = String(!!(row?.is_active??true));
+    $('isDefault').value    = String(!!(row?.is_default??false));
+    $('templateText').value = row?.template_text||'';
+    $('notes').value        = row?.notes||'';
+  }
+
+  function openModal(editId=null){
+    state.editingId=editId;
+    const isNew=!editId;
+    const row=isNew?null:state.templates.find(x=>x.id===editId);
+    fillForm(row);
+    $('modalTitle').textContent=isNew?'Neue Vorlage':'Vorlage bearbeiten';
+    $('modalSub').textContent=isNew?`Sortierung vorgeschlagen: ${nextSort()}`:row?.label||'';
+    $('deleteBtn').classList.toggle('hidden',isNew);
+    $('duplicateBtn').classList.toggle('hidden',isNew);
+    refreshPreview();
+    $('modalOverlay').classList.add('open');
+    document.body.style.overflow='hidden';
+    setTimeout(()=>(isNew?$('label'):$('templateText')).focus(),80);
+  }
+
+  function closeModal(){
+    $('modalOverlay').classList.remove('open');
+    document.body.style.overflow='';
+    state.editingId=null;
+    renderTable();
+  }
+
+  // ── DUPLICATE ──
+  function dupFromTable(id){
+    const row=state.templates.find(x=>x.id===id);
+    if(!row) return;
+    openModal(null);
+    $('studioId').value     = row.studio_id||'';
+    $('contextKey').value   = row.context_key||'';
+    $('label').value        = `${row.label} (Kopie)`;
+    $('code').value         = slugify(`${row.code}_kopie`);
+    $('code').dataset.manual= '1';
+    $('sortOrder').value    = nextSort();
+    $('isActive').value     = String(!!row.is_active);
+    $('isDefault').value    = 'false';
+    $('templateText').value = row.template_text||'';
+    $('notes').value        = row.notes||'';
+    $('modalTitle').textContent='Vorlage duplizieren';
+    $('modalSub').textContent=`Kopie von: ${row.label}`;
+    refreshPreview();
+  }
+
+  function dupFromModal(){
+    const snap={
+      studio_id:$('studioId').value, context_key:$('contextKey').value,
+      label:$('label').value, code:$('code').value,
+      is_active:$('isActive').value, template_text:$('templateText').value, notes:$('notes').value
+    };
+    closeModal();
+    openModal(null);
+    $('studioId').value    = snap.studio_id;
+    $('contextKey').value  = snap.context_key;
+    $('label').value       = `${snap.label} (Kopie)`;
+    $('code').value        = slugify(`${snap.code}_kopie`);
+    $('code').dataset.manual='1';
+    $('sortOrder').value   = nextSort();
+    $('isActive').value    = snap.is_active;
+    $('isDefault').value   = 'false';
+    $('templateText').value= snap.template_text;
+    $('notes').value       = snap.notes;
+    $('modalTitle').textContent='Vorlage duplizieren';
+    $('modalSub').textContent=`Kopie von: ${snap.label}`;
+    refreshPreview();
+  }
+
+  // ── CLEAR DEFAULT ──
+  async function clearDefault(studioId,contextKey,currentId){
+    const keepId=currentId||'00000000-0000-0000-0000-000000000000';
+    let q=sb.from('pt_whatsapp_templates').update({is_default:false})
+      .eq('context_key',contextKey).neq('id',keepId);
+    q=studioId?q.eq('studio_id',studioId):q.is('studio_id',null);
+    const {error}=await q; if(error) throw error;
+  }
+
+  // ── SAVE ──
+  async function saveTemplate(){
+    const id          = $('templateId').value||null;
+    const studio_id   = $('studioId').value||null;
+    const context_key = $('contextKey').value;
+    const label       = $('label').value.trim();
+    const code        = slugify($('code').value.trim()||label);
+    const sort_order  = Number($('sortOrder').value||10);
+    const is_active   = $('isActive').value==='true';
+    const is_default  = $('isDefault').value==='true';
+    const template_text=$('templateText').value.trim();
+    const notes       = $('notes').value.trim()||null;
+
+    if(!context_key||!label||!code||!template_text){
+      toast('Pflichtfelder fehlen','Bitte Kontext, Bezeichnung, Code und Nachrichtentext ausfüllen.'); return;
+    }
+    try{
+      showLoad('Vorlage wird gespeichert …');
+      if(is_default) await clearDefault(studio_id,context_key,id);
+      const _empId=window._fbSession&&window._fbSession.employee?window._fbSession.employee.id:null;
+      const payload={studio_id,context_key,code,label,sort_order,is_active,is_default,template_text,notes};
+      let error;
+      if(id){ ({error}=await sb.from('pt_whatsapp_templates').update({...payload,updated_by:_empId}).eq('id',id)); }
+      else   { ({error}=await sb.from('pt_whatsapp_templates').insert({...payload,created_by:_empId,updated_by:_empId})); }
+      if(error) throw error;
+      await loadTemplates();
+      closeModal();
+      toast('✓ Gespeichert',id?'Vorlage aktualisiert.':'Neue Vorlage angelegt.');
+    }catch(err){ console.error(err); toast('Fehler',err.message||'Speichern fehlgeschlagen'); }
+    finally{ hideLoad(); }
+  }
+
+  // ── DELETE ──
+  function askDelete(){
+    const label=$('label').value||'diese Vorlage';
+    $('confirmMsg').textContent=`„${label}" wird dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.`;
+    $('confirmOverlay').classList.add('open');
+  }
+  async function doDelete(){
+    $('confirmOverlay').classList.remove('open');
+    const id=$('templateId').value||_deleteDirectId; _deleteDirectId=null;
+    if(!id) return;
+    try{
+      showLoad('Vorlage wird gelöscht …');
+      const {error}=await sb.from('pt_whatsapp_templates').delete().eq('id',id);
+      if(error) throw error;
+      closeModal(); await loadTemplates();
+      toast('🗑 Gelöscht');
+    }catch(err){ toast('Fehler',err.message); }
+    finally{ hideLoad(); }
+  }
+
+  // ── INSERT PLACEHOLDER ──
+  function insertPh(value){
+    const el=$('templateText');
+    const start=el.selectionStart??el.value.length, end=el.selectionEnd??el.value.length;
+    el.value=el.value.slice(0,start)+value+el.value.slice(end);
+    el.focus(); el.setSelectionRange(start+value.length,start+value.length);
+    refreshPreview();
+  }
+
+  // ── SORT HEADERS ──
+  function bindSort(){
+    document.querySelectorAll('thead th.sortable').forEach(th=>{
+      th.addEventListener('click',()=>{
+        if(state.sortCol===th.dataset.col){
+          state.sortDir=state.sortDir==='asc'?'desc':'asc';
+        } else { state.sortCol=th.dataset.col; state.sortDir='asc'; }
+        renderTable();
+      });
+    });
+  }
+
+  // ── WA TEST ──
+  function waTest(id){
+    const t=state.templates.find(x=>x.id===id); if(!t) return;
+    const payload=prevPayload();
+    const text=applyTpl(t.template_text||'',payload);
+    const url='https://wa.me/4915730024124?text='+encodeURIComponent(text);
+    window.open(url,'_blank');
+  }
+
+  // ── DELETE DIRECT (aus Tabelle) ──
+  let _deleteDirectId=null;
+  function askDeleteDirect(id, label){
+    _deleteDirectId=id;
+    $('confirmMsg').textContent=`„${label}" wird dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.`;
+    $('confirmOverlay').classList.add('open');
+  }
+
+  // ── BIND ALL EVENTS ──
+  function bindEvents(){
+    // newBtn/reloadBtn moved to topbar (newBtnTop/reloadBtnTop)
+
+    $('modalCloseBtn').addEventListener('click',closeModal);
+    $('cancelBtn').addEventListener('click',closeModal);
+    $('saveBtn').addEventListener('click',saveTemplate);
+    $('deleteBtn').addEventListener('click',askDelete);
+    $('duplicateBtn').addEventListener('click',dupFromModal);
+
+    $('modalOverlay').addEventListener('click',e=>{ if(e.target===$('modalOverlay')) closeModal(); });
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){
+        if($('confirmOverlay').classList.contains('open')) $('confirmOverlay').classList.remove('open');
+        else if($('modalOverlay').classList.contains('open')) closeModal();
+      }
+    });
+
+    $('confirmCancel').addEventListener('click',()=>$('confirmOverlay').classList.remove('open'));
+    $('confirmOk').addEventListener('click',doDelete);
+
+    ['filterStudio','filterContext','filterActive','searchInput'].forEach(id=>{
+      $(id).addEventListener('input',renderTable);
+      $(id).addEventListener('change',renderTable);
+    });
+
+    $('templateText').addEventListener('input',refreshPreview);
+    $('studioId').addEventListener('change',refreshPreview);
+
+    $('label').addEventListener('input',()=>{
+      if(!$('templateId').value&&!$('code').dataset.manual) $('code').value=slugify($('label').value);
+    });
+    $('code').addEventListener('input',()=>{ $('code').dataset.manual='1'; });
+
+    document.querySelectorAll('[data-ph]').forEach(b=>b.addEventListener('click',()=>insertPh(b.dataset.ph)));
+
+    bindSort();
+  }
+
+  // ── INIT ──
+  async function init(){
+    bindEvents();
+    try{
+      showLoad('Daten werden geladen …');
+      await loadStudios(); await loadTemplates();
+    }catch(err){ console.error(err); toast('Fehler',err.message||'Initialisierung fehlgeschlagen'); var _d=document.getElementById('connDot'),_l=document.getElementById('connLabel');if(_d){_d.className='conn-dot err';}if(_l){_l.className='conn-label err';_l.textContent='Fehler';} }
+    finally{ hideLoad(); }
+  }
+
+  (async () => {
+    const emp = await requireAuth({ adminOnly: true });
+    if (!emp) return;
+    await init();
+    var rTop=document.getElementById("reloadBtnTop");if(rTop)rTop.addEventListener("click",async function(){
+      try{ showLoad('Daten werden geladen …'); await loadStudios(); await loadTemplates(); }
+      catch(err){ toast('Fehler',err.message||'Fehler'); var _d=document.getElementById('connDot'),_l=document.getElementById('connLabel');if(_d){_d.className='conn-dot err';}if(_l){_l.className='conn-label err';_l.textContent='Fehler';} }
+      finally{ hideLoad(); }
+    });
+    var nTop=document.getElementById("newBtnTop");if(nTop){var nBtn=document.getElementById("newBtn");if(nBtn)nTop.addEventListener("click",function(){nBtn.click();});}
+
+    // Info-Modal
+    var infoBtn=document.getElementById('infoBtnTop');
+    var infoModal=document.getElementById('infoModal');
+    var infoClose=document.getElementById('infoClose');
+    if(infoBtn&&infoModal){
+      infoBtn.addEventListener('click',function(){infoModal.classList.add('show');});
+      if(infoClose)infoClose.addEventListener('click',function(){infoModal.classList.remove('show');});
+      infoModal.addEventListener('click',function(e){if(e.target===infoModal)infoModal.classList.remove('show');});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape'&&infoModal.classList.contains('show'))infoModal.classList.remove('show');});
+    }
+  })();
+
+})();
+</script>
+<script>
+(function(){
+  if(window.self===window.top) return;
+  // Apply class immediately for CSS
+  document.documentElement.classList.add('in-iframe');
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.add('in-iframe');
+    // Hide all topbar variants
+          });
+    });
+    document.body.style.padding='0';
+    document.body.style.margin='0';
+    // Zero out page wrapper padding
+    ['.page','.wrap','.app','.container'].forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        el.style.paddingTop='0';
+        el.style.marginTop='0';
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

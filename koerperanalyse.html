@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Körperanalyse – fitbox</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,700;9..40,900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --brand:#2f8615;--brand2:#95c11f;--brand-soft:#eaf5e3;--brand-dim:#d4edbe;--brand-line:#c2dba8;
+  --bg:#f0f4f0;--surface:#fff;--surface2:#f8faf7;
+  --text:#141f10;--muted:#5e7257;--line:#d6e4d0;--line-strong:#bcd0b4;
+  --shadow:0 2px 12px rgba(20,50,20,.08);--shadow-md:0 6px 22px rgba(20,50,20,.12);
+  --r:12px;--r-sm:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font:14px/1.45 'DM Sans',system-ui,sans-serif;min-height:100vh}
+button,input{font:inherit;color:inherit}
+
+/* ─── TOPBAR (Standard) ─── */
+.topbar-outer{
+  background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  position:sticky;top:0;z-index:100;
+}
+.topbar{
+  max-width:none;margin:0;height:46px;
+  display:flex;align-items:center;flex-wrap:nowrap;
+  padding:0 18px;gap:14px;overflow:hidden;
+}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.topbar-spacer{flex:1}
+.topbar-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:700 12px/1 'DM Sans',sans-serif;padding:6px 12px;border-radius:8px;cursor:pointer;appearance:none;white-space:nowrap;}
+.topbar-btn:hover{background:rgba(255,255,255,.25)}
+
+/* ─── LAYOUT ── */
+.page{max-width:960px;margin:0;padding:20px 16px 48px}
+
+/* ── HEADER ── */
+.page-head{margin-bottom:20px}
+.page-title{font-size:22px;font-weight:900;line-height:1;color:var(--text)}
+.page-sub{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:2px;background:rgba(255,255,255,.6);border:1px solid var(--line);padding:3px;border-radius:999px;margin-bottom:16px;width:fit-content}
+.tab-btn{border:none;background:transparent;padding:7px 20px;border-radius:999px;font:700 13px/1 inherit;cursor:pointer;color:var(--muted);transition:.15s;white-space:nowrap}
+.tab-btn.active{background:#fff;color:var(--brand);box-shadow:0 1px 6px rgba(0,0,0,.1)}
+
+/* ── SEARCH ── */
+.search-wrap{position:relative;margin-bottom:14px}
+.search-inp{
+  width:100%;height:46px;border:1.5px solid var(--line-strong);background:#fff;
+  border-radius:var(--r);padding:0 46px 0 14px;
+  font:600 15px/1 inherit;color:var(--text);outline:none;transition:.15s
+}
+.search-inp:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(47,134,21,.1)}
+.search-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:17px;pointer-events:none;opacity:.5}
+.search-clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;background:none;border:none;cursor:pointer;opacity:.5;display:none;line-height:1;padding:2px}
+.search-clear.show{display:block}
+
+/* ── RESULT LIST ── */
+.results-info{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:10px}
+.result-list{display:flex;flex-direction:column;gap:6px}
+
+.person-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:12px 14px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;transition:border-color .15s,box-shadow .15s,background .12s;
+  text-align:left;width:100%
+}
+.person-card:hover{border-color:var(--brand-line);box-shadow:var(--shadow-md);background:var(--brand-soft)}
+.person-avatar{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--brand),var(--brand2));
+  display:flex;align-items:center;justify-content:center;
+  font:900 14px/1 inherit;color:#fff;
+  box-shadow:0 2px 8px rgba(47,134,21,.25)
+}
+.person-avatar.int{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.person-info{flex:1;min-width:0}
+.person-name{font-size:14px;font-weight:800;line-height:1.2}
+.person-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.person-badge{
+  font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;
+  white-space:nowrap;flex-shrink:0;border:1px solid
+}
+.person-badge.mitglied{background:var(--brand-soft);color:var(--brand);border-color:var(--brand-line)}
+.person-badge.interessent{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
+.person-badge.messungen{background:#f0f9ff;color:#0369a1;border-color:#bae6fd;margin-left:6px}
+.person-arrow{font-size:16px;color:var(--line-strong);flex-shrink:0;transition:color .15s,transform .15s}
+.person-card:hover .person-arrow{color:var(--brand);transform:translateX(3px)}
+
+/* ── EMPTY / LOADING ── */
+.empty{
+  text-align:center;padding:40px 20px;color:var(--muted);
+  background:var(--surface);border:1px dashed var(--line);border-radius:var(--r)
+}
+.empty-icon{font-size:36px;margin-bottom:10px}
+.empty-text{font-size:14px;font-weight:700}
+.empty-sub{font-size:12px;margin-top:4px;opacity:.75}
+
+.loading-row{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px;display:flex;align-items:center;gap:12px
+}
+.skel{background:linear-gradient(90deg,#eee 25%,#e0e0e0 50%,#eee 75%);background-size:200% 100%;animation:skel 1.4s infinite;border-radius:6px}
+@keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-circ{width:40px;height:40px;border-radius:50%;flex-shrink:0}
+.skel-lines{flex:1;display:flex;flex-direction:column;gap:6px}
+.skel-line{height:12px}
+
+/* ── QUICK ACTIONS ── */
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.qa-card{
+  background:var(--surface);border:1.5px solid var(--line);border-radius:var(--r);
+  padding:14px 16px;cursor:pointer;transition:.15s;text-align:left
+}
+.qa-card:hover{border-color:var(--brand-line);box-shadow:var(--shadow-md);background:var(--brand-soft)}
+.qa-icon{font-size:22px;margin-bottom:6px}
+.qa-title{font-size:13px;font-weight:800;line-height:1.2}
+.qa-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ── MESSUNG LIST (wenn Kunde/Int. ausgewählt) ── */
+.detail-panel{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;box-shadow:var(--shadow);margin-top:16px
+}
+.detail-head{
+  padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:10px
+}
+.detail-title{font-size:13px;font-weight:900}
+.btn-new-mess{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--brand);color:#fff;border:none;border-radius:var(--r-sm);
+  padding:8px 14px;font:700 12px/1 inherit;cursor:pointer;white-space:nowrap;
+  transition:background .15s
+}
+.btn-new-mess:hover{background:var(--brand-dark,#236010)}
+.mess-list{padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.mess-row{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;
+  background:var(--surface2);border:1px solid var(--line);border-radius:var(--r-sm);
+  cursor:pointer;transition:.12s
+}
+.mess-row:hover{background:var(--brand-soft);border-color:var(--brand-line)}
+.mess-date{font-size:13px;font-weight:800;flex:1}
+.mess-trainer{font-size:11px;color:var(--muted);margin-top:1px}
+.mess-kpi{
+  display:flex;gap:8px;flex-wrap:wrap
+}
+.mess-kpi-item{
+  font-size:11px;font-weight:700;background:#f0f9ff;color:#0369a1;
+  border-radius:999px;padding:2px 8px;border:1px solid #bae6fd;white-space:nowrap
+}
+.mess-arrow{font-size:14px;color:var(--line-strong);flex-shrink:0;transition:.12s}
+.mess-row:hover .mess-arrow{color:var(--brand);transform:translateX(2px)}
+
+.mess-empty{padding:20px;text-align:center;color:var(--muted);font-size:13px;font-weight:600}
+
+/* ── BACK BUTTON ── */
+.btn-back{
+  display:inline-flex;align-items:center;gap:6px;background:none;border:none;
+  color:var(--muted);font:600 13px/1 inherit;cursor:pointer;padding:0;margin-bottom:16px;
+  transition:color .12s
+}
+.btn-back:hover{color:var(--brand)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(10px);
+  background:#162812;color:#fff;border-radius:12px;padding:11px 24px;
+  font-size:13px;font-weight:700;z-index:999;opacity:0;
+  transition:.25s;pointer-events:none;white-space:nowrap
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:520px){
+  .quick-actions{grid-template-columns:1fr}
+  .tabs{width:100%}
+  .tab-btn{flex:1;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<script>
+if(window.self!==window.top){
+  document.documentElement.classList.add('in-iframe');
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.add('in-iframe');
+    document.body.style.background='#f5f7f4';
+    document.body.style.display='block';
+    var to=document.querySelector('.topbar-outer');
+    if(to){ to.style.width='100%'; }
+    var pg=document.querySelector('.page');
+    if(pg){
+      pg.style.maxWidth='none';
+      pg.style.width='auto';
+      pg.style.margin='0';
+      pg.style.padding='14px 14px 24px';
+    }
+  });
+}
+</script>
+<script>
+(function(){
+  var SK='fitbox_session';var TM=8*60*60*1000;var s;
+  try{var r=localStorage.getItem(SK)||sessionStorage.getItem(SK);s=JSON.parse(r);if(s&&!localStorage.getItem(SK))localStorage.setItem(SK,r);}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){
+    if(window.self!==window.top){try{window.top.location.replace('login.html');}catch(e){window.location.replace('login.html');}}
+    else{window.location.replace('login.html');}
+    throw new Error('AUTH');
+  }
+  window._fbSession=s;window._fbToken=s.access_token;
+  var _t;
+  function resetTimer(){clearTimeout(_t);_t=setTimeout(function(){localStorage.removeItem(SK);sessionStorage.removeItem(SK);window.location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet (8h Inaktivität).'));},TM);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+})();
+</script>
+
+<!-- TOPBAR -->
+<div class="topbar-outer"><div class="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">📊</span> Körperanalyse</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat" id="stat-datum">–</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-uhrzeit">–:–</span></span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <button class="topbar-btn" id="btnInfo">ℹ️ Info</button>
+</div></div>
+
+<script>
+(function(){
+  function pad(n){return n<10?'0'+n:n;}
+  function tick(){
+    var now=new Date();
+    var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    var weekdays=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    var dEl=document.getElementById('stat-datum');
+    var tEl=document.getElementById('stat-uhrzeit');
+    if(dEl) dEl.textContent=weekdays[now.getDay()]+', '+now.getDate()+'. '+months[now.getMonth()];
+    if(tEl) tEl.textContent=pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    tick();setInterval(tick,1000);
+    var modal=document.getElementById('infoModal');
+    if(modal){
+      document.getElementById('btnInfo').addEventListener('click',function(){modal.style.display='flex';});
+      document.getElementById('btnInfoClose').addEventListener('click',function(){modal.style.display='none';});
+      modal.addEventListener('click',function(e){if(e.target===modal)modal.style.display='none';});
+      document.addEventListener('keydown',function(e){if(e.key==='Escape')modal.style.display='none';});
+    }
+  });
+})();
+</script>
+
+<!-- INFO MODAL -->
+<div id="infoModal" style="position:fixed;inset:0;background:rgba(15,23,42,.42);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:9000;padding:16px">
+  <div style="width:min(580px,96vw);max-height:85vh;overflow:auto;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:20px;box-shadow:0 24px 48px rgba(15,23,42,.18);padding:22px">
+    <h3 style="margin:0 0 8px;font-size:22px;font-weight:800;letter-spacing:-.02em">📊 Körperanalyse – Anleitung</h3>
+    <p style="margin:0 0 16px;color:#64748b;font-size:14px;line-height:1.5">Messungen für Mitglieder und Interessenten verwalten und auswerten.</p>
+    <div style="display:grid;gap:10px;margin-bottom:16px">
+      <div style="border:1px solid #e5e9e2;border-radius:12px;padding:12px 14px;background:linear-gradient(180deg,#fff,#fbfdfb)">
+        <strong style="display:block;font-size:14px;margin-bottom:4px">🔍 Person suchen</strong>
+        <span style="font-size:13px;color:#64748b">Mitglieder oder Interessenten per Name suchen – Tab wechseln für die jeweilige Gruppe.</span>
+      </div>
+      <div style="border:1px solid #e5e9e2;border-radius:12px;padding:12px 14px;background:linear-gradient(180deg,#fff,#fbfdfb)">
+        <strong style="display:block;font-size:14px;margin-bottom:4px">➕ Neue Messung</strong>
+        <span style="font-size:13px;color:#64748b">Person anklicken, dann „Neue Messung" – Körperwerte erfassen und speichern.</span>
+      </div>
+      <div style="border:1px solid #e5e9e2;border-radius:12px;padding:12px 14px;background:linear-gradient(180deg,#fff,#fbfdfb)">
+        <strong style="display:block;font-size:14px;margin-bottom:4px">📈 Verlauf ansehen</strong>
+        <span style="font-size:13px;color:#64748b">Bestehende Messung anklicken um den Verlauf und alle Werte zu sehen.</span>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px">
+      <button id="btnInfoClose" type="button" style="appearance:none;border:1px solid #e5e9e2;background:#fff;border-radius:10px;padding:9px 18px;font:700 13px/1 inherit;cursor:pointer">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <!-- TAB BAR -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tabMitglieder" onclick="setTab('mitglieder')">👥 Mitglieder</button>
+    <button class="tab-btn" id="tabInteressenten" onclick="setTab('interessenten')">🔍 Interessenten</button>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-wrap">
+    <input type="text" class="search-inp" id="searchInp" placeholder="Name suchen …" autocomplete="off" oninput="onSearch()"/>
+    <span class="search-icon" id="searchIcon">🔍</span>
+    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+  </div>
+
+  <!-- RESULTS INFO -->
+  <div class="results-info" id="resultsInfo"></div>
+
+  <!-- MAIN CONTENT AREA -->
+  <div id="mainArea">
+    <!-- Initial: loading skeletons or list -->
+    <div id="listView">
+      <div class="result-list" id="resultList"></div>
+      <div class="empty" id="emptyState" style="display:none">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-text">Keine Ergebnisse</div>
+        <div class="empty-sub" id="emptySubText">Versuche einen anderen Suchbegriff</div>
+      </div>
+    </div>
+
+    <!-- Detail view: selected person + measurements -->
+    <div id="detailView" style="display:none">
+      <button class="btn-back" onclick="showList()">← Zurück zur Suche</button>
+      <div class="detail-panel">
+        <div class="detail-head">
+          <div>
+            <div class="detail-title" id="detailName">–</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px" id="detailMeta">–</div>
+          </div>
+          <button class="btn-new-mess" id="btnNeueMess">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+            Neue Messung
+          </button>
+        </div>
+        <div class="mess-list" id="messList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var SB_URL='https://jypbyywxfjniafuygxci.supabase.co';
+  var SB_KEY='sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+
+  // Auth
+  var _s=window._fbSession||(function(){
+    try{return JSON.parse(localStorage.getItem('fitbox_session')||sessionStorage.getItem('fitbox_session'));}
+    catch(e){}return null;
+  })();
+  if(!_s||!_s.access_token){
+    if(window.self!==window.top){try{window.top.location.replace('login.html');}catch(e){location.replace('login.html');}}
+    else location.replace('login.html');
+    throw new Error('AUTH');
+  }
+
+  var sb=null;
+  function getSB(){
+    if(!sb){
+      sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
+      sb.auth.setSession({access_token:_s.access_token,refresh_token:_s.access_token});
+    }
+    return sb;
+  }
+
+  // Studio ID aus Session
+  var SID=(function(){
+    try{
+      var emp=_s.employee;
+      if(emp&&emp.studio_id)return emp.studio_id;
+      // aus URL-Kontext des iframes
+      var p=new URLSearchParams(location.search);
+      return p.get('studio_id')||null;
+    }catch(e){return null;}
+  })();
+
+  var currentTab='mitglieder';
+  var searchTimer=null;
+  var allData=[];
+  var selectedPerson=null;
+
+  // Render functions
+  function toast(m){
+    var t=document.getElementById('toast');
+    t.textContent=m;t.classList.add('show');
+    setTimeout(function(){t.classList.remove('show');},2500);
+  }
+
+  window.setTab=function(tab){
+    currentTab=tab;
+    document.getElementById('tabMitglieder').classList.toggle('active',tab==='mitglieder');
+    document.getElementById('tabInteressenten').classList.toggle('active',tab==='interessenten');
+    document.getElementById('searchInp').value='';
+    document.getElementById('searchClear').classList.remove('show');
+    showList();
+    loadAll();
+  };
+
+  window.onSearch=function(){
+    var v=document.getElementById('searchInp').value;
+    document.getElementById('searchClear').classList.toggle('show',v.length>0);
+    clearTimeout(searchTimer);
+    searchTimer=setTimeout(renderFiltered,220);
+  };
+
+  window.clearSearch=function(){
+    document.getElementById('searchInp').value='';
+    document.getElementById('searchClear').classList.remove('show');
+    renderFiltered();
+  };
+
+  function showList(){
+    selectedPerson=null;
+    document.getElementById('listView').style.display='';
+    document.getElementById('detailView').style.display='none';
+  }
+
+  function showSkeleton(n){
+    n=n||4;
+    var html='';
+    for(var i=0;i<n;i++){
+      html+='<div class="loading-row">'
+        +'<div class="skel skel-circ"></div>'
+        +'<div class="skel-lines"><div class="skel skel-line" style="width:60%"></div><div class="skel skel-line" style="width:40%"></div></div>'
+        +'</div>';
+    }
+    document.getElementById('resultList').innerHTML=html;
+    document.getElementById('emptyState').style.display='none';
+    document.getElementById('resultsInfo').textContent='';
+  }
+
+  async function loadAll(){
+    showSkeleton();
+    try{
+      if(currentTab==='mitglieder'){
+        var q=getSB().from('kunden').select('id,first_name,last_name,geburtsdatum,ziel,status,kundennummer').eq('is_active',true).order('last_name');
+        if(SID)q=q.eq('studio_id',SID);
+        var {data,error}=await q;
+        if(error)throw error;
+        allData=data||[];
+      } else {
+        var q2=getSB().from('interessenten').select('id,first_name,last_name,email,phone,status,created_at').neq('status','archiviert').order('last_name');
+        if(SID)q2=q2.eq('studio_id',SID);
+        var {data:d2,error:e2}=await q2;
+        if(e2)throw e2;
+        allData=d2||[];
+      }
+      renderFiltered();
+    }catch(err){
+      document.getElementById('resultList').innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><div class="empty-text">Fehler beim Laden</div><div class="empty-sub">'+err.message+'</div></div>';
+    }
+  }
+
+  function renderFiltered(){
+    var q=document.getElementById('searchInp').value.trim().toLowerCase();
+    var filtered=allData;
+    if(q){
+      filtered=allData.filter(function(p){
+        var name=((p.first_name||'')+' '+(p.last_name||'')).toLowerCase();
+        var nr=(p.kundennummer||'').toLowerCase();
+        return name.includes(q)||nr.includes(q)||(p.email||'').toLowerCase().includes(q);
+      });
+    }
+
+    var info='';
+    if(q){
+      info=filtered.length+' Ergebnis'+(filtered.length!==1?'se':'')+' für „'+q+'"';
+    } else {
+      info=allData.length+' '+(currentTab==='mitglieder'?'Mitglieder':'Interessenten');
+    }
+    document.getElementById('resultsInfo').textContent=info;
+
+    if(filtered.length===0){
+      document.getElementById('resultList').innerHTML='';
+      document.getElementById('emptyState').style.display='';
+      document.getElementById('emptySubText').textContent=q?'Keine Treffer für „'+q+'"':'Keine Einträge gefunden';
+      return;
+    }
+    document.getElementById('emptyState').style.display='none';
+
+    var html=filtered.map(function(p){
+      var name=((p.first_name||'')+' '+(p.last_name||'')).trim();
+      var ini=((p.first_name||'')[0]||'').toUpperCase()+((p.last_name||'')[0]||'').toUpperCase();
+      var meta='';
+      if(currentTab==='mitglieder'){
+        var age=p.geburtsdatum?Math.floor((new Date()-new Date(p.geburtsdatum))/31557600000):null;
+        meta=[age?age+' Jahre':null,p.ziel,p.kundennummer?'#'+p.kundennummer:null].filter(Boolean).join(' · ');
+      } else {
+        meta=[p.email,p.phone,p.status].filter(Boolean).join(' · ');
+      }
+      var isInt=currentTab==='interessenten';
+      return '<button class="person-card" onclick="selectPerson(\''+p.id+'\',\''+escHtml(name)+'\',\''+escHtml(meta)+'\','+isInt+')">'
+        +'<div class="person-avatar'+(isInt?' int':'')+'">'+ini+'</div>'
+        +'<div class="person-info">'
+          +'<div class="person-name">'+escHtml(name)+'</div>'
+          +'<div class="person-meta">'+escHtml(meta||'–')+'</div>'
+        +'</div>'
+        +(isInt
+          ?'<span class="person-badge interessent">Interessent</span>'
+          :'<span class="person-badge mitglied">Mitglied</span>')
+        +'<span class="person-arrow">→</span>'
+        +'</button>';
+    }).join('');
+    document.getElementById('resultList').innerHTML=html;
+  }
+
+  function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  window.selectPerson=function(id,name,meta,isInteressent){
+    selectedPerson={id:id,name:name,meta:meta,isInteressent:isInteressent};
+    document.getElementById('listView').style.display='none';
+    document.getElementById('detailView').style.display='';
+    document.getElementById('detailName').textContent=name;
+    document.getElementById('detailMeta').textContent=(isInteressent?'Interessent · ':'')+meta;
+    document.getElementById('messList').innerHTML='<div class="mess-empty"><div style="font-size:20px;margin-bottom:6px">⏳</div>Messungen werden geladen …</div>';
+
+    // Neue Messung Button
+    document.getElementById('btnNeueMess').onclick=function(){
+      openMessung(null);
+    };
+
+    if(isInteressent){
+      // Interessenten haben keine Messungen in koerperanalyse direkt — trotzdem zeigen
+      document.getElementById('messList').innerHTML='<div class="mess-empty">'
+        +'<div style="font-size:20px;margin-bottom:6px">📊</div>'
+        +'<div style="font-weight:700;font-size:13px;margin-bottom:4px">Noch keine Messungen</div>'
+        +'<div style="font-size:12px;color:var(--muted)">Erstelle jetzt die erste Körperanalyse-Messung für diesen Interessenten.</div>'
+        +'</div>';
+    } else {
+      loadMessungen(id);
+    }
+  };
+
+  async function loadMessungen(kundeId){
+    try{
+      var {data,error}=await getSB()
+        .from('koerperanalyse')
+        .select('id,datum,trainer,gewicht_kg,koerperfett_prozent,muskelmasse_prozent,bmi')
+        .eq('kunde_id',kundeId)
+        .order('datum',{ascending:false});
+      if(error)throw error;
+      var rows=data||[];
+      if(rows.length===0){
+        document.getElementById('messList').innerHTML='<div class="mess-empty">'
+          +'<div style="font-size:20px;margin-bottom:6px">📊</div>'
+          +'<div style="font-weight:700;font-size:13px;margin-bottom:4px">Noch keine Messungen</div>'
+          +'<div style="font-size:12px;color:var(--muted)">Erstelle jetzt die erste Körperanalyse-Messung.</div>'
+          +'</div>';
+        return;
+      }
+      var html=rows.map(function(m){
+        var dateStr=m.datum?new Date(m.datum).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'}):m.datum;
+        var kpis=[];
+        if(m.gewicht_kg!=null)kpis.push(m.gewicht_kg+' kg');
+        if(m.bmi!=null)kpis.push('BMI '+m.bmi);
+        if(m.koerperfett_prozent!=null)kpis.push('KF '+m.koerperfett_prozent+'%');
+        if(m.muskelmasse_prozent!=null)kpis.push('MM '+m.muskelmasse_prozent+'%');
+        return '<div class="mess-row" onclick="openMessung(\''+m.id+'\')">'
+          +'<div style="flex:1">'
+            +'<div class="mess-date">'+escHtml(dateStr)+'</div>'
+            +(m.trainer?'<div class="mess-trainer">Trainer: '+escHtml(m.trainer)+'</div>':'')
+          +'</div>'
+          +(kpis.length?'<div class="mess-kpi">'+kpis.map(function(k){return'<span class="mess-kpi-item">'+k+'</span>';}).join('')+'</div>':'')
+          +'<span class="mess-arrow">→</span>'
+          +'</div>';
+      }).join('');
+      document.getElementById('messList').innerHTML=html;
+    }catch(err){
+      document.getElementById('messList').innerHTML='<div class="mess-empty">Fehler: '+err.message+'</div>';
+    }
+  }
+
+  function openMessung(messId){
+    if(!selectedPerson)return;
+    var p=selectedPerson;
+    var params=new URLSearchParams();
+
+    if(p.isInteressent){
+      params.set('interessent_id',p.id);
+    } else {
+      params.set('kunde_id',p.id);
+    }
+    if(SID)params.set('studio_id',SID);
+    if(messId)params.set('mess_id',messId);
+    // Rückgabe-Kontext: Person-Daten für Wiederherstellung
+    params.set('back_id',p.id);
+    params.set('back_name',p.name);
+    params.set('back_meta',p.meta||'');
+    params.set('back_int',p.isInteressent?'1':'0');
+    params.set('back_tab',currentTab);
+
+    var url='./koerperanalyse_messung.html?'+params.toString();
+    if(window.self!==window.top&&window.parent.navigate){
+      try{window.parent.navigate('mess_'+(messId?'edit':'neu'),url);return;}
+      catch(e){}
+    }
+    location.href=url;
+  }
+
+  // Auto-restore: wenn von Messung zurückgekehrt, Person direkt öffnen
+  (function restoreFromUrl(){
+    var p=new URLSearchParams(location.search);
+    var backId=p.get('back_id');
+    var backName=p.get('back_name');
+    var backMeta=p.get('back_meta');
+    var backInt=p.get('back_int')==='1';
+    var backTab=p.get('back_tab');
+    if(!backId||!backName)return;
+    if(backTab&&backTab!==currentTab){
+      currentTab=backTab;
+      document.getElementById('tabMitglieder').classList.toggle('active',backTab==='mitglieder');
+      document.getElementById('tabInteressenten').classList.toggle('active',backTab==='interessenten');
+    }
+    // Nach kurzem Warten (loadAll läuft async) Detail öffnen
+    setTimeout(function(){
+      window.selectPerson(backId,backName,backMeta,backInt);
+    },100);
+  })();
+
+  // Init
+  loadAll();
+})();
+</script>
+</body>
+</html>

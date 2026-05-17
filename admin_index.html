@@ -1,0 +1,1914 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>fitbox Studio OS · Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --brand:       #2f8615;
+  --brand-dark:  #1e5c0e;
+  --brand-acc:   #95c11f;
+  --brand-soft:  #eef7e9;
+  --muted2:      #9ca3af;
+  --brand-line:  #c8e6b4;
+  --bg:          #f0f4ef;
+  --card:        #ffffff;
+  --text:        #111827;
+  --muted:       #6b7280;
+  --line:        #e0e8de;
+  --danger:      #dc2626;
+  --sidebar-w:   240px;
+  --header-h:    58px;
+  --shadow:      0 2px 8px rgba(16,40,12,.06), 0 1px 2px rgba(16,40,12,.04);
+  --shadow-lg:   0 20px 48px rgba(16,40,12,.14);
+  --shadow-md:   0 8px 28px rgba(16,40,12,.10);
+  --radius:      14px;
+  --font:        'DM Sans', system-ui, sans-serif;
+  --mono:        'DM Mono', monospace;
+}
+html, body { height: 100%; font-family: var(--font); color: var(--text); }
+
+/* ─── LOGIN ─── */
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(145deg, #f0f7ee 0%, #e6f2e1 100%);
+}
+.login-card {
+  width: min(420px, 100%);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(16,40,12,.13);
+  padding: 32px 28px;
+}
+.login-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+.login-logo img {
+  max-width: 180px;
+  width: 100%;
+  height: auto;
+}
+.login-title {
+  font-size: 22px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 4px;
+}
+.login-sub {
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.field { margin-bottom: 14px; }
+.field label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #374151;
+}
+.field input {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 11px 14px;
+  font: inherit;
+  font-size: 14px;
+  background: #fff;
+  color: var(--text);
+  transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus {
+  outline: none;
+  border-color: #86bc79;
+  box-shadow: 0 0 0 3px rgba(47,134,21,.10);
+}
+.login-btn {
+  width: 100%;
+  min-height: 46px;
+  background: linear-gradient(180deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 11px;
+  font: 800 15px/1 var(--font);
+  cursor: pointer;
+  margin-top: 4px;
+  transition: transform .15s, box-shadow .15s;
+  box-shadow: 0 4px 14px rgba(47,134,21,.28);
+}
+.login-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(47,134,21,.36); }
+.login-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+.error-box {
+  margin-top: 11px;
+  padding: 10px 13px;
+  border-radius: 10px;
+  background: #fff4f4;
+  border: 1px solid #f2c8c8;
+  color: var(--danger);
+  font-size: 13px;
+  display: none;
+}
+.login-note {
+  margin-top: 16px;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ─── APP ─── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ─── TOPBAR ─── */
+.topbar {
+  height: var(--header-h);
+  background: linear-gradient(135deg, #1a3a5c 0%, #0f2035 100%);
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 14px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,.18);
+  z-index: 100;
+}
+.topbar-logo {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  flex-shrink: 0;
+}
+.topbar-title { font-size: 15px; font-weight: 900; color: #fff; letter-spacing: .02em; }
+.topbar-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.25);
+  color: #fff;
+  border-radius: 999px;
+  padding: 3px 9px;
+}
+.topbar-spacer { flex: 1; }
+.topbar-session {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  padding: 5px 13px;
+  flex-shrink: 0;
+}
+.topbar-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #86efac;
+}
+.topbar-email { font-size: 12px; font-weight: 700; color: #fff; }
+.topbar-logout {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.22);
+  color: #fff;
+  font: 700 12px/1 var(--font);
+  padding: 7px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.topbar-logout:hover { background: rgba(255,255,255,.25); }
+.topbar-back {
+  font: 600 12px/1 var(--font);
+  color: rgba(255,255,255,.75);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+.topbar-back:hover { color: #fff; }
+
+/* ─── SHELL ─── */
+.shell {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--card);
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+/* ─── SEARCH ─── */
+.sidebar-search {
+  padding: 12px 12px 6px;
+  position: relative;
+}
+.sidebar-search input {
+  width: 100%;
+  padding: 8px 10px 8px 32px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font: 500 12px/1.3 var(--font);
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color .15s, box-shadow .15s;
+}
+.sidebar-search input:focus {
+  outline: none;
+  border-color: #86bc79;
+  box-shadow: 0 0 0 3px rgba(47,134,21,.08);
+  background: #fff;
+}
+.sidebar-search-icon {
+  position: absolute;
+  left: 21px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.nav-group-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 14px 16px 5px;
+}
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  font: 600 13px/1.3 var(--font);
+  color: var(--muted);
+  cursor: pointer;
+  text-align: left;
+  border-radius: 8px;
+  margin: 1px 5px;
+  width: calc(100% - 10px);
+  transition: background .13s, color .13s;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nav-btn:hover { background: var(--brand-soft); color: var(--brand); }
+.nav-btn.active {
+  background: linear-gradient(135deg, var(--brand-soft), #e4f5d8);
+  color: var(--brand-dark);
+  font-weight: 800;
+  position: relative;
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+
+.nav-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.nav-divider { border: none; border-top: 1px solid var(--line); margin: 6px 0; }
+.nav-hidden { display: none !important; }
+
+/* Übersicht Hero-Button */
+.nav-btn.nav-overview {
+  background: linear-gradient(135deg, var(--brand-soft) 0%, #fff 100%);
+  border: 1px solid var(--brand-line);
+  color: var(--brand-dark);
+  font-weight: 700;
+  margin: 4px 0 8px;
+  position: relative;
+  padding-right: 36px;
+  transition: .15s;
+}
+.nav-btn.nav-overview:hover {
+  background: linear-gradient(135deg, #e2f0d6 0%, var(--brand-soft) 100%);
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(47,134,21,.12);
+}
+.nav-btn.nav-overview.active {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: #fff;
+  border-color: var(--brand-dark);
+}
+.nav-btn.nav-overview.active::before { display: none; }
+.nav-overview-badge {
+  position: absolute;
+  right: 10px; top: 50%; transform: translateY(-50%);
+  min-width: 22px; height: 22px;
+  border-radius: 11px;
+  background: var(--danger); color: #fff;
+  font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 7px;
+  box-shadow: 0 2px 6px rgba(220,38,38,.3);
+  animation: badgePulse 2s ease-in-out infinite;
+}
+.nav-btn.nav-overview.active .nav-overview-badge {
+  background: #fff; color: var(--brand-dark);
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
+  animation: none;
+}
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 2px 6px rgba(220,38,38,.3); }
+  50% { box-shadow: 0 2px 12px rgba(220,38,38,.55); }
+}
+
+/* Externer Link (öffnet in neuem Tab) */
+.nav-btn.nav-external {
+  position: relative;
+  color: var(--muted);
+}
+.nav-btn.nav-external:hover {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+.nav-btn.nav-external .nav-ext-icon {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--muted2);
+  font-weight: 600;
+  padding-left: 8px;
+}
+.nav-btn.nav-external:hover .nav-ext-icon { color: var(--brand); }
+.sidebar-footer {
+  margin-top: auto;
+  padding: 12px 14px;
+  border-top: 1px solid var(--line);
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* ─── MAIN ─── */
+.main-wrapper {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 8px;
+  background: var(--bg);
+}
+#page-frame {
+  flex: 1;
+  border: none;
+  width: 100%;
+  display: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(16,40,12,.07);
+  background: var(--bg);
+}
+
+/* ─── FRAME LOADER ─── */
+#frame-loader {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 10;
+}
+.loader-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--brand-line);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader-text { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+/* ─── WELCOME SCREEN ─── */
+#page-welcome {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 16px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: var(--bg);
+  border-radius: 14px;
+}
+.welcome-hero {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+  color: #fff;
+  box-shadow: 0 10px 32px rgba(47,134,21,.28);
+  position: relative;
+  overflow: hidden;
+}
+.welcome-hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -30px;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.07);
+  pointer-events: none;
+}
+.welcome-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -50px; left: 40%;
+  width: 220px; height: 110px;
+  border-radius: 50%;
+  background: rgba(149,193,31,.12);
+  pointer-events: none;
+}
+.welcome-hero h2 { font-size: 21px; letter-spacing: -.02em; font-weight: 900; margin-bottom: 5px; }
+.welcome-hero p  { font-size: 13px; opacity: .82; }
+
+.overview-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-dark) 100%);
+  color: #fff;
+  border-radius: 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(47,134,21,.22);
+  transition: transform .2s ease, box-shadow .2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.overview-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 90% 50%, rgba(255,255,255,.18), transparent 60%);
+  pointer-events: none;
+}
+.overview-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(47,134,21,.32);
+}
+.overview-card-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.15));
+}
+.overview-card-body { flex: 1; min-width: 0; }
+.overview-card-title { font-size: 17px; font-weight: 900; letter-spacing: -.01em; }
+.overview-card-desc { font-size: 13px; opacity: .92; margin-top: 2px; }
+.overview-card-arrow {
+  font-size: 22px;
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: transform .2s ease;
+}
+.overview-card:hover .overview-card-arrow { transform: translateX(4px); }
+
+.section-title {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--brand);
+  opacity: .75;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: -4px;
+}
+.section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--brand-line), transparent);
+}
+
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
+}
+.tile {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  transition: transform .15s cubic-bezier(.4,0,.2,1), box-shadow .15s, border-color .15s;
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: var(--text);
+}
+.tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(47,134,21,.14);
+  border-color: var(--brand-line);
+}
+.tile.dash-tile { background: linear-gradient(135deg, #fcfffb 0%, #f0f9eb 100%); border-color: var(--brand-line); }
+.tile.dash-tile:hover { background: linear-gradient(135deg, #f4fbf0 0%, #e6f5df 100%); }
+.tile-icon { font-size: 24px; line-height: 1; }
+.tile-name { font-size: 13px; font-weight: 800; line-height: 1.2; margin-top: 2px; }
+.tile-desc { font-size: 11px; color: var(--muted2, #9ca3af); font-weight: 500; line-height: 1.4; }
+.tile-label { font-size: 13px; font-weight: 800; }
+
+/* ─── OWNER DASHBOARD ─── */
+#ownerDashboard { display: flex; flex-direction: column; gap: 16px; }
+
+.dash-studio-tabs {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.dash-tab {
+  padding: 7px 16px; border-radius: 20px; border: 1.5px solid var(--line);
+  background: var(--card); color: var(--muted); font: 700 12px/1 var(--font);
+  cursor: pointer; transition: all .15s;
+}
+.dash-tab.active {
+  background: var(--brand); color: #fff; border-color: var(--brand);
+}
+.dash-tab:hover:not(.active) { border-color: var(--brand-line); color: var(--brand); }
+
+.dash-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 900px) { .dash-kpi-row { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 520px)  { .dash-kpi-row { grid-template-columns: 1fr; } }
+
+.kpi-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 14px; padding: 16px 18px;
+  box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 4px;
+  transition: transform .15s, box-shadow .15s;
+}
+.kpi-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.kpi-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.kpi-val { font-size: 32px; font-weight: 900; color: var(--brand); letter-spacing: -.02em; line-height: 1.1; }
+.kpi-val.warn { color: #d97706; }
+.kpi-val.danger { color: var(--danger); }
+.kpi-sub { font-size: 11px; color: var(--muted2); }
+
+.dash-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+@media (max-width: 820px) { .dash-grid { grid-template-columns: 1fr; } }
+
+.dash-card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 14px; box-shadow: var(--shadow); overflow: hidden;
+}
+.dash-card-full { /* volle Breite */ }
+.dash-card-header {
+  display: flex; align-items: center; gap: 8px;
+  padding: 13px 16px 11px; border-bottom: 1px solid var(--line);
+}
+.dash-card-icon { font-size: 16px; }
+.dash-card-title { font-size: 13px; font-weight: 800; flex: 1; }
+.dash-card-link {
+  font-size: 11px; font-weight: 700; color: var(--brand); border: none;
+  background: none; cursor: pointer; padding: 0; text-decoration: none;
+}
+.dash-card-link:hover { text-decoration: underline; }
+.dash-card-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+
+.dash-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 7px 10px; border-radius: 9px; background: var(--bg);
+  font-size: 12px;
+}
+.dash-row-label { font-weight: 600; color: var(--text); }
+.dash-row-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.dash-row-val { font-size: 13px; font-weight: 800; color: var(--brand); }
+.dash-row-val.warn { color: #d97706; }
+.dash-row-val.danger { color: var(--danger); }
+.dash-row-val.neutral { color: var(--muted); }
+.dash-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+  background: var(--brand-soft); color: var(--brand); border: 1px solid var(--brand-line);
+}
+.dash-badge.warn { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+.dash-badge.danger { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+.dash-badge.neutral { background: var(--bg); color: var(--muted); border-color: var(--line); }
+.dash-badge.mm { background: #e6f2ff; color: #1e40af; border-color: #bfdbfe; }
+.dash-badge.se { background: #f3e8ff; color: #6b21a8; border-color: #e9d5ff; }
+
+.dash-skeleton {
+  height: 36px; border-radius: 9px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
+
+.dash-empty { font-size: 12px; color: var(--muted); text-align: center; padding: 12px 0; }
+
+/* ─── TOAST ─── */
+#toastContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  pointer-events: none;
+}
+.toast {
+  background: #0d1b2a;
+  color: #fff;
+  border-radius: 12px;
+  padding: 11px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 14px 36px rgba(0,0,0,.22);
+  max-width: 380px;
+  width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+  animation: toastIn .2s ease;
+}
+.toast.ok  { border-left: 4px solid #4ade80; }
+.toast.err { border-left: 4px solid #f87171; }
+@keyframes toastIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+.hidden { display: none !important; }
+
+@media (max-width:720px) {
+  .sidebar { display: none; }
+  #page-welcome { padding: 0; }
+}
+
+/* ─── IFRAME MODE: hide old header + zero padding ─── */
+.in-iframe .header,
+.in-iframe .topbar,
+.in-iframe header,
+.in-iframe .app-header,
+.in-iframe .page-header {
+  display: none !important;
+}
+.in-iframe .page,
+.in-iframe .wrap,
+.in-iframe .app,
+.in-iframe .container,
+.in-iframe main {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+body.in-iframe,
+html.in-iframe body {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+
+/* ─── AKKORDION SIDEBAR ─── */
+.acc-group { margin-bottom: 2px; }
+.acc-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font: 700 12px/1.3 var(--font);
+  color: var(--muted);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  transition: background .12s, color .12s;
+  margin-top: 4px;
+}
+.acc-header:hover { background: var(--brand-soft); color: var(--brand); }
+.acc-icon { font-size: 14px; flex-shrink: 0; }
+.acc-label { flex: 1; }
+.acc-chevron {
+  font-size: 12px;
+  transition: transform .2s ease;
+  color: var(--muted);
+}
+.acc-group:not(.open) .acc-chevron { transform: rotate(-90deg); }
+.acc-body {
+  overflow: hidden;
+  max-height: 500px;
+  transition: max-height .25s ease, opacity .2s ease;
+  opacity: 1;
+  padding-left: 8px;
+}
+.acc-group:not(.open) .acc-body {
+  max-height: 0;
+  opacity: 0;
+}
+.nav-sub {
+  padding-left: 20px !important;
+  font-size: 13px !important;
+}
+
+
+/* ─── INACTIVITY TIMER ─── */
+.topbar-timer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 999px;
+  padding: 5px 11px;
+  font: 700 12px/1 var(--mono, monospace);
+  color: rgba(255,255,255,.9);
+  letter-spacing: .03em;
+  transition: background .3s, border-color .3s, color .3s;
+}
+.topbar-timer.warn {
+  background: rgba(245,158,11,.25);
+  border-color: rgba(245,158,11,.5);
+  color: #fef3c7;
+}
+.topbar-timer.danger {
+  background: rgba(220,38,38,.3);
+  border-color: rgba(220,38,38,.5);
+  color: #fee2e2;
+  animation: timerPulse 1s ease infinite;
+}
+@keyframes timerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .65; }
+}
+.topbar-timer-icon { font-size: 13px; }
+
+</style>
+</head>
+<body>
+<script>
+(function(){
+  var SESSION_KEY='fitbox_session';
+  var TIMEOUT_MS=8*60*60*1000;
+  var s;try{s=JSON.parse(localStorage.getItem(SESSION_KEY))||JSON.parse(sessionStorage.getItem(SESSION_KEY));}catch(e){}
+  // Kein Login → Login-Seite
+  if(!s||!s.access_token||s.expires_at<Date.now()){
+    var here=encodeURIComponent(location.pathname+location.search);
+    localStorage.removeItem(SESSION_KEY);
+    location.replace('login.html?next='+here);
+    throw new Error('AUTH');
+  }
+  // Rolle aus Session prüfen (gespeichert beim Login)
+  var roleId=s.employee?s.employee.role_id:'';
+  var roleCode=s.employee&&s.employee.roles?s.employee.roles.code:'';
+  var isAdmin=(roleId==='80f04245-ee93-45e8-9861-121778b5ff84'||roleCode==='admin');
+  var isStudioLeader=(roleCode==='studioleitung');
+  var hasAdminAccess=isAdmin||isStudioLeader;
+  // Globale Flags für Sub-Seiten
+  window._fbIsAdmin = isAdmin;
+  window._fbIsStudioLeader = isStudioLeader;
+  window._fbRoleCode = roleCode;
+  if(!hasAdminAccess){
+    window.location.replace('index_memmingen.html');
+    throw new Error('ROLE');
+  }
+  // Auto-Logout
+  var _timer;
+  function resetTimer(){clearTimeout(_timer);_timer=setTimeout(function(){localStorage.removeItem(SESSION_KEY);location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet (8h Inaktivität).'));},TIMEOUT_MS);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+  // ── Auto Token-Refresh ──────────────────────────────────────
+  window._fbRefreshToken = async function(){
+    var KEY = 'fitbox_session';
+    var SB_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+    var SB_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+    try{
+      var raw = localStorage.getItem(KEY) || sessionStorage.getItem(KEY);
+      var sess = JSON.parse(raw);
+      if(!sess || !sess.refresh_token) return;
+      if(sess.expires_at - Date.now() > 10*60*1000) return;
+      var res = await fetch(SB_URL+'/auth/v1/token?grant_type=refresh_token', {
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+        body:JSON.stringify({refresh_token: sess.refresh_token})
+      });
+      if(!res.ok) return;
+      var data = await res.json();
+      if(!data.access_token) return;
+      sess.access_token = data.access_token;
+      sess.refresh_token = data.refresh_token || sess.refresh_token;
+      sess.expires_at = Date.now() + (data.expires_in * 1000);
+      var updated = JSON.stringify(sess);
+      localStorage.setItem(KEY, updated);
+      if(sessionStorage.getItem(KEY)) sessionStorage.setItem(KEY, updated);
+      window._fbToken = data.access_token;
+      if(window._fbSession) window._fbSession.access_token = data.access_token;
+    }catch(e){ console.warn('Token-Refresh fehlgeschlagen:', e); }
+  };
+  setInterval(window._fbRefreshToken, 5*60*1000);
+  // ────────────────────────────────────────────────────────────
+  window._fbSession=s;window._fbToken=s.access_token;
+  // User-Badge
+  window.addEventListener('DOMContentLoaded',function(){
+    var tb=document.querySelector('.fitbox-topbar-outer > div');
+    if(!tb||tb.querySelector('#fb-user'))return;
+    var sp=tb.querySelector('[style*="flex:1"]');if(sp)sp.remove();
+    var emp=s.employee||{};
+    var name=emp.display_name||emp.first_name||s.user.email||'User';
+    var ini=((emp.first_name||'')[0]+(emp.last_name||'')[0]).toUpperCase()||'?';
+    var d=document.createElement('div');d.id='fb-user';d.style='display:flex;align-items:center;gap:8px;margin-left:auto';
+    d.innerHTML='<div style="text-align:right;line-height:1.3"><div style="font-size:12px;font-weight:800;color:#fff">'+name+'</div></div>'
+      +'<div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff">'+ini+'</div>'
+      +'<button id="fb-logout-btn" style="appearance:none;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;border-radius:8px;padding:5px 10px;font:700 11px/1 inherit;cursor:pointer">Abmelden</button>';
+    tb.appendChild(d);
+    document.getElementById('fb-logout-btn').addEventListener('click',function(){localStorage.removeItem(SESSION_KEY);location.href='login.html';});
+  });
+})();
+</script>
+    <a href="index.html" style="font:600 11px/1 sans-serif;color:rgba(255,255,255,.8);text-decoration:none">← Startseite</a>
+  </div>
+</div>
+
+
+<div id="toastContainer"></div>
+
+<!-- APP -->
+<div id="appView" class="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <img class="topbar-logo" src="https://145725822.fs1.hubspotusercontent-eu1.net/hub/145725822/hubfs/fitbox/images/logo-fitbox.png?width=1500&height=575&name=logo-fitbox.png" alt="fitbox"/>
+    <span class="topbar-title">fitbox Admin</span>
+    <span class="topbar-badge" id="roleBadge">Verwaltung</span>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-session">
+      <div class="topbar-dot"></div>
+      <span class="topbar-email" id="sessionEmail">–</span>
+    </div>
+    <div class="topbar-timer" id="topbarTimer" title="Automatischer Logout bei Inaktivität">
+      <span class="topbar-timer-icon">⏳</span>
+      <span id="timerDisplay">03:00</span>
+    </div>
+    <button class="topbar-logout" id="logoutBtn">Abmelden</button>
+    <a class="topbar-back" href="index.html">← Studio OS</a>
+  </div>
+
+  <div class="shell">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="sidebar-search">
+        <span class="sidebar-search-icon">🔍</span>
+        <input id="sidebarSearch" type="text" placeholder="Suchen …" autocomplete="off"/>
+      </div>
+
+      <button class="nav-btn active" data-page="welcome">
+        <span class="nav-icon">🏠</span> Admin Start
+      </button>
+
+      <div class="acc-group open" data-group="einstellungen">
+        <button class="acc-header" onclick="toggleGroup('einstellungen')">
+          <span class="acc-icon">⚙️</span>
+          <span class="acc-label">Einstellungen</span>
+          <span class="acc-chevron">▾</span>
+        </button>
+        <div class="acc-body">
+          <button class="nav-btn nav-sub" data-page="grunddaten" data-file="admin_grunddaten.html" data-search="Grunddaten Studios Rollen Mitarbeiter Zuordnungen">
+            <span class="nav-icon">🏢</span> Grunddaten
+          </button>
+          <button class="nav-btn nav-sub" data-page="lookup" data-file="admin_systemlisten.html" data-search="Lookup Listen Dropdown Einträge Werte PT MTT Reinigung Templates">
+            <span class="nav-icon">📋</span> Lookup
+          </button>
+          <button class="nav-btn nav-sub" data-page="kassenprodukte" data-file="admin_kassenprodukte.html" data-search="Kassenprodukte Cash Produkte Kategorien Preise Artikelstamm POS">
+            <span class="nav-icon">🛍️</span> Kassenprodukte
+          </button>
+          <button class="nav-btn nav-sub" data-page="kassenrechte" data-file="admin_kassenrechte.html" data-search="Kassenrechte Cash Berechtigungen Mitarbeiter Rechte Verkäufer">
+            <span class="nav-icon">🔐</span> Kassenrechte
+          </button>
+          <button class="nav-btn nav-sub" data-page="benachrichtigungen" data-file="admin_benachrichtigungen.html" data-search="Benachrichtigungen E-Mail Push Notifications Empfänger Events Studio Versandprotokoll Subscriptions Geräte Trigger">
+            <span class="nav-icon">🔔</span> Benachrichtigungen
+          </button>
+          <button class="nav-btn nav-sub" data-page="ki_prompts" data-file="admin_ki_prompts.html" data-search="KI Prompts Ernährungsanalyse Textblöcke KI-Texte Anweisungen">
+            <span class="nav-icon">🤖</span> KI-Prompts (Ernährung)
+          </button>
+        </div>
+      </div>
+
+      <div class="acc-group" data-group="personal">
+        <button class="acc-header" onclick="toggleGroup('personal')">
+          <span class="acc-icon">👥</span>
+          <span class="acc-label">Personal</span>
+          <span class="acc-chevron">▾</span>
+        </button>
+        <div class="acc-body">
+          <button class="nav-btn nav-sub" data-page="personal" data-file="admin_personal.html" data-search="Personal Urlaub Abwesenheiten Urlaubskonten Schichtvorlagen Arbeitsmuster Planungseinstellungen">
+            <span class="nav-icon">👥</span> Personal
+          </button>
+          <button class="nav-btn nav-sub" data-page="zeiterfassung" data-file="admin_zeiterfassung.html" data-search="Zeiterfassung Zeiten korrigieren Auffälligkeiten Saldo Korrekturen">
+            <span class="nav-icon">⏱️</span> Zeiterfassung
+          </button>
+          <button class="nav-btn nav-sub" data-page="abwesenheiten" data-file="admin_abwesenheiten.html" data-search="Abwesenheiten Krankmeldung Urlaub Schule Prüfung Überstundenabbau Sonderurlaub">
+            <span class="nav-icon">📅</span> Abwesenheiten
+          </button>
+          <button class="nav-btn nav-sub" data-page="dokumente" data-file="admin_dokumente.html" data-search="Dokumente Arbeitsvertrag Zeugnis Zertifikat AU-Schein Lohnabrechnung Personalakte">
+            <span class="nav-icon">📁</span> Dokumente
+          </button>
+          <button class="nav-btn nav-sub" data-page="live_praesenz" data-file="admin_live_praesenz.html" data-search="Live Präsenz Eingecheckt Anwesend Studios Memmingen Senden Online Status">
+            <span class="nav-icon">🟢</span> Live Präsenz
+          </button>
+          <button class="nav-btn nav-sub" data-page="mitarbeiter_aufgaben" data-file="admin_aufgaben.html" data-search="Aufgaben Mitarbeiter Tasks To-Do Aufgabe vergeben Erinnerung Pop-up">
+            <span class="nav-icon">📋</span> Mitarbeiter-Aufgaben
+          </button>
+          <button class="nav-btn nav-sub" data-page="fahrtkosten" data-file="admin_fahrtkosten.html" data-search="Fahrtkosten Reisekosten Kilometergeld Dienstfahrten Abrechnung genehmigen">
+            <span class="nav-icon">🚗</span> Fahrtkosten
+          </button>
+          <button class="nav-btn nav-sub" data-page="mitarbeiter_nachrichten" data-file="admin_mitarbeiter_nachrichten.html" data-search="Nachrichten Defekte Stempelkorrektur Mitarbeiter Inbox Feedback Probleme Ideen Foto">
+            <span class="nav-icon">💬</span> Mitarbeiter-Nachrichten
+          </button>
+          <button class="nav-btn nav-sub nav-external" data-external="mitarbeiter_app.html" data-search="Mitarbeiter App PWA Handy Stempeluhr Schichten ansehen Vorschau">
+            <span class="nav-icon">📱</span> Mitarbeiter-App <span class="nav-ext-icon">↗</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="acc-group" data-group="planung">
+        <button class="acc-header" onclick="toggleGroup('planung')">
+          <span class="acc-icon">📅</span>
+          <span class="acc-label">Planung</span>
+          <span class="acc-chevron">▾</span>
+        </button>
+        <div class="acc-body">
+          <button class="nav-btn nav-sub" data-page="schichtplaner" data-file="admin_schichtplaner.html" data-search="Schichtplaner Monatsplanung Schichten Planung">
+            <span class="nav-icon">📅</span> Schichtplaner
+          </button>
+        </div>
+      </div>
+
+      <div class="acc-group" data-group="reinigung">
+        <button class="acc-header" onclick="toggleGroup('reinigung')">
+          <span class="acc-icon">🧹</span>
+          <span class="acc-label">Reinigung</span>
+          <span class="acc-chevron">▾</span>
+        </button>
+        <div class="acc-body">
+          <button class="nav-btn nav-sub" data-page="reinigungsaufgaben" data-file="admin_reinigungsaufgaben.html" data-search="Reinigung Aufgaben Reinigungspläne Putzplan Pflichtaufgaben Schicht">
+            <span class="nav-icon">📝</span> Reinigungsaufgaben
+          </button>
+        </div>
+      </div>
+
+      <div class="acc-group" data-group="pt">
+        <button class="acc-header" onclick="toggleGroup('pt')">
+          <span class="acc-icon">🎯</span>
+          <span class="acc-label">Vertrieb & Marketing</span>
+          <span class="acc-chevron">▾</span>
+        </button>
+        <div class="acc-body">
+          <button class="nav-btn nav-sub" data-page="pt_whatsapp_vorlagen" data-file="admin_pt_whatsapp_vorlagen.html" data-search="WhatsApp Templates PT Leads Nachrichten">
+            <span class="nav-icon">💬</span> WhatsApp Templates
+          </button>
+          <button class="nav-btn nav-sub" data-page="newsletter" data-file="admin_newsletter.html" data-search="Newsletter Kampagne E-Mail Interessenten Kunden Versand Mailing">
+            <span class="nav-icon">📧</span> Newsletter
+          </button>
+          <button class="nav-btn nav-sub" data-page="email_vorlagen" data-file="admin_email_vorlagen.html" data-search="E-Mail Vorlagen Anamnese Interessenten Mail Template Generator Kampagne">
+            <span class="nav-icon">✉️</span> E-Mail Vorlagen
+          </button>
+          <button class="nav-btn nav-sub" data-page="aktionen" data-file="admin_aktionen.html" data-search="Aktionen Mitglieder werben Partner Rabatt Werbeaktion Empfehlung Teilnahmen">
+            <span class="nav-icon">🎯</span> Aktionen
+          </button>
+        </div>
+      </div>
+
+      <div class="acc-group" data-group="vertraege">
+        <button class="acc-header" onclick="toggleGroup('vertraege')">
+          <span class="acc-icon">📋</span>
+          <span class="acc-label">Vertragsverwaltung</span>
+          <span class="acc-chevron">▾</span>
+        </button>
+        <div class="acc-body">
+          <button class="nav-btn nav-sub" data-page="vertraege" data-file="admin_vertraege.html" data-search="Vertragsverwaltung Vertragstypen Vertragsvorlagen Laufzeit Wochenbeitrag Rabatte Module Kundenverträge Flex One Flex Max Wellpass MTT Kontingent">
+            <span class="nav-icon">📋</span> Vertragstypen & Varianten
+          </button>
+        </div>
+      </div>
+
+      <div class="acc-group" data-group="dashboards">
+        <button class="acc-header" onclick="toggleGroup('dashboards')">
+          <span class="acc-icon">📊</span>
+          <span class="acc-label">Dashboards</span>
+          <span class="acc-chevron">▾</span>
+        </button>
+        <div class="acc-body">
+          <button class="nav-btn nav-sub" data-page="zeit_uebersicht" data-file="admin_zeit_uebersicht.html" data-search="Zeit Dashboard Zeiterfassung Soll Ist Saldo Stunden Auswertung Mitarbeiter">
+            <span class="nav-icon">⏱️</span> Zeit Dashboard
+          </button>
+          <button class="nav-btn nav-sub" data-page="reinigung_uebersicht" data-file="admin_reinigung_uebersicht.html" data-search="Reinigung Dashboard Quote Statistik Auswertung Mitarbeiter Schichten">
+            <span class="nav-icon">🧹</span> Reinigung Dashboard
+          </button>
+          <button class="nav-btn nav-sub" data-page="kasse_uebersicht" data-file="admin_kasse_uebersicht.html" data-search="Kasse Umsatz Dashboard Transaktionen Tagesumsatz Produkte Kassenrechte">
+            <span class="nav-icon">💰</span> Kassen Dashboard
+          </button>
+          <button class="nav-btn nav-sub" data-page="feedback" data-file="admin_feedback.html" data-search="Feedback Dashboard Bewertungen Trainer Ranking Kundenzufriedenheit">
+            <span class="nav-icon">⭐</span> Feedback Dashboard
+          </button>
+          <button class="nav-btn nav-sub" data-page="mtt" data-file="admin_mtt.html" data-search="MTT Dashboard Rezepte Therapie Abrechnung">
+            <span class="nav-icon">🏥</span> MTT Dashboard
+          </button>
+          <button class="nav-btn nav-sub" data-page="pt" data-file="admin_pt.html" data-search="PT Dashboard Leads Abschluss Follow-up">
+            <span class="nav-icon">🎯</span> PT Dashboard
+          </button>
+        </div>
+      </div>
+
+      <hr class="nav-divider"/>
+      <div class="nav-group">
+        <div class="nav-group-label">System</div>
+        <div class="nav-group-items">
+          <button class="nav-btn nav-sub" data-page="aenderungsprotokoll" data-file="admin_aenderungsprotokoll.html" data-search="Audit Log Änderungen Protokoll History Verlauf Änderungsprotokoll">
+            <span class="nav-icon">🔎</span> Audit Log
+          </button>
+          <button class="nav-btn nav-sub" data-page="medien" data-file="admin_medien.html" data-search="Medien Bibliothek Logos Bilder Trainer Fotos Marketing Newsletter Print Dateien Upload">
+            <span class="nav-icon">🖼️</span> Medien-Bibliothek
+          </button>
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        fitbox Admin OS<br/>
+        #fitboxMemmingen
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <div class="main-wrapper">
+
+      <div id="frame-loader">
+        <div class="loader-spinner"></div>
+        <div class="loader-text">Seite wird geladen …</div>
+      </div>
+
+      <iframe id="page-frame" title="Admin Inhalt"></iframe>
+
+      <!-- KEIN ZUGRIFF SCREEN (für Studioleitung bei Owner-Only Seiten) -->
+      <div id="page-no-access" style="display:none; flex:1; align-items:center; justify-content:center; flex-direction:column; gap:18px; padding:40px 24px; background:var(--bg); border-radius:14px;">
+        <div style="font-size:64px;">🔒</div>
+        <h2 style="font-size:22px; font-weight:900; color:var(--ink); text-align:center; margin:0;">Kein Zugriff auf diese Seite</h2>
+        <p style="font-size:14px; color:var(--muted); text-align:center; max-width:480px; margin:0; line-height:1.6;">
+          Dieser Bereich ist nur für den <strong style="color:var(--brand-dark)">Owner</strong> zugänglich. Wenn du hier etwas brauchst oder ändern möchtest, wende dich bitte an <strong style="color:var(--brand-dark)">Kürşat</strong>.
+        </p>
+        <button onclick="showWelcome()" style="margin-top:8px; background:linear-gradient(180deg,#2f8615,#256a10); color:#fff; border:none; border-radius:11px; padding:12px 24px; font:900 13px/1 system-ui; cursor:pointer;">
+          ← Zurück zum Start
+        </button>
+      </div>
+
+      <!-- WELCOME SCREEN -->
+      <div id="page-welcome">
+
+        <!-- ═══════════════════════════════════════════ OWNER DASHBOARD ═══ -->
+        <div id="ownerDashboard">
+
+          <!-- HERO -->
+          <div class="welcome-hero" style="margin-bottom:0">
+            <h2 id="dashGreeting">Guten Morgen 👋</h2>
+            <p id="dashDate" style="opacity:.8;font-size:13px"></p>
+          </div>
+
+          <!-- STUDIO TABS -->
+          <div class="dash-studio-tabs">
+            <button class="dash-tab active" data-studio="both">Beide Studios</button>
+            <button class="dash-tab" data-studio="mm">fitbox Memmingen</button>
+            <button class="dash-tab" data-studio="se">fitbox Senden</button>
+          </div>
+
+          <!-- KPI ROW -->
+          <div class="dash-kpi-row">
+            <div class="kpi-card" id="kpi-leads-mm">
+              <div class="kpi-label">Neue Leads heute</div>
+              <div class="kpi-val" id="kpiLeadsToday">–</div>
+              <div class="kpi-sub" id="kpiLeadsSub">Memmingen · Senden</div>
+            </div>
+            <div class="kpi-card" id="kpi-conv">
+              <div class="kpi-label">Abschlussquote (Monat)</div>
+              <div class="kpi-val" id="kpiConv">–</div>
+              <div class="kpi-sub" id="kpiConvSub">Leads → Abschluss</div>
+            </div>
+            <div class="kpi-card" id="kpi-members">
+              <div class="kpi-label">Aktive Mitglieder</div>
+              <div class="kpi-val" id="kpiMembers">–</div>
+              <div class="kpi-sub" id="kpiMembersSub">Verträge aktiv</div>
+            </div>
+            <div class="kpi-card" id="kpi-tasks">
+              <div class="kpi-label">Offene Aufgaben</div>
+              <div class="kpi-val" id="kpiTasks">–</div>
+              <div class="kpi-sub" id="kpiTasksSub">Mitarbeiter-To-Dos</div>
+            </div>
+          </div>
+
+          <!-- 2-COLUMN GRID -->
+          <div class="dash-grid">
+
+            <!-- LEADS & PT -->
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">🎯</span>
+                <span class="dash-card-title">Leads &amp; PT</span>
+                <button class="dash-card-link" onclick="navigate('pt','admin_pt.html')">Details →</button>
+              </div>
+              <div class="dash-card-body" id="dashLeads">
+                <div class="dash-skeleton"></div><div class="dash-skeleton"></div><div class="dash-skeleton"></div>
+              </div>
+            </div>
+
+            <!-- PERSONAL HEUTE -->
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">👥</span>
+                <span class="dash-card-title">Personal heute</span>
+                <button class="dash-card-link" onclick="navigate('live_praesenz','admin_live_praesenz.html')">Live →</button>
+              </div>
+              <div class="dash-card-body" id="dashPersonal">
+                <div class="dash-skeleton"></div><div class="dash-skeleton"></div><div class="dash-skeleton"></div>
+              </div>
+            </div>
+
+            <!-- MITGLIEDER -->
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">📋</span>
+                <span class="dash-card-title">Mitglieder</span>
+                <button class="dash-card-link" onclick="navigate('vertraege','admin_vertraege.html')">Details →</button>
+              </div>
+              <div class="dash-card-body" id="dashMitglieder">
+                <div class="dash-skeleton"></div><div class="dash-skeleton"></div><div class="dash-skeleton"></div>
+              </div>
+            </div>
+
+            <!-- AUFGABEN -->
+            <div class="dash-card">
+              <div class="dash-card-header">
+                <span class="dash-card-icon">✅</span>
+                <span class="dash-card-title">Offene Aufgaben</span>
+                <button class="dash-card-link" onclick="navigate('mitarbeiter_aufgaben','admin_aufgaben.html')">Alle →</button>
+              </div>
+              <div class="dash-card-body" id="dashAufgaben">
+                <div class="dash-skeleton"></div><div class="dash-skeleton"></div><div class="dash-skeleton"></div>
+              </div>
+            </div>
+
+          </div><!-- /dash-grid -->
+
+          <!-- ABWESENHEITEN HEUTE -->
+          <div class="dash-card dash-card-full">
+            <div class="dash-card-header">
+              <span class="dash-card-icon">📅</span>
+              <span class="dash-card-title">Abwesenheiten &amp; Auffälligkeiten heute</span>
+              <button class="dash-card-link" onclick="navigate('zeiterfassung','admin_zeiterfassung.html')">Zeiterfassung →</button>
+            </div>
+            <div class="dash-card-body" id="dashAbwesenheiten">
+              <div class="dash-skeleton"></div><div class="dash-skeleton"></div>
+            </div>
+          </div>
+
+          <!-- SCHNELLZUGRIFF -->
+          <div class="section-title">Schnellzugriff</div>
+          <div class="tile-grid">
+
+
+
+        <div class="tile" onclick="navigate('pt','admin_pt.html')">
+            <span class="tile-icon">🎯</span>
+            <span class="tile-name">PT Dashboard</span>
+            <span class="tile-desc">Lead-Auswertung · Abschlussquoten · Follow-up</span>
+          </div>
+          <div class="tile" onclick="navigate('zeiterfassung','admin_zeiterfassung.html')">
+            <span class="tile-icon">⏱️</span>
+            <span class="tile-name">Zeiterfassung</span>
+            <span class="tile-desc">Zeiten korrigieren · Auffälligkeiten · Saldo</span>
+          </div>
+          <div class="tile" onclick="navigate('abwesenheiten','admin_abwesenheiten.html')">
+            <span class="tile-icon">📅</span>
+            <span class="tile-name">Abwesenheiten</span>
+            <span class="tile-desc">Urlaub · Krankmeldung · Genehmigungen</span>
+          </div>
+          <div class="tile" onclick="navigate('mitarbeiter_aufgaben','admin_aufgaben.html')">
+            <span class="tile-icon">✅</span>
+            <span class="tile-name">Mitarbeiter-Aufgaben</span>
+            <span class="tile-desc">Aufgaben vergeben · Pop-up · Snooze</span>
+          </div>
+          <div class="tile" onclick="navigate('schichtplaner','admin_schichtplaner.html')">
+            <span class="tile-icon">📅</span>
+            <span class="tile-name">Schichtplaner</span>
+            <span class="tile-desc">Monatsplanung & Schichten</span>
+          </div>
+          <div class="tile" onclick="navigate('kasse_uebersicht','admin_kasse_uebersicht.html')">
+            <span class="tile-icon">💰</span>
+            <span class="tile-name">Kassen Dashboard</span>
+            <span class="tile-desc">Umsatz · Transaktionen · Tagesumsatz</span>
+          </div>
+          <div class="tile" onclick="navigate('personal','admin_personal.html')">
+            <span class="tile-icon">👥</span>
+            <span class="tile-name">Personal</span>
+            <span class="tile-desc">Mitarbeiter · Urlaub · Schichtvorlagen</span>
+          </div>
+          <div class="tile" onclick="navigate('grunddaten','admin_grunddaten.html')">
+            <span class="tile-icon">🏢</span>
+            <span class="tile-name">Grunddaten</span>
+            <span class="tile-desc">Studios · Rollen · Mitarbeiter</span>
+          </div>
+        </div>
+
+      </div><!-- /page-welcome -->
+    </div><!-- /main-wrapper -->
+  </div><!-- /shell -->
+</div><!-- /appView -->
+
+<script>
+
+/* ─── AUTO LOGOUT TIMER (3 min inactivity) ─── */
+(function() {
+  const TIMEOUT_SEC = 3 * 60; // 3 Minuten
+  let remaining = TIMEOUT_SEC;
+  let timerInterval = null;
+  let isLoggedIn = false;
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function updateDisplay() {
+    const el = document.getElementById('timerDisplay');
+    const wrap = document.getElementById('topbarTimer');
+    if (!el || !wrap) return;
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    el.textContent = pad(m) + ':' + pad(s);
+    wrap.classList.remove('warn', 'danger');
+    if (remaining <= 30) wrap.classList.add('danger');
+    else if (remaining <= 60) wrap.classList.add('warn');
+  }
+
+  function resetTimer() {
+    if (!isLoggedIn) return;
+    remaining = TIMEOUT_SEC;
+    updateDisplay();
+  }
+
+  function startTimer() {
+    isLoggedIn = true;
+    remaining = TIMEOUT_SEC;
+    updateDisplay();
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(function() {
+      if (!isLoggedIn) return;
+      remaining--;
+      updateDisplay();
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        doAutoLogout();
+      }
+    }, 1000);
+  }
+
+  function stopTimer() {
+    isLoggedIn = false;
+    if (timerInterval) clearInterval(timerInterval);
+    const el = document.getElementById('timerDisplay');
+    if (el) el.textContent = '--:--';
+    const wrap = document.getElementById('topbarTimer');
+    if (wrap) wrap.classList.remove('warn', 'danger');
+  }
+
+  function doAutoLogout() {
+    isLoggedIn = false;
+    showToast('Automatisch abgemeldet – 3 Minuten Inaktivität.', 'warn', 4000);
+    setTimeout(function() {
+      var logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) logoutBtn.click();
+    }, 1500);
+  }
+
+  // Reset on user activity
+  var activityEvents = ['mousemove','keydown','click','scroll','touchstart','pointerdown'];
+  activityEvents.forEach(function(evt) {
+    document.addEventListener(evt, resetTimer, { passive: true });
+  });
+
+  // Expose for app logic to call
+  window._adminTimer = { start: startTimer, stop: stopTimer, reset: resetTimer };
+})();
+
+
+const SUPA_URL = "https://jypbyywxfjniafuygxci.supabase.co";
+const SUPA_KEY = "sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU";
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY, {auth:{persistSession:false,storageKey:"sb_admin_index"}});
+
+// Auth-Session aus fitbox_session in den sb-Client laden
+(function(){
+  try {
+    const s = JSON.parse(localStorage.getItem('fitbox_session') || '{}');
+    if (s.access_token && s.refresh_token) {
+      sb.auth.setSession({ access_token: s.access_token, refresh_token: s.refresh_token });
+    }
+  } catch(e) { console.warn('Dashboard: Session-Init fehlgeschlagen', e); }
+})();
+
+/* ─── OWNER DASHBOARD ─── */
+const STUDIOS = {
+  mm: { id: '50de091d-debc-4172-8053-b516f42c4321', label: 'Memmingen', cls: 'mm' },
+  se: { id: '3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb', label: 'Senden',    cls: 'se' }
+};
+let dashStudio = 'both'; // 'both' | 'mm' | 'se'
+
+function dashGreeting() {
+  const h = new Date().getHours();
+  const g = h < 11 ? 'Guten Morgen' : h < 17 ? 'Guten Tag' : 'Guten Abend';
+  const emp = (window._fbSession?.employee?.first_name) || '';
+  document.getElementById('dashGreeting').textContent = `${g}${emp ? ', '+emp : ''} 👋`;
+  const d = new Date();
+  document.getElementById('dashDate').textContent =
+    d.toLocaleDateString('de-DE', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+}
+
+function studioIds() {
+  if (dashStudio === 'both') return Object.values(STUDIOS).map(s => s.id);
+  return [STUDIOS[dashStudio].id];
+}
+
+function skel(id, n=3) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = Array(n).fill('<div class="dash-skeleton"></div>').join('');
+}
+
+function row(label, val, valCls='', sub='', badgeText='', badgeCls='') {
+  const badge = badgeText ? `<span class="dash-badge ${badgeCls}">${badgeText}</span>` : '';
+  const subHtml = sub ? `<div class="dash-row-sub">${sub}</div>` : '';
+  return `<div class="dash-row">
+    <div><div class="dash-row-label">${label}</div>${subHtml}</div>
+    <div style="display:flex;align-items:center;gap:8px">${badge}<span class="dash-row-val ${valCls}">${val}</span></div>
+  </div>`;
+}
+
+async function loadDashLeads() {
+  skel('dashLeads');
+  const ids = studioIds();
+  const today = new Date().toISOString().slice(0,10);
+  const monthStart = today.slice(0,7) + '-01';
+
+  // interessenten = normale Leads (status: new/kontakt/termin_gesetzt/abschluss/lost...)
+  // pt_leads = PT-Leads (status_key)
+  const [todayRes, monthRes, abschlussRes, terminRes, ptTerminRes] = await Promise.all([
+    sb.from('interessenten').select('id', {count:'exact', head:true})
+      .in('studio_id', ids).gte('created_at', today+'T00:00:00'),
+    sb.from('interessenten').select('id', {count:'exact', head:true})
+      .in('studio_id', ids).gte('created_at', monthStart+'T00:00:00'),
+    sb.from('interessenten').select('id', {count:'exact', head:true})
+      .in('studio_id', ids).eq('status','abschluss').gte('created_at', monthStart+'T00:00:00'),
+    sb.from('interessenten').select('id', {count:'exact', head:true})
+      .in('studio_id', ids).eq('status','termin_gesetzt'),
+    sb.from('pt_leads').select('id', {count:'exact', head:true})
+      .in('studio_id', ids).eq('status_key','termin_gesetzt'),
+  ]);
+
+  const todayCount = todayRes.count  ?? 0;
+  const monthCount = monthRes.count  ?? 0;
+  const abschluss  = abschlussRes.count ?? 0;
+  const termine    = (terminRes.count ?? 0) + (ptTerminRes.count ?? 0);
+  const quote = monthCount > 0 ? Math.round(abschluss / monthCount * 100) : 0;
+
+  document.getElementById('kpiLeadsToday').textContent = todayCount;
+  document.getElementById('kpiLeadsSub').textContent = dashStudio === 'both' ? 'Memmingen · Senden' : STUDIOS[dashStudio]?.label;
+  document.getElementById('kpiConv').textContent = quote + '%';
+  document.getElementById('kpiConvSub').textContent = `${abschluss} von ${monthCount} (Monat)`;
+
+  const el = document.getElementById('dashLeads');
+  el.innerHTML =
+    row('Neue Leads heute', todayCount, todayCount > 0 ? '' : 'neutral') +
+    row('Leads diesen Monat', monthCount) +
+    row('Abschlüsse Monat', abschluss, abschluss > 0 ? '' : 'neutral', `Quote: ${quote}%`) +
+    row('Offene Termine', termine, termine > 0 ? 'warn' : 'neutral');
+}
+
+async function loadDashPersonal() {
+  skel('dashPersonal');
+  const ids = studioIds();
+  const today = new Date().toISOString().slice(0,10);
+
+  // time_events: event_date, event_type, studio_id
+  // employee_absences: date_from, date_to, status, studio_id
+  // time_daily_records: work_date, day_status, studio_id
+  const [clockRes, absRes, anomRes] = await Promise.all([
+    sb.from('time_events').select('employee_id')
+      .in('studio_id', ids).eq('event_date', today).eq('event_type','clock_in'),
+    sb.from('employee_absences').select('absence_id', {count:'exact', head:true})
+      .in('studio_id', ids).lte('date_from', today).gte('date_to', today).eq('status','approved'),
+    sb.from('time_daily_records').select('daily_record_id', {count:'exact', head:true})
+      .in('studio_id', ids).eq('work_date', today)
+      .in('day_status', ['open','missing_clock']),
+  ]);
+
+  const eingestempelt = [...new Set(clockRes.data?.map(e => e.employee_id) ?? [])].length;
+  const abwesend = absRes.count ?? 0;
+  const auffaellig = anomRes.count ?? 0;
+
+  const el = document.getElementById('dashPersonal');
+  el.innerHTML =
+    row('Heute eingestempelt', eingestempelt, eingestempelt > 0 ? '' : 'neutral', 'Unique Mitarbeiter') +
+    row('Abwesend heute', abwesend, abwesend > 0 ? 'warn' : 'neutral', 'Genehmigt') +
+    row('Auffälligkeiten', auffaellig, auffaellig > 0 ? 'danger' : 'neutral', 'Offene Zeiterfassungs-Issues');
+}
+
+async function loadDashMitglieder() {
+  skel('dashMitglieder');
+  const ids = studioIds();
+  const today = new Date().toISOString().slice(0,10);
+  const in30 = new Date(Date.now() + 30*24*60*60*1000).toISOString().slice(0,10);
+  const monthStart = today.slice(0,7) + '-01';
+
+  // kunden_vertraege: status ('active'), vertragsart (Wellpass erkennen), vertragsbeginn, vertragsende
+  const [aktiveRes, wellpassRes, kuendigungRes, neuRes] = await Promise.all([
+    sb.from('kunden_vertraege').select('id', {count:'exact', head:true})
+      .in('studio_id', ids).eq('is_active', true),
+    sb.from('kunden_vertraege').select('id', {count:'exact', head:true})
+      .in('studio_id', ids).eq('is_active', true).ilike('vertragsart','%wellpass%'),
+    sb.from('kunden_vertraege').select('id', {count:'exact', head:true})
+      .in('studio_id', ids).eq('is_active', true)
+      .lte('vertragsende', in30).gte('vertragsende', today),
+    sb.from('kunden_vertraege').select('id', {count:'exact', head:true})
+      .in('studio_id', ids).gte('vertragsbeginn', monthStart),
+  ]);
+
+  const aktive   = aktiveRes.count   ?? 0;
+  const wellpass = wellpassRes.count ?? 0;
+  const kuendig  = kuendigungRes.count ?? 0;
+  const neu      = neuRes.count ?? 0;
+
+  document.getElementById('kpiMembers').textContent = aktive;
+  document.getElementById('kpiMembersSub').textContent = `${wellpass} Wellpass`;
+
+  const el = document.getElementById('dashMitglieder');
+  el.innerHTML =
+    row('Aktive Verträge', aktive) +
+    row('davon Wellpass', wellpass, '', `${aktive > 0 ? Math.round(wellpass/aktive*100) : 0}% Anteil`) +
+    row('Neue Verträge (Monat)', neu, neu > 0 ? '' : 'neutral') +
+    row('Enden in 30 Tagen', kuendig, kuendig > 0 ? 'warn' : 'neutral', 'Verlängerung prüfen');
+}
+
+async function loadDashAufgaben() {
+  skel('dashAufgaben');
+  const ids = studioIds();
+
+  // mitarbeiter_aufgaben: titel, prioritaet, faellig_am, erledigt, studio_id
+  const { data, count } = await sb.from('mitarbeiter_aufgaben')
+    .select('id, titel, prioritaet, studio_id, faellig_am', {count:'exact'})
+    .in('studio_id', ids).eq('erledigt', false)
+    .order('faellig_am', {ascending: true, nullsFirst: false})
+    .limit(4);
+
+  document.getElementById('kpiTasks').textContent = count ?? (data?.length ?? '–');
+  const el = document.getElementById('dashAufgaben');
+  if (!data || data.length === 0) {
+    el.innerHTML = '<div class="dash-empty">Keine offenen Aufgaben ✓</div>';
+    return;
+  }
+  const today = new Date().toISOString().slice(0,10);
+  el.innerHTML = data.map(t => {
+    const overdue = t.faellig_am && t.faellig_am < today;
+    const studio = Object.values(STUDIOS).find(s => s.id === t.studio_id);
+    return row(
+      t.titel || '–',
+      overdue ? 'Überfällig' : (t.faellig_am ? t.faellig_am.slice(5).replace('-','.') : '–'),
+      overdue ? 'danger' : 'warn',
+      '',
+      studio?.label || '',
+      studio?.cls || ''
+    );
+  }).join('');
+}
+
+async function loadDashAbwesenheiten() {
+  skel('dashAbwesenheiten', 2);
+  const ids = studioIds();
+  const today = new Date().toISOString().slice(0,10);
+
+  // employee_absences: date_from, date_to, absence_type, status, employee_id, studio_id
+  const [absRes, anomRes] = await Promise.all([
+    sb.from('employee_absences')
+      .select('absence_id, employee_id, absence_type, studio_id, employees(first_name, last_name)')
+      .in('studio_id', ids).lte('date_from', today).gte('date_to', today)
+      .eq('status','approved').limit(6),
+    sb.from('time_daily_records')
+      .select('daily_record_id, employee_id, studio_id, day_status, employees(first_name, last_name)')
+      .in('studio_id', ids).eq('work_date', today)
+      .in('day_status', ['open','missing_clock']).limit(4),
+  ]);
+
+  const el = document.getElementById('dashAbwesenheiten');
+  const rows = [];
+
+  if (absRes.data?.length) {
+    absRes.data.forEach(a => {
+      const studio = Object.values(STUDIOS).find(s => s.id === a.studio_id);
+      const name = a.employees ? `${a.employees.first_name} ${a.employees.last_name}` : '–';
+      const type = ({sick:'Krankmeldung', vacation:'Urlaub', school_exam:'Schule/Prüfung'})[a.absence_type] || a.absence_type;
+      rows.push(row(name, type, 'warn', '', studio?.label||'', studio?.cls||''));
+    });
+  }
+
+  if (anomRes.data?.length) {
+    anomRes.data.forEach(r2 => {
+      const studio = Object.values(STUDIOS).find(s => s.id === r2.studio_id);
+      const name = r2.employees ? `${r2.employees.first_name} ${r2.employees.last_name}` : '–';
+      rows.push(row(name, 'Auffälligkeit', 'danger', r2.day_status || '', studio?.label||'', studio?.cls||''));
+    });
+  }
+
+  el.innerHTML = rows.length ? rows.join('') : '<div class="dash-empty">Keine Abwesenheiten heute ✓</div>';
+}
+
+async function loadOwnerDashboard() {
+  dashGreeting();
+  await Promise.all([
+    loadDashLeads(),
+    loadDashPersonal(),
+    loadDashMitglieder(),
+    loadDashAufgaben(),
+    loadDashAbwesenheiten(),
+  ]);
+}
+
+// Studio-Tab-Switching
+document.querySelectorAll('.dash-tab').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.dash-tab').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    dashStudio = this.dataset.studio;
+    loadOwnerDashboard();
+  });
+});
+
+// Dashboard laden wenn Welcome-Page aktiv
+function maybeDashboard() {
+  const w = document.getElementById('page-welcome');
+  if (w && !w.classList.contains('hidden')) loadOwnerDashboard();
+}
+setTimeout(maybeDashboard, 300);
+
+/* ─── TOAST ─── */
+function showToast(msg, type='ok'){
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span style="font-size:15px">${type==='ok'?'✓':'✕'}</span><span>${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(()=>{ t.style.transition='.3s ease'; t.style.opacity='0'; t.style.transform='translateY(8px)'; setTimeout(()=>t.remove(),300); }, 2800);
+}
+
+/* ─── AUTH via localStorage ─── */
+// App ist bereits sichtbar — Guard hat schon geprüft
+var _s = window._fbSession;
+var sessionEl = document.getElementById('sessionEmail');
+if(sessionEl && _s) {
+  var emp = _s.employee || {};
+  sessionEl.textContent = emp.display_name || emp.first_name
+    ? (emp.first_name||'')+' '+(emp.last_name||'')
+    : _s.user.email || 'Admin';
+}
+// Badge je nach Rolle anzeigen
+var roleBadge = document.getElementById('roleBadge');
+if (roleBadge) {
+  if (window._fbIsStudioLeader && !window._fbIsAdmin) {
+    roleBadge.textContent = 'Studioleitung';
+    roleBadge.style.background = 'linear-gradient(135deg,#5b8def 0%,#3563c9 100%)';
+  } else if (window._fbIsAdmin) {
+    roleBadge.textContent = 'Verwaltung';
+  }
+}
+document.getElementById('logoutBtn').addEventListener('click', function() {
+  localStorage.removeItem('fitbox_session');
+  window.location.href = 'login.html';
+});
+
+/* ─── NAVIGATION ─── */
+const frame   = document.getElementById('page-frame');
+const welcome = document.getElementById('page-welcome');
+const noAccess = document.getElementById('page-no-access');
+const loader  = document.getElementById('frame-loader');
+
+// Liste der Module, die NUR für Admin (Owner) zugänglich sind
+const OWNER_ONLY_PAGES = [
+  'grunddaten',          // Studios, Rollen, Mitarbeiter-Zuordnung
+  'lookup',              // System-Werte (Status-Codes etc.)
+  'benachrichtigungen',       // E-Mail + Push Benachrichtigungs-Zentrale
+  'newsletter',          // Newsletter-Versand
+  'email_vorlagen',      // Marketing-Mail-Vorlagen
+  'aktionen',            // Mitglieder-werben-Aktionen
+  'vertraege',           // Vertragsstammdaten (global)
+  'ki_prompts',  // KI-Prompt-Konfiguration
+  'medien'               // Marketing-Medien-Bibliothek
+];
+
+function isStudioLeaderOnly() {
+  return !!window._fbIsStudioLeader && !window._fbIsAdmin;
+}
+
+// Tracking: welche Seite ist aktuell geladen (für postMessage-Match)
+window._fbCurrentPage = null;
+
+function showNoAccess(page){
+  frame.style.display = 'none';
+  frame.src = 'about:blank';
+  welcome.style.display = 'none';
+  loader.style.display = 'none';
+  noAccess.style.display = 'flex';
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+}
+
+// PostMessage-Listener: Sub-Pages können "Kein Zugriff" signalisieren ohne Redirect
+window.addEventListener('message', function(event) {
+  if (!event.data || typeof event.data !== 'object') return;
+  if (event.data.type === 'fitbox-no-access') {
+    console.log('[admin_index] Sub-page meldet kein Zugriff:', event.data.path);
+    showNoAccess(window._fbCurrentPage);
+  }
+});
+
+function navigate(page, file){
+  // Studioleitung darf Owner-Only Seiten nicht aufrufen
+  if (isStudioLeaderOnly() && OWNER_ONLY_PAGES.includes(page)) {
+    showNoAccess(page);
+    return;
+  }
+
+  welcome.style.display = 'none';
+  noAccess.style.display = 'none';
+  frame.style.display = 'flex';
+
+  loader.style.display = 'flex';
+  frame.style.visibility = 'hidden';
+
+  window._fbCurrentPage = page;
+
+  const ts = Date.now();
+  frame.src = file + (file.includes('?') ? '&' : '?') + '_ts=' + ts;
+  frame.onload = () => {
+    // iFrame-Redirect-Schutz: Wenn die Seite uns wegredirected hat (location.replace)
+    // dann zeigen wir "Kein Zugriff". ABER: Race-Condition-anfällig — daher
+    // zweistufig: erst nach kurzem Delay prüfen damit Redirect Zeit hat zu greifen.
+    function checkRedirect() {
+      try {
+        const iframePath = frame.contentWindow?.location?.pathname || '';
+        if (!iframePath) return false; // Kein Path lesbar → vermutlich Cross-Origin → OK lassen
+        const expectedFile = file.split('?')[0];
+        // Wenn iframe-Path nicht mehr unsere Datei ist, sondern Login/Memmingen/Senden
+        const wasRedirected = !iframePath.endsWith(expectedFile) && (
+          iframePath.endsWith('index_memmingen.html') ||
+          iframePath.endsWith('index_senden.html') ||
+          iframePath.endsWith('login.html') ||
+          iframePath.endsWith('/index.html')
+        );
+        return wasRedirected;
+      } catch (e) {
+        // Cross-Origin oder iframe noch nicht ready → kein Redirect-Verdacht
+        return false;
+      }
+    }
+    // Erst nach 150ms checken — gibt dem iframe Zeit, location.replace() durchzuziehen falls nötig
+    setTimeout(function() {
+      if (checkRedirect()) {
+        showNoAccess(window._fbCurrentPage || page);
+        return;
+      }
+      // Alles OK: iframe anzeigen
+      loader.style.display = 'none';
+      frame.style.visibility = 'visible';
+    }, 150);
+  };
+
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`.nav-btn[data-page="${page}"]`);
+  if(btn) btn.classList.add('active');
+}
+
+function showWelcome(){
+  frame.style.display = 'none';
+  frame.src = 'about:blank';
+  noAccess.style.display = 'none';
+  welcome.style.display = 'flex';
+  loader.style.display = 'none';
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const welcomeBtn = document.querySelector('.nav-btn[data-page="welcome"]');
+  if (welcomeBtn) welcomeBtn.classList.add('active');
+  loadOwnerDashboard();
+}
+
+document.querySelectorAll('.nav-btn[data-page]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const page = btn.dataset.page;
+    const file = btn.dataset.file;
+    if(page === 'welcome') { showWelcome(); return; }
+    if(file) navigate(page, file);
+  });
+});
+
+/* Externe Links (öffnen in neuem Tab) */
+document.querySelectorAll('.nav-btn[data-external]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    window.open(btn.dataset.external, '_blank', 'noopener');
+  });
+});
+
+/* ─── ROLLEN-BASIERTE SICHTBARKEIT ─── */
+(function applyRoleFilter(){
+  if (!isStudioLeaderOnly()) return;
+
+  // Studioleitung: Verstecke Owner-Only Module komplett aus der Sidebar
+  OWNER_ONLY_PAGES.forEach(page => {
+    const btn = document.querySelector(`.nav-btn[data-page="${page}"]`);
+    if (btn) btn.style.display = 'none';
+  });
+
+  // Tiles in der Welcome-Karte auch versteckt machen (falls als onclick navigate(...) referenziert)
+  document.querySelectorAll('#page-welcome .tile').forEach(tile => {
+    const onclickAttr = tile.getAttribute('onclick') || '';
+    const match = onclickAttr.match(/navigate\(['"]([^'"]+)['"]/);
+    if (match && OWNER_ONLY_PAGES.includes(match[1])) {
+      tile.style.display = 'none';
+    }
+  });
+
+  // Leere Navigations-Gruppen verstecken
+  document.querySelectorAll('.acc-group').forEach(group => {
+    const visibleBtns = group.querySelectorAll('.nav-btn:not([style*="display: none"]):not([style*="display:none"])');
+    if (visibleBtns.length === 0) group.style.display = 'none';
+  });
+
+  document.querySelectorAll('.nav-group-label').forEach(label => {
+    let next = label.nextElementSibling;
+    let hasVisible = false;
+    while(next && !next.classList.contains('nav-group-label') && next.tagName !== 'HR'){
+      if(next.classList.contains('nav-btn') && next.style.display !== 'none') hasVisible = true;
+      next = next.nextElementSibling;
+    }
+    if (!hasVisible) {
+      label.style.display = 'none';
+      const group = label.closest('.nav-group');
+      if (group) {
+        const visibleBtns = group.querySelectorAll('.nav-btn:not([style*="display: none"]):not([style*="display:none"])');
+        if (visibleBtns.length === 0) group.style.display = 'none';
+      }
+    }
+  });
+
+  // Welcome-Hero-Titel anpassen
+  const heroH = document.querySelector('.welcome-hero h2');
+  if (heroH) heroH.textContent = 'Studioleitung 🟢';
+  const heroP = document.querySelector('.welcome-hero p');
+  if (heroP) {
+    const studio = (window._fbSession?.employee?.display_name) ? window._fbSession.employee.display_name + ' · ' : '';
+    heroP.textContent = studio + 'Verwaltung deines Studios: Personal · Schichten · Anwesenheiten · Kasse · Reinigung';
+  }
+})();
+
+/* ─── SIDEBAR SEARCH ─── */
+document.getElementById('sidebarSearch').addEventListener('input', function(){
+  const q = this.value.trim().toLowerCase();
+  document.querySelectorAll('.nav-btn[data-search]').forEach(btn => {
+    // Bei Studioleitung: Owner-Only weiterhin versteckt
+    if (isStudioLeaderOnly() && OWNER_ONLY_PAGES.includes(btn.dataset.page)) {
+      btn.classList.add('nav-hidden');
+      return;
+    }
+    const match = !q || (btn.dataset.search||'').toLowerCase().includes(q) || btn.textContent.toLowerCase().includes(q);
+    btn.classList.toggle('nav-hidden', !match);
+  });
+  // Show/hide group labels based on visible buttons
+  document.querySelectorAll('.nav-group-label').forEach(label => {
+    let next = label.nextElementSibling;
+    let hasVisible = false;
+    while(next && !next.classList.contains('nav-group-label') && next.tagName !== 'HR'){
+      if(!next.classList.contains('nav-hidden') && next.classList.contains('nav-btn') && next.style.display !== 'none') hasVisible = true;
+      next = next.nextElementSibling;
+    }
+    label.style.display = !q || hasVisible ? '' : 'none';
+  });
+});
+</script>
+<script>
+
+
+(function(){
+  if(window.self===window.top) return;
+  // Apply class immediately for CSS
+  document.documentElement.classList.add('in-iframe');
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.add('in-iframe');
+    // Hide all topbar variants
+    ['.fitbox-topbar-outer','.topbar-outer','.header','.app-topbar','.page-topbar'].forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        el.style.display='none';
+      });
+    });
+    document.body.style.padding='0';
+    document.body.style.margin='0';
+    // Zero out page wrapper padding
+    ['.page','.wrap','.app','.container'].forEach(function(sel){
+      document.querySelectorAll(sel).forEach(function(el){
+        el.style.paddingTop='0';
+        el.style.marginTop='0';
+      });
+    });
+  });
+})();
+
+
+
+
+
+function toggleGroup(name) {
+  const group = document.querySelector('.acc-group[data-group="' + name + '"]');
+  if (group) group.classList.toggle('open');
+}
+
+/* ─── Übersicht Badge: Anzahl offener Action-Items ─── */
+(function(){
+  async function updateOverviewBadge(){
+    try {
+      const today = new Date().toISOString().slice(0,10);
+      const tomorrow = (() => { const d=new Date(); d.setDate(d.getDate()+1); return d.toISOString().slice(0,10) + 'T00:00:00'; })();
+      const startToday = today + 'T00:00:00';
+
+      const [ptOverdue, ptToday, timeOpen, timeIssue, mttFlags, fkOpen, absPending] = await Promise.all([
+        sb.from('pt_followups').select('id',{count:'exact',head:true}).eq('status_key','open').lt('due_at', startToday),
+        sb.from('pt_followups').select('id',{count:'exact',head:true}).eq('status_key','open').gte('due_at', startToday).lt('due_at', tomorrow),
+        sb.from('time_daily_records').select('daily_record_id',{count:'exact',head:true}).eq('day_status','open').eq('has_time_entries', true).lt('work_date', today),
+        sb.from('time_daily_records').select('daily_record_id',{count:'exact',head:true}).eq('is_significant_issue', true).not('day_status','in','(ok,verified,no_work_day,holiday)').lt('work_date', today),
+        sb.from('mtt_prescription_overview_v').select('id, recipe_received, is_stalled, needs_scan, session_count').eq('status_key','ACTIVE'),
+        sb.from('fahrtkosten_eintraege').select('eintrag_id',{count:'exact',head:true}).eq('status','eingereicht'),
+        sb.from('employee_absences').select('absence_id',{count:'exact',head:true}).eq('status','pending')
+      ]);
+
+      const mttCount = (mttFlags.data||[]).filter(r =>
+        !r.recipe_received || r.is_stalled || r.needs_scan || Number(r.session_count) === 7
+      ).length;
+
+      const total = (ptOverdue.count||0) + (ptToday.count||0) +
+                    (timeOpen.count||0) + (timeIssue.count||0) +
+                    mttCount + (fkOpen.count||0) + (absPending.count||0);
+
+      const badge = document.getElementById('overviewBadge');
+      if (!badge) return;
+      if (total > 0) {
+        badge.textContent = total > 99 ? '99+' : total;
+        badge.hidden = false;
+      } else {
+        badge.hidden = true;
+      }
+    } catch(e) {
+      // Leise scheitern – Badge bleibt versteckt
+      console.warn('Overview badge update failed:', e);
+    }
+  }
+
+  // Initial + alle 2 Minuten aktualisieren
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', updateOverviewBadge);
+  } else {
+    updateOverviewBadge();
+  }
+  setInterval(updateOverviewBadge, 120000);
+})();
+
+</script>
+</body>
+</html>

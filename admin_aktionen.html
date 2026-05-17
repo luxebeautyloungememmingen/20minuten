@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aktionen verwalten – fitbox Studio OS</title>
+<style>
+  :root {
+    --green: #95c11f;
+    --green-dark: #2f8615;
+    --bg: #f5f7f2;
+    --card: #ffffff;
+    --border: #e0e7d5;
+    --text: #1a2010;
+    --muted: #6b7a5a;
+    --red: #e53e3e;
+    --orange: #dd6b20;
+    --blue: #3182ce;
+    --shadow: 0 2px 8px rgba(47,134,21,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+  
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid var(--border); }
+  .tab { padding: 8px 20px; background: none; border: none; cursor: pointer; font-size: 14px; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+  .tab.active { color: var(--green-dark); border-bottom-color: var(--green-dark); font-weight: 600; }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* --- Karten / Listen --- */
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .section-header h2 { font-size: 16px; font-weight: 600; }
+
+  .btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.2s; }
+  .btn-primary { background: var(--green); color: #fff; }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-outline { background: #fff; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--green); color: var(--green-dark); }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 14px; box-shadow: var(--shadow); }
+  .card-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .card-info h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .card-info p { font-size: 13px; color: var(--muted); margin-bottom: 2px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-active { background: #e8f5e2; color: var(--green-dark); }
+  .badge-inactive { background: #f5f5f5; color: #999; }
+  .card-actions { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .card-stats { display: flex; gap: 20px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .stat { text-align: center; }
+  .stat .val { font-size: 20px; font-weight: 700; color: var(--green-dark); }
+  .stat .lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* --- Formular --- */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  input, select, textarea { padding: 9px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; width: 100%; outline: none; transition: border 0.2s; background: #fff; }
+  input:focus, select:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(149,193,31,0.12); }
+  textarea { resize: vertical; min-height: 70px; }
+
+  /* --- Übersichts-Tabelle --- */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f0f4e8; color: var(--green-dark); font-weight: 600; text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); white-space: nowrap; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:hover td { background: #f9fbf5; }
+  .status-pill { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .status-offen    { background: #fff8e1; color: #e65100; }
+  .status-zugesagt { background: #e8f5e2; color: var(--green-dark); }
+  .status-abgelehnt { background: #fdecea; color: var(--red); }
+
+  /* --- KPI-Banner --- */
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; text-align: center; box-shadow: var(--shadow); }
+  .kpi .num { font-size: 28px; font-weight: 700; color: var(--green-dark); }
+  .kpi .txt { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* Filter */
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+  .filters select, .filters input { max-width: 180px; padding: 7px 10px; }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 12px; padding: 24px; max-width: 620px; width: 95%; max-height: 92vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+  /* Zielgruppe */
+  .zg-section{margin-top:18px;border-top:1px solid var(--border);padding-top:14px;}
+  .zg-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px;}
+  .zg-row{margin-bottom:14px;}
+  .zg-label{font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px;display:block;}
+  .zg-code-list{display:flex;flex-direction:column;gap:6px;}
+  .zg-code-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:9px;background:#f9fbf7;border:1px solid var(--border);}
+  .zg-code-name{flex:1;font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px;}
+  .zg-toggle-group{display:flex;gap:4px;}
+  .zg-toggle{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--muted);transition:.12s;white-space:nowrap;}
+  .zg-toggle:hover{border-color:#aaa;background:#f5f5f5;}
+  .zg-toggle.inc{border-color:#2f8615;background:#eaf5e3;color:#2f8615;}
+  .zg-toggle.exc{border-color:#e53e3e;background:#fdecea;color:#e53e3e;}
+  .zg-wp-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+  .zg-wp-chip{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:#fff;color:var(--muted);transition:.12s;}
+  .zg-wp-chip:hover{border-color:#93c5fd;background:#eff6ff;}
+  .zg-wp-chip.sel{border-color:#1d6fa4;background:#e0eaf8;color:#1d6fa4;}
+  .zg-hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5;font-style:italic;}
+  .modal h2 { font-size: 16px; font-weight: 700; margin-bottom: 18px; }
+  .modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  .empty { text-align: center; padding: 40px; color: var(--muted); }
+  .loading { text-align: center; padding: 30px; color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .card-row { flex-direction: column; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  }
+
+.topbar-new{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);
+  padding:0 18px;height:46px;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  position:sticky;top:0;z-index:200;
+}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0;}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.tb-space{flex:1;}
+#connStatus{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2);}
+#connStatus.ok{background:rgba(149,193,31,.25);color:#fff;border-color:rgba(149,193,31,.4);}
+#connStatus.err{background:rgba(220,38,38,.3);color:#fff;border-color:rgba(220,38,38,.5);}
+.topbar-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:600 12px/1 inherit;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.topbar-btn:hover{background:rgba(255,255,255,.25)}
+
+/* conn-dot */
+.conn-dot{width:9px;height:9px;border-radius:50%;background:#6b7280;flex-shrink:0;box-shadow:0 0 0 2px rgba(255,255,255,.15);transition:background .4s,box-shadow .4s}
+.conn-dot.connecting{background:#f59e0b;animation:connPulse 1.2s ease-in-out infinite}
+.conn-dot.ok{background:#95c11f;box-shadow:0 0 0 3px rgba(149,193,31,.3);animation:none}
+.conn-dot.err{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.3);animation:none}
+@keyframes connPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.conn-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.85)}
+#connStatus{display:flex;align-items:center;gap:6px;background:transparent;border:none;padding:0}
+
+/* iframe-Mode */
+html.in-iframe body{padding:0!important;margin:0!important}
+html.in-iframe .container{padding-top:18px}
+
+/* Info-Modal */
+.info-backdrop{display:none;position:fixed;inset:0;background:rgba(10,20,9,.55);backdrop-filter:blur(4px);z-index:9999;align-items:center;justify-content:center;padding:20px}
+.info-backdrop.show{display:flex}
+.info-card{background:#fff;border-radius:14px;max-width:680px;width:100%;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden;font-family:'Sora',-apple-system,sans-serif}
+.info-card-head{padding:18px 22px;border-bottom:1px solid #e9ebe4;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(135deg,#f4faef 0%,#fff 100%)}
+.info-card-title{font-size:16px;font-weight:700;color:#0a1409}
+.info-card-close{background:none;border:none;font-size:18px;cursor:pointer;color:#6b756a;padding:4px 8px;border-radius:6px}
+.info-card-body{padding:20px 22px;overflow-y:auto;flex:1;font-size:13.5px;line-height:1.65;color:#0a1409}
+.info-sec{background:#f4faef;border-left:3px solid #2f8615;padding:11px 14px;border-radius:0 6px 6px 0;margin-bottom:12px}
+.info-sec.warn{background:#fef3c7;border-left-color:#ea580c}
+.info-card-foot{padding:14px 22px;border-top:1px solid #e9ebe4;display:flex;justify-content:flex-end;background:#fafbfa}
+.info-card-foot button{background:#2f8615;color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif}
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════ TOPBAR ═══════════ -->
+<div class="topbar-new" id="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">🎯</span> Aktionen &amp; Promotions</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-aktionen">–</span> Aktionen</span>
+    <span class="tb-stat"><span class="tb-stat-dot" style="background:#4ade80"></span><span class="tb-stat-num" id="stat-zugesagt">–</span> Zugesagt</span>
+    <span class="tb-stat"><span class="tb-stat-dot" style="background:#60a5fa"></span><span class="tb-stat-num" id="stat-quote">–</span> Quote</span>
+  </div>
+  <div class="tb-space"></div>
+  <span id="connStatus"><span class="conn-dot connecting" id="connDot"></span><span class="conn-label" id="connLabel">Verbinde…</span></span>
+  <button class="topbar-btn" id="infoBtnTop" onclick="openInfoModal()" title="Was kann ich auf dieser Seite?">ℹ️ Info</button>
+  <button class="topbar-btn" id="reloadBtnTop">↻ Neu laden</button>
+</div>
+
+<!-- Info-Modal -->
+<div class="info-backdrop" id="infoModal" onclick="if(event.target===this)closeInfoModal()">
+  <div class="info-card">
+    <div class="info-card-head">
+      <div class="info-card-title">ℹ️ Aktionen &amp; Promotions</div>
+      <button class="info-card-close" onclick="closeInfoModal()">✕</button>
+    </div>
+    <div class="info-card-body">
+      <div class="info-sec"><strong>Was ist das?</strong><br>Hier verwaltest du Aktionen wie <em>"Freunde werben Freunde"</em>, Rabatt-Codes oder zeitlich begrenzte Promotions. Mitarbeiter sprechen Kunden gezielt an und tracken jede Teilnahme.</div>
+      <div class="info-sec"><strong>📋 Tab "Alle Aktionen"</strong><br>Hier siehst du alle aktiven und vergangenen Aktionen. Klick auf eine Karte zum Bearbeiten. Mit <b>+ Neue Aktion</b> legst du eine neue Promotion an — inklusive Rabatt-Prozent, Laufzeit und Zielgruppen-Filter (z.B. nur Frauen, nur EMS-Kunden).</div>
+      <div class="info-sec"><strong>👥 Tab "Alle Teilnahmen"</strong><br>Jede Ansprache wird hier erfasst: <b>angesprochen → zugesagt → Partner zum PT → Abschluss</b>. So sieht jeder Mitarbeiter, welche Kunden schon angesprochen wurden und welche noch offen sind.</div>
+      <div class="info-sec"><strong>📊 Tab "Auswertung"</strong><br>Quote pro Aktion: Wie viele Angesprochene haben zugesagt? Wie viele Abschlüsse? Welcher Mitarbeiter ist der beste Aufreißer? Hier siehst du es schwarz auf weiß.</div>
+      <div class="info-sec warn"><strong>⚠️ Wichtig:</strong> Aktionen sind <strong>nicht</strong> dasselbe wie Newsletter-Kampagnen. Aktionen = Mitarbeiter sprechen Kunden persönlich an. Newsletter = automatisierte Mails.</div>
+    </div>
+    <div class="info-card-foot">
+      <button onclick="closeInfoModal()">Verstanden</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('aktionen')">Aktionen</button>
+    <button class="tab" onclick="switchTab('uebersicht')">Alle Teilnahmen</button>
+    <button class="tab" onclick="switchTab('auswertung')">Auswertung</button>
+  </div>
+
+  <!-- =========== TAB: AKTIONEN =========== -->
+  <div class="tab-pane active" id="tab-aktionen">
+    <div class="section-header">
+      <h2>Alle Aktionen</h2>
+      <button class="btn btn-primary" onclick="openAktionModal()">+ Neue Aktion</button>
+    </div>
+    <div id="aktionen-list" class="loading">Lade Aktionen…</div>
+  </div>
+
+  <!-- =========== TAB: ALLE TEILNAHMEN =========== -->
+  <div class="tab-pane" id="tab-uebersicht">
+    <div class="section-header">
+      <h2>Alle Teilnahmen</h2>
+    </div>
+    <div class="filters">
+      <select id="filter-aktion" onchange="loadTeilnahmen()"><option value="">Alle Aktionen</option></select>
+      <select id="filter-status" onchange="loadTeilnahmen()">
+        <option value="">Alle Status</option>
+        <option value="offen">Offen</option>
+        <option value="zugesagt">Zugesagt</option>
+        <option value="abgelehnt">Abgelehnt</option>
+      </select>
+      <input type="text" id="filter-search" placeholder="Suchen…" oninput="loadTeilnahmen()">
+      <button class="btn btn-outline btn-sm" onclick="exportCSV()">⬇ CSV Export</button>
+    </div>
+    <div class="table-wrap">
+      <table id="teilnahmen-table">
+        <thead>
+          <tr>
+            <th>Mitglied</th>
+            <th>Aktion</th>
+            <th>Angesprochen am</th>
+            <th>Mitarbeiter</th>
+            <th>Status</th>
+            <th>Partner</th>
+            <th>Rabatt ✓</th>
+            <th>Abschluss ✓</th>
+            <th>Umsatz</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="teilnahmen-body">
+          <tr><td colspan="10" class="loading">Lade…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- =========== TAB: AUSWERTUNG =========== -->
+  <div class="tab-pane" id="tab-auswertung">
+    <div class="section-header">
+      <h2>Auswertung</h2>
+    </div>
+    <div class="filters">
+      <select id="auswert-aktion" onchange="loadAuswertung()"><option value="">Alle Aktionen</option></select>
+    </div>
+    <div class="kpi-row" id="kpi-row">
+      <div class="kpi"><div class="num" id="kpi-angesprochen">–</div><div class="txt">Angesprochen</div></div>
+      <div class="kpi"><div class="num" id="kpi-zugesagt">–</div><div class="txt">Zugesagt</div></div>
+      <div class="kpi"><div class="num" id="kpi-abgelehnt">–</div><div class="txt">Abgelehnt</div></div>
+      <div class="kpi"><div class="num" id="kpi-quote">–</div><div class="txt">Zustimmungsquote</div></div>
+      <div class="kpi"><div class="num" id="kpi-rabatt">–</div><div class="txt">Rabatt eingelöst</div></div>
+      <div class="kpi"><div class="num" id="kpi-abschluss">–</div><div class="txt">Partnerabschlüsse</div></div>
+      <div class="kpi"><div class="num" id="kpi-umsatz">–</div><div class="txt">Gesamtumsatz Partner</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- =========== MODAL: AKTION ANLEGEN/BEARBEITEN =========== -->
+<div class="modal-overlay" id="aktion-modal">
+  <div class="modal">
+    <h2 id="modal-title">Neue Aktion anlegen</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Studio</label>
+        <select id="m-studio" onchange="scheduleZgPreview()"></select>
+      </div>
+      <div class="form-group">
+        <label>Rabatt (%)</label>
+        <input type="number" id="m-rabatt" value="15" min="1" max="100" step="0.5">
+      </div>
+      <div class="form-group full">
+        <label>Name der Aktion</label>
+        <input type="text" id="m-name" placeholder="z.B. Partner-Aktion Frühjahr 2025">
+      </div>
+      <div class="form-group">
+        <label>Gültig von</label>
+        <input type="date" id="m-von">
+      </div>
+      <div class="form-group">
+        <label>Gültig bis</label>
+        <input type="date" id="m-bis">
+      </div>
+      <div class="form-group full">
+        <label>Beschreibung</label>
+        <textarea id="m-beschreibung" placeholder="Interne Notizen zur Aktion…"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="m-active">
+          <option value="true">Aktiv</option>
+          <option value="false">Inaktiv</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ZIELGRUPPEN-FILTER -->
+    <div class="zg-section">
+      <div class="zg-title">🎯 Zielgruppe eingrenzen</div>
+
+      <div class="zg-row">
+        <span class="zg-label">Mitgliederstatus <span style="font-weight:400;color:var(--muted);font-size:11px">— welche einschließen?</span></span>
+        <div class="zg-wp-chips">
+          <button type="button" class="zg-wp-chip" data-ms="aktiv" onclick="toggleMsChip(this)">✅ Aktiv</button>
+          <button type="button" class="zg-wp-chip sel" data-ms="ehemalig" onclick="toggleMsChip(this)" style="display:none">📦 Ehemalig</button>
+          <button type="button" class="zg-wp-chip" data-ms="archiviert" onclick="toggleMsChip(this)" style="display:none">🗃️ Archiviert</button>
+        </div>
+        <div class="zg-hint">Standardmäßig nur aktive Mitglieder. Weitere Status zuwählbar.</div>
+      </div>
+
+      <div class="zg-row">
+        <span class="zg-label">Mitglieder-Codes <span style="font-weight:400;color:var(--muted);font-size:11px">— normale Mitglieder ohne Code sind immer dabei</span></span>
+        <div class="zg-code-list" id="zg-code-chips"></div>
+      </div>
+
+      <div class="zg-row" id="zg-wp-row" style="display:none">
+        <span class="zg-label">💳 Wellpass-Aktivitätsstatus <span id="zg-wp-action-label" style="font-weight:400;color:var(--muted);font-size:11px">— welche einschließen?</span></span>
+        <div class="zg-wp-chips">
+          <button type="button" class="zg-wp-chip" data-wp="aktiv" onclick="toggleWpChip(this)">🟢 Aktiv</button>
+          <button type="button" class="zg-wp-chip" data-wp="inaktiv" onclick="toggleWpChip(this)">⏸️ Inaktiv</button>
+          <button type="button" class="zg-wp-chip" data-wp="unset" onclick="toggleWpChip(this)">❓ Nicht festgelegt</button>
+        </div>
+        <div class="zg-hint" id="zg-wp-hint">Nicht angewählt = wird ausgeschlossen.</div>
+      </div>
+    </div>
+
+    <div id="zg-preview" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-top:14px;display:flex;align-items:center;gap:10px;">
+      <span style="font-size:18px">👥</span>
+      <div>
+        <span id="zg-preview-count" style="font-size:16px;font-weight:900;color:#166534">–</span>
+        <span style="font-size:13px;color:#166534;font-weight:600"> Mitglieder in dieser Zielgruppe</span>
+      </div>
+      <span id="zg-preview-spin" style="margin-left:auto;font-size:12px;color:#6b7280;display:none">Lade…</span>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('aktion-modal')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveAktion()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+const ADMIN_ROLE_ID = '80f04245-ee93-45e8-9861-121778b5ff84';
+
+let session = null;
+let editAktionId = null;
+let allTeilnahmen = [];
+let allAktionen = [];
+
+// Session-Helper — liest Token aus parent (iframe-Modus) oder localStorage
+function getSessionToken() {
+  // 1. Parent-Window (admin_index.html refresht den Token zentral)
+  try {
+    if (window.parent && window.parent !== window) {
+      if (window.parent._fbToken) return window.parent._fbToken;
+      if (window.parent._fbSession?.access_token) return window.parent._fbSession.access_token;
+    }
+  } catch(e) { /* cross-origin: ignorieren */ }
+  // 2. Eigener localStorage
+  try {
+    const s = JSON.parse(localStorage.getItem('fitbox_session') || '{}');
+    if (s.access_token) return s.access_token;
+  } catch(e) {}
+  return null;
+}
+
+function getHeaders() {
+  const tok = getSessionToken();
+  if (!tok) {
+    console.error('[admin_aktionen] Keine Session — bitte neu einloggen.');
+  }
+  return {
+    'Content-Type': 'application/json',
+    'apikey': SUPABASE_KEY,
+    'Authorization': 'Bearer ' + (tok || SUPABASE_KEY),
+    'Prefer': 'return=representation'
+  };
+}
+
+async function sb(path, opts = {}) {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: getHeaders(), ...opts });
+  if (!r.ok) { const e = await r.text(); throw new Error(e); }
+  return r.status === 204 ? null : r.json();
+}
+
+// ---- Studios laden ----
+async function loadStudios() {
+  const data = await sb('studios?select=id,name&order=name');
+  const sel = document.getElementById('m-studio');
+  sel.innerHTML = data.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+}
+
+// ---- Aktionen laden ----
+async function loadAktionen() {
+  const list = document.getElementById('aktionen-list');
+  list.innerHTML = '<div class="loading">Lade…</div>';
+  try {
+    const data = await sb('aktionen?select=*,studios(name)&order=created_at.desc');
+    allAktionen = data;
+    fillAktionFilter(data);
+    if (!data.length) { list.innerHTML = '<div class="empty">Noch keine Aktionen angelegt.</div>'; return; }
+
+    // Stats nachladen
+    const stats = await sb('aktion_teilnahmen?select=aktion_id,status,rabatt_eingeloest,partner_abschluss,partner_vertragswert');
+    const statsMap = {};
+    stats.forEach(t => {
+      if (!statsMap[t.aktion_id]) statsMap[t.aktion_id] = { total:0, zugesagt:0, rabatt:0, abschluss:0, umsatz:0 };
+      const m = statsMap[t.aktion_id];
+      m.total++;
+      if (t.status === 'zugesagt') m.zugesagt++;
+      if (t.rabatt_eingeloest) m.rabatt++;
+      if (t.partner_abschluss) m.abschluss++;
+      if (t.partner_vertragswert) m.umsatz += parseFloat(t.partner_vertragswert);
+    });
+
+    list.innerHTML = data.map(a => {
+      const s = statsMap[a.id] || { total:0, zugesagt:0, rabatt:0, abschluss:0, umsatz:0 };
+      const quote = s.total ? Math.round(s.zugesagt/s.total*100) : 0;
+      return `
+      <div class="card">
+        <div class="card-row">
+          <div class="card-info">
+            <h3>${a.name} <span class="badge ${a.is_active ? 'badge-active':'badge-inactive'}">${a.is_active ? 'Aktiv':'Inaktiv'}</span></h3>
+            <p>📍 ${a.studios?.name || '–'} &nbsp;|&nbsp; 💰 ${a.rabatt_prozent}% Rabatt &nbsp;|&nbsp; 📅 ${fmt(a.gueltig_von)} – ${fmt(a.gueltig_bis)}</p>
+            ${a.beschreibung ? `<p style="margin-top:4px;font-style:italic;color:var(--muted)">${a.beschreibung}</p>` : ''}
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-outline btn-sm" onclick="editAktion('${a.id}')">✏️ Bearbeiten</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteAktion('${a.id}')">🗑</button>
+          </div>
+        </div>
+        <div class="card-stats">
+          <div class="stat"><div class="val">${s.total}</div><div class="lbl">Angesprochen</div></div>
+          <div class="stat"><div class="val">${s.zugesagt}</div><div class="lbl">Zugesagt</div></div>
+          <div class="stat"><div class="val">${quote}%</div><div class="lbl">Quote</div></div>
+          <div class="stat"><div class="val">${s.rabatt}</div><div class="lbl">Rabatt eingelöst</div></div>
+          <div class="stat"><div class="val">${s.abschluss}</div><div class="lbl">Abschlüsse</div></div>
+          <div class="stat"><div class="val">${s.umsatz.toFixed(0)} €</div><div class="lbl">Umsatz Partner</div></div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { list.innerHTML = `<div class="empty">Fehler: ${e.message}</div>`; }
+}
+
+function fillAktionFilter(data) {
+  ['filter-aktion','auswert-aktion'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">Alle Aktionen</option>' + data.map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+    sel.value = cur;
+  });
+}
+
+function fmt(d) { if (!d) return '–'; return d.split('-').reverse().join('.'); }
+
+// ---- Modal öffnen ----
+// Codes global cachen
+let _allCodes = [];
+async function loadCodesLookup() {
+  if (_allCodes.length) return;
+  try {
+    _allCodes = await sb('kunden_codes_lookup?order=sort_order&select=id,code,label,icon,farbe');
+  } catch(e) { _allCodes = []; }
+}
+
+// Zielgruppen-State: { codeId: 'inc'|'exc'|null, wp: Set }
+let _zgCodes = {}, _zgWp = new Set();
+
+let _zgMs = new Set(['aktiv']); // Mitgliederstatus-Filter, default: aktiv
+
+function renderZgChips() {
+  const wrap = document.getElementById('zg-code-chips');
+  if (!wrap) return;
+  wrap.innerHTML = _allCodes.map(c => {
+    const state = _zgCodes[c.id] || null;
+    const incCls = state === 'inc' ? 'zg-toggle inc' : 'zg-toggle';
+    const excCls = state === 'exc' ? 'zg-toggle exc' : 'zg-toggle';
+    return `<div class="zg-code-item">
+      <div class="zg-code-name">${c.icon||''} ${c.label}</div>
+      <div class="zg-toggle-group">
+        <button type="button" class="${incCls}" data-code-id="${c.id}" data-action="inc" onclick="setZgCode(this)">✅ Einschließen</button>
+        <button type="button" class="${excCls}" data-code-id="${c.id}" data-action="exc" onclick="setZgCode(this)">❌ Ausschließen</button>
+      </div>
+    </div>`;
+  }).join('');
+  // Wellpass-Zeile zeigen wenn Wellpass ein- oder ausgeschlossen
+  const wpCode = _allCodes.find(c => c.code === 'WELLPASS');
+  const wpRow = document.getElementById('zg-wp-row');
+  const wpState = wpCode ? (_zgCodes[wpCode.id] || null) : null;
+  if (wpRow) wpRow.style.display = wpState ? '' : 'none';
+  // Label anpassen je nach inc/exc
+  const lbl = document.getElementById('zg-wp-action-label');
+  const hint = document.getElementById('zg-wp-hint');
+  if (lbl) lbl.textContent = wpState === 'exc' ? '— welche ausschließen?' : '— welche einschließen?';
+  if (hint) hint.textContent = wpState === 'exc'
+    ? 'Angewählt = wird ausgeschlossen. Nicht angewählt = bleibt drin.'
+    : 'Nicht angewählt = wird ausgeschlossen.';
+}
+
+function setZgCode(btn) {
+  const id = btn.dataset.codeId;
+  const action = btn.dataset.action;
+  // Nochmal gleichen Button klicken = deaktivieren
+  _zgCodes[id] = (_zgCodes[id] === action) ? null : action;
+  renderZgChips();
+  // Wellpass-Sub zurücksetzen wenn neutral
+  const wpCode = _allCodes.find(c => c.code === 'WELLPASS');
+  if (wpCode && id === wpCode.id && !_zgCodes[id]) {
+    _zgWp.clear();
+    document.querySelectorAll('.zg-wp-chip[data-wp]').forEach(c => c.classList.remove('sel'));
+  }
+  scheduleZgPreview();
+}
+
+function toggleMsChip(btn) {
+  const val = btn.dataset.ms;
+  if (_zgMs.has(val)) { _zgMs.delete(val); btn.classList.remove('sel'); }
+  else { _zgMs.add(val); btn.classList.add('sel'); }
+  scheduleZgPreview();
+}
+
+function toggleWpChip(btn) {
+  const val = btn.dataset.wp;
+  if (_zgWp.has(val)) { _zgWp.delete(val); btn.classList.remove('sel'); }
+  else { _zgWp.add(val); btn.classList.add('sel'); }
+  scheduleZgPreview();
+}
+
+// ── Live-Vorschau Zielgruppe ─────────────────────
+let _zgPreviewTimer = null;
+function scheduleZgPreview() {
+  clearTimeout(_zgPreviewTimer);
+  _zgPreviewTimer = setTimeout(updateZgPreview, 400);
+}
+
+async function updateZgPreview() {
+  const studioId = document.getElementById('m-studio').value;
+  if (!studioId) return;
+  const spin = document.getElementById('zg-preview-spin');
+  const countEl = document.getElementById('zg-preview-count');
+  if (spin) spin.style.display = '';
+  try {
+    const msFilter = Array.from(_zgMs);
+    if (!msFilter.length) { countEl.textContent = '0'; if(spin)spin.style.display='none'; return; }
+
+    // Status-Filter aufbauen
+    const statusParts = msFilter.map(s => s === 'aktiv' ? 'and(is_active.eq.true,or(status.eq.aktiv,status.is.null))' : `status.eq.${s}`).join(',');
+    let alle = await sb(`kunden?studio_id=eq.${studioId}&or=(${statusParts})&select=id,wellpass_aktivitaet`);
+
+    // Code-Filter: Codes "einschließen" erlaubt diese Code-Gruppe, alle anderen Codes filtern raus
+    const codes_inc = Object.keys(_zgCodes).filter(k => _zgCodes[k] === 'inc');
+    const codes_exc = Object.keys(_zgCodes).filter(k => _zgCodes[k] === 'exc');
+    const wpCode = _allCodes.find(c => c.code === 'WELLPASS');
+    const wpId = wpCode?.id || null;
+    const allCodeIds = _allCodes.map(c => c.id);
+    const hasAnyFilter = codes_inc.length || codes_exc.length || (_zgWp.size && wpId);
+
+    if (hasAnyFilter) {
+      const assigns = await sb(`kunden_codes?select=kunde_id,code_id`);
+      const byKunde = {};
+      assigns.forEach(a => {
+        if (!byKunde[a.kunde_id]) byKunde[a.kunde_id] = new Set();
+        byKunde[a.kunde_id].add(a.code_id);
+      });
+      alle = alle.filter(k => {
+        const kc = byKunde[k.id] || new Set();
+        // Kundes Codes nur die "speziellen" (im Lookup vorhandenen)
+        const kSpecialCodes = allCodeIds.filter(cid => kc.has(cid));
+
+        // 1) Explizit ausgeschlossene Codes: wenn Kunde einen hat → raus
+        if (codes_exc.some(cid => kc.has(cid))) {
+          // Außer bei Wellpass mit Subfilter (siehe unten)
+          const nonWpExc = wpId ? codes_exc.filter(cid => cid !== wpId) : codes_exc;
+          if (nonWpExc.some(cid => kc.has(cid))) return false;
+        }
+
+        // 2) Wenn Kunde SPEZIELLE Codes hat, müssen alle eingeschlossen sein
+        if (kSpecialCodes.length > 0) {
+          for (const cid of kSpecialCodes) {
+            if (codes_exc.includes(cid)) {
+              // Sonderbehandlung Wellpass exc
+              if (cid === wpId && _zgWp.size) {
+                const wa = k.wellpass_aktivitaet || 'unset';
+                if (_zgWp.has(wa)) return false;
+              } else {
+                return false;
+              }
+            } else if (!codes_inc.includes(cid)) {
+              // Code nicht eingeschlossen → Kunde raus
+              return false;
+            }
+          }
+          // 3) Wellpass eingeschlossen + Subfilter: nur passende WP-Status
+          if (wpId && codes_inc.includes(wpId) && kc.has(wpId) && _zgWp.size) {
+            const wa = k.wellpass_aktivitaet || 'unset';
+            if (!_zgWp.has(wa)) return false;
+          }
+        }
+        // Kunden ohne spezielle Codes: immer drin
+        return true;
+      });
+    }
+
+    countEl.textContent = alle.length;
+  } catch(e) {
+    countEl.textContent = '?';
+  } finally {
+    if (spin) spin.style.display = 'none';
+  }
+}
+
+function openAktionModal(data = null) {
+  editAktionId = data?.id || null;
+  document.getElementById('modal-title').textContent = data ? 'Aktion bearbeiten' : 'Neue Aktion anlegen';
+  document.getElementById('m-name').value = data?.name || '';
+  document.getElementById('m-rabatt').value = data?.rabatt_prozent || 15;
+  document.getElementById('m-von').value = data?.gueltig_von || '';
+  document.getElementById('m-bis').value = data?.gueltig_bis || '';
+  document.getElementById('m-beschreibung').value = data?.beschreibung || '';
+  document.getElementById('m-active').value = data ? String(data.is_active) : 'true';
+  if (data?.studio_id) document.getElementById('m-studio').value = data.studio_id;
+  // Zielgruppe laden
+  _zgCodes = {};
+  _zgWp = new Set();
+  _zgMs = new Set(data?.zielgruppe_filter?.mitglied_status || ['aktiv']);
+  const zf = data?.zielgruppe_filter || {};
+  (zf.codes_inc || []).forEach(id => _zgCodes[id] = 'inc');
+  (zf.codes_exc || []).forEach(id => _zgCodes[id] = 'exc');
+  (zf.wellpass_status || []).forEach(v => _zgWp.add(v));
+  renderZgChips();
+  document.querySelectorAll('.zg-wp-chip[data-wp]').forEach(c => {
+    c.classList.toggle('sel', _zgWp.has(c.dataset.wp));
+  });
+  document.querySelectorAll('.zg-wp-chip[data-ms]').forEach(c => {
+    c.classList.toggle('sel', _zgMs.has(c.dataset.ms));
+  });
+  document.getElementById('aktion-modal').classList.add('open');
+  scheduleZgPreview();
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+async function editAktion(id) {
+  const a = allAktionen.find(x => x.id === id);
+  if (a) openAktionModal(a);
+}
+
+async function saveAktion() {
+  // Zielgruppe-Filter zusammenbauen
+  const codes_inc = Object.keys(_zgCodes).filter(k => _zgCodes[k] === 'inc');
+  const codes_exc = Object.keys(_zgCodes).filter(k => _zgCodes[k] === 'exc');
+  const wellpass_status = Array.from(_zgWp);
+  const mitglied_status = Array.from(_zgMs);
+  const wpCode = _allCodes.find(c => c.code === 'WELLPASS');
+  const wellpass_code_id = wpCode?.id || null;
+  const hasFilter = codes_inc.length || codes_exc.length || wellpass_status.length || !_zgMs.has('aktiv') || _zgMs.size > 1;
+  const zielgruppe_filter = hasFilter
+    ? { codes_inc, codes_exc, wellpass_status, wellpass_code_id, mitglied_status }
+    : null;
+  const body = {
+    studio_id: document.getElementById('m-studio').value,
+    name: document.getElementById('m-name').value.trim(),
+    rabatt_prozent: parseFloat(document.getElementById('m-rabatt').value),
+    gueltig_von: document.getElementById('m-von').value,
+    gueltig_bis: document.getElementById('m-bis').value,
+    beschreibung: document.getElementById('m-beschreibung').value.trim() || null,
+    is_active: document.getElementById('m-active').value === 'true',
+    zielgruppe_filter
+  };
+  if (!body.name || !body.gueltig_von || !body.gueltig_bis) { alert('Bitte alle Pflichtfelder ausfüllen.'); return; }
+  try {
+    if (editAktionId) {
+      await sb(`aktionen?id=eq.${editAktionId}`, { method:'PATCH', body: JSON.stringify(body) });
+    } else {
+      await sb('aktionen', { method:'POST', body: JSON.stringify(body) });
+    }
+    closeModal('aktion-modal');
+    loadAktionen();
+    loadTeilnahmen();
+    loadAuswertung();
+  } catch(e) { alert('Fehler: ' + e.message); }
+}
+
+async function deleteAktion(id) {
+  if (!confirm('Aktion wirklich löschen? Alle Teilnahmen werden ebenfalls gelöscht.')) return;
+  await sb(`aktionen?id=eq.${id}`, { method:'DELETE' });
+  loadAktionen();
+  loadTeilnahmen();
+}
+
+// ---- Teilnahmen laden ----
+async function loadTeilnahmen() {
+  const body = document.getElementById('teilnahmen-body');
+  body.innerHTML = '<tr><td colspan="10" class="loading">Lade…</td></tr>';
+  try {
+    let q = 'v_aktion_uebersicht?order=angesprochen_am.desc';
+    const fa = document.getElementById('filter-aktion').value;
+    const fs = document.getElementById('filter-status').value;
+    if (fa) q += `&aktion_id=eq.${fa}`;
+    if (fs) q += `&status=eq.${fs}`;
+    const data = await sb(q);
+    const search = document.getElementById('filter-search').value.toLowerCase();
+    allTeilnahmen = data;
+    const filtered = search ? data.filter(t =>
+      (t.mitglied_name||'').toLowerCase().includes(search) ||
+      (t.partner_vorname||'').toLowerCase().includes(search) ||
+      (t.partner_nachname||'').toLowerCase().includes(search)
+    ) : data;
+    if (!filtered.length) { body.innerHTML = '<tr><td colspan="10" class="empty">Keine Einträge.</td></tr>'; return; }
+    body.innerHTML = filtered.map(t => `
+      <tr>
+        <td>${t.mitglied_name || '–'}</td>
+        <td>${t.aktion_name}</td>
+        <td>${fmt(t.angesprochen_am)}</td>
+        <td>${t.mitarbeiter_name || '–'}</td>
+        <td><span class="status-pill status-${t.status}">${{offen:'⏳ Offen',zugesagt:'✅ Zugesagt',abgelehnt:'❌ Abgelehnt'}[t.status]}</span></td>
+        <td>${t.partner_vorname ? t.partner_vorname+' '+(t.partner_nachname||'') : '–'}</td>
+        <td>${t.rabatt_eingeloest ? '✅' : '–'}</td>
+        <td>${t.partner_abschluss ? '✅' : '–'}</td>
+        <td>${t.partner_vertragswert ? t.partner_vertragswert.toFixed(2)+' €' : '–'}</td>
+        <td><button class="btn btn-outline btn-sm" onclick="openEditTeilnahme('${t.id}')">✏️</button></td>
+      </tr>`).join('');
+  } catch(e) { body.innerHTML = `<tr><td colspan="10">Fehler: ${e.message}</td></tr>`; }
+}
+
+// ---- Auswertung ----
+async function loadAuswertung() {
+  try {
+    let q = 'aktion_teilnahmen?select=status,rabatt_eingeloest,partner_abschluss,partner_vertragswert';
+    const fa = document.getElementById('auswert-aktion').value;
+    if (fa) q += `&aktion_id=eq.${fa}`;
+    const data = await sb(q);
+    const total = data.length;
+    const zugesagt = data.filter(d => d.status === 'zugesagt').length;
+    const abgelehnt = data.filter(d => d.status === 'abgelehnt').length;
+    const rabatt = data.filter(d => d.rabatt_eingeloest).length;
+    const abschluss = data.filter(d => d.partner_abschluss).length;
+    const umsatz = data.reduce((s, d) => s + (parseFloat(d.partner_vertragswert) || 0), 0);
+    document.getElementById('kpi-angesprochen').textContent = total;
+    var sA=document.getElementById('stat-aktionen');if(sA)sA.textContent=total;
+    var sZ=document.getElementById('stat-zugesagt');if(sZ)sZ.textContent=zugesagt;
+    var sQ=document.getElementById('stat-quote');if(sQ)sQ.textContent=total?Math.round(zugesagt/total*100)+'%':'–';
+    document.getElementById('kpi-zugesagt').textContent = zugesagt;
+    document.getElementById('kpi-abgelehnt').textContent = abgelehnt;
+    document.getElementById('kpi-quote').textContent = total ? Math.round(zugesagt/total*100)+'%' : '–';
+    document.getElementById('kpi-rabatt').textContent = rabatt;
+    document.getElementById('kpi-abschluss').textContent = abschluss;
+    document.getElementById('kpi-umsatz').textContent = umsatz.toFixed(2)+' €';
+  } catch(e) {}
+}
+
+function exportCSV() {
+  const rows = allTeilnahmen;
+  if (!rows.length) return;
+  const headers = ['Mitglied','Aktion','Angesprochen am','Mitarbeiter','Status','Partner Vorname','Partner Nachname','Partner Tel','Rabatt eingelöst','Abschluss','Umsatz'];
+  const csv = [headers.join(';'), ...rows.map(r => [
+    r.mitglied_name, r.aktion_name, r.angesprochen_am, r.mitarbeiter_name,
+    r.status, r.partner_vorname, r.partner_nachname, r.partner_telefon,
+    r.rabatt_eingeloest?'Ja':'Nein', r.partner_abschluss?'Ja':'Nein', r.partner_vertragswert||''
+  ].map(v => `"${v||''}"`).join(';'))].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = 'aktionen_export.csv';
+  a.click();
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['aktionen','uebersicht','auswertung'][i] === name));
+  document.querySelectorAll('.tab-pane').forEach((p,i) => p.classList.toggle('active', ['tab-aktionen','tab-uebersicht','tab-auswertung'][i] === 'tab-'+name));
+  if (name === 'uebersicht') loadTeilnahmen();
+  if (name === 'auswertung') loadAuswertung();
+}
+
+// Redirect zur Bearbeitung einer Teilnahme → aktionen.html
+function openEditTeilnahme(id) {
+  window.open(`aktionen.html?edit=${id}`, '_blank');
+}
+
+window.addEventListener('click', e => {
+  if (e.target.classList.contains('modal-overlay')) closeModal(e.target.id);
+});
+
+// iframe-Modus
+(function(){if(window.self===window.top)return;document.documentElement.classList.add('in-iframe');document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('in-iframe');});})();
+
+// Info-Modal
+function openInfoModal(){document.getElementById('infoModal').classList.add('show');}
+function closeInfoModal(){document.getElementById('infoModal').classList.remove('show');}
+
+// Conn-Helper
+function setConn(state){
+  var d=document.getElementById('connDot'),l=document.getElementById('connLabel');
+  if(!d||!l)return;
+  d.className='conn-dot '+state;
+  l.textContent=state==='ok'?'Verbunden':state==='err'?'Fehler':'Verbinde…';
+}
+
+// Init
+(async () => {
+  setConn('connecting');
+  if (!getSessionToken()) {
+    setConn('err');
+    document.getElementById('aktionen-list').innerHTML = '<div class="empty" style="color:#991b1b">⚠️ Keine gültige Session. Bitte die Seite über das Admin-Menü öffnen oder neu einloggen.</div>';
+    return;
+  }
+  try {
+    await loadStudios();
+    await loadCodesLookup();
+    await loadAktionen();
+    setConn('ok');
+  } catch(e) {
+    console.error(e);
+    setConn('err');
+  }
+  var rBtn=document.getElementById('reloadBtnTop');if(rBtn)rBtn.addEventListener('click',async function(){
+    setConn('connecting');
+    try{await loadAktionen();setConn('ok');}catch(e){setConn('err');}
+  });
+})();
+</script>
+</body>
+</html>

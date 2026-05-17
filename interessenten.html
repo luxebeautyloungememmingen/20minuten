@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interessenten – fitbox Studio OS</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --fit: #2f8615;
+  --fit2: #95c11f;
+  --fit-light: #e8f5e0;
+  --fit-mid: #d0eab8;
+  --bg: #f4f6f3;
+  --card: #ffffff;
+  --border: #dde8d5;
+  --text: #1a2a12;
+  --muted: #6b7f60;
+  --danger: #c0392b;
+  --danger-bg: #fdecea;
+  --warn: #d97706;
+  --warn-bg: #fff3cd;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(47,134,21,.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+
+/* ─── TOPBAR (Standard) ─── */
+.topbar-outer{
+  background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  position:sticky;top:0;z-index:100;
+}
+.topbar{
+  max-width:none;margin:0;height:46px;
+  display:flex;align-items:center;flex-wrap:nowrap;
+  padding:0 18px;gap:14px;overflow:hidden;
+}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.topbar-spacer{flex:1}
+.topbar-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:700 12px/1 'DM Sans',sans-serif;padding:6px 12px;border-radius:8px;cursor:pointer;appearance:none;white-space:nowrap;}
+.topbar-btn:hover{background:rgba(255,255,255,.25)}
+
+/* LAYOUT */
+.page { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+/* HEADER */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+.page-header h1 { font-size: 22px; font-weight: 900; color: var(--fit); }
+.page-header p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+/* STATS KARTEN */
+.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+.stat-card .val { font-size: 28px; font-weight: 900; color: var(--fit); line-height: 1; }
+.stat-card .lbl { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-top: 4px; }
+.stat-card.highlight { background: linear-gradient(135deg, var(--fit), #267312); border-color: var(--fit); }
+.stat-card.highlight .val, .stat-card.highlight .lbl { color: #fff; }
+.stat-card.warn-card { border-color: #f0d28a; background: var(--warn-bg); }
+.stat-card.warn-card .val { color: var(--warn); }
+
+/* FILTER BAR */
+.filter-bar { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; box-shadow: var(--shadow); }
+.filter-bar .search-wrap { position: relative; flex: 1; min-width: 200px; }
+.filter-bar .search-wrap input { width: 100%; border: 1.5px solid var(--border); border-radius: 7px; padding: 8px 10px 8px 34px; font-size: 13px; background: var(--bg); outline: none; transition: .2s; }
+.filter-bar .search-wrap input:focus { border-color: var(--fit); box-shadow: 0 0 0 3px rgba(47,134,21,.1); }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+.sel { border: 1.5px solid var(--border); border-radius: 7px; padding: 7px 10px; font-size: 13px; background: #fff; color: var(--text); cursor: pointer; outline: none; }
+.sel:focus { border-color: var(--fit); }
+.chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.chip { border: 1.5px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 12px; font-weight: 700; cursor: pointer; color: var(--muted); background: #fff; transition: .15s; white-space: nowrap; }
+.chip.active { background: var(--fit); border-color: var(--fit); color: #fff; }
+.chip.lost-chip.active { background: var(--danger); border-color: var(--danger); }
+.chip.email-chip.active { background: #1e40af; border-color: #1e40af; }
+
+/* TABELLE */
+.table-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.table-head-bar { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, var(--fit-light), #fff); }
+.table-head-bar h2 { font-size: 14px; font-weight: 700; color: var(--fit); }
+.count-badge { background: var(--fit); color: #fff; border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { background: var(--fit-light); color: var(--fit); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--fit-mid); white-space: nowrap; }
+td { padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
+tr:hover td { background: #fafff7; }
+tr.lost-row td { opacity: .75; }
+tr.lost-row:hover td { opacity: 1; background: #fff5f5; }
+
+/* BADGES */
+.badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.badge-new { background: rgba(37,99,235,.1); color: #1d4ed8; border: 1px solid rgba(37,99,235,.2); }
+.badge-terminiert { background: rgba(21,128,61,.1); color: #166534; border: 1px solid rgba(21,128,61,.2); }
+.badge-erfolgt { background: var(--fit-light); color: var(--fit); border: 1px solid var(--fit-mid); }
+.badge-lost { background: var(--danger-bg); color: var(--danger); border: 1px solid #f5c6c2; }
+.badge-default { background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+
+/* KONTAKT ICONS */
+.contact-icons { display: flex; gap: 5px; align-items: center; }
+.icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border); background: #fff; cursor: pointer; transition: .15s; text-decoration: none; font-size: 14px; }
+.icon-btn:hover { background: var(--fit-light); border-color: var(--fit2); }
+.icon-btn.email-btn:hover { background: #dbeafe; border-color: #93c5fd; }
+.icon-btn.wa-btn:hover { background: #dcfce7; border-color: #86efac; }
+
+/* TAGE BADGE */
+.days-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+.days-fresh { background: var(--fit-light); color: var(--fit); }
+.days-mid { background: var(--warn-bg); color: var(--warn); }
+.days-old { background: var(--danger-bg); color: var(--danger); }
+
+/* QUELLE BADGE */
+.source-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: #f3f4f6; color: #6b7280; border: 1px solid #e5e7eb; }
+.source-ig { background: rgba(219,39,119,.08); color: #be185d; border-color: rgba(219,39,119,.2); }
+.source-fb { background: rgba(29,78,216,.08); color: #1d4ed8; border-color: rgba(29,78,216,.2); }
+.source-website { background: rgba(21,128,61,.08); color: #166534; border-color: rgba(21,128,61,.2); }
+.source-walkin { background: rgba(180,83,9,.08); color: #92400e; border-color: rgba(180,83,9,.2); }
+.source-referral { background: rgba(109,40,217,.08); color: #6d28d9; border-color: rgba(109,40,217,.2); }
+
+/* NEWSLETTER SEGMENTIERUNG */
+.segment-bar { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 16px; box-shadow: var(--shadow); }
+.segment-title { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.segment-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.seg-pill { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; background: #fff; color: var(--muted); transition: .15s; }
+.seg-pill:hover { border-color: var(--fit2); color: var(--fit); }
+.seg-pill.active { background: var(--fit-light); border-color: var(--fit); color: var(--fit); }
+.seg-pill .seg-count { background: var(--fit); color: #fff; border-radius: 999px; padding: 1px 7px; font-size: 11px; }
+.seg-pill.active .seg-count { background: var(--fit); }
+
+/* EMPTY */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: .3; }
+.empty-state p { font-size: 14px; }
+
+/* LOADING */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(255,255,255,.7); z-index: 200; align-items: center; justify-content: center; flex-direction: column; gap: 10px; }
+.overlay.show { display: flex; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--fit-mid); border-top-color: var(--fit); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* TOAST */
+#toast { position: fixed; bottom: 20px; right: 20px; background: var(--fit); color: #fff; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; box-shadow: 0 4px 16px rgba(0,0,0,.2); transform: translateY(50px); opacity: 0; transition: .3s; z-index: 999; }
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { background: var(--danger); }
+
+/* EXPORT BTN */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 7px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: .2s; white-space: nowrap; }
+.btn-primary { background: var(--fit); color: #fff; }
+.btn-primary:hover { background: #267312; }
+.btn-outline { background: #fff; color: var(--muted); border: 1.5px solid var(--border); }
+.btn-outline:hover { border-color: var(--fit); color: var(--fit); }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+
+/* KEIN EMAIL INFO */
+.no-email { color: var(--muted); font-style: italic; font-size: 12px; }
+
+@media (max-width: 900px) {
+  .stats-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* INFO MODAL */
+.info-modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 500; align-items: center; justify-content: center; padding: 20px; }
+.info-modal-bg.open { display: flex; }
+.info-modal-box { background: #fff; border-radius: 16px; max-width: 540px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+.info-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; background: #fff; border-radius: 16px 16px 0 0; }
+.info-modal-head h3 { font-size: 15px; font-weight: 900; color: #162812; }
+.info-modal-body { padding: 16px 20px; }
+.info-modal-body p { color: #6b7f60; font-size: 13px; line-height: 1.55; margin-bottom: 12px; }
+.im-sec { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .5px; color: #9ca3af; margin: 12px 0 8px; }
+.im-step { display: flex; gap: 10px; margin-bottom: 10px; font-size: 13px; line-height: 1.5; color: #374151; }
+.im-step strong { color: #162812; min-width: 140px; flex-shrink: 0; }
+.im-step span { color: #6b7f60; }
+.im-tip { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px 14px; margin-top: 12px; font-size: 12px; }
+.im-tip b { color: #166534; display: block; margin-bottom: 6px; }
+.im-inline-btn { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); color: #fff; font: 700 12px/1 inherit; padding: 6px 12px; border-radius: 999px; cursor: pointer; transition: .15s; }
+.im-inline-btn:hover { background: rgba(255,255,255,.25); }
+/* CONFIRM POPUP */
+.confirm-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 600; align-items: center; justify-content: center; padding: 20px; }
+.confirm-bg.open { display: flex; }
+.confirm-box { background: #fff; border-radius: 16px; max-width: 400px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.25); overflow: hidden; }
+.confirm-head { padding: 18px 20px 12px; }
+.confirm-head h3 { font-size: 16px; font-weight: 900; color: #162812; margin-bottom: 6px; }
+.confirm-head p { font-size: 13px; color: #6b7f60; line-height: 1.5; }
+.confirm-actions { display: flex; gap: 8px; padding: 14px 20px; border-top: 1px solid #e5e7eb; justify-content: flex-end; }
+</style>
+</head>
+<body>
+
+<script>
+if(window.self!==window.top){
+  document.documentElement.classList.add('in-iframe');
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.add('in-iframe');
+    document.body.style.background='#f5f7f4';
+    document.body.style.display='block';
+    var to=document.querySelector('.topbar-outer');
+    if(to){ to.style.width='100%'; }
+    var pg=document.querySelector('.page');
+    if(pg){
+      pg.style.maxWidth='none';
+      pg.style.width='auto';
+      pg.style.margin='0';
+      pg.style.padding='14px 14px 24px';
+    }
+  });
+}
+</script>
+<script>
+(function(){
+  var SK='fitbox_session';var TM=8*60*60*1000;var s;
+  try{var r=localStorage.getItem(SK)||sessionStorage.getItem(SK);s=JSON.parse(r);if(s&&!localStorage.getItem(SK))localStorage.setItem(SK,r);}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){
+    if(window.self!==window.top){try{window.top.location.replace('login.html');}catch(e){window.location.replace('login.html');}}
+    else{window.location.replace('login.html');}
+    throw new Error('AUTH');
+  }
+  window._fbSession=s;window._fbToken=s.access_token;
+  var _t;
+  function resetTimer(){clearTimeout(_t);_t=setTimeout(function(){localStorage.removeItem(SK);sessionStorage.removeItem(SK);window.location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet (8h Inaktivität).'));},TM);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+})();
+</script>
+
+<!-- TOPBAR -->
+<div class="topbar-outer"><div class="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">👥</span> Interessenten</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat" id="stat-datum">–</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-uhrzeit">–:–</span></span>
+    <span class="tb-stat" id="studioBadge" style="font-weight:700;color:#fff;">📍 Laden…</span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <button class="topbar-btn" onclick="exportCSV()">📥 CSV</button>
+  <button class="topbar-btn" onclick="exportEmailList()">📧 E-Mail Liste</button>
+  <button class="topbar-btn" id="interessentenInfoBtn">ℹ️ Info</button>
+</div></div>
+
+<script>
+(function(){
+  function pad(n){return n<10?'0'+n:n;}
+  function tick(){
+    var now=new Date();
+    var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    var weekdays=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    var dEl=document.getElementById('stat-datum');
+    var tEl=document.getElementById('stat-uhrzeit');
+    if(dEl) dEl.textContent=weekdays[now.getDay()]+', '+now.getDate()+'. '+months[now.getMonth()];
+    if(tEl) tEl.textContent=pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+  }
+  document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);});
+})();
+</script>
+
+<div class="overlay" id="overlay"><div class="spinner"></div><div style="font-size:13px;color:var(--fit);font-weight:700" id="overlayText">Wird geladen...</div></div>
+<div id="toast"></div>
+
+<div class="page">
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card highlight">
+      <div class="val" id="statGesamt">–</div>
+      <div class="lbl">Personen gesamt</div>
+    </div>
+    <div class="stat-card">
+      <div class="val" id="statAktiv" style="color:var(--muted)">–</div>
+      <div class="lbl">Interessenten (Leads)</div>
+    </div>
+    <div class="stat-card warn-card">
+      <div class="val" id="statLost">–</div>
+      <div class="lbl">Ehemalige Mitglieder</div>
+    </div>
+    <div class="stat-card">
+      <div class="val" id="statEmail" style="color:#1d4ed8">–</div>
+      <div class="lbl">Mit E-Mail</div>
+    </div>
+    <div class="stat-card">
+      <div class="val" id="statPhone" style="color:#15803d">–</div>
+      <div class="lbl">Mit Telefon / WhatsApp</div>
+    </div>
+  </div>
+
+  <!-- NEWSLETTER SEGMENTE -->
+  <div class="segment-bar">
+    <div class="segment-title">📬 Newsletter-Segmente</div>
+    <div class="segment-pills" id="segmentPills">
+      <div class="seg-pill active" data-seg="alle" onclick="setSeg(this,'alle')">
+        Alle <span class="seg-count" id="segAll">0</span>
+      </div>
+      <div class="seg-pill" data-seg="nur_leads" onclick="setSeg(this,'nur_leads')">
+        🎯 Nur Leads <span class="seg-count" id="segLeads">0</span>
+      </div>
+      <div class="seg-pill" data-seg="nur_ehemalige" onclick="setSeg(this,'nur_ehemalige')">
+        🔄 Nur Ehemalige <span class="seg-count" id="segEhemalige">0</span>
+      </div>
+      <div class="seg-pill" data-seg="mit_email" onclick="setSeg(this,'mit_email')">
+        📧 Mit E-Mail <span class="seg-count" id="segEmail">0</span>
+      </div>
+
+      <div class="seg-pill" data-seg="ohne_email" onclick="setSeg(this,'ohne_email')">
+        ⚠️ Ohne E-Mail <span class="seg-count" id="segOhneEmail">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-bar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Name, E-Mail, Telefon suchen..." oninput="renderTable()">
+    </div>
+    <select class="sel" id="filterQuelle" onchange="renderTable()">
+      <option value="">Alle Quellen</option>
+    </select>
+    <select class="sel" id="filterZiel" onchange="renderTable()">
+      <option value="">Alle Ziele</option>
+    </select>
+    <div class="chips">
+      <div class="chip active" data-f="alle" onclick="setChip(this,'alle')">Alle</div>
+      <div class="chip email-chip" data-f="email" onclick="setChip(this,'email')">Mit E-Mail</div>
+    </div>
+  </div>
+
+  <!-- TABELLE -->
+  <div class="table-card">
+    <div class="table-head-bar">
+      <h2>Interessenten-Liste</h2>
+      <span class="count-badge" id="tableCount">0</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Kontakt</th>
+            <th>Quelle</th>
+            <th>Ziel</th>
+            <th>Studio</th>
+            <th>Lost seit</th>
+            <th>Tage</th>
+            <th>Aktion</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">Wird geladen...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const SB_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+const SB_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+const SK = 'fitbox_session';
+const STUDIO_MM = '50de091d-debc-4172-8053-b516f42c4321';
+const STUDIO_SE = '3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb';
+
+// Auth
+let _s;
+try { _s = JSON.parse(localStorage.getItem(SK) || sessionStorage.getItem(SK)); } catch(e) {}
+if (!_s || !_s.access_token) { window.location.replace('login.html'); throw new Error('AUTH'); }
+window._fbSession = _s;
+
+// State
+let allData = [];
+let studioId = null;
+let currentChip = 'alle';
+let currentSeg = 'alle';
+
+// Utils
+function goBack() {
+  if (window.self !== window.top) {
+    try { if (typeof window.parent.navigate === 'function') { window.parent.navigate('welcome', ''); return; } } catch(e) {}
+  }
+  window.location.href = 'admin_index.html';
+}
+function showLoad(msg) { document.getElementById('overlay').classList.add('show'); document.getElementById('overlayText').textContent = msg || 'Wird geladen...'; }
+function hideLoad() { document.getElementById('overlay').classList.remove('show'); }
+function toast(msg, isErr = false) { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'show' + (isErr ? ' error' : ''); setTimeout(() => t.className = '', 3000); }
+function esc(v) { return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(v) { if (!v) return '–'; const d = new Date(v); return isNaN(d) ? v : d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'2-digit' }); }
+
+async function sb(path, opts = {}) {
+  const { prefer, method, body, headers: extraHeaders } = opts;
+  const res = await fetch(SB_URL + path, {
+    method: method || 'GET',
+    body: body || undefined,
+    headers: {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + _s.access_token,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Prefer': prefer || 'return=representation',
+      ...(extraHeaders || {})
+    }
+  });
+  if (!res.ok) {
+    const e = await res.text();
+    console.error('sb() error', res.status, path, e);
+    throw new Error('HTTP ' + res.status + ': ' + e);
+  }
+  const t = await res.text();
+  return t ? JSON.parse(t) : [];
+}
+
+// Studio laden
+async function loadStudio() {
+  try {
+    const r = await fetch(SB_URL + '/rest/v1/employees?auth_user_id=eq.' + _s.user.id + '&select=id&limit=1', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + _s.access_token }
+    });
+    const emp = (await r.json())?.[0];
+    if (!emp) return;
+
+    const r2 = await fetch(SB_URL + '/rest/v1/employee_studios?employee_id=eq.' + emp.id + '&is_active=eq.true&select=studio_id,is_primary,studios(id,name)&order=is_primary.desc&limit=1', {
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + _s.access_token }
+    });
+    const st = (await r2.json())?.[0];
+    if (st) {
+      studioId = st.studio_id;
+      document.getElementById('studioBadge').textContent = '📍 ' + (st.studios?.name || 'fitbox');
+    }
+  } catch(e) { console.warn(e); }
+}
+
+// Daten laden
+async function loadData() {
+  showLoad('Interessenten laden...');
+  try {
+    // Basis-Filter: nur das eigene Studio wenn gesetzt
+    let url = '/rest/v1/v_interessenten?order=created_at.desc&limit=2000';
+    if (studioId) url += '&studio_id=eq.' + studioId;
+
+    const data = await sb(url);
+    allData = data;
+
+    // Filter-Dropdowns befüllen
+    fillFilterDropdowns();
+    updateStats();
+    updateSegmentCounts();
+    renderTable();
+  } catch(e) {
+    toast('Fehler beim Laden: ' + e.message, true);
+  }
+  hideLoad();
+}
+
+function fillFilterDropdowns() {
+  // Quellen
+  const quellen = [...new Map(allData.filter(d => d.source_label).map(d => [d.source_label, d.source_label])).values()];
+  const qEl = document.getElementById('filterQuelle');
+  qEl.innerHTML = '<option value="">Alle Quellen</option>' + quellen.map(q => `<option value="${esc(q)}">${esc(q)}</option>`).join('');
+
+  // Ziele
+  const ziele = [...new Map(allData.filter(d => d.goal_label).map(d => [d.goal_label, d.goal_label])).values()];
+  const zEl = document.getElementById('filterZiel');
+  zEl.innerHTML = '<option value="">Alle Ziele</option>' + ziele.map(z => `<option value="${esc(z)}">${esc(z)}</option>`).join('');
+}
+
+function updateStats() {
+  const d = allData;
+  const ehemalige = d.filter(x => x.quelle === 'ehemalig');
+  const leads = d.filter(x => x.quelle !== 'ehemalig'); // 'lead' + 'interessent'
+  document.getElementById('statGesamt').textContent = d.length;
+  document.getElementById('statAktiv').textContent = leads.length;
+  document.getElementById('statLost').textContent = ehemalige.length;
+  document.getElementById('statEmail').textContent = d.filter(x => x.hat_email).length;
+  document.getElementById('statPhone').textContent = d.filter(x => x.hat_telefon).length;
+}
+
+function updateSegmentCounts() {
+  const d = allData;
+  const ehemalige = d.filter(x => x.quelle === 'ehemalig');
+  const leads = d.filter(x => x.quelle !== 'ehemalig');
+  document.getElementById('segAll').textContent = d.length;
+  const elL = document.getElementById('segLeads'); if(elL) elL.textContent = leads.length;
+  const elE = document.getElementById('segEhemalige'); if(elE) elE.textContent = ehemalige.length;
+  document.getElementById('segEmail').textContent = d.filter(x => x.hat_email).length;
+  const elLost = document.getElementById('segLost'); if(elLost) elLost.textContent = ehemalige.length;
+  document.getElementById('segOhneEmail').textContent = d.filter(x => !x.hat_email).length;
+}
+
+function getFilteredData() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  const quelle = document.getElementById('filterQuelle').value;
+  const ziel = document.getElementById('filterZiel').value;
+
+  return allData.filter(d => {
+    // Chip Filter
+    if (currentChip === 'email' && !d.hat_email) return false;
+
+    // Segment Filter
+    if (currentSeg === 'mit_email' && !d.hat_email) return false;
+    if (currentSeg === 'ohne_email' && d.hat_email) return false;
+    if (currentSeg === 'nur_leads' && d.quelle === 'ehemalig') return false;
+    if (currentSeg === 'nur_ehemalige' && d.quelle !== 'ehemalig') return false;
+    if (currentSeg === 'nur_interessenten' && d.quelle !== 'interessent') return false;
+
+    // Dropdown Filter
+    if (quelle && d.source_label !== quelle) return false;
+    if (ziel && d.goal_label !== ziel) return false;
+
+    // Suche
+    if (q) {
+      const haystack = [d.first_name, d.last_name, d.email, d.phone].filter(Boolean).join(' ').toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+
+    return true;
+  });
+}
+
+function statusBadge(key) {
+  const map = {
+    new: ['badge-new', '⭐ Neu'],
+    terminiert: ['badge-terminiert', '📅 Terminiert'],
+    erfolgt: ['badge-erfolgt', '✅ Erfolgt'],
+    lost: ['badge-lost', '❌ Lost'],
+    lost_final: ['badge-lost', '❌ Lost Final'],
+    abgesagt: ['badge-lost', '↩️ Abgesagt'],
+    noshow: ['badge-lost', '👻 NoShow'],
+  };
+  const [cls, label] = map[key] || ['badge-default', key || '–'];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function sourceBadge(label, code, quelle) {
+  if (quelle === 'ehemalig') return '<span class="source-badge" style="background:#fff6df;border:1px solid #f0d28a;color:#8a6210">🔄 Ehem. Mitglied</span>';
+  const cls = code === 'ig' ? 'source-ig' : code === 'fb' ? 'source-fb' : code === 'website' ? 'source-website' : code === 'walkin' ? 'source-walkin' : code === 'referral' ? 'source-referral' : '';
+  const icon = code === 'ig' ? '📸' : code === 'fb' ? '👍' : code === 'website' ? '🌐' : code === 'walkin' ? '🚶' : code === 'referral' ? '🤝' : '📋';
+  return label ? `<span class="source-badge ${cls}">${icon} ${esc(label)}</span>` : '<span style="color:var(--muted);font-size:12px">–</span>';
+}
+
+function daysBadge(days) {
+  if (days === null || days === undefined) return '–';
+  const cls = days <= 7 ? 'days-fresh' : days <= 30 ? 'days-mid' : 'days-old';
+  return `<span class="days-badge ${cls}">${days}d</span>`;
+}
+
+function renderTable() {
+  const filtered = getFilteredData();
+  document.getElementById('tableCount').textContent = filtered.length;
+
+  if (!filtered.length) {
+    document.getElementById('tableBody').innerHTML = `
+      <tr><td colspan="8">
+        <div class="empty-state">
+          <div class="icon">👥</div>
+          <p>Keine Interessenten gefunden.</p>
+        </div>
+      </td></tr>`;
+    return;
+  }
+
+  document.getElementById('tableBody').innerHTML = filtered.map(d => {
+    const name = esc((d.first_name || '') + ' ' + (d.last_name || '')).trim();
+
+    let kontakt = '<div class="contact-icons">';
+    if (d.email) {
+      kontakt += `<a href="mailto:${esc(d.email)}" class="icon-btn email-btn" title="${esc(d.email)}">📧</a>`;
+    }
+    if (d.phone) {
+      const nr = d.phone.replace(/[^0-9+]/g,'').replace(/^0/, '+49');
+      kontakt += `<a href="https://wa.me/${nr}" target="_blank" class="icon-btn wa-btn" title="${esc(d.phone)}">💬</a>`;
+      kontakt += `<a href="tel:${esc(d.phone)}" class="icon-btn" title="${esc(d.phone)}">📞</a>`;
+    }
+    if (!d.email && !d.phone) kontakt += '<span class="no-email">Kein Kontakt</span>';
+    kontakt += '</div>';
+
+    const emailDisplay = d.email
+      ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${esc(d.email)}</div>`
+      : '';
+
+    return `<tr class="lost-row">
+      <td>
+        <div style="font-weight:700">${name}</div>
+        ${emailDisplay}
+      </td>
+      <td>${kontakt}</td>
+      <td>${sourceBadge(d.source_label, d.source_code, d.quelle)}</td>
+      <td><span style="font-size:12px;color:var(--muted)">${esc(d.goal_label || '–')}</span></td>
+      <td><span style="font-size:12px">${esc(d.studio_name || '–')}</span></td>
+      <td><span style="font-size:12px;color:var(--muted)">${fmtDate(d.updated_at || d.created_at)}</span></td>
+      <td>${daysBadge(d.tage_seit_kontakt)}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-outline" style="color:var(--fit);border-color:var(--fit)" onclick="showConfirm('reaktivieren','${esc(d.id)}','${esc((d.first_name||'')+' '+(d.last_name||'')).trim()}','${d.quelle||''}')">↩ Reaktivieren</button>
+          <button class="btn btn-sm btn-outline" style="color:#92400e;border-color:#f0d28a;background:#fff6df" onclick="showConfirm('archivieren','${esc(d.id)}','${esc((d.first_name||'')+' '+(d.last_name||'')).trim()}','${d.quelle||''}')">📦 Archivieren</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function setChip(el, val) {
+  currentChip = val;
+  // Segment zurücksetzen wenn Chip gewechselt
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.f === val));
+  renderTable();
+}
+
+function setSeg(el, val) {
+  currentSeg = val;
+  // Chip auf "alle" zurücksetzen
+  currentChip = 'alle';
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.f === 'alle'));
+  document.querySelectorAll('.seg-pill').forEach(p => p.classList.toggle('active', p.dataset.seg === val));
+  renderTable();
+}
+
+// CSV Export
+function exportCSV() {
+  const filtered = getFilteredData();
+  if (!filtered.length) { toast('Keine Daten zum Exportieren', true); return; }
+
+  const headers = ['Vorname', 'Nachname', 'E-Mail', 'Telefon', 'Status', 'Quelle', 'Ziel', 'Studio', 'Seit', 'Tage'];
+  const rows = filtered.map(d => [
+    d.first_name || '', d.last_name || '', d.email || '', d.phone || '',
+    d.status_key || '', d.source_label || '', d.goal_label || '',
+    d.studio_name || '', d.created_at ? new Date(d.created_at).toLocaleDateString('de-DE') : '',
+    d.tage_seit_kontakt ?? ''
+  ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `interessenten_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  toast('CSV exportiert (' + filtered.length + ' Einträge)');
+}
+
+// E-Mail Liste Export
+function exportEmailList() {
+  const filtered = getFilteredData().filter(d => d.hat_email);
+  if (!filtered.length) { toast('Keine E-Mail-Adressen in der aktuellen Auswahl', true); return; }
+
+  const emails = filtered.map(d => d.email).join('; ');
+  navigator.clipboard.writeText(emails).then(() => {
+    toast('✅ ' + filtered.length + ' E-Mail-Adressen kopiert!');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = emails; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    toast('✅ ' + filtered.length + ' E-Mail-Adressen kopiert!');
+  });
+}
+
+// ── Confirm Popup ──────────────────────────────────────────────────
+let _confirmAction = null;
+
+function showConfirm(action, id, name, quelle) {
+  _confirmAction = { action, id, name, quelle };
+  const isEhemalig = quelle === 'ehemalig';
+  const box = document.getElementById('confirmBox');
+  if (action === 'reaktivieren') {
+    box.querySelector('.confirm-head h3').textContent = '↩ Reaktivieren';
+    box.querySelector('.confirm-head p').textContent = isEhemalig
+      ? `"${name}" als aktives Mitglied reaktivieren? Der Eintrag verschwindet aus dieser Liste.`
+      : `"${name}" reaktivieren? Der Lead erscheint wieder im aktiven Funnel.`;
+    box.querySelector('#confirmOk').textContent = 'Reaktivieren';
+    box.querySelector('#confirmOk').style.cssText = 'background:#2f8615;color:#fff;border:none;border-radius:8px;padding:9px 18px;font:700 13px/1 inherit;cursor:pointer';
+  } else {
+    box.querySelector('.confirm-head h3').textContent = '📦 Archivieren';
+    box.querySelector('.confirm-head p').textContent = `"${name}" archivieren? Der Eintrag wird dauerhaft aus dieser Liste entfernt.`;
+    box.querySelector('#confirmOk').textContent = 'Archivieren';
+    box.querySelector('#confirmOk').style.cssText = 'background:#92400e;color:#fff;border:none;border-radius:8px;padding:9px 18px;font:700 13px/1 inherit;cursor:pointer';
+  }
+  document.getElementById('confirmBg').classList.add('open');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmBg').classList.remove('open');
+  _confirmAction = null;
+}
+
+async function executeConfirm() {
+  if (!_confirmAction) return;
+  const { action, id, name, quelle } = _confirmAction;
+  closeConfirm();
+  if (action === 'reaktivieren') await reaktivieren(id, name, quelle);
+  else await archivieren(id, name, quelle);
+}
+
+// ── Reaktivieren ────────────────────────────────────────────────────
+async function reaktivieren(id, name, quelle) {
+  try {
+    if (quelle === 'ehemalig') {
+      await sb('/rest/v1/kunden?id=eq.' + id, {
+        method: 'PATCH', prefer: 'return=minimal',
+        body: JSON.stringify({ status: 'aktiv', updated_at: new Date().toISOString() })
+      });
+      toast('✅ ' + name + ' reaktiviert — wieder aktives Mitglied');
+    } else {
+      await sb('/rest/v1/pt_leads?id=eq.' + id, {
+        method: 'PATCH', prefer: 'return=minimal',
+        body: JSON.stringify({ status_key: 'new', is_active: true, archived_at: null, contact_attempts: 0, updated_at: new Date().toISOString() })
+      });
+      toast('✅ ' + name + ' reaktiviert — erscheint jetzt in Aktuelle Leads');
+    }
+    await loadData();
+  } catch(e) { toast('Fehler: ' + e.message, true); }
+}
+
+// ── Archivieren ─────────────────────────────────────────────────────
+async function archivieren(id, name, quelle) {
+  try {
+    if (quelle === 'ehemalig') {
+      // Ehemaliges Mitglied → kunden-Tabelle
+      await sb('/rest/v1/kunden?id=eq.' + id, {
+        method: 'PATCH', prefer: 'return=minimal',
+        body: JSON.stringify({ status: 'archiviert', updated_at: new Date().toISOString() })
+      });
+    } else if (quelle === 'lead') {
+      // PT-Lead → pt_leads-Tabelle
+      await sb('/rest/v1/pt_leads?id=eq.' + id, {
+        method: 'PATCH', prefer: 'return=minimal',
+        body: JSON.stringify({ archived_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+      });
+    } else if (quelle === 'interessent') {
+      // Direkter Interessent → interessenten-Tabelle
+      await sb('/rest/v1/interessenten?id=eq.' + id, {
+        method: 'PATCH', prefer: 'return=minimal',
+        body: JSON.stringify({ status: 'archiviert', updated_at: new Date().toISOString() })
+      });
+    }
+    toast('📦 ' + name + ' archiviert');
+    await loadData();
+  } catch(e) { toast('Fehler: ' + e.message, true); }
+}
+
+// Init
+async function init() {
+  await loadStudio();
+  await loadData();
+}
+init();
+</script>
+
+<!-- ── INFO MODAL ── -->
+<div class="info-modal-bg" id="interessentenInfoModal">
+  <div class="info-modal-box">
+    <div class="info-modal-head">
+      <h3>ℹ️ Interessenten &amp; Ehemalige – Wozu dient diese Seite?</h3>
+      <button onclick="document.getElementById('interessentenInfoModal').classList.remove('open')" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6b7f60">✕</button>
+    </div>
+    <div class="info-modal-body">
+      <p style="color:#6b7f60;font-size:13px;line-height:1.55;margin-bottom:12px">Diese Seite zeigt drei Gruppen von Personen, die noch kein aktives Mitglied sind – die Basis für Reaktivierung, Follow-up und Newsletter.</p>
+
+      <div class="im-sec">Die drei Gruppen</div>
+      <div class="im-step"><strong>🎯 PT-Leads (Lost)</strong><span>Leads aus dem PT-Manager, bei denen kein Abschluss zustande kam (Status „Lost"). Reaktivierungspotenzial durch erneute Ansprache.</span></div>
+      <div class="im-step"><strong>👥 Interessenten</strong><span>Direkt erfasste Interessenten ohne PT-Prozess. Kommen z. B. aus Walk-Ins, Empfehlungen oder Anfragen, die noch nicht im PT-Funnel sind.</span></div>
+      <div class="im-step"><strong>🔄 Ehemalige Mitglieder</strong><span>Frühere Mitglieder, die in der Mitgliederverwaltung als „Ehemaliges Mitglied" markiert wurden. Höchstes Reaktivierungspotenzial.</span></div>
+
+      <div class="im-sec">Aktionen</div>
+      <div class="im-step"><strong>↩ Reaktivieren</strong><span>Setzt einen Lead zurück in den aktiven PT-Funnel bzw. reaktiviert ein ehemaliges Mitglied. Die Person verschwindet dann aus dieser Liste.</span></div>
+      <div class="im-step"><strong>📦 Archivieren</strong><span>Entfernt die Person dauerhaft aus dieser Liste wenn keine Reaktivierung mehr geplant ist.</span></div>
+      <div class="im-step"><strong>📥 CSV Export</strong><span>Exportiert die aktuell gefilterte Liste als CSV – z. B. für E-Mail-Marketing oder externe Auswertungen.</span></div>
+      <div class="im-step"><strong>📧 E-Mail Liste</strong><span>Erstellt eine semikolongetrennte Liste aller E-Mail-Adressen der aktuellen Auswahl – direkt kopierbar für Newsletter oder Massen-E-Mails.</span></div>
+
+      <div class="im-sec">Newsletter-Segmente</div>
+      <div class="im-step"><strong>Filter kombinieren</strong><span>Die Segment-Pills (Nur Leads, Nur Ehemalige, Mit E-Mail, Ohne E-Mail) lassen sich mit der Suche und den Dropdown-Filtern kombinieren – der CSV-Export und die E-Mail-Liste beziehen sich immer auf die aktuelle Ansicht.</span></div>
+
+      <div class="im-tip"><b>💡 Hinweise</b><ul style="margin:0;padding-left:16px;color:#6b7f60;font-size:12px;line-height:1.9">
+        <li>PT-Leads kommen automatisch hier an, sobald sie im PT-Manager auf „Lost" gesetzt werden.</li>
+        <li>Ehemalige Mitglieder erscheinen hier nach „Als ehem. Mitglied markieren" in der Mitgliederverwaltung.</li>
+        <li>Wellpass-Mitglieder erscheinen <b>nicht</b> hier – sie sind aktive Mitglieder und in der Mitgliederliste zu finden.</li>
+        <li>Detailansicht und Follow-up für Leads → <b>PT Manager</b> nutzen.</li>
+      </ul></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:16px">
+        <button onclick="document.getElementById('interessentenInfoModal').classList.remove('open')" style="background:#2f8615;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer">Verstanden – Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var mid='interessentenInfoModal',bid='interessentenInfoBtn';
+  function openIM(){document.getElementById(mid).classList.add('open');}
+  function closeIM(){document.getElementById(mid).classList.remove('open');}
+  document.addEventListener('DOMContentLoaded',function(){
+    var b=document.getElementById(bid);if(b)b.addEventListener('click',openIM);
+    document.getElementById(mid).addEventListener('click',function(e){if(e.target===this)closeIM();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeIM();});
+  });
+})();
+</script>
+
+<!-- ── CONFIRM POPUP ── -->
+<div class="confirm-bg" id="confirmBg" onclick="if(event.target===this)closeConfirm()">
+  <div class="confirm-box" id="confirmBox">
+    <div class="confirm-head">
+      <h3>Bestätigen</h3>
+      <p>Bist du sicher?</p>
+    </div>
+    <div class="confirm-actions">
+      <button onclick="closeConfirm()" style="background:#f3f4f6;color:#374151;border:none;border-radius:8px;padding:9px 18px;font:700 13px/1 inherit;cursor:pointer">Abbrechen</button>
+      <button id="confirmOk" onclick="executeConfirm()">OK</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

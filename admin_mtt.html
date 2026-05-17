@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MTT Dashboard · fitbox Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--fit:#2f8615;--fit2:#95c11f;--fit-dark:#256a10;--fit-soft:#eef5ea;--ink:#0f172a;--muted:#64748b;--card:#fff;--line:#dde5dd;--line2:#eef3ee;--bg:#f5f7f4;--shadow:0 4px 16px rgba(15,23,42,.06);--shadow-md:0 8px 24px rgba(15,23,42,.10);--ok:#166534;--ok-bg:#f0fdf4;--warn:#b45309;--warn-bg:#fff7ed;--danger:#b91c1c;--danger-bg:#fef2f2;--info:#1d4ed8;--info-bg:#eff6ff;--r:14px;--r-sm:10px;}
+html,body{font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);background:var(--bg);min-height:100vh;}
+.topbar{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--fit) 0%,var(--fit-dark) 100%);padding:0 18px;height:46px;flex-shrink:0;box-shadow:0 2px 12px rgba(0,0,0,.15);position:sticky;top:0;z-index:200;}
+.tb-t{color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
+.tb-div{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0;}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-num{font-weight:700;color:#fff;}
+.tb-dot{width:5px;height:5px;border-radius:50%;background:var(--fit2);display:inline-block;flex-shrink:0;}
+.tb-s{flex:1;}
+
+
+
+.tb-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:600 12px/1 'DM Sans',system-ui;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;transition:.15s;}
+.tb-btn:hover{background:rgba(255,255,255,.25);}
+.tb-btn.primary{background:rgba(255,255,255,.9);color:var(--fit);font-weight:700;}
+.page{max-width:1600px;margin:0 auto;padding:20px 18px 60px;}
+.in-iframe .page{padding-top:14px;}body.in-iframe{padding:0;margin:0;}
+.filterbar{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;box-shadow:var(--shadow);}
+.fg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px;}
+.fg label{font-size:11px;font-weight:800;color:#475569;text-transform:uppercase;letter-spacing:.05em;}
+.ctrl{width:100%;appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:var(--r-sm);height:38px;padding:0 10px;font:inherit;font-size:13px;outline:none;transition:.15s;}
+.ctrl:focus{border-color:rgba(47,134,21,.5);box-shadow:0 0 0 3px rgba(47,134,21,.1);}
+.fdiv{width:1px;background:var(--line);align-self:stretch;margin:0 2px;}
+.kpi-row{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:16px;}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;position:relative;overflow:hidden;box-shadow:var(--shadow);}
+.kpi::before{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:var(--line);}
+.kpi.ok::before{background:#16a34a;}.kpi.warn::before{background:#f59e0b;}.kpi.danger::before{background:#dc2626;}.kpi.info::before{background:#3b82f6;}
+.kpi-label{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.05em;}
+.kpi-value{font-size:22px;font-weight:900;line-height:1.1;margin-top:5px;letter-spacing:-.02em;}
+.kpi.ok .kpi-value{color:var(--ok);}.kpi.warn .kpi-value{color:#92400e;}.kpi.danger .kpi-value{color:var(--danger);}.kpi.info .kpi-value{color:var(--info);}
+.kpi-foot{font-size:10px;color:var(--muted);margin-top:2px;}
+.section{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px;}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);}
+.section-head h3{margin:0;font-size:15px;font-weight:800;}.section-sub{font-size:12px;color:var(--muted);}
+.section-body{padding:14px 16px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.split-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.mini-stat{background:var(--line2);border-radius:8px;padding:10px 12px;}
+.mini-stat .k{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;}
+.mini-stat .v{font-size:20px;font-weight:900;}
+.extra-filters{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;margin-bottom:16px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px;box-shadow:var(--shadow);}
+.filter-box{display:flex;flex-direction:column;gap:4px;}
+.filter-box label{font-size:11px;font-weight:800;color:#475569;text-transform:uppercase;letter-spacing:.05em;}
+.helper-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;flex-wrap:wrap;}
+.helper-row .filter-summary{font-size:12px;color:var(--muted);}
+.table-wrap{overflow:auto;}
+table{width:100%;border-collapse:collapse;min-width:900px;}
+th,td{padding:9px 12px;border-bottom:1px solid var(--line2);text-align:left;font-size:12px;vertical-align:middle;}
+thead th{background:#f8faf8;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;position:sticky;top:0;z-index:1;}
+tbody tr:last-child td{border-bottom:none;}tbody tr:hover td{background:#f9fdf9;}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:6px;font-size:10px;font-weight:800;border:1px solid;}
+.badge.open{background:var(--warn-bg);color:var(--warn);border-color:#fed7aa;}
+.badge.billed{background:var(--info-bg);color:var(--info);border-color:#bfdbfe;}
+.badge.ready{background:var(--ok-bg);color:var(--ok);border-color:#bbf7d0;}
+.badge.completed{background:#f5f3ff;color:#6d28d9;border-color:#ddd6fe;}
+.badge.alert{background:var(--danger-bg);color:var(--danger);border-color:#fecaca;}
+.list-item{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;margin-bottom:6px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.list-item .title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.list-item .meta{font-size:11px;color:var(--muted);}
+.empty{padding:20px;color:var(--muted);font-size:13px;text-align:center;}
+.btn{appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:var(--r-sm);height:36px;padding:0 12px;font:600 12px/1 inherit;cursor:pointer;transition:.15s;}
+.btn:hover{background:var(--fit-soft);border-color:var(--fit);}
+.btn.primary{background:var(--fit);color:#fff;border-color:var(--fit);}
+#globalLoading{position:fixed;inset:0;background:rgba(10,15,28,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000;}
+.loading-card{background:#fff;border-radius:14px;padding:14px 20px;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:12px;font-weight:700;}
+.spinner{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--line);border-top-color:var(--fit);animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#toastWrap{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;}
+.toast{background:#0d1b2a;color:#fff;border-radius:12px;padding:11px 18px;font-size:13px;font-weight:700;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:10px;animation:toastIn .2s ease;}
+.toast.ok{border-left:3px solid #4ade80;}.toast.err{border-left:3px solid #f87171;}.toast.warn{border-left:3px solid #fbbf24;}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1300px){.kpi-row{grid-template-columns:repeat(4,1fr);}.extra-filters{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr);}.grid2,.grid3{grid-template-columns:1fr;}.extra-filters{grid-template-columns:repeat(2,1fr);}}
+
+/* conn-dot */
+.conn-dot{width:9px;height:9px;border-radius:50%;background:#6b7280;flex-shrink:0;box-shadow:0 0 0 2px rgba(255,255,255,.15);transition:background .4s,box-shadow .4s;}
+.conn-dot.connecting{background:#f59e0b;animation:connPulse 1.2s ease-in-out infinite;}
+.conn-dot.ok{background:#95c11f;box-shadow:0 0 0 3px rgba(149,193,31,.3);animation:none;}
+.conn-dot.err{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.3);animation:none;}
+@keyframes connPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.conn-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);}
+#connStatus{display:flex;align-items:center;gap:6px;}
+/* Info-Modal */
+.info-backdrop{position:fixed;inset:0;background:rgba(13,27,42,.55);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:flex-start;justify-content:center;padding:50px 20px;overflow-y:auto;}
+.info-backdrop.show{display:flex;animation:infoFadeIn .2s ease;}
+@keyframes infoFadeIn{from{opacity:0}to{opacity:1}}
+.info-card{background:#fff;border-radius:18px;max-width:640px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.3);overflow:hidden;animation:infoSlideUp .25s cubic-bezier(.4,0,.2,1);}
+@keyframes infoSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.info-head{background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);color:#fff;padding:18px 22px;display:flex;align-items:center;gap:14px;}
+.info-head-icon{font-size:28px;flex-shrink:0;}
+.info-head-title{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+.info-head-sub{font-size:12px;opacity:.85;margin-top:2px;}
+.info-head>div:nth-child(2){flex:1;min-width:0;}
+.info-close{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
+.info-close:hover{background:rgba(255,255,255,.28);}
+.info-body{padding:20px 24px 24px;max-height:65vh;overflow-y:auto;}
+.info-section{margin-bottom:18px;}.info-section:last-child{margin-bottom:0;}
+.info-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#2f8615;margin-bottom:7px;}
+.info-section p,.info-list li{font-size:13px;line-height:1.6;color:#334155;}
+.info-list{margin:0;padding-left:0;list-style:none;}
+.info-list li{padding:7px 0 7px 22px;position:relative;border-bottom:1px solid #f1f5f0;}
+.info-list li:last-child{border-bottom:none;}
+.info-list li::before{content:'';position:absolute;left:6px;top:14px;width:6px;height:6px;border-radius:50%;background:#95c11f;}
+.info-list li b{color:#0d1b2a;font-weight:700;}
+</style>
+
+<script>
+/* fitbox auth fallback: zeigt Kein-Zugriff im iFrame oder standalone */
+function showNoAccessFallback(){
+  try {
+    if (window.self !== window.top) {
+      window.parent.postMessage({ type: 'fitbox-no-access', path: location.pathname }, '*');
+      return;
+    }
+  } catch (e) {}
+  document.documentElement.innerHTML = '<head><meta charset="utf-8"><title>Kein Zugriff</title></head>' +
+    '<body style="margin:0;font-family:system-ui,sans-serif;background:#f5f6f4;min-height:100vh;display:flex;align-items:center;justify-content:center;">' +
+    '<div style="background:#fff;border-radius:14px;padding:40px;max-width:480px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08);">' +
+    '<div style="font-size:64px;margin-bottom:16px;">🔒</div>' +
+    '<h1 style="font-size:22px;font-weight:800;margin:0 0 12px;color:#0f172a;">Kein Zugriff auf diese Seite</h1>' +
+    '<p style="color:#64748b;line-height:1.6;margin:0 0 24px;">Dieser Bereich ist nur für den <strong style="color:#2f8615">Owner</strong> zugänglich. Wende dich an <strong style="color:#2f8615">Kürşat</strong>.</p>' +
+    '<a href="admin_index.html" style="display:inline-block;background:linear-gradient(180deg,#2f8615,#256a10);color:#fff;text-decoration:none;border-radius:11px;padding:12px 24px;font:900 13px/1 system-ui;">← Zurück zum Admin</a>' +
+    '</div></body>';
+}
+</script>
+</head>
+<body>
+<script>
+(function(){var s;try{s=JSON.parse(localStorage.getItem('fitbox_session'));}catch(e){}if(!s||!s.access_token||s.expires_at<Date.now()){localStorage.removeItem('fitbox_session');location.replace('login.html?next='+encodeURIComponent(location.pathname));throw new Error('AUTH');}var rid=s.employee?s.employee.role_id:'',rc=s.employee&&s.employee.roles?s.employee.roles.code:'';if(rid!=='80f04245-ee93-45e8-9861-121778b5ff84'&&rc!=='admin'&&rc!=='studioleitung'){showNoAccessFallback();throw new Error('ROLE');}window._fbSession=s;window._fbToken=s.access_token;})();
+(function(){if(window.self===window.top)return;document.documentElement.classList.add('in-iframe');document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('in-iframe');});})();
+</script>
+
+<div class="topbar" id="topbar">
+  <span class="tb-t">🏥 MTT Dashboard</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <div class="tb-stat"><span class="tb-dot"></span><b id="stat-rezepte">–</b> Rezepte</div>
+    <div class="tb-stat"><span class="tb-dot" style="background:#f59e0b"></span><b id="stat-offen">–</b> Offen</div>
+    <div class="tb-stat"><span class="tb-dot" style="background:#f87171"></span><b id="stat-flags">–</b> Auffällig</div>
+  </div>
+  <span class="tb-s"></span>
+  <span id="connStatus"><span class="conn-dot connecting" id="connDot"></span><span class="conn-label" id="connLabel">Verbinde…</span></span>
+  <button class="tb-btn" id="infoBtnTop" title="Info">ℹ️ Info</button>
+  <button class="tb-btn" id="reloadBtn">↻ Neu laden</button>
+</div>
+<!-- ═══ INFO MODAL ═══ -->
+<div class="info-backdrop" id="infoModal">
+  <div class="info-card">
+    <div class="info-head">
+      <span class="info-head-icon">🏥</span>
+      <div>
+        <div class="info-head-title">MTT Dashboard</div>
+        <div class="info-head-sub">Medizinische Trainingstherapie</div>
+      </div>
+      <button class="info-close" id="infoClose" aria-label="Schließen">✕</button>
+    </div>
+    <div class="info-body">
+      <div class="info-section"><div class="info-section-title">Wozu diese Seite?</div><p>Aktive MTT-Rezepte — offene Verordnungen und auffällige Fälle.</p></div>
+      <div class="info-section"><div class="info-section-title">Kennzahlen</div><ul class="info-list"><li><b>Rezepte</b> — Aktive Verordnungen.</li><li><b>Offen</b> — Ausstehende Einheiten.</li><li><b>Auffällig</b> — Fehlende Unterlagen.</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<div id="globalLoading"><div class="loading-card"><div class="spinner"></div><span id="loadingText">Lade …</span></div></div>
+<div id="toastWrap"></div>
+
+<div class="page">
+  <div class="filterbar">
+    <div class="fg">
+      <label for="studioSelect">Studio</label>
+      <select id="studioSelect" class="ctrl"></select>
+    </div>
+    <span class="fdiv"></span>
+    <div class="fg" style="min-width:130px;flex:0 0 auto">
+      <label for="dateFrom">Von</label>
+      <input id="dateFrom" type="date" class="ctrl"/>
+    </div>
+    <div class="fg" style="min-width:130px;flex:0 0 auto">
+      <label for="dateTo">Bis</label>
+      <input id="dateTo" type="date" class="ctrl"/>
+    </div>
+    <div style="display:flex;align-items:flex-end;gap:8px">
+      <button id="applyBtn" class="btn primary">🔍 Anwenden</button>
+      <button id="resetBtn" class="btn">↺ Zurück</button>
+    </div>
+  </div>
+
+  <div class="kpi-row" id="kpiGrid"></div>
+
+  <div class="extra-filters">
+    <div class="filter-box">
+      <label for="searchInput">Suche</label>
+      <input id="searchInput" class="ctrl" placeholder="Name oder Zyklus …"/>
+    </div>
+    <div class="filter-box">
+      <label for="billingFilter">Abrechnungsstatus</label>
+      <select id="billingFilter" class="ctrl"><option value="ALL">Alle</option><option value="OPEN">Offen</option><option value="BILLED">Eingereicht</option></select>
+    </div>
+    <div class="filter-box">
+      <label for="statusKeyFilter">Rezept-Status</label>
+      <select id="statusKeyFilter" class="ctrl"><option value="ALL">Alle</option><option value="ACTIVE">Aktiv</option><option value="COMPLETED">Abgeschlossen</option></select>
+    </div>
+    <div class="filter-box">
+      <label for="progressFilter">Fortschritt</label>
+      <select id="progressFilter" class="ctrl"><option value="ALL">Alle</option><option value="NO_SESSION">Ohne Session</option><option value="EARLY">0–3 Sessions</option><option value="MID">4–6 Sessions</option><option value="SEVEN">7/8 Einheiten</option><option value="FULL">8/8 abgeschlossen</option></select>
+    </div>
+    <div class="filter-box">
+      <label for="attentionFilter">Auffälligkeit</label>
+      <select id="attentionFilter" class="ctrl"><option value="ALL">Alle</option><option value="ONLY_FLAGS">Nur auffällig</option><option value="ONLY_STALLED">Nur hängend</option><option value="ONLY_LONG">Nur lang laufend</option><option value="NEEDS_SCAN">Scan benötigt</option><option value="NO_RECIPE">Rezept fehlt</option></select>
+    </div>
+    <div class="filter-box">
+      <label for="sortFilter">Sortierung</label>
+      <select id="sortFilter" class="ctrl"><option value="FLAGS_DESC">Auffälligkeit zuerst</option><option value="LAST_SESSION_ASC">Längste Pause zuerst</option><option value="LAST_SESSION_DESC">Neueste Session zuerst</option><option value="DURATION_DESC">Längste Dauer zuerst</option><option value="ISSUED_DESC">Neueste Rezepte zuerst</option><option value="NAME_ASC">Name A–Z</option></select>
+    </div>
+    <div class="helper-row" style="grid-column:1/-1">
+      <span class="filter-summary" id="filterSummary">Keine Zusatzfilter aktiv.</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="detailCount" style="font-weight:700;font-size:13px">0 Rezepte sichtbar</span>
+        <button id="clearFiltersBtn" class="btn" style="height:32px;font-size:11px">✕ Filter löschen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid3" style="margin-bottom:16px">
+    <div class="section" style="margin-bottom:0">
+      <div class="section-head"><h3>🔴 Hängende Rezepte</h3><div class="section-sub">Ohne aktuelle Aktivität</div></div>
+      <div class="section-body" id="stalledList"></div>
+    </div>
+    <div class="section" style="margin-bottom:0">
+      <div class="section-head"><h3>🟡 Lang laufend</h3><div class="section-sub">Ungewöhnlich lange Dauer</div></div>
+      <div class="section-body" id="longRunningList"></div>
+    </div>
+    <div class="section" style="margin-bottom:0">
+      <div class="section-head"><h3>Quick Checks</h3></div>
+      <div class="section-body">
+        <div class="split-stats" id="quickChecks"></div>
+        <div style="margin-top:12px" id="insightsBox"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><div><h3>Rezepte im Detail</h3><div class="section-sub" id="heroRange">Alle Rezepte</div></div></div>
+    <div class="section-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Kunde</th><th>Zyklus</th><th>Sessions</th><th>Erste Session</th><th>Letzte Session</th><th>Pause (Tage)</th><th>Dauer (Tage)</th><th>Billing</th><th>Rezept-Status</th><th>Flags</th></tr></thead>
+          <tbody id="detailTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(async function(){
+  const SB_URL='https://jypbyywxfjniafuygxci.supabase.co',SB_KEY='sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+  const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false,storageKey:'sb_mtt_dashboard'}});
+  try{const _s=JSON.parse(localStorage.getItem('fitbox_session')||'null');if(_s?.access_token)await sb.auth.setSession({access_token:_s.access_token,refresh_token:_s.refresh_token||_s.access_token});}catch(e){}
+
+  const $=id=>document.getElementById(id);
+  const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const fmtDate=v=>v?new Date(v+(String(v).length===10?'T12:00:00':'')).toLocaleDateString('de-DE'):'–';
+  const fmtInt=v=>Number(v||0).toLocaleString('de-DE');
+  const fmtDec=v=>Number(v||0).toLocaleString('de-DE',{minimumFractionDigits:1,maximumFractionDigits:1});
+  function showLoading(msg){$('loadingText').textContent=msg||'Lade …';$('globalLoading').style.display='flex';}
+  function hideLoading(){$('globalLoading').style.display='none';}
+  function setConn(ok){var d=document.getElementById('connDot'),l=document.getElementById('connLabel');if(d)d.className='conn-dot '+(ok?'ok':'err');if(l)l.textContent=ok?'Verbunden':'Fehler';}
+  function toast(msg,type='ok'){const c=$('toastWrap'),t=document.createElement('div');t.className='toast '+type;t.innerHTML=`<span>${{ok:'✓',err:'✕',warn:'⚠'}[type]||''}</span><span>${esc(msg)}</span>`;c.appendChild(t);setTimeout(()=>{t.style.transition='.3s';t.style.opacity='0';setTimeout(()=>t.remove(),300);},4000);}
+  const normStatus=v=>String(v||'OPEN').toUpperCase();
+  const normSKey=v=>String(v||'ACTIVE').toUpperCase();
+  const getCount=r=>Number(r.session_count||0);
+
+  var state={studios:[],selectedStudioId:'',dashboard:null,overviewRows:[]};
+
+  async function loadStudios(){const{data,error}=await sb.from('studios').select('id,name,sort_order,is_active').order('sort_order').order('name');if(error)throw error;state.studios=(data||[]).filter(s=>s.is_active!==false);const sel=$('studioSelect');sel.innerHTML=state.studios.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('');if(!state.selectedStudioId&&state.studios.length)state.selectedStudioId=state.studios[0].id;sel.value=state.selectedStudioId;}
+  async function loadOverviewRows(){const{data,error}=await sb.from('mtt_prescription_overview_v').select('*').eq('studio_id',state.selectedStudioId).order('issued_on',{ascending:false}).limit(500);if(error)throw error;state.overviewRows=data||[];}
+
+  function setDefaultDates(){const now=new Date(),start=new Date(now.getFullYear(),now.getMonth(),1);$('dateFrom').value=start.toISOString().slice(0,10);$('dateTo').value=now.toISOString().slice(0,10);}
+
+  function applyDateFilter(rows){const from=$('dateFrom').value?new Date($('dateFrom').value+'T00:00:00'):null,to=$('dateTo').value?new Date($('dateTo').value+'T23:59:59'):null;return rows.filter(r=>{const probe=r.billed_at||r.paid_at||r.last_session_date||r.issued_on;if(!probe)return true;const d=new Date(probe);if(from&&d<from)return false;if(to&&d>to)return false;return true;});}
+
+  function applyExtraFilters(rows){
+    const q=($('searchInput').value||'').trim().toLowerCase(),billing=$('billingFilter').value,skey=$('statusKeyFilter').value,prog=$('progressFilter').value,attn=$('attentionFilter').value;
+    return rows.filter(r=>{
+      const name=`${r.first_name||''} ${r.last_name||''}`.trim().toLowerCase();
+      if(q&&!name.includes(q)&&!String(r.cycle_no||'').includes(q))return false;
+      if(billing!=='ALL'&&normStatus(r.billing_status)!==billing)return false;
+      if(skey!=='ALL'&&normSKey(r.status_key)!==skey)return false;
+      const cnt=getCount(r);
+      if(prog==='NO_SESSION'&&cnt!==0)return false;
+      if(prog==='EARLY'&&!(cnt>=0&&cnt<=3))return false;
+      if(prog==='MID'&&!(cnt>=4&&cnt<=6))return false;
+      if(prog==='SEVEN'&&cnt!==7)return false;
+      if(prog==='FULL'&&cnt<8)return false;
+      if(attn==='ONLY_FLAGS'&&!(r.is_stalled||r.is_long_running))return false;
+      if(attn==='ONLY_STALLED'&&!r.is_stalled)return false;
+      if(attn==='ONLY_LONG'&&!r.is_long_running)return false;
+      if(attn==='NEEDS_SCAN'&&!r.needs_scan)return false;
+      if(attn==='NO_RECIPE'&&!!r.recipe_received)return false;
+      return true;
+    });
+  }
+
+  function sortRows(rows){
+    const sort=$('sortFilter').value,sd=v=>v?new Date(v).getTime():0;
+    return [...rows].sort((a,b)=>{
+      const af=(a.is_stalled?2:0)+(a.is_long_running?1:0),bf=(b.is_stalled?2:0)+(b.is_long_running?1:0);
+      if(sort==='LAST_SESSION_ASC')return Number(b.days_since_last_session||99999)-Number(a.days_since_last_session||99999);
+      if(sort==='LAST_SESSION_DESC')return sd(b.last_session_date)-sd(a.last_session_date);
+      if(sort==='DURATION_DESC')return Number(b.duration_days||0)-Number(a.duration_days||0);
+      if(sort==='ISSUED_DESC')return sd(b.issued_on)-sd(a.issued_on);
+      if(sort==='NAME_ASC')return `${a.last_name||''} ${a.first_name||''}`.localeCompare(`${b.last_name||''} ${b.first_name||''}`,'de');
+      if(bf!==af)return bf-af;return sd(b.issued_on)-sd(a.issued_on);
+    });
+  }
+
+  function buildFilterSummary(){const parts=[];const q=($('searchInput').value||'').trim();if(q)parts.push(`Suche: ${q}`);if($('billingFilter').value!=='ALL')parts.push(`Billing: ${$('billingFilter').selectedOptions[0].textContent}`);if($('statusKeyFilter').value!=='ALL')parts.push(`Status: ${$('statusKeyFilter').selectedOptions[0].textContent}`);if($('progressFilter').value!=='ALL')parts.push(`Fortschritt: ${$('progressFilter').selectedOptions[0].textContent}`);if($('attentionFilter').value!=='ALL')parts.push(`Auffälligkeit: ${$('attentionFilter').selectedOptions[0].textContent}`);$('filterSummary').textContent=parts.length?parts.join(' · '):'Keine Zusatzfilter aktiv.';}
+
+  const statusBadge=s=>normStatus(s)==='BILLED'?'<span class="badge billed">Eingereicht</span>':'<span class="badge open">Offen</span>';
+  const statusKeyBadge=s=>normSKey(s)==='COMPLETED'?'<span class="badge completed">Abgeschlossen</span>':'<span class="badge ready">Aktiv</span>';
+
+  function renderAll(){
+    const dateFiltered=applyDateFilter(state.overviewRows);
+    const rows=applyExtraFilters(dateFiltered);
+    const sorted=sortRows(rows);
+    const stalled=applyExtraFilters(state.dashboard?.stalled_prescriptions||[]);
+    const longRunning=applyExtraFilters(state.dashboard?.long_running_prescriptions||[]);
+    buildFilterSummary();
+    const total=rows.length,open=rows.filter(r=>normStatus(r.billing_status)==='OPEN').length,billed=rows.filter(r=>normStatus(r.billing_status)==='BILLED').length;
+    const active=rows.filter(r=>normSKey(r.status_key)==='ACTIVE').length,completed=rows.filter(r=>normSKey(r.status_key)==='COMPLETED').length;
+    const fullEight=rows.filter(r=>getCount(r)>=8).length,sevenOf8=rows.filter(r=>getCount(r)===7).length;
+    const noSession=rows.filter(r=>!r.last_session_date).length,needsScan=rows.filter(r=>r.needs_scan).length,noRecipe=rows.filter(r=>!r.recipe_received).length;
+    const flags=rows.filter(r=>r.is_stalled||r.is_long_running).length;
+    const avgUnits=rows.length?rows.reduce((s,r)=>s+getCount(r),0)/rows.length:0;
+    $('heroRange').textContent=($('dateFrom').value||$('dateTo').value)?`${$('dateFrom').value||'…'} bis ${$('dateTo').value||'…'}`:'Alle Rezepte';
+    $('detailCount').textContent=`${fmtInt(rows.length)} Rezepte sichtbar`;
+    var sR=$('stat-rezepte');if(sR)sR.textContent=fmtInt(total);
+    var sO=$('stat-offen');if(sO)sO.textContent=fmtInt(open);
+    var sF=$('stat-flags');if(sF)sF.textContent=fmtInt(flags);
+    setConn(true);
+    $('kpiGrid').innerHTML=[['Aktive Fälle',total,'Rezepte im Filter',''],['Offen',open,'Nicht eingereicht','warn'],['Eingereicht',billed,'Zur Abrechnung','info'],['Aktive Rezepte',active,'Status: ACTIVE','ok'],['Abgeschlossen',completed,'Status: COMPLETED',''],['7/8 Einheiten',sevenOf8,'Letzte Session fehlt','warn'],['8/8 gesamt',fullEight,'Vollständig','ok'],['Ø Einheiten',fmtDec(avgUnits),'Sessions je Rezept','']].map(([k,v,f,cl])=>`<div class="kpi ${cl}"><div class="kpi-label">${esc(k)}</div><div class="kpi-value">${esc(v)}</div><div class="kpi-foot">${esc(f)}</div></div>`).join('');
+    $('quickChecks').innerHTML=[['Ohne Session',noSession],['Scan nötig',needsScan],['Rezept fehlt',noRecipe],['Ø Dauer (Tage)',state.dashboard?.kpis?.avg_duration_days?fmtDec(state.dashboard.kpis.avg_duration_days):'–']].map(([k,v])=>`<div class="mini-stat"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div></div>`).join('');
+    const ins=[];if(billed>0)ins.push(`<div class="list-item"><div><div class="title">${fmtInt(billed)} Fälle eingereicht</div><div class="meta">Diese Rezepte sind zur Abrechnung markiert.</div></div><span class="badge billed">BILLED</span></div>`);if(sevenOf8>0)ins.push(`<div class="list-item"><div><div class="title">${fmtInt(sevenOf8)} Fälle stehen bei 7/8</div><div class="meta">Scan-/Rezept-Check vor letzter Einheit empfohlen.</div></div><span class="badge billed">7/8</span></div>`);if(stalled.length>0)ins.push(`<div class="list-item"><div><div class="title">${fmtInt(stalled.length)} hängende Rezepte</div><div class="meta">Nachtelefonieren oder prüfen.</div></div><span class="badge alert">Stalled</span></div>`);if(!ins.length)ins.push('<div class="empty">Aktuell keine besonderen Hinweise.</div>');
+    $('insightsBox').innerHTML=ins.join('');
+    const renderAlertList=(id,items)=>{const el=$(id);if(!items?.length){el.innerHTML='<div class="empty">Keine auffälligen Fälle.</div>';return;}el.innerHTML=items.slice(0,20).map(r=>`<div class="list-item"><div><div class="title">${esc([r.first_name,r.last_name].filter(Boolean).join(' ')||'–')}</div><div class="meta">Zyklus ${r.cycle_no||'–'} · ${r.session_count||0}/8 Sessions · letzte Session ${fmtDate(r.last_session_date)} · ${r.days_since_last_session||0} Tage her</div></div></div>`).join('');};
+    renderAlertList('stalledList',stalled);renderAlertList('longRunningList',longRunning);
+    $('detailTableBody').innerHTML=sorted.map(r=>`<tr><td><strong>${esc([r.first_name,r.last_name].filter(Boolean).join(' ')||'–')}</strong>${r.phone?`<br><span style="font-size:11px;color:var(--muted)">${esc(r.phone)}</span>`:''}</td><td>${esc(r.cycle_no??'–')}</td><td>${esc(getCount(r))}/8</td><td>${esc(fmtDate(r.first_session_date))}</td><td>${esc(fmtDate(r.last_session_date))}</td><td>${r.days_since_last_session!=null?esc(r.days_since_last_session):'–'}</td><td>${r.duration_days!=null?esc(r.duration_days):'–'}</td><td>${statusBadge(r.billing_status)}</td><td>${statusKeyBadge(r.status_key)}</td><td>${[r.is_stalled?'<span class="badge alert">Stalled</span>':'',r.is_long_running?'<span class="badge billed">Lang</span>':'',getCount(r)===7?'<span class="badge ready">7/8</span>':'',getCount(r)>=8?'<span class="badge completed">8/8</span>':'',r.needs_scan?'<span class="badge open">Scan</span>':'',!r.recipe_received?'<span class="badge alert">Kein Rezept</span>':''].filter(Boolean).join(' ')||'–'}</td></tr>`).join('')||'<tr><td colspan="10"><div class="empty">Keine Daten.</div></td></tr>';
+  }
+
+  async function loadDashboard(){
+    showLoading('Lade MTT-Daten …');
+    try{const params={p_studio_id:state.selectedStudioId,p_from:$('dateFrom').value||null,p_to:$('dateTo').value||null};const[rpcRes]=await Promise.all([sb.rpc('mtt_get_controlling_dashboard',params),loadOverviewRows()]);if(rpcRes.error)throw rpcRes.error;if(!rpcRes.data?.ok)throw new Error(rpcRes.data?.error||'Dashboard konnte nicht geladen werden.');state.dashboard=rpcRes.data;renderAll();}
+    catch(err){console.error(err);setConn(false);toast('Fehler: '+(err.message||String(err)),'err',6000);}
+    finally{hideLoading();}
+  }
+
+  $('studioSelect').addEventListener('change',e=>{state.selectedStudioId=e.target.value;loadDashboard();});
+  $('applyBtn').addEventListener('click',loadDashboard);
+  $('reloadBtn').addEventListener('click',loadDashboard);
+  $('resetBtn').addEventListener('click',()=>{$('dateFrom').value='';$('dateTo').value='';loadDashboard();});
+  $('clearFiltersBtn').addEventListener('click',()=>{$('searchInput').value='';$('billingFilter').value='ALL';$('statusKeyFilter').value='ALL';$('progressFilter').value='ALL';$('attentionFilter').value='ALL';$('sortFilter').value='FLAGS_DESC';renderAll();});
+  ['searchInput','billingFilter','statusKeyFilter','progressFilter','attentionFilter','sortFilter'].forEach(id=>$(id).addEventListener(id==='searchInput'?'input':'change',()=>renderAll()));
+
+  showLoading('Initialisiere …');
+  try{await loadStudios();setDefaultDates();await loadDashboard();}
+  catch(err){setConn(false);toast('Fehler: '+(err.message||err),'err',6000);}
+  finally{hideLoading();}
+})();
+
+// ── Topbar-Handler ──
+(function(){
+  var infoBtn=document.getElementById('infoBtnTop');
+  var infoModal=document.getElementById('infoModal');
+  var infoClose=document.getElementById('infoClose');
+  if(infoBtn&&infoModal){
+    infoBtn.addEventListener('click',function(){infoModal.classList.add('show');});
+    infoClose&&infoClose.addEventListener('click',function(){infoModal.classList.remove('show');});
+    infoModal.addEventListener('click',function(e){if(e.target===infoModal)infoModal.classList.remove('show');});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&infoModal.classList.contains('show'))infoModal.classList.remove('show');});
+  }
+})();
+</script>
+</body>
+</html>

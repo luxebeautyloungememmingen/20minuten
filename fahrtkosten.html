@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fahrtkosten – fitbox Studio OS</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --fit: #2f8615;
+    --fit2: #95c11f;
+    --bg: #f5f7f2;
+    --card: #ffffff;
+    --border: #e0e8d8;
+    --text: #1a2a14;
+    --muted: #6b7c61;
+    --danger: #c0392b;
+    --warn: #e67e22;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(47,134,21,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* TOPBAR (Standard) */
+  .topbar-outer{background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);box-shadow:0 2px 12px rgba(0,0,0,.15);position:sticky;top:0;z-index:200;}
+  .topbar{max-width:none;margin:0;height:46px;display:flex;align-items:center;flex-wrap:nowrap;padding:0 18px;gap:14px;overflow:hidden;}
+  .tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap;}
+  .tb-pagetitle-icon{font-size:16px;}
+  .tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);}
+  .tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+  .tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+  .tb-stat-num{font-weight:700;color:#fff;}
+  .tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+  .topbar-spacer{flex:1}
+  .topbar-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:700 12px/1 inherit;padding:6px 12px;border-radius:8px;cursor:pointer;appearance:none;white-space:nowrap;}
+  .topbar-btn:hover{background:rgba(255,255,255,.25)}
+
+  .container { max-width: 960px; margin: 0; padding: 24px 16px; }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px; width: fit-content; }
+  .tab { padding: 8px 20px; border-radius: 7px; cursor: pointer; font-size: 0.9rem; font-weight: 500; color: var(--muted); transition: all .2s; border: none; background: none; }
+  .tab.active { background: var(--fit); color: #fff; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px; }
+  .card h2 { font-size: 1rem; font-weight: 600; color: var(--fit); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .04em; }
+  input, select, textarea {
+    width: 100%; padding: 10px 12px; border: 1.5px solid var(--border);
+    border-radius: 7px; font-size: 0.95rem; color: var(--text);
+    background: #fff; transition: border-color .2s;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--fit2); }
+  textarea { resize: vertical; min-height: 70px; }
+
+  .km-preview {
+    background: linear-gradient(135deg, #f0f8e8, #e8f5d8);
+    border: 1.5px solid var(--fit2);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .km-preview .label { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+  .km-preview .value { font-size: 1.3rem; font-weight: 700; color: var(--fit); }
+
+  .entries-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .entries-table th { text-align: left; padding: 8px 12px; background: #f0f5eb; color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: .04em; border-bottom: 2px solid var(--border); }
+  .entries-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  .entries-table tr:hover td { background: #fafdf7; }
+  .entries-table tr:last-child td { border-bottom: none; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+  .badge-offen { background: #fff3cd; color: #856404; }
+  .badge-eingereicht { background: #cce5ff; color: #004085; }
+  .badge-genehmigt { background: #d4edda; color: #155724; }
+  .badge-abgelehnt { background: #f8d7da; color: #721c24; }
+
+  .btn { padding: 10px 22px; border-radius: 7px; border: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; gap: 7px; }
+  .btn-primary { background: var(--fit); color: #fff; }
+  .btn-primary:hover { background: #247010; }
+  .btn-primary:disabled { background: #aaa; cursor: not-allowed; }
+  .btn-outline { background: #fff; color: var(--fit); border: 1.5px solid var(--fit); }
+  .btn-outline:hover { background: #f0f8e8; }
+  .btn-danger { background: #fff; color: var(--danger); border: 1.5px solid var(--danger); }
+  .btn-danger:hover { background: #fdf0ef; }
+  .btn-sm { padding: 5px 12px; font-size: 0.8rem; }
+
+  .actions-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+
+  .alert { padding: 12px 16px; border-radius: 8px; font-size: 0.88rem; margin-bottom: 16px; }
+  .alert-info { background: #e8f4fd; color: #1a5276; border: 1px solid #aed6f1; }
+  .alert-warn { background: #fef9e7; color: #7d6608; border: 1px solid #f9e79f; }
+
+  .empty { text-align: center; padding: 40px; color: var(--muted); }
+  .empty svg { margin-bottom: 12px; opacity: .4; }
+
+  .summary-box { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+  .summary-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
+  .summary-item .s-val { font-size: 1.5rem; font-weight: 700; color: var(--fit); }
+  .summary-item .s-lbl { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+
+  #tab-neu { display: block; }
+  #tab-liste { display: none; }
+
+  .loading { text-align: center; padding: 20px; color: var(--muted); }
+
+  /* Autocomplete */
+  .addr-wrap { position: relative; }
+  .autocomplete-list {
+    position: absolute; z-index: 999; width: 100%;
+    background: #fff; border: 1.5px solid var(--fit2);
+    border-top: none; border-radius: 0 0 7px 7px;
+    max-height: 220px; overflow-y: auto;
+    box-shadow: 0 4px 16px rgba(47,134,21,0.13);
+  }
+  .autocomplete-list li {
+    padding: 9px 13px; cursor: pointer; font-size: 0.88rem;
+    list-style: none; border-bottom: 1px solid var(--border);
+    transition: background .15s;
+  }
+  .autocomplete-list li:last-child { border-bottom: none; }
+  .autocomplete-list li:hover, .autocomplete-list li.active { background: #f0f8e8; }
+  .autocomplete-list li small { color: var(--muted); font-size: 0.78rem; display: block; }
+
+  /* Route-Button */
+  .route-row {
+    grid-column: 1 / -1;
+    display: flex; align-items: center; gap: 12px; margin-top: 2px;
+  }
+  .btn-route {
+    background: linear-gradient(135deg, var(--fit2), var(--fit));
+    color: #fff; border: none; border-radius: 7px;
+    padding: 9px 18px; font-size: 0.88rem; font-weight: 600;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+    transition: opacity .2s; white-space: nowrap;
+  }
+  .btn-route:hover { opacity: .88; }
+  .btn-route:disabled { opacity: .5; cursor: not-allowed; }
+  .route-info { font-size: 0.82rem; color: var(--muted); }
+  .route-info.ok { color: var(--fit); font-weight: 600; }
+  .route-info.err { color: var(--danger); }
+
+  @media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .summary-box { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<script>
+if(window.self!==window.top){
+  document.documentElement.classList.add('in-iframe');
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.add('in-iframe');
+    document.body.style.background='#f5f7f4';
+    document.body.style.display='block';
+    var to=document.querySelector('.topbar-outer');
+    if(to){ to.style.width='100%'; }
+    var pg=document.querySelector('.container');
+    if(pg){ pg.style.maxWidth='none';pg.style.width='auto';pg.style.margin='0'; }
+  });
+}
+</script>
+<script>
+(function(){
+  var SK='fitbox_session';var TM=8*60*60*1000;var s;
+  try{var r=localStorage.getItem(SK)||sessionStorage.getItem(SK);s=JSON.parse(r);if(s&&!localStorage.getItem(SK))localStorage.setItem(SK,r);}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){
+    if(window.self!==window.top){try{window.top.location.replace('login.html');}catch(e){window.location.replace('login.html');}}
+    else{window.location.replace('login.html');}
+    throw new Error('AUTH');
+  }
+  window._fbSession=s;window._fbToken=s.access_token;
+  var _t;
+  function resetTimer(){clearTimeout(_t);_t=setTimeout(function(){localStorage.removeItem(SK);sessionStorage.removeItem(SK);window.location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet (8h Inaktivität).'));},TM);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+})();
+</script>
+
+<div class="topbar-outer"><div class="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">🚗</span> Fahrtkosten</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat" id="stat-datum">–</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-uhrzeit">–:–</span></span>
+    <span class="tb-stat" id="user-name" style="font-weight:700;color:#fff;"></span>
+  </div>
+  <div class="topbar-spacer"></div>
+</div></div>
+
+<script>
+(function(){
+  function pad(n){return n<10?'0'+n:n;}
+  function tick(){
+    var now=new Date();
+    var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    var weekdays=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    var dEl=document.getElementById('stat-datum');
+    var tEl=document.getElementById('stat-uhrzeit');
+    if(dEl) dEl.textContent=weekdays[now.getDay()]+', '+now.getDate()+'. '+months[now.getMonth()];
+    if(tEl) tEl.textContent=pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+  }
+  document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);});
+})();
+</script>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" data-tab="neu">➕ Neue Fahrt</button>
+    <button class="tab" data-tab="liste">📋 Meine Abrechnungen</button>
+  </div>
+
+  <!-- TAB NEU -->
+  <div id="tab-neu">
+    <div class="card">
+      <h2>🚗 Fahrt erfassen</h2>
+      <div class="alert alert-info">
+        Die Erstattung beträgt <strong>0,30 € pro km</strong> (Hin- und Rückfahrt). Eingetragene Fahrten können vom Admin genehmigt werden.
+      </div>
+
+      <div class="form-grid">
+        <div>
+          <label>Studio *</label>
+          <select id="f-studio">
+            <option value="50de091d-debc-4172-8053-b516f42c4321">fitbox Memmingen</option>
+            <option value="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb">fitbox Senden</option>
+          </select>
+        </div>
+        <div>
+          <label>Datum *</label>
+          <input type="date" id="f-datum">
+        </div>
+        <div>
+          <label>Startadresse *</label>
+          <div class="addr-wrap">
+            <input type="text" id="f-start" placeholder="z.B. Fraunhoferstr. 5, 87700 Memmingen" autocomplete="off">
+            <ul class="autocomplete-list" id="ac-start" style="display:none"></ul>
+          </div>
+        </div>
+        <div>
+          <label>Zieladresse *</label>
+          <div class="addr-wrap">
+            <input type="text" id="f-ziel" placeholder="z.B. Hauptstraße 27, 89250 Senden" autocomplete="off">
+            <ul class="autocomplete-list" id="ac-ziel" style="display:none"></ul>
+          </div>
+        </div>
+        <div class="full route-row">
+          <button class="btn-route" id="btn-route" type="button">🗺️ Kilometer automatisch berechnen</button>
+          <span class="route-info" id="route-info"></span>
+        </div>
+        <div class="full">
+          <label>Zweck der Fahrt *</label>
+          <input type="text" id="f-zweck" placeholder="z.B. Kurzfristiger Einsatz bei fitbox Senden" list="zwecke-list">
+        </div>
+        <div>
+          <label>Kennzeichen Fahrzeug</label>
+          <input type="text" id="f-kz" placeholder="z.B. MM-AB 123">
+        </div>
+        <div>
+          <label>Einfache Strecke (km) *</label>
+          <input type="number" id="f-km" min="0.1" step="0.1" placeholder="z.B. 18.5">
+        </div>
+        <div class="full">
+          <div class="km-preview">
+            <div>
+              <div class="label">Hin- &amp; Rückfahrt</div>
+              <div class="value" id="preview-km">0 km</div>
+            </div>
+            <div>
+              <div class="label">Erstattungsbetrag</div>
+              <div class="value" id="preview-eur">0,00 €</div>
+            </div>
+            <div>
+              <div class="label">Satz</div>
+              <div class="value" style="font-size:1rem;color:var(--muted)">0,30 €/km</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <button class="btn btn-outline" data-action="reset">↺ Zurücksetzen</button>
+        <button class="btn btn-primary" id="btn-speichern">💾 Speichern</button>
+        <button class="btn btn-primary" id="btn-einreichen" style="background:var(--fit2);color:#1a2a14;">📤 Speichern &amp; Einreichen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB LISTE -->
+  <div id="tab-liste">
+    <div class="summary-box" id="summary-box">
+      <div class="summary-item"><div class="s-val" id="s-offen">–</div><div class="s-lbl">Offen / Eingereicht</div></div>
+      <div class="summary-item"><div class="s-val" id="s-km">–</div><div class="s-lbl">Gesamtkilometer (genehmigt)</div></div>
+      <div class="summary-item"><div class="s-val" id="s-eur">–</div><div class="s-lbl">Gesamtbetrag (genehmigt)</div></div>
+    </div>
+
+    <div class="card">
+      <h2>📋 Meine Fahrtkostenabrechnungen</h2>
+      <div id="liste-content"><div class="loading">Lade...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Datalist Zwecke -->
+<datalist id="zwecke-list">
+  <option value="Kurzfristiger Einsatz bei fitbox Senden">
+  <option value="Kurzfristiger Einsatz bei BodyForm Memmingen">
+  <option value="Einkauf für den Betrieb">
+  <option value="Berufsschule">
+  <option value="Hochschule">
+</datalist>
+
+<script>
+const SUPABASE_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+
+let sb, session, myEmployee;
+
+async function notifyFahrtkosten(event, eintragId) {
+  try {
+    // Eintrag aus DB holen für alle Felder
+    const { data } = await sb.from('fahrtkosten_eintraege').select('*').eq('eintrag_id', eintragId).single();
+    if (!data) return;
+    await fetch('https://jypbyywxfjniafuygxci.supabase.co/functions/v1/notify-studio-events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event, payload: data })
+    });
+  } catch(e) { console.warn('Notify failed:', e); }
+}
+
+async function init() {
+  const stored = window._fbSession || JSON.parse(localStorage.getItem('fitbox_session') || sessionStorage.getItem('fitbox_session') || 'null');
+  if (!stored) { alert('Bitte zuerst einloggen.'); return; }
+  session = stored;
+
+  // Supabase-Client mit Token
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: `Bearer ${session.access_token}` } }
+  });
+
+  // Mitarbeiter aus Session lesen (kein extra DB-Call nötig)
+  const empFromSession = session.employee;
+  if (empFromSession) {
+    myEmployee = empFromSession;
+    const name = (empFromSession.first_name || '') + ' ' + (empFromSession.last_name || '');
+    document.getElementById('user-name').textContent = name.trim();
+  } else {
+    // Fallback: aus DB laden
+    const userId = session.user?.id;
+    if (userId) {
+      const { data: emp } = await sb
+        .from('employees')
+        .select('id, first_name, last_name')
+        .eq('auth_user_id', userId)
+        .single();
+      myEmployee = emp;
+      if (emp) document.getElementById('user-name').textContent = `${emp.first_name} ${emp.last_name}`;
+    }
+  }
+
+  // Heutiges Datum vorbelegen
+  document.getElementById('f-datum').value = new Date().toISOString().split('T')[0];
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', (i === 0) === (tab === 'neu')));
+  document.getElementById('tab-neu').style.display = tab === 'neu' ? 'block' : 'none';
+  document.getElementById('tab-liste').style.display = tab === 'liste' ? 'block' : 'none';
+  if (tab === 'liste') loadListe();
+}
+
+function updatePreview() {
+  const km = parseFloat(document.getElementById('f-km').value) || 0;
+  const gesamt = km * 2;
+  const betrag = gesamt * 0.30;
+  document.getElementById('preview-km').textContent = gesamt.toFixed(1).replace('.', ',') + ' km';
+  document.getElementById('preview-eur').textContent = betrag.toFixed(2).replace('.', ',') + ' €';
+}
+
+function resetForm() {
+  ['f-start','f-ziel','f-zweck','f-km'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-datum').value = new Date().toISOString().split('T')[0];
+  acCoords = { start: null, ziel: null };
+  resetRouteInfo();
+  updatePreview();
+}
+
+function getFormData() {
+  return {
+    studio_id: document.getElementById('f-studio').value,
+    employee_id: myEmployee?.id,
+    datum: document.getElementById('f-datum').value,
+    startadresse: document.getElementById('f-start').value.trim(),
+    zieladresse: document.getElementById('f-ziel').value.trim(),
+    zweck: document.getElementById('f-zweck').value.trim(),
+    fahrzeug_kennzeichen: document.getElementById('f-kz').value.trim() || null,
+    km_einfach: parseFloat(document.getElementById('f-km').value)
+  };
+}
+
+function validate(data) {
+  if (!data.datum) return 'Datum fehlt.';
+  if (!data.startadresse) return 'Startadresse fehlt.';
+  if (!data.zieladresse) return 'Zieladresse fehlt.';
+  if (!data.zweck) return 'Zweck fehlt.';
+  if (!data.km_einfach || data.km_einfach <= 0) return 'Bitte gültige Kilometer eingeben.';
+  return null;
+}
+
+let isSubmitting = false;
+
+function setBothButtons(disabled) {
+  document.getElementById('btn-speichern').disabled = disabled;
+  document.getElementById('btn-einreichen').disabled = disabled;
+}
+
+async function speichern() {
+  if (isSubmitting) return;
+  const data = getFormData();
+  const err = validate(data);
+  if (err) return alert(err);
+
+  isSubmitting = true;
+  setBothButtons(true);
+  try {
+    const { error } = await sb.from('fahrtkosten_eintraege').insert({ ...data, status: 'offen' });
+    if (error) { alert('Fehler: ' + error.message); return; }
+    alert('✅ Fahrt gespeichert!');
+    resetForm();
+  } finally {
+    isSubmitting = false;
+    setBothButtons(false);
+  }
+}
+
+async function speichernUndEinreichen() {
+  if (isSubmitting) return;
+  const data = getFormData();
+  const err = validate(data);
+  if (err) return alert(err);
+
+  isSubmitting = true;
+  setBothButtons(true);
+  try {
+    const { data: inserted, error } = await sb.from('fahrtkosten_eintraege').insert({
+      ...data,
+      status: 'eingereicht',
+      eingereicht_am: new Date().toISOString()
+    }).select('eintrag_id').single();
+    if (error) { alert('Fehler: ' + error.message); return; }
+    if (inserted?.eintrag_id) await notifyFahrtkosten('fahrtkosten_eingereicht', inserted.eintrag_id);
+    alert('✅ Fahrt gespeichert und eingereicht!');
+    resetForm();
+  } finally {
+    isSubmitting = false;
+    setBothButtons(false);
+  }
+}
+
+async function loadListe() {
+  document.getElementById('liste-content').innerHTML = '<div class="loading">Lade...</div>';
+
+  const { data, error } = await sb
+    .from('fahrtkosten_eintraege')
+    .select('*')
+    .order('datum', { ascending: false });
+
+  if (error) { document.getElementById('liste-content').innerHTML = '<div class="alert alert-warn">Fehler beim Laden.</div>'; return; }
+
+  // Zusammenfassung
+  const offen = data.filter(d => ['offen','eingereicht'].includes(d.status)).length;
+  const genehmigte = data.filter(d => d.status === 'genehmigt');
+  const totalKm = genehmigte.reduce((s, d) => s + parseFloat(d.km_gesamt || 0), 0);
+  const totalEur = genehmigte.reduce((s, d) => s + parseFloat(d.betrag_eur || 0), 0);
+
+  document.getElementById('s-offen').textContent = offen;
+  document.getElementById('s-km').textContent = totalKm.toFixed(1).replace('.', ',') + ' km';
+  document.getElementById('s-eur').textContent = totalEur.toFixed(2).replace('.', ',') + ' €';
+
+  if (!data.length) {
+    document.getElementById('liste-content').innerHTML = '<div class="empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 0 1 0 10h-2M8 12h8"/></svg><p>Noch keine Fahrten erfasst.</p></div>';
+    return;
+  }
+
+  const badges = { offen: 'badge-offen', eingereicht: 'badge-eingereicht', genehmigt: 'badge-genehmigt', abgelehnt: 'badge-abgelehnt' };
+  const labels = { offen: 'Offen', eingereicht: 'Eingereicht', genehmigt: 'Genehmigt', abgelehnt: 'Abgelehnt' };
+
+  let html = `<table class="entries-table">
+    <thead><tr>
+      <th>Datum</th><th>Von → Nach</th><th>Zweck</th>
+      <th style="text-align:right">km</th><th style="text-align:right">Betrag</th>
+      <th>Status</th><th></th>
+    </tr></thead><tbody>`;
+
+  for (const e of data) {
+    const datum = new Date(e.datum).toLocaleDateString('de-DE');
+    const km = parseFloat(e.km_gesamt || 0).toFixed(1).replace('.', ',');
+    const eur = parseFloat(e.betrag_eur || 0).toFixed(2).replace('.', ',');
+    const einreichBtn = e.status === 'offen'
+      ? `<button class="btn btn-sm btn-outline" onclick="einreichen('${e.eintrag_id}')">📤 Einreichen</button>`
+      : '';
+
+    html += `<tr>
+      <td>${datum}</td>
+      <td><small>${e.startadresse}</small><br><small>→ ${e.zieladresse}</small></td>
+      <td>${e.zweck}</td>
+      <td style="text-align:right;font-weight:600">${km}</td>
+      <td style="text-align:right;font-weight:700;color:var(--fit)">${eur} €</td>
+      <td><span class="badge ${badges[e.status]}">${labels[e.status]}</span>
+        ${e.ablehnungsgrund ? `<br><small style="color:var(--danger)">${e.ablehnungsgrund}</small>` : ''}
+      </td>
+      <td>${einreichBtn}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  document.getElementById('liste-content').innerHTML = html;
+}
+
+async function einreichen(id) {
+  if (!confirm('Fahrt jetzt zur Genehmigung einreichen?')) return;
+  const { error } = await sb.from('fahrtkosten_eintraege')
+    .update({ status: 'eingereicht', eingereicht_am: new Date().toISOString() })
+    .eq('eintrag_id', id);
+  if (error) return alert('Fehler: ' + error.message);
+  loadListe();
+}
+
+// ─── Routing via Supabase Edge Function (Key ist serverseitig) ──────────────
+const ROUTE_FN = 'https://jypbyywxfjniafuygxci.supabase.co/functions/v1/calculate-route';
+
+// ─── Geocoding (Nominatim / OpenStreetMap) ──────────────────────────────────
+let acTimers = {};
+let acCoords = { start: null, ziel: null };
+
+function setupAutocomplete(inputId, listId, coordKey) {
+  const input = document.getElementById(inputId);
+  const list  = document.getElementById(listId);
+  let items = [], activeIdx = -1;
+
+  function hide() { list.style.display = 'none'; items = []; activeIdx = -1; }
+
+  input.addEventListener('input', function() {
+    clearTimeout(acTimers[coordKey]);
+    const q = this.value.trim();
+    if (q.length < 3) { hide(); return; }
+    acTimers[coordKey] = setTimeout(() => geocode(q), 380);
+  });
+
+  input.addEventListener('keydown', function(e) {
+    const lis = list.querySelectorAll('li');
+    if (!lis.length) return;
+    if (e.key === 'ArrowDown') { activeIdx = Math.min(activeIdx + 1, lis.length - 1); highlight(lis); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { activeIdx = Math.max(activeIdx - 1, 0); highlight(lis); e.preventDefault(); }
+    else if (e.key === 'Enter' && activeIdx >= 0) { lis[activeIdx].click(); e.preventDefault(); }
+    else if (e.key === 'Escape') hide();
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!input.contains(e.target) && !list.contains(e.target)) hide();
+  });
+
+  function highlight(lis) {
+    lis.forEach((li, i) => li.classList.toggle('active', i === activeIdx));
+    if (activeIdx >= 0) lis[activeIdx].scrollIntoView({ block: 'nearest' });
+  }
+
+  async function geocode(q) {
+    try {
+      const url = `https://nominatim.openstreetmap.org/search?format=json&limit=6&addressdetails=1&q=${encodeURIComponent(q)}&countrycodes=de`;
+      const res = await fetch(url, { headers: { 'Accept-Language': 'de' } });
+      const data = await res.json();
+      items = data;
+      if (!data.length) { hide(); return; }
+      list.innerHTML = data.map((d, i) => {
+        const a = d.address || {};
+        const main = a.road ? `${a.road}${a.house_number ? ' ' + a.house_number : ''}` : d.display_name.split(',')[0];
+        const sub = [a.postcode, a.city || a.town || a.village, a.state].filter(Boolean).join(', ');
+        return `<li data-idx="${i}"><strong>${main}</strong><small>${sub}</small></li>`;
+      }).join('');
+      list.style.display = 'block';
+      list.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click', function() {
+          const d = data[+this.dataset.idx];
+          const a = d.address || {};
+          const road = a.road || '';
+          const nr   = a.house_number ? ' ' + a.house_number : '';
+          const plz  = a.postcode || '';
+          const ort  = a.city || a.town || a.village || '';
+          input.value = `${road}${nr}, ${plz} ${ort}`.trim().replace(/^,\s*/, '');
+          acCoords[coordKey] = { lat: parseFloat(d.lat), lon: parseFloat(d.lon) };
+          hide();
+          resetRouteInfo();
+        });
+      });
+    } catch(e) { hide(); }
+  }
+}
+
+function resetRouteInfo() {
+  document.getElementById('route-info').textContent = '';
+  document.getElementById('route-info').className = 'route-info';
+}
+
+// ─── Routing (OpenRouteService) ─────────────────────────────────────────────
+async function berechneRoute() {
+  const btn  = document.getElementById('btn-route');
+  const info = document.getElementById('route-info');
+
+  // Prüfen ob Koordinaten via Autocomplete gesetzt — sonst erst geocoden
+  if (!acCoords.start) {
+    const q = document.getElementById('f-start').value.trim();
+    if (!q) { info.textContent = '⚠️ Bitte Startadresse eingeben.'; info.className = 'route-info err'; return; }
+    acCoords.start = await geocodeSingle(q);
+  }
+  if (!acCoords.ziel) {
+    const q = document.getElementById('f-ziel').value.trim();
+    if (!q) { info.textContent = '⚠️ Bitte Zieladresse eingeben.'; info.className = 'route-info err'; return; }
+    acCoords.ziel = await geocodeSingle(q);
+  }
+  if (!acCoords.start || !acCoords.ziel) {
+    info.textContent = '❌ Adresse konnte nicht gefunden werden.';
+    info.className = 'route-info err'; return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Berechne...';
+  info.textContent = '';
+
+  try {
+    const res = await fetch(ROUTE_FN, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({
+        start: document.getElementById('f-start').value.trim(),
+        ziel:  document.getElementById('f-ziel').value.trim()
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Unbekannter Fehler');
+
+    document.getElementById('f-km').value = data.km.toFixed(1);
+    updatePreview();
+    info.textContent = `✅ ${data.km.toFixed(1)} km · ca. ${data.min} Min. (einfache Strecke)`;
+    info.className = 'route-info ok';
+  } catch(e) {
+    info.textContent = '❌ Routing fehlgeschlagen: ' + e.message;
+    info.className = 'route-info err';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🗺️ Kilometer automatisch berechnen';
+  }
+}
+
+async function geocodeSingle(q) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}&countrycodes=de`;
+    const res = await fetch(url, { headers: { 'Accept-Language': 'de' } });
+    const data = await res.json();
+    if (!data.length) return null;
+    return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+  } catch { return null; }
+}
+
+// ─── Event-Listener statt inline onclick/oninput ────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  setupAutocomplete('f-start', 'ac-start', 'start');
+  setupAutocomplete('f-ziel',  'ac-ziel',  'ziel');
+  document.getElementById('btn-route').addEventListener('click', berechneRoute);
+  document.getElementById('f-start').addEventListener('input', () => { acCoords.start = null; resetRouteInfo(); });
+  document.getElementById('f-ziel').addEventListener('input',  () => { acCoords.ziel  = null; resetRouteInfo(); });
+  document.getElementById('f-km').addEventListener('input', updatePreview);
+  document.getElementById('btn-speichern').addEventListener('click', speichern);
+  document.getElementById('btn-einreichen').addEventListener('click', speichernUndEinreichen);
+  document.querySelector('.tab[data-tab="neu"]').addEventListener('click', function(){ switchTab('neu'); });
+  document.querySelector('.tab[data-tab="liste"]').addEventListener('click', function(){ switchTab('liste'); });
+  document.querySelector('button[data-action="reset"]').addEventListener('click', resetForm);
+});
+window.einreichen = einreichen; // bleibt global weil dynamisch in Tabelle
+
+
+init();
+
+</script>
+</body>
+</html>

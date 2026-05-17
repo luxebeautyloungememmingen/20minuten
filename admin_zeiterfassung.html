@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Zeiterfassung Admin · fitbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --fit:#2f8615;--fit-dark:#236010;
+  --ink:#0f172a;--muted:#64748b;--card:#fff;--line:#dde5dd;--soft:#eef5ea;
+  --shadow:0 10px 24px rgba(15,23,42,.06);--shadow-strong:0 18px 40px rgba(15,23,42,.14);
+  --danger:#b91c1c;--danger-bg:#fef2f2;--ok:#166534;--ok-bg:#f0fdf4;
+  --warn:#b45309;--warn-bg:#fff7ed;--info:#1d4ed8;--info-bg:#eff6ff;
+}
+html,body{font-family:'DM Sans',system-ui,sans-serif;color:var(--ink);background:radial-gradient(900px 380px at 10% 0%,rgba(47,134,21,.10),transparent 55%),linear-gradient(180deg,#fff 0%,#f2f6f0 50%,#f5f7f6 100%);min-height:100vh}
+/* LOADING */
+#globalLoading{position:fixed;inset:0;background:rgba(15,23,42,.35);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000}
+.loadingCard{background:#fff;border-radius:18px;padding:16px 18px;box-shadow:var(--shadow-strong);display:flex;align-items:center;gap:12px;font-weight:900;min-width:min(360px,92vw);justify-content:center}
+.spinner{width:18px;height:18px;border-radius:50%;border:3px solid rgba(15,23,42,.16);border-top-color:var(--fit);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* TOAST */
+#toastContainer{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{background:#0d1b2a;color:#fff;border-radius:14px;padding:12px 18px;font-size:13px;font-weight:800;box-shadow:0 14px 36px rgba(0,0,0,.25);max-width:500px;text-align:center;animation:toastIn .22s ease}
+.toast.ok{border-left:4px solid #4ade80}.toast.err{border-left:4px solid #f87171;pointer-events:all;cursor:pointer}.toast.warn{border-left:4px solid #fbbf24}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* PAGE */
+.page{max-width:none;margin:0;padding:18px 22px 60px}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:14px}
+.kpiLabel{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.kpiValue{font-size:22px;font-weight:950;line-height:1;letter-spacing:-.03em}
+.kpiFoot{margin-top:5px;font-size:11px;color:var(--muted)}
+.kpi.warn .kpiValue{color:var(--warn)}.kpi.ok .kpiValue{color:var(--ok)}
+/* PANEL */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:14px;margin-bottom:14px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.panel h3{font-size:17px;font-weight:900;margin:0}
+/* TOOLBAR */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld label{font-size:11px;font-weight:900;color:#334155;text-transform:uppercase;letter-spacing:.04em}
+.control{appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;min-height:36px;padding:6px 10px;font:inherit;font-size:13px;transition:.15s}
+.control:focus{outline:none;border-color:rgba(47,134,21,.55);box-shadow:0 0 0 3px rgba(47,134,21,.10)}
+/* BUTTONS */
+.btn{appearance:none;border-radius:10px;min-height:36px;padding:6px 13px;font:inherit;font-weight:900;cursor:pointer;font-size:12px;display:inline-flex;align-items:center;gap:6px;transition:.15s;border:1px solid transparent;white-space:nowrap}
+.btn.primary{background:linear-gradient(180deg,var(--fit),var(--fit-dark));color:#fff;border-color:rgba(47,134,21,.3);box-shadow:0 4px 12px rgba(47,134,21,.2)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.secondary{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn.secondary:hover{background:#f5faf3;border-color:rgba(47,134,21,.3)}
+.btn.danger{background:var(--danger-bg);color:var(--danger);border-color:#fecaca}
+.btn.warn-btn{background:var(--warn-bg);color:var(--warn);border-color:#fed7aa}
+.btn.ghost{background:transparent;color:var(--muted);border-color:var(--line)}
+.btn.small{min-height:28px;padding:4px 9px;font-size:11px;border-radius:8px}
+.btn.xs{min-height:24px;padding:3px 7px;font-size:10px;border-radius:6px}
+/* PILLS */
+.pill{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:900;border:1px solid var(--line);white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok);border-color:#bbf7d0}
+.pill.warn{background:var(--warn-bg);color:var(--warn);border-color:#fed7aa}
+.pill.danger{background:var(--danger-bg);color:var(--danger);border-color:#fecaca}
+.pill.info{background:var(--info-bg);color:var(--info);border-color:#bfdbfe}
+.pill.gray{background:#f3f4f6;color:#6b7280;border-color:#e5e7eb}
+/* TABLE */
+.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 12px;border-bottom:1px solid #edf1ea;text-align:left;vertical-align:middle;font-size:12px}
+thead th{background:#f8faf8;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.04em;font-weight:900;position:sticky;top:0;z-index:1;cursor:pointer;user-select:none;white-space:nowrap}
+thead th:hover{background:#eef5ea;color:var(--fit)}
+thead th.asc::after{content:' ↑'}thead th.desc::after{content:' ↓'}
+tr.data-row{cursor:pointer}
+tr.data-row:hover td{background:#f5faf3}
+tr.data-row.issue td{background:#fffbeb}
+tr.data-row.issue:hover td{background:#fef3c7}
+tr.data-row.open-row td{background:#f0f7ee;border-bottom:none}
+tr.detail-row td{padding:0;background:#f8fdf6;border-bottom:1px solid var(--line)}
+tr.detail-row.hidden{display:none}
+.detail-inner{padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+/* DETAIL PANEL: TIME ENTRIES */
+.entries-section h4{font-size:13px;font-weight:900;margin-bottom:10px;color:var(--fit)}
+.entry-card{border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.entry-card .times{font-weight:900;font-size:14px}
+.entry-card .meta{font-size:11px;color:var(--muted)}
+.entry-card .actions{margin-left:auto;display:flex;gap:6px}
+.new-entry-form{border:2px dashed var(--line);border-radius:12px;padding:12px;background:#fafcf9}
+.new-entry-form h5{font-size:12px;font-weight:900;margin-bottom:10px;color:var(--muted)}
+.form-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+.form-row .fld{flex:1;min-width:80px}
+/* DETAIL PANEL: RECORD EDIT */
+.record-section h4{font-size:13px;font-weight:900;margin-bottom:10px;color:var(--fit)}
+.error-banner{background:var(--danger-bg);border:1px solid #fecaca;border-radius:10px;padding:10px 14px;font-size:12px;color:var(--danger);margin-bottom:10px;display:none;word-break:break-word}
+.num-right{text-align:right}
+.empty{padding:20px;text-align:center;color:var(--muted);font-size:13px;font-style:italic}
+.in-iframe .page{padding-top:18px!important}
+@media(max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.detail-inner{grid-template-columns:1fr}}
+@media(max-width:600px){.kpis{grid-template-columns:repeat(2,1fr)}}
+
+/* ─── TOPBAR-NEW ─── */
+.topbar-new{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);
+  padding:0 18px;height:46px;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(0,0,0,.15);
+  position:sticky;top:0;z-index:200;
+}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0;}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.tb-space{flex:1;}
+/* conn-dot */
+.conn-dot{width:9px;height:9px;border-radius:50%;background:#6b7280;flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(255,255,255,.15);transition:background .4s,box-shadow .4s;}
+.conn-dot.connecting{background:#f59e0b;animation:connPulse 1.2s ease-in-out infinite;}
+.conn-dot.ok{background:#95c11f;box-shadow:0 0 0 3px rgba(149,193,31,.3);animation:none;}
+.conn-dot.err{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.3);animation:none;}
+@keyframes connPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.conn-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);transition:color .3s;}
+.conn-label.ok{color:rgba(255,255,255,.9);}
+.conn-label.err{color:rgba(255,255,255,.9);}
+#connStatus{display:flex;align-items:center;gap:6px;}
+
+/* ─── INFO MODAL ─── */
+.info-backdrop{
+  position:fixed;inset:0;background:rgba(13,27,42,.55);backdrop-filter:blur(8px);
+  z-index:2000;display:none;align-items:flex-start;justify-content:center;
+  padding:50px 20px;overflow-y:auto;
+}
+.info-backdrop.show{display:flex;animation:infoFadeIn .2s ease;}
+@keyframes infoFadeIn{from{opacity:0}to{opacity:1}}
+.info-card{
+  background:#fff;border-radius:18px;max-width:640px;width:100%;
+  box-shadow:0 24px 80px rgba(0,0,0,.3);overflow:hidden;
+  animation:infoSlideUp .25s cubic-bezier(.4,0,.2,1);
+}
+@keyframes infoSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.info-head{
+  background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);
+  color:#fff;padding:18px 22px;display:flex;align-items:center;gap:14px;
+}
+.info-head-icon{font-size:28px;flex-shrink:0;}
+.info-head-title{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+.info-head-sub{font-size:12px;opacity:.85;margin-top:2px;}
+.info-head > div:nth-child(2){flex:1;min-width:0;}
+.info-close{
+  appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);
+  color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;
+  font-weight:700;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;flex-shrink:0;
+}
+.info-close:hover{background:rgba(255,255,255,.28);}
+.info-body{padding:20px 24px 24px;max-height:65vh;overflow-y:auto;}
+.info-section{margin-bottom:18px;}
+.info-section:last-child{margin-bottom:0;}
+.info-section-title{
+  font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+  color:#2f8615;margin-bottom:7px;
+}
+.info-section p{font-size:13px;line-height:1.6;color:#334155;}
+.info-list{margin:0;padding-left:0;list-style:none;}
+.info-list li{
+  font-size:13px;line-height:1.6;color:#334155;padding:7px 0 7px 22px;
+  position:relative;border-bottom:1px solid #f1f5f0;
+}
+.info-list li:last-child{border-bottom:none;}
+.info-list li::before{
+  content:'';position:absolute;left:6px;top:14px;width:6px;height:6px;
+  border-radius:50%;background:#95c11f;
+}
+.info-list li b{color:#0d1b2a;font-weight:700;}
+.topbar-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:600 12px/1 inherit;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.topbar-btn:hover{background:rgba(255,255,255,.25)}
+
+/* ─── IFRAME FULL-WIDTH ─── */
+.in-iframe .page,.in-iframe .wrap,.in-iframe .app,.in-iframe .container,.in-iframe main{
+  max-width:none!important;margin:0!important;padding:14px!important;
+}
+body.in-iframe,html.in-iframe body{padding:0!important;margin:0!important;}
+
+</style><script>
+function showNoAccessFallback(){
+  try {
+    if (window.self !== window.top) {
+      window.parent.postMessage({ type: 'fitbox-no-access', path: location.pathname }, '*');
+      return;
+    }
+  } catch (e) {}
+  var html = '<head><meta charset="utf-8"><title>Kein Zugriff</title></head>' +
+    '<body style="margin:0;font-family:system-ui,sans-serif;background:#f5f6f4;min-height:100vh;display:flex;align-items:center;justify-content:center;">' +
+    '<div style="background:#fff;border-radius:14px;padding:40px;max-width:480px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.08);">' +
+    '<div style="font-size:64px;margin-bottom:16px;">🔒</div>' +
+    '<h1 style="font-size:22px;font-weight:800;margin:0 0 12px;color:#0f172a;">Kein Zugriff auf diese Seite</h1>' +
+    '<p style="color:#64748b;line-height:1.6;margin:0 0 24px;">Dieser Bereich ist nur für den <strong style="color:#2f8615">Owner</strong> zugänglich.</p>' +
+    '<a href="admin_index.html" style="display:inline-block;background:linear-gradient(180deg,#2f8615,#256a10);color:#fff;text-decoration:none;border-radius:11px;padding:12px 24px;font:900 13px/1 system-ui;">← Zurück zum Admin</a>' +
+    '</div></body>';
+  document.documentElement.innerHTML = html;
+}
+</script>
+
+</head>
+<body>
+<!-- ═══════════ TOPBAR ═══════════ -->
+<div class="topbar-new" id="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">⏱️</span> Zeiterfassung</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-eintr">–</span> Einträge</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-issues">–</span> Auffälligkeiten</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-open">–</span> Offen</span>
+  </div>
+  <div class="tb-space"></div>
+  <span id="connStatus"><span class="conn-dot" id="connDot"></span><span class="conn-label" id="connLabel">Verbinde…</span></span>
+  <button class="topbar-btn" id="infoBtnTop" title="Was kann ich auf dieser Seite?">ℹ️ Info</button>
+  <button class="topbar-btn" id="reloadBtnTop">↻ Neu laden</button>
+</div>
+
+<!-- ═══════════ INFO MODAL ═══════════ -->
+<div class="info-backdrop" id="infoModal">
+  <div class="info-card">
+    <div class="info-head">
+      <span class="info-head-icon">⏱️</span>
+      <div>
+        <div class="info-head-title">Zeiterfassung</div>
+        <div class="info-head-sub">Tagesübersicht, Korrekturen &amp; Auffälligkeiten</div>
+      </div>
+      <button class="info-close" id="infoClose" aria-label="Schließen">✕</button>
+    </div>
+    <div class="info-body">
+
+      <div class="info-section">
+        <div class="info-section-title">Wozu diese Seite?</div>
+        <p>Hier siehst du die <b>Tagesübersicht</b> aller Mitarbeiter: gestempelte Zeiten, Soll/Ist-Vergleich, Saldo, Auffälligkeiten. Du kannst Stempelvorgänge nachbearbeiten (z. B. vergessene Clock-Outs ergänzen) und Tage als geprüft markieren.</p>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Die Status-Werte</div>
+        <ul class="info-list">
+          <li><b>✓ ok</b> — Tag ist erledigt, alle Zeiten sind plausibel.</li>
+          <li><b>⏳ open</b> — Tag liegt in der Vergangenheit, hat aber kein <i>ok</i>/<i>verified</i> erhalten — meistens fehlende Clock-Outs.</li>
+          <li><b>missing_clock</b> — Mitarbeiter hat sich nicht ausgestempelt — automatische Auffälligkeit.</li>
+          <li><b>✅ verified</b> — Tag wurde von dir geprüft und abgeschlossen — wird in Auswertungen als sicher gewertet.</li>
+          <li><b>absent / holiday / no_work_day</b> — Abwesenheit, Feiertag, kein Arbeitstag.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">So bearbeitest du Einträge</div>
+        <ul class="info-list">
+          <li><b>Zeile aufklappen</b> — Klick auf eine Zeile zeigt alle Stempel-Events (Clock-in, Pause, Clock-out) im Detail.</li>
+          <li><b>Eintrag löschen</b> — Falsche Stempelvorgänge können einzeln entfernt werden (z. B. Doppelstempel).</li>
+          <li><b>Neuen Eintrag hinzufügen</b> — Wenn ein Stempel fehlt, kannst du ihn manuell ergänzen.</li>
+          <li><b>Status ändern</b> — Tag als <i>verified</i> markieren wenn alle Zeiten geprüft sind.</li>
+          <li><b>Filter</b> — Studio, Mitarbeiter, Zeitraum (Heute/Woche/Monat/Vormonat), Status. „Nur Auffälligkeiten" zeigt nur Probleme.</li>
+        </ul>
+      </div>
+
+      <div class="info-section">
+        <div class="info-section-title">Wichtig zu wissen</div>
+        <ul class="info-list">
+          <li>📱 <b>Mobil gestempelt</b> = via Mitarbeiter-App. Liegt der Mitarbeiter dabei nicht im Studio, ist das ein Hinweis auf möglichen Missbrauch.</li>
+          <li>Soll-Stunden kommen aus <b>Arbeitsmuster</b> (Personal-Modul). Saldo = Ist − Soll, kumuliert sich über den Zeitraum.</li>
+          <li>Mit <b>⬇ CSV</b> exportierst du den gefilterten Zeitraum für die Lohnabrechnung.</li>
+          <li>Geprüfte Tage (<i>verified</i>) sollten <b>nicht</b> mehr nachträglich geändert werden — sonst stimmt die historische Abrechnung nicht.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var s;try{s=JSON.parse(localStorage.getItem('fitbox_session'));}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){localStorage.removeItem('fitbox_session');location.replace('login.html?next='+encodeURIComponent(location.pathname));throw new Error('AUTH');}
+  var rid=s.employee?s.employee.role_id:'',rc=s.employee&&s.employee.roles?s.employee.roles.code:'';
+  if(rid!=='80f04245-ee93-45e8-9861-121778b5ff84'&&rc!=='admin'){showNoAccessFallback();throw new Error('ROLE');}
+  window._fbSession=s;
+})();
+</script>
+<script>(function(){if(window.self===window.top)return;document.documentElement.classList.add('in-iframe');document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('in-iframe');});})();</script>
+
+
+<div id="globalLoading"><div class="loadingCard"><div class="spinner"></div><span id="globalLoadingText">Lade …</span></div></div>
+<div id="toastContainer"></div>
+
+<div class="page">
+
+  <!-- TOOLBAR -->
+  <div class="panel">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between">
+      <div class="toolbar">
+        <div class="fld"><label>Studio</label><select id="studioSel" class="control"><option value="">Alle Studios</option></select></div>
+        <div class="fld"><label>Mitarbeiter</label><select id="empSel" class="control" style="min-width:160px"><option value="">Alle</option></select></div>
+        <div class="fld"><label>Von</label><input id="dateFrom" class="control" type="date"/></div>
+        <div class="fld"><label>Bis</label><input id="dateTo" class="control" type="date"/></div>
+        <div class="fld"><label>Status</label>
+          <select id="statusSel" class="control">
+            <option value="">Alle</option>
+            <option value="issues">⚠️ Nur Auffälligkeiten</option>
+            <option value="review_required">Prüfung nötig</option>
+            <option value="missing_clock">Stempel fehlt</option>
+            <option value="open">Offen</option>
+            <option value="ok">✓ Erledigt</option>
+            <option value="absent">Abwesend</option>
+            <option value="holiday">Feiertag</option>
+            <option value="no_work_day">Kein Arbeitstag</option>
+            <option value="verified">Geprüft</option>
+          </select>
+        </div>
+        <div class="fld"><label>Schnell</label>
+          <div style="display:flex;gap:5px">
+            <button class="btn secondary" data-range="today">Heute</button>
+            <button class="btn secondary" data-range="week">Woche</button>
+            <button class="btn secondary" data-range="month">Monat</button>
+            <button class="btn secondary" data-range="lastmonth">Vormonat</button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost" id="exportBtn">⬇ CSV</button>
+        <button class="btn primary" id="reloadBtn">↻ Neu laden</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi"><div class="kpiLabel">Einträge</div><div class="kpiValue" id="kpiTotal">–</div><div class="kpiFoot">Im Zeitraum</div></div>
+    <div class="kpi warn"><div class="kpiLabel">⚠️ Auffälligkeiten</div><div class="kpiValue" id="kpiIssues">–</div><div class="kpiFoot">Prüfung nötig</div></div>
+    <div class="kpi warn"><div class="kpiLabel">📱 Mobil gestempelt</div><div class="kpiValue" id="kpiMobile">–</div><div class="kpiFoot">via Handy-App</div></div>
+    <div class="kpi"><div class="kpiLabel">Gesamt Soll</div><div class="kpiValue" id="kpiTarget">–</div><div class="kpiFoot">Stunden</div></div>
+    <div class="kpi"><div class="kpiLabel">Gesamt Ist</div><div class="kpiValue" id="kpiActual">–</div><div class="kpiFoot">Stunden</div></div>
+    <div class="kpi"><div class="kpiLabel">Saldo</div><div class="kpiValue" id="kpiDelta">–</div><div class="kpiFoot">Über-/Minusstunden</div></div>
+  </div>
+
+  <!-- TABELLE -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h3>📋 Tagesübersicht</h3>
+        <p id="tableInfo" style="color:var(--muted);font-size:12px">–</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn warn-btn small" id="filterIssuesBtn">⚠️ Nur Auffälligkeiten</button>
+        <button class="btn ghost small" id="clearFilterBtn">Alle anzeigen</button>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">💡 Auf eine Zeile klicken um Zeiteinträge zu sehen und zu bearbeiten.</p>
+    <div class="tableWrap">
+      <table>
+        <thead><tr>
+          <th data-col="work_date">Datum</th>
+          <th data-col="employee_name">Mitarbeiter</th>
+          <th data-col="studio_name">Studio</th>
+          <th data-col="day_status">Status</th>
+          <th class="num-right" data-col="clock_in">Kommen</th>
+          <th class="num-right" data-col="clock_out">Gehen</th>
+          <th class="num-right" data-col="final_target_minutes">Soll</th>
+          <th class="num-right" data-col="actual_minutes">Ist</th>
+          <th class="num-right" data-col="delta_minutes">Saldo</th>
+          <th>Info</th>
+          <th>Quelle</th>
+        </tr></thead>
+        <tbody id="mainBody"><tr><td colspan="11" class="empty">Lade …</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<script>
+(async function() {
+  const SUPA_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+  const SUPA_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+  const sb = window.supabase.createClient(SUPA_URL, SUPA_KEY, { auth: { persistSession: false, storageKey: "sb_time_tracking" } });
+
+  try {
+    var _s = JSON.parse(localStorage.getItem('fitbox_session') || 'null');
+    if (_s && _s.access_token) await sb.auth.setSession({ access_token: _s.access_token, refresh_token: _s.refresh_token || _s.access_token });
+  } catch(e) {}
+
+  // ── State ──────────────────────────────────────────────
+  var state = { records: [], studios: [], employees: [], openRowId: null, showIssuesOnly: false };
+  var sortCol = 'work_date', sortDir = 'desc';
+
+  // ── Helpers ────────────────────────────────────────────
+  function $(id) { return document.getElementById(id); }
+  function showLoading(msg) { $('globalLoadingText').textContent = msg || 'Lade …'; $('globalLoading').style.display = 'flex'; }
+  function hideLoading() { $('globalLoading').style.display = 'none'; }
+
+  function showToast(msg, type, duration) {
+    duration = duration || 3000;
+    var c = $('toastContainer'), t = document.createElement('div');
+    t.className = 'toast ' + (type || 'ok');
+    t.textContent = msg;
+    if (type === 'err') t.title = 'Klicken zum Schließen';
+    c.appendChild(t);
+    var timer = setTimeout(function() { t.style.transition='.3s';t.style.opacity='0';setTimeout(function(){t.remove();},300); }, duration);
+    if (type === 'err') t.addEventListener('click', function() { clearTimeout(timer); t.remove(); });
+  }
+
+  function esc(v) { return String(v ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function fmtMin(m) {
+    var n = Number(m || 0), sign = n < 0 ? '-' : '', abs = Math.abs(n);
+    return sign + Math.floor(abs / 60) + 'h ' + String(abs % 60).padStart(2, '0') + 'm';
+  }
+
+  function fmtDate(d) {
+    if (!d) return '–';
+    return new Date(d + 'T00:00:00').toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  function fmtTime(t) {
+    if (!t) return '–';
+    return String(t).slice(0, 5);
+  }
+
+  function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+  function setRange(type) {
+    var today = todayStr();
+    if (type === 'today') { $('dateFrom').value = today; $('dateTo').value = today; }
+    else if (type === 'week') {
+      var d = new Date(), mon = new Date(d); mon.setDate(d.getDate() - (d.getDay() || 7) + 1);
+      $('dateFrom').value = mon.toISOString().slice(0, 10); $('dateTo').value = today;
+    } else if (type === 'month') {
+      var d2 = new Date(); $('dateFrom').value = d2.getFullYear() + '-' + String(d2.getMonth()+1).padStart(2,'0') + '-01'; $('dateTo').value = today;
+    } else if (type === 'lastmonth') {
+      var d3 = new Date(); d3.setDate(1); d3.setMonth(d3.getMonth()-1);
+      var y=d3.getFullYear(), m=d3.getMonth()+1, last=new Date(y,m,0).getDate();
+      $('dateFrom').value = y+'-'+String(m).padStart(2,'0')+'-01';
+      $('dateTo').value = y+'-'+String(m).padStart(2,'0')+'-'+String(last).padStart(2,'0');
+    }
+  }
+
+  var STATUS_LABELS = { open:'Offen', ok:'Erledigt', absent:'Abwesend', holiday:'Feiertag', no_work_day:'Kein Arbeitstag', review_required:'Prüfung nötig', missing_clock:'Stempel fehlt', verified:'Geprüft', locked:'Gesperrt' };
+  var STATUS_PILLS  = { open:'gray', ok:'ok', absent:'info', holiday:'info', no_work_day:'gray', review_required:'warn', missing_clock:'danger', verified:'ok', locked:'gray' };
+
+  function isIssue(r) { return r.day_status === 'review_required' || r.day_status === 'missing_clock'; }
+  function empName(id) { var e = state.employees.find(function(x){return x.id===id;}); return e ? (e.display_name || e.first_name+' '+e.last_name) : (id||'–'); }
+
+  // ── Load master ────────────────────────────────────────
+  async function loadMaster() {
+    var [sr, er] = await Promise.all([
+      sb.from('studios').select('id,name').order('sort_order'),
+      sb.from('employees').select('id,first_name,last_name,display_name').eq('is_active',true).order('last_name')
+    ]);
+    state.studios = sr.data || [];
+    state.employees = er.data || [];
+
+    $('studioSel').innerHTML = '<option value="">Alle Studios</option>' +
+      state.studios.map(function(s){return '<option value="'+s.id+'">'+esc(s.name)+'</option>';}).join('');
+    $('empSel').innerHTML = '<option value="">Alle Mitarbeiter</option>' +
+      state.employees.map(function(e){var n=e.display_name||(e.first_name+' '+e.last_name);return '<option value="'+e.id+'">'+esc(n)+'</option>';}).join('');
+  }
+
+  // ── Load records ───────────────────────────────────────
+  async function loadRecords() {
+    var from=$('dateFrom').value, to=$('dateTo').value, studio=$('studioSel').value, emp=$('empSel').value, status=$('statusSel').value;
+    var q = sb.from('v_time_daily_overview').select('*');
+    if (from) q = q.gte('work_date', from);
+    if (to)   q = q.lte('work_date', to);
+    if (studio) q = q.eq('studio_id', studio);
+    if (emp)    q = q.eq('employee_id', emp);
+    if (status === 'issues') q = q.in('day_status', ['review_required','missing_clock']);
+    else if (status) q = q.eq('day_status', status);
+    q = q.order('work_date',{ascending:false}).order('employee_name').limit(1000);
+    var { data, error } = await q;
+    if (error) throw error;
+    state.records = data || [];
+
+    // Mobile Stempelungen aus time_events nachladen und Records anreichern
+    if (state.records.length) {
+      var empIds = [...new Set(state.records.map(function(r){return r.employee_id;}))];
+      var mq = sb.from('time_events')
+        .select('employee_id,event_date,source')
+        .eq('source','mobile')
+        .gte('event_date', from || '')
+        .lte('event_date', to || '9999-12-31');
+      var { data: mobileEvents } = await mq;
+      var mobileSet = new Set((mobileEvents||[]).map(function(e){return e.employee_id+'_'+e.event_date;}));
+      state.records = state.records.map(function(r){
+        r.has_mobile_clock = mobileSet.has(r.employee_id+'_'+r.work_date);
+        return r;
+      });
+    }
+  }
+
+  // ── Render KPIs ────────────────────────────────────────
+  function renderKpis() {
+    var r = state.records;
+    var issues = r.filter(isIssue).length;
+    var tgt = r.reduce(function(s,x){return s+(x.final_target_minutes||0);},0);
+    var act = r.reduce(function(s,x){return s+(x.actual_minutes||0);},0);
+    var dlt = act - tgt;
+    $('kpiTotal').textContent = r.length;
+    $('kpiIssues').textContent = issues;
+    $('kpiTarget').textContent = fmtMin(tgt);
+    $('kpiActual').textContent = fmtMin(act);
+    $('kpiDelta').textContent  = (dlt>=0?'+':'')+fmtMin(dlt);
+    $('kpiDelta').style.color  = dlt<0?'var(--danger)':dlt>0?'var(--ok)':'var(--ink)';
+    $('kpiIssues').closest('.kpi').className = 'kpi '+(issues>0?'warn':'ok');
+    var mobileCount = r.filter(function(x){return x.has_mobile_clock;}).length;
+    $('kpiMobile').textContent = mobileCount;
+    $('kpiMobile').closest('.kpi').className = 'kpi '+(mobileCount>0?'warn':'ok');
+  }
+
+  // ── Render table ───────────────────────────────────────
+  function renderTable() {
+    var rows = state.records.slice();
+    if (state.showIssuesOnly) rows = rows.filter(isIssue);
+
+    rows.sort(function(a,b){
+      var av=a[sortCol]??'', bv=b[sortCol]??'';
+      if (typeof av==='number'||(!isNaN(Number(av))&&av!=='')) return sortDir==='asc'?Number(av)-Number(bv):Number(bv)-Number(av);
+      return sortDir==='asc'?String(av).localeCompare(String(bv),'de'):String(bv).localeCompare(String(av),'de');
+    });
+
+    $('tableInfo').textContent = rows.length + ' Einträge' + (state.showIssuesOnly?' (nur Auffälligkeiten)':'');
+
+    var body = $('mainBody');
+    if (!rows.length) { body.innerHTML = '<tr><td colspan="11" class="empty">Keine Einträge gefunden.</td></tr>'; return; }
+
+    body.innerHTML = rows.map(function(r) {
+      var issue = isIssue(r);
+      var delta = Number(r.delta_minutes||0);
+      var deltaColor = delta<-30?'var(--danger)':delta<0?'var(--warn)':delta>60?'var(--info)':'var(--ok)';
+      var isOpen = state.openRowId === r.daily_record_id;
+
+      var info = [];
+      if (r.has_holiday) info.push('🎉 Feiertag');
+      if (r.has_absence) info.push('🏖️ ' + esc(r.absence_type||'Abwesenheit'));
+      if (!r.has_time_entries && !r.has_absence && !r.has_holiday) info.push('–');
+
+      var dataRow = '<tr class="data-row'+(issue?' issue':'')+(isOpen?' open-row':'')+'" data-id="'+r.daily_record_id+'">' +
+        '<td><strong>'+fmtDate(r.work_date)+'</strong></td>' +
+        '<td>'+esc(r.employee_name||empName(r.employee_id))+'</td>' +
+        '<td class="mutedSm">'+esc(r.studio_name||'–')+'</td>' +
+        '<td><span class="pill '+(STATUS_PILLS[r.day_status]||'gray')+'">'+esc(STATUS_LABELS[r.day_status]||r.day_status||'–')+'</span>'+(issue?' ⚠️':'')+' </td>' +
+        '<td class="num-right" style="font-size:12px;color:var(--muted)">'+fmtTime(r.clock_in)+'</td>' +
+        '<td class="num-right" style="font-size:12px;color:var(--muted)">'+fmtTime(r.clock_out)+'</td>' +
+        '<td class="num-right">'+fmtMin(r.final_target_minutes)+'</td>' +
+        '<td class="num-right">'+fmtMin(r.actual_minutes)+'</td>' +
+        '<td class="num-right" style="font-weight:900;color:'+deltaColor+'">'+(delta>=0?'+':'')+fmtMin(delta)+'</td>' +
+        '<td style="font-size:11px;color:var(--muted)">'+info.join(' · ')+'</td>' +
+        '<td>' + (r.has_mobile_clock ? '<span class="pill warn" title="Mindestens eine Stempelung per Handy-App">📱 Mobil</span>' : '<span class="pill gray">Desktop</span>') + '</td>' +
+        '</tr>';
+
+      var detailRow = '<tr class="detail-row'+(isOpen?'':' hidden')+'" data-detail-id="'+r.daily_record_id+'"><td colspan="10">' +
+        (isOpen ? buildDetailHtml(r) : '') +
+        '</td></tr>';
+
+      return dataRow + detailRow;
+    }).join('');
+  }
+
+  // ── Build detail HTML (inline) ─────────────────────────
+  function buildDetailHtml(r) {
+    return '<div class="detail-inner">' +
+
+      // LEFT: Zeiteinträge
+      '<div class="entries-section">' +
+        '<h4>⏱️ Zeiteinträge</h4>' +
+        '<div id="entriesList_'+r.daily_record_id+'"><div class="empty">Lade …</div></div>' +
+
+        // Neuen Zeiteintrag Formular
+        '<div class="new-entry-form" style="margin-top:10px" id="newEntryForm_'+r.daily_record_id+'">' +
+          '<h5>+ Neuer Zeiteintrag</h5>' +
+          '<div id="errBanner_'+r.daily_record_id+'" class="error-banner"></div>' +
+          '<div class="form-row">' +
+            '<div class="fld"><label>Start *</label><input class="control" id="newStart_'+r.daily_record_id+'" type="time"/></div>' +
+            '<div class="fld"><label>Ende *</label><input class="control" id="newEnd_'+r.daily_record_id+'" type="time"/></div>' +
+            '<div class="fld"><label>Pause Min.</label><input class="control" id="newBreak_'+r.daily_record_id+'" type="number" min="0" value="0" style="width:80px"/></div>' +
+            '<div class="fld"><label>Typ</label>' +
+              '<select class="control" id="newType_'+r.daily_record_id+'">' +
+                '<option value="work">Arbeit</option>' +
+                '<option value="manual_correction">Korrektur</option>' +
+              '</select></div>' +
+          '</div>' +
+          '<div class="form-row" style="margin-top:8px">' +
+            '<div class="fld" style="flex:1"><label>Notiz</label><input class="control" id="newNote_'+r.daily_record_id+'" placeholder="optional"/></div>' +
+            '<div class="fld" style="justify-content:flex-end"><button class="btn primary small" data-add-entry="'+r.daily_record_id+'" data-emp="'+r.employee_id+'" data-date="'+r.work_date+'" data-studio="'+r.studio_id+'">Hinzufügen</button></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+
+      // RIGHT: Tagesdatensatz bearbeiten
+      '<div class="record-section">' +
+        '<h4>📝 Tagesdatensatz bearbeiten</h4>' +
+        '<div class="fld" style="margin-bottom:10px"><label>Status</label>' +
+          '<select class="control" id="recStatus_'+r.daily_record_id+'">' +
+            '<option value="open"'+(r.day_status==='open'?' selected':'')+'>Offen</option>' +
+            '<option value="ok"'+(r.day_status==='ok'?' selected':'')+'>✓ Erledigt</option>' +
+            '<option value="review_required"'+(r.day_status==='review_required'?' selected':'')+'>⚠️ Prüfung nötig</option>' +
+            '<option value="missing_clock"'+(r.day_status==='missing_clock'?' selected':'')+'>Stempel fehlt</option>' +
+            '<option value="absent"'+(r.day_status==='absent'?' selected':'')+'>Abwesend</option>' +
+            '<option value="holiday"'+(r.day_status==='holiday'?' selected':'')+'>Feiertag</option>' +
+            '<option value="no_work_day"'+(r.day_status==='no_work_day'?' selected':'')+'>Kein Arbeitstag</option>' +
+            '<option value="verified"'+(r.day_status==='verified'?' selected':'')+'>✓✓ Geprüft</option>' +
+            '<option value="locked"'+(r.day_status==='locked'?' selected':'')+'>Gesperrt 🔒</option>' +
+          '</select>' +
+        '</div>' +
+        '<div class="fld" style="margin-bottom:10px"><label>Ist-Minuten manuell überschreiben</label>' +
+          '<input class="control" id="recActual_'+r.daily_record_id+'" type="number" min="0" max="1440" placeholder="leer = automatisch berechnet"/>' +
+        '</div>' +
+        '<div class="fld" style="margin-bottom:10px"><label>Notiz / Korrekturgrund</label>' +
+          '<input class="control" id="recNote_'+r.daily_record_id+'" value="'+esc(r.note||'')+'" placeholder="optional"/>' +
+        '</div>' +
+        '<div class="fld" style="margin-bottom:10px"><label>Prüfungsgrund</label>' +
+          '<input class="control" id="recReview_'+r.daily_record_id+'" value="'+esc(r.review_reason||'')+'" placeholder="optional"/>' +
+        '</div>' +
+        '<div style="display:flex;gap:8px">' +
+          '<button class="btn primary" data-save-record="'+r.daily_record_id+'">💾 Speichern</button>' +
+          '<button class="btn secondary" data-close-row="'+r.daily_record_id+'">Schließen</button>' +
+        '</div>' +
+      '</div>' +
+
+    '</div>';
+  }
+
+  // ── Load time entries for expanded row ─────────────────
+  async function loadEntries(recordId, empId, workDate) {
+    var container = document.getElementById('entriesList_' + recordId);
+    if (!container) return;
+    var { data, error } = await sb.from('time_entries')
+      .select('*').eq('employee_id', empId).eq('work_date', workDate).order('start_time');
+    if (error) { container.innerHTML = '<div class="empty" style="color:var(--danger)">Fehler: ' + esc(error.message) + '</div>'; return; }
+    if (!data || !data.length) { container.innerHTML = '<div class="empty">Keine Zeiteinträge für diesen Tag.</div>'; return; }
+    container.innerHTML = data.map(function(e) {
+      var mins = e.actual_minutes || 0;
+      var typeLabel = e.entry_type === 'manual_correction' ? 'Korrektur' : e.entry_type === 'work' ? 'Arbeit' : esc(e.entry_type||'');
+      var srcBadge = e.source==='mobile' ? '<span class="pill warn" title="Via Mitarbeiter-App">📱 Mobil</span>'
+        : e.source==='admin' ? '<span class="pill info">Admin</span>'
+        : '<span class="pill gray">Terminal</span>';
+      return '<div class="entry-card">' +
+        '<span class="times">'+(e.start_time||'?')+' – '+(e.end_time||'?')+'</span>' +
+        '<span class="meta">'+fmtMin(mins)+' netto'+(e.break_minutes?' · '+e.break_minutes+' Min. Pause':'')+'</span>' +
+        '<span class="pill '+(e.entry_type==='manual_correction'?'warn':'gray')+'">' + typeLabel+'</span>' +
+        srcBadge +
+        (e.note?'<span class="meta">'+esc(e.note)+'</span>':'') +
+        '<div class="actions"><button class="btn danger xs" data-del-entry="'+e.time_entry_id+'" data-record-id="'+recordId+'" data-emp="'+empId+'" data-date="'+workDate+'">🗑</button></div>' +
+        '</div>';
+    }).join('');
+  }
+
+  // ── Toggle row ─────────────────────────────────────────
+  async function toggleRow(recordId) {
+    var rec = state.records.find(function(r){return r.daily_record_id===recordId;});
+    if (!rec) return;
+
+    // If same row → close
+    if (state.openRowId === recordId) {
+      state.openRowId = null;
+      renderTable();
+      return;
+    }
+
+    state.openRowId = recordId;
+    renderTable();
+
+    // Now load entries asynchronously
+    await loadEntries(recordId, rec.employee_id, rec.work_date);
+  }
+
+  // ── Event delegation ───────────────────────────────────
+  document.addEventListener('click', async function(e) {
+
+    // Row click → toggle
+    var dataRow = e.target.closest('tr.data-row');
+    if (dataRow && !e.target.closest('button') && !e.target.closest('input') && !e.target.closest('select')) {
+      toggleRow(dataRow.dataset.id);
+      return;
+    }
+
+    // Close row button
+    var closeBtn = e.target.closest('[data-close-row]');
+    if (closeBtn) { state.openRowId = null; renderTable(); return; }
+
+    // Add entry button
+    var addBtn = e.target.closest('[data-add-entry]');
+    if (addBtn) {
+      var recId = addBtn.dataset.addEntry;
+      var empId = addBtn.dataset.emp;
+      var workDate = addBtn.dataset.date;
+      var studioId = addBtn.dataset.studio;
+      await addEntry(recId, empId, workDate, studioId);
+      return;
+    }
+
+    // Delete entry button
+    var delBtn = e.target.closest('[data-del-entry]');
+    if (delBtn) {
+      if (!confirm('Zeiteintrag löschen?')) return;
+      showLoading('Lösche …');
+      var { error } = await sb.from('time_entries').delete().eq('time_entry_id', delBtn.dataset.delEntry);
+      hideLoading();
+      if (error) { showToast('Fehler: '+error.message, 'err', 8000); return; }
+      showToast('Zeiteintrag gelöscht ✓');
+      await loadEntries(delBtn.dataset.recordId, delBtn.dataset.emp, delBtn.dataset.date);
+      return;
+    }
+
+    // Save record button
+    var saveBtn = e.target.closest('[data-save-record]');
+    if (saveBtn) {
+      await saveRecord(saveBtn.dataset.saveRecord);
+      return;
+    }
+  });
+
+  // ── Add entry ──────────────────────────────────────────
+  async function addEntry(recId, empId, workDate, studioId) {
+    var errBanner = document.getElementById('errBanner_' + recId);
+    errBanner.style.display = 'none';
+
+    var start = document.getElementById('newStart_' + recId).value;
+    var end   = document.getElementById('newEnd_'   + recId).value;
+    var brk   = Number(document.getElementById('newBreak_' + recId).value || 0);
+    var type  = document.getElementById('newType_'  + recId).value;
+    var note  = document.getElementById('newNote_'  + recId).value.trim() || null;
+
+    if (!start || !end) { errBanner.textContent = 'Bitte Start- und Endzeit eingeben.'; errBanner.style.display='block'; return; }
+
+    var [sh,sm] = start.split(':').map(Number), [eh,em] = end.split(':').map(Number);
+    var total = (eh*60+em) - (sh*60+sm) - brk;
+    if (total <= 0) { errBanner.textContent = 'Endzeit muss nach Startzeit liegen (Netto > 0 Min.).'; errBanner.style.display='block'; return; }
+
+    var payload = { studio_id: studioId, employee_id: empId, work_date: workDate, start_time: start, end_time: end, break_minutes: brk, actual_minutes: total, entry_type: type, source: 'admin', note: note };
+
+    showLoading('Zeiteintrag wird gespeichert …');
+    var { error } = await sb.from('time_entries').insert(payload);
+    hideLoading();
+
+    if (error) {
+      var msg = error.message || String(error);
+      // Make error readable
+      if (msg.includes('Kein Studio') || msg.includes('kein Studio')) msg = 'Kein Arbeitsmuster/Studio für diesen Mitarbeiter am ' + workDate + ' gefunden. Bitte zuerst unter Personal → Arbeitsmuster anlegen.';
+      errBanner.textContent = '⚠️ ' + msg;
+      errBanner.style.display = 'block';
+      return;
+    }
+
+    // Clear form
+    document.getElementById('newStart_'+recId).value = '';
+    document.getElementById('newEnd_'+recId).value = '';
+    document.getElementById('newBreak_'+recId).value = '0';
+    document.getElementById('newNote_'+recId).value = '';
+
+    showToast('Zeiteintrag gespeichert ✓');
+    var rec = state.records.find(function(r){return r.daily_record_id===recId;});
+    if (rec) await loadEntries(recId, empId, workDate);
+  }
+
+  // ── Save record ────────────────────────────────────────
+  async function saveRecord(recId) {
+    var payload = {
+      day_status: document.getElementById('recStatus_'+recId).value,
+      note: document.getElementById('recNote_'+recId).value.trim() || null,
+      review_reason: document.getElementById('recReview_'+recId).value.trim() || null,
+      updated_at: new Date().toISOString()
+    };
+    var actualVal = document.getElementById('recActual_'+recId).value;
+    if (actualVal !== '') payload.actual_minutes = Number(actualVal);
+
+    showLoading('Speichere …');
+    var { error } = await sb.from('time_daily_records').update(payload).eq('daily_record_id', recId);
+    hideLoading();
+    if (error) { showToast('Fehler: ' + error.message, 'err', 8000); return; }
+    showToast('Tagesdatensatz gespeichert ✓');
+    await loadAll(true); // reload keeping open row
+  }
+
+  // ── Table sort ─────────────────────────────────────────
+  document.querySelectorAll('thead th[data-col]').forEach(function(th) {
+    th.addEventListener('click', function() {
+      var col = th.dataset.col;
+      if (sortCol === col) sortDir = sortDir==='asc'?'desc':'asc'; else { sortCol=col; sortDir='asc'; }
+      document.querySelectorAll('thead th').forEach(function(h){h.classList.remove('asc','desc');});
+      th.classList.add(sortDir);
+      renderTable();
+      // Reload entries if a row is open
+      if (state.openRowId) {
+        var rec = state.records.find(function(r){return r.daily_record_id===state.openRowId;});
+        if (rec) loadEntries(state.openRowId, rec.employee_id, rec.work_date);
+      }
+    });
+  });
+
+  // ── CSV Export ─────────────────────────────────────────
+  $('exportBtn').addEventListener('click', function() {
+    var rows = state.showIssuesOnly ? state.records.filter(isIssue) : state.records;
+    if (!rows.length) { showToast('Keine Daten.', 'warn'); return; }
+    var hdr = ['Datum','Mitarbeiter','Studio','Status','Kommen','Gehen','Soll Min','Ist Min','Saldo Min','Feiertag','Abwesenheit','Notiz','Mobil gestempelt'];
+    var csv = '\uFEFF' + [hdr.join(';'), ...rows.map(function(r) {
+      return [r.work_date, r.employee_name||empName(r.employee_id), r.studio_name||'', STATUS_LABELS[r.day_status]||r.day_status||'',
+        fmtTime(r.clock_in), fmtTime(r.clock_out),
+        r.final_target_minutes||0, r.actual_minutes||0, r.delta_minutes||0,
+        r.has_holiday?'Ja':'Nein', r.has_absence?'Ja':'Nein', (r.note||'').replace(/;/g,',')
+      ].join(';');
+    })].join('\n');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+    a.download = 'zeiterfassung_'+($('dateFrom').value||'export')+'.csv';
+    a.click(); showToast('CSV exportiert ✓');
+  });
+
+  // ── Filter buttons ─────────────────────────────────────
+  $('filterIssuesBtn').addEventListener('click', function(){state.showIssuesOnly=true;renderTable();});
+  $('clearFilterBtn').addEventListener('click', function(){state.showIssuesOnly=false;renderTable();});
+
+  // ── Range & filter events ──────────────────────────────
+  document.querySelectorAll('[data-range]').forEach(function(btn){btn.addEventListener('click',function(){setRange(btn.dataset.range);loadAll();});});
+  ['studioSel','empSel','statusSel'].forEach(function(id){$(id).addEventListener('change',loadAll);});
+  $('reloadBtn').addEventListener('click', function(){loadAll();});
+  var rTop=document.getElementById('reloadBtnTop');if(rTop)rTop.addEventListener('click',function(){loadAll();});
+
+  // ── Main load ──────────────────────────────────────────
+  async function loadAll(keepOpen) {
+    if (!keepOpen) state.openRowId = null;
+    showLoading('Zeiterfassung wird geladen …');
+    var dot=document.getElementById('connDot'),lbl=document.getElementById('connLabel');
+    if(dot){dot.className='conn-dot connecting';}if(lbl){lbl.textContent='Verbinde…';}
+    try {
+      await loadRecords();
+      renderKpis();
+      renderTable();
+      if(dot){dot.className='conn-dot ok';}if(lbl){lbl.className='conn-label ok';lbl.textContent='Verbunden';}
+      // Topbar-Stats befüllen
+      var recs=state.records||[];
+      var sE=document.getElementById("stat-eintr");if(sE)sE.textContent=recs.length;
+      var sI=document.getElementById("stat-issues");if(sI)sI.textContent=recs.filter(function(r){return r.is_significant_issue;}).length;
+      var sO=document.getElementById("stat-open");if(sO)sO.textContent=recs.filter(function(r){return r.day_status==='open'||r.day_status==='missing_clock';}).length;
+      // Reload entries for open row
+      if (state.openRowId) {
+        var rec = state.records.find(function(r){return r.daily_record_id===state.openRowId;});
+        if (rec) await loadEntries(state.openRowId, rec.employee_id, rec.work_date);
+      }
+    } catch(err) {
+      showToast('Ladefehler: ' + (err.message||String(err)), 'err', 8000);
+      if(dot){dot.className='conn-dot err';}if(lbl){lbl.className='conn-label err';lbl.textContent='Fehler';}
+    } finally { hideLoading(); }
+  }
+  // Info-Modal Handler
+  (function(){
+    function bind(){
+      var infoBtn=document.getElementById('infoBtnTop');
+      var infoModal=document.getElementById('infoModal');
+      var infoClose=document.getElementById('infoClose');
+      if(infoBtn&&infoModal){
+        infoBtn.addEventListener('click',function(){infoModal.classList.add('show');});
+        infoClose&&infoClose.addEventListener('click',function(){infoModal.classList.remove('show');});
+        infoModal.addEventListener('click',function(e){if(e.target===infoModal)infoModal.classList.remove('show');});
+        document.addEventListener('keydown',function(e){if(e.key==='Escape'&&infoModal.classList.contains('show'))infoModal.classList.remove('show');});
+      }
+    }
+    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',bind);} else {bind();}
+  })();
+
+  // ── Init ───────────────────────────────────────────────
+  setRange('month');
+  showLoading('Initialisiere …');
+  try { await loadMaster(); await loadAll(); } catch(err) { showToast(err.message||String(err),'err',8000); hideLoading(); }
+
+})();
+</script>
+</body>
+</html>

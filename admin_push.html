@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Push Notifications · fitbox Admin</title>
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --accent: #95c11f;
+  --accent-dark: #2f8615;
+  --bg: #f5f6f4;
+  --surface: #ffffff;
+  --border: #e5e7e0;
+  --text: #1a1a1a;
+  --text-muted: #6b7066;
+  --danger: #d94545;
+  --warning: #e89028;
+  --success: #2f8615;
+  --info: #2563eb;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 2px 8px rgba(0,0,0,0.06);
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, select, textarea { font-family: inherit; font-size: 14px; }
+
+.page-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.page-header .back { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 18px; }
+.page-header .back:hover { background: var(--bg); }
+.page-header h1 { font-size: 18px; font-weight: 700; }
+.page-header .subtitle { font-size: 12px; color: var(--text-muted); }
+
+.tabs {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  position: relative;
+  transition: all 0.15s;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent-dark); border-bottom-color: var(--accent); }
+.tab .tab-count { background: var(--bg); color: var(--text-muted); padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 700; margin-left: 6px; }
+.tab.active .tab-count { background: var(--accent); color: #1a3d05; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.view { display: none; }
+.view.active { display: block; }
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+}
+
+.section-title { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+
+.empty-state { text-align: center; padding: 60px 24px; color: var(--text-muted); }
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+
+/* TABLE */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th, .data-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+.data-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); background: var(--bg); }
+.data-table tbody tr:hover { background: rgba(149,193,31,0.04); }
+.data-table tbody tr:last-child td { border-bottom: none; }
+
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 100px; font-size: 11px; font-weight: 600; background: var(--bg); }
+.badge.success { background: #eaf4d6; color: var(--success); }
+.badge.danger { background: #fde8e8; color: var(--danger); }
+.badge.warning { background: #fef3e0; color: var(--warning); }
+.badge.info { background: #dbeafe; color: var(--info); }
+.badge.muted { background: var(--bg); color: var(--text-muted); }
+
+/* FORM */
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--surface);
+  transition: all 0.15s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--accent); }
+.form-group textarea { min-height: 80px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-help { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+.btn {
+  padding: 10px 18px;
+  background: var(--accent-dark);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn:hover { background: #267010; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--border); }
+.btn-danger { background: var(--danger); }
+.btn-danger:hover { background: #b83333; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+/* TOGGLE SWITCH */
+.toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; inset: 0; background: #ccc; border-radius: 24px; transition: 0.2s; }
+.toggle-slider::before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: 0.2s; }
+.toggle input:checked + .toggle-slider { background: var(--accent-dark); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+
+/* EVENT CARD */
+.event-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all 0.15s;
+}
+.event-card:hover { border-color: var(--accent); box-shadow: var(--shadow); }
+.event-card.disabled { opacity: 0.6; }
+.event-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.event-info { flex: 1; min-width: 0; }
+.event-info .event-label { font-weight: 700; font-size: 14px; margin-bottom: 2px; }
+.event-info .event-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.event-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* CATEGORY GROUP */
+.category-group { margin-bottom: 24px; }
+.category-title { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 10px; padding-left: 4px; }
+.category-title .cat-icon { font-size: 16px; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a1a; color: #fff; padding: 14px 20px; border-radius: 10px; font-size: 14px; z-index: 200; opacity: 0; transform: translateY(20px); transition: all 0.25s; pointer-events: none; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+
+/* MODAL */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+.modal-backdrop.show { display: flex; }
+.modal { background: var(--surface); border-radius: var(--radius); max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
+.modal-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.modal-header h3 { font-size: 16px; font-weight: 700; }
+.modal-body { padding: 20px 24px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+.modal-close { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: var(--text-muted); }
+.modal-close:hover { background: var(--bg); }
+
+/* SPINNER */
+.spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: inline-block; vertical-align: middle; }
+.spinner.dark { border-color: rgba(0,0,0,0.1); border-top-color: var(--accent-dark); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-row { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 40px; color: var(--text-muted); }
+
+/* STATS GRID */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: var(--surface); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow-sm); border-left: 3px solid var(--accent); }
+.stat-card .label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.stat-card .value { font-size: 24px; font-weight: 800; }
+.stat-card.danger { border-left-color: var(--danger); }
+.stat-card.warning { border-left-color: var(--warning); }
+.stat-card.info { border-left-color: var(--info); }
+
+@media (max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+  .container { padding: 16px; }
+  .page-header { padding: 12px 16px; }
+  .tabs { padding: 0 16px; }
+  .tab { padding: 12px 14px; font-size: 13px; }
+  .data-table th, .data-table td { padding: 10px 12px; font-size: 13px; }
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <button class="back" onclick="history.back()">←</button>
+  <div style="flex:1">
+    <h1>🔔 Push Notifications</h1>
+    <div class="subtitle">Verwaltung der Mitarbeiter-Benachrichtigungen</div>
+  </div>
+  <div id="user-info" style="font-size:12px;color:var(--text-muted)"></div>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" data-tab="subscriptions" onclick="switchTab('subscriptions')">
+    📱 Subscriptions
+    <span class="tab-count" id="count-subscriptions">0</span>
+  </button>
+  <button class="tab" data-tab="manual" onclick="switchTab('manual')">
+    ✉️ Manuell senden
+  </button>
+  <button class="tab" data-tab="events" onclick="switchTab('events')">
+    ⚡ Event-Trigger
+    <span class="tab-count" id="count-events">0</span>
+  </button>
+  <button class="tab" data-tab="log" onclick="switchTab('log')">
+    📜 Verlauf
+  </button>
+</nav>
+
+<main class="container">
+
+  <!-- ============ TAB: SUBSCRIPTIONS ============ -->
+  <section class="view active" id="view-subscriptions">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">Aktive Geräte</div>
+        <div class="value" id="stat-active">—</div>
+      </div>
+      <div class="stat-card info">
+        <div class="label">Mitarbeiter mit Push</div>
+        <div class="value" id="stat-employees">—</div>
+      </div>
+      <div class="stat-card warning">
+        <div class="label">Fehlerhafte (deaktiviert)</div>
+        <div class="value" id="stat-inactive">—</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="label">Ohne Push-Setup</div>
+        <div class="value" id="stat-missing">—</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Aktive Push-Subscriptions</div>
+      <div id="subscriptions-table-wrap">
+        <div class="loading-row"><span class="spinner dark"></span> Lade Subscriptions…</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Mitarbeiter ohne aktive Push-Subscription</div>
+      <div id="missing-employees-wrap">
+        <div class="loading-row"><span class="spinner dark"></span> Lade…</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TAB: MANUELL SENDEN ============ -->
+  <section class="view" id="view-manual">
+    <div class="card">
+      <div class="section-title">📤 Push-Nachricht versenden</div>
+
+      <div class="form-group">
+        <label>Empfänger-Typ</label>
+        <select id="manual-scope" onchange="updateManualScope()">
+          <option value="employee">Einzelner Mitarbeiter</option>
+          <option value="employees">Mehrere Mitarbeiter</option>
+          <option value="studio">Alle eines Studios</option>
+          <option value="role">Alle einer Rolle</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="manual-target-employee">
+        <label>Mitarbeiter</label>
+        <select id="manual-employee-id">
+          <option value="">— wählen —</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="manual-target-employees" style="display:none">
+        <label>Mitarbeiter (mehrere)</label>
+        <select id="manual-employees-ids" multiple size="6" style="height:auto">
+        </select>
+        <div class="form-help">Strg/Cmd + Klick für Mehrfachauswahl</div>
+      </div>
+
+      <div class="form-group" id="manual-target-studio" style="display:none">
+        <label>Studio</label>
+        <select id="manual-studio-id">
+          <option value="">— wählen —</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="manual-target-role" style="display:none">
+        <label>Rolle</label>
+        <select id="manual-role-code">
+          <option value="">— wählen —</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Titel <span style="color:var(--danger)">*</span></label>
+        <input type="text" id="manual-title" maxlength="100" placeholder="z.B. Wichtige Info">
+      </div>
+
+      <div class="form-group">
+        <label>Nachricht <span style="color:var(--danger)">*</span></label>
+        <textarea id="manual-message" maxlength="300" placeholder="Was möchtest du mitteilen?"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Link (optional)</label>
+        <input type="text" id="manual-url" placeholder="/mitarbeiter_app.html">
+        <div class="form-help">Wohin soll der Tap auf die Notification führen?</div>
+      </div>
+
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px">
+        <button class="btn btn-secondary" onclick="previewManualPush()">Vorschau</button>
+        <button class="btn" id="manual-send-btn" onclick="sendManualPush()">📤 Senden</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">💡 Quick-Templates</div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="loadTemplate('shift_reminder')">🕐 Schichterinnerung</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadTemplate('all_hands')">📢 All Hands</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadTemplate('emergency')">⚠️ Notfall-Info</button>
+        <button class="btn btn-secondary btn-sm" onclick="loadTemplate('thanks')">🎉 Danke-Nachricht</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TAB: EVENTS ============ -->
+  <section class="view" id="view-events">
+    <div class="card" style="background: linear-gradient(135deg, #eaf4d6 0%, #d6e8a8 100%); border-left: 3px solid var(--accent-dark);">
+      <div style="display:flex; gap:12px; align-items:flex-start">
+        <div style="font-size:24px">💡</div>
+        <div>
+          <div style="font-weight:700; margin-bottom:4px">Event-Konfiguration</div>
+          <div style="font-size:13px; color:#3a4a2a">
+            Hier kannst du steuern, welche Auto-Trigger aktiv sind. Cron-basierte Events benötigen separate pg_cron Jobs in Supabase.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="events-list">
+      <div class="loading-row"><span class="spinner dark"></span> Lade Events…</div>
+    </div>
+  </section>
+
+  <!-- ============ TAB: VERLAUF ============ -->
+  <section class="view" id="view-log">
+    <div class="card">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px; flex-wrap:wrap">
+        <div class="section-title" style="margin:0">📜 Verlauf der letzten 100 Pushes</div>
+        <div style="flex:1"></div>
+        <select id="log-filter-event" style="padding:6px 10px; border-radius:6px; border:1px solid var(--border); font-size:13px" onchange="loadLog()">
+          <option value="">Alle Events</option>
+        </select>
+        <select id="log-filter-source" style="padding:6px 10px; border-radius:6px; border:1px solid var(--border); font-size:13px" onchange="loadLog()">
+          <option value="">Alle Quellen</option>
+          <option value="manual">Manuell</option>
+          <option value="auto_trigger">Auto-Trigger</option>
+          <option value="cron">Cron</option>
+          <option value="api">API</option>
+        </select>
+        <button class="btn btn-secondary btn-sm" onclick="loadLog()">🔄 Aktualisieren</button>
+      </div>
+      <div id="log-table-wrap">
+        <div class="loading-row"><span class="spinner dark"></span> Lade Verlauf…</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ MODAL: Event Edit ============ -->
+<div class="modal-backdrop" id="event-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="event-modal-title">Event bearbeiten</h3>
+      <button class="modal-close" onclick="closeEventModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="event-edit-id">
+      <div class="form-group">
+        <label>Event-Code</label>
+        <input type="text" id="event-edit-code" readonly style="background:var(--bg)">
+      </div>
+      <div class="form-group">
+        <label>Bezeichnung</label>
+        <input type="text" id="event-edit-label">
+      </div>
+      <div class="form-group">
+        <label>Beschreibung</label>
+        <textarea id="event-edit-description"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Standard-Titel</label>
+          <input type="text" id="event-edit-title" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label>Standard-URL</label>
+          <input type="text" id="event-edit-url">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Nachrichten-Template</label>
+        <textarea id="event-edit-template" placeholder="z.B. {{lead_name}} wurde dir zugewiesen"></textarea>
+        <div class="form-help">Platzhalter: <code>{{lead_name}}</code>, <code>{{time}}</code>, <code>{{trainer}}</code>, etc.</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Empfänger-Scope</label>
+          <select id="event-edit-scope">
+            <option value="employee">Einzelner Mitarbeiter</option>
+            <option value="studio">Studio</option>
+            <option value="role">Rolle</option>
+            <option value="all">Alle</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Cron-Schedule (optional)</label>
+          <input type="text" id="event-edit-cron" placeholder="z.B. */15 * * * *">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeEventModal()">Abbrechen</button>
+      <button class="btn" onclick="saveEvent()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: Push-Detail ============ -->
+<div class="modal-backdrop" id="log-detail-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Push-Detail</h3>
+      <button class="modal-close" onclick="closeLogDetail()">×</button>
+    </div>
+    <div class="modal-body" id="log-detail-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeLogDetail()">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+const SESSION_KEY = 'fitbox_session';
+const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/send-push-notification`;
+
+let sb = null;
+let session = null;
+let allEmployees = [];
+let allStudios = [];
+let allRoles = [];
+let allEvents = [];
+
+// ===== INIT =====
+function init() {
+  const stored = localStorage.getItem(SESSION_KEY);
+  if (!stored) {
+    alert('Bitte zuerst anmelden');
+    location.href = '/index.html';
+    return;
+  }
+  session = JSON.parse(stored);
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false, storageKey: 'sb_admin_push' },
+    global: { headers: { Authorization: `Bearer ${session.access_token}` } }
+  });
+
+  document.getElementById('user-info').textContent = session.display_name || session.email || '';
+
+  Promise.all([
+    loadEmployees(),
+    loadStudios(),
+    loadRoles()
+  ]).then(() => {
+    loadSubscriptions();
+    loadEvents();
+  });
+}
+
+// ===== TAB SWITCHING =====
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+  document.getElementById(`view-${tab}`).classList.add('active');
+
+  if (tab === 'log') loadLog();
+}
+
+// ===== STAMMDATEN =====
+async function loadEmployees() {
+  const { data, error } = await sb
+    .from('employees')
+    .select('id, first_name, last_name, display_name, email, role_id, roles:roles!employees_role_id_fkey(name, code)')
+    .eq('is_active', true)
+    .order('display_name');
+  if (error) { console.error(error); return; }
+  allEmployees = data;
+
+  // Selects befüllen
+  const opts = data.map(e => {
+    const name = e.display_name || `${e.first_name} ${e.last_name}`;
+    return `<option value="${e.id}">${escapeHtml(name)}</option>`;
+  }).join('');
+  document.getElementById('manual-employee-id').insertAdjacentHTML('beforeend', opts);
+  document.getElementById('manual-employees-ids').insertAdjacentHTML('beforeend', opts);
+}
+
+async function loadStudios() {
+  const { data, error } = await sb
+    .from('studios')
+    .select('id, name, code')
+    .eq('is_active', true)
+    .order('sort_order');
+  if (error) { console.error(error); return; }
+  allStudios = data;
+
+  const opts = data.map(s => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+  document.getElementById('manual-studio-id').insertAdjacentHTML('beforeend', opts);
+}
+
+async function loadRoles() {
+  const { data, error } = await sb
+    .from('roles')
+    .select('code, name')
+    .eq('is_active', true)
+    .order('sort_order');
+  if (error) { console.error(error); return; }
+  allRoles = data;
+
+  const opts = data.map(r => `<option value="${r.code}">${escapeHtml(r.name)}</option>`).join('');
+  document.getElementById('manual-role-code').insertAdjacentHTML('beforeend', opts);
+}
+
+// ===== TAB 1: SUBSCRIPTIONS =====
+async function loadSubscriptions() {
+  const { data: subs, error } = await sb
+    .from('push_subscriptions')
+    .select(`
+      id, employee_id, studio_id, device_label, user_agent,
+      is_active, last_used_at, last_error_at, failure_count, created_at,
+      employees:employees!push_subscriptions_employee_id_fkey(first_name, last_name, display_name, email),
+      studios:studios!push_subscriptions_studio_id_fkey(name, code)
+    `)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    document.getElementById('subscriptions-table-wrap').innerHTML = `<div class="empty-state">⚠️ ${escapeHtml(error.message)}</div>`;
+    return;
+  }
+
+  const active = subs.filter(s => s.is_active);
+  const inactive = subs.filter(s => !s.is_active);
+  const employeeIdsWithPush = new Set(active.map(s => s.employee_id));
+  const missing = allEmployees.filter(e => !employeeIdsWithPush.has(e.id));
+
+  // Stats
+  document.getElementById('stat-active').textContent = active.length;
+  document.getElementById('stat-employees').textContent = employeeIdsWithPush.size;
+  document.getElementById('stat-inactive').textContent = inactive.length;
+  document.getElementById('stat-missing').textContent = missing.length;
+  document.getElementById('count-subscriptions').textContent = active.length;
+
+  // Tabelle
+  const wrap = document.getElementById('subscriptions-table-wrap');
+  if (subs.length === 0) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon">📱</div><div>Noch keine Push-Subscriptions angelegt</div></div>';
+  } else {
+    wrap.innerHTML = `
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Mitarbeiter</th>
+              <th>Studio</th>
+              <th>Gerät</th>
+              <th>Status</th>
+              <th>Letzter Push</th>
+              <th>Angelegt</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${subs.map(s => {
+              const emp = s.employees;
+              const name = emp ? (emp.display_name || `${emp.first_name} ${emp.last_name}`) : 'Unbekannt';
+              const studio = s.studios ? s.studios.code : '—';
+              const device = s.device_label || extractDevice(s.user_agent) || '—';
+              const status = s.is_active ?
+                (s.failure_count > 0 ? '<span class="badge warning">Fehler</span>' : '<span class="badge success">Aktiv</span>')
+                : '<span class="badge danger">Deaktiviert</span>';
+              return `
+                <tr>
+                  <td><strong>${escapeHtml(name)}</strong><div style="font-size:11px;color:var(--text-muted)">${escapeHtml(emp?.email || '')}</div></td>
+                  <td><span class="badge muted">${escapeHtml(studio)}</span></td>
+                  <td>${escapeHtml(device)}</td>
+                  <td>${status}</td>
+                  <td style="font-size:12px;color:var(--text-muted)">${formatDate(s.last_used_at) || '—'}</td>
+                  <td style="font-size:12px;color:var(--text-muted)">${formatDate(s.created_at)}</td>
+                  <td>
+                    <button class="btn btn-secondary btn-sm" onclick="testPushToSubscription('${s.id}', '${escapeHtml(name)}')">📤 Test</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteSubscription('${s.id}', '${escapeHtml(name)}')">🗑</button>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  // Mitarbeiter ohne Push
+  const missingWrap = document.getElementById('missing-employees-wrap');
+  if (missing.length === 0) {
+    missingWrap.innerHTML = '<div style="padding:20px;text-align:center;color:var(--success)">✅ Alle Mitarbeiter haben Push-Notifications aktiviert</div>';
+  } else {
+    missingWrap.innerHTML = `
+      <div style="display:flex; gap:8px; flex-wrap:wrap; padding:8px">
+        ${missing.map(e => {
+          const name = e.display_name || `${e.first_name} ${e.last_name}`;
+          return `<span class="badge muted" style="padding:6px 12px; font-size:13px">${escapeHtml(name)}</span>`;
+        }).join('')}
+      </div>
+    `;
+  }
+}
+
+function extractDevice(ua) {
+  if (!ua) return null;
+  if (/iPhone/.test(ua)) return 'iPhone';
+  if (/iPad/.test(ua)) return 'iPad';
+  if (/Android/.test(ua)) return /Mobile/.test(ua) ? 'Android Phone' : 'Android Tablet';
+  if (/Mac OS/.test(ua)) return 'Mac';
+  if (/Windows/.test(ua)) return 'Windows';
+  return 'Browser';
+}
+
+async function testPushToSubscription(subId, name) {
+  if (!confirm(`Test-Push an "${name}" senden?`)) return;
+  const { data: sub } = await sb.from('push_subscriptions').select('employee_id').eq('id', subId).single();
+  if (!sub) return showToast('Subscription nicht gefunden', 'error');
+
+  await callEdgeFunction({
+    employee_id: sub.employee_id,
+    title: '🧪 Test-Benachrichtigung',
+    message: `Hallo ${name}! Push funktioniert ✓`,
+    url: '/mitarbeiter_app.html'
+  }, 'manual');
+}
+
+async function deleteSubscription(subId, name) {
+  if (!confirm(`Subscription von "${name}" wirklich löschen?\nDer Mitarbeiter muss Push neu aktivieren.`)) return;
+  const { error } = await sb.from('push_subscriptions').delete().eq('id', subId);
+  if (error) return showToast('Fehler: ' + error.message, 'error');
+  showToast('Gelöscht ✓', 'success');
+  loadSubscriptions();
+}
+
+// ===== TAB 2: MANUAL SEND =====
+function updateManualScope() {
+  const scope = document.getElementById('manual-scope').value;
+  document.getElementById('manual-target-employee').style.display = scope === 'employee' ? '' : 'none';
+  document.getElementById('manual-target-employees').style.display = scope === 'employees' ? '' : 'none';
+  document.getElementById('manual-target-studio').style.display = scope === 'studio' ? '' : 'none';
+  document.getElementById('manual-target-role').style.display = scope === 'role' ? '' : 'none';
+}
+
+function previewManualPush() {
+  const title = document.getElementById('manual-title').value;
+  const msg = document.getElementById('manual-message').value;
+  if (!title || !msg) return showToast('Bitte Titel und Nachricht ausfüllen', 'error');
+
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, { body: msg, icon: '/icons/icon-192.png' });
+  } else {
+    alert(`Vorschau:\n\n${title}\n${msg}`);
+  }
+}
+
+async function sendManualPush() {
+  const scope = document.getElementById('manual-scope').value;
+  const title = document.getElementById('manual-title').value.trim();
+  const message = document.getElementById('manual-message').value.trim();
+  const url = document.getElementById('manual-url').value.trim() || '/mitarbeiter_app.html';
+
+  if (!title || !message) return showToast('Bitte Titel und Nachricht ausfüllen', 'error');
+
+  let payload = { title, message, url };
+  let targetLabel = '';
+
+  if (scope === 'employee') {
+    const id = document.getElementById('manual-employee-id').value;
+    if (!id) return showToast('Bitte Mitarbeiter wählen', 'error');
+    payload.employee_id = id;
+    const emp = allEmployees.find(e => e.id === id);
+    targetLabel = emp ? (emp.display_name || `${emp.first_name} ${emp.last_name}`) : id;
+  } else if (scope === 'employees') {
+    const sel = document.getElementById('manual-employees-ids');
+    const ids = Array.from(sel.selectedOptions).map(o => o.value);
+    if (ids.length === 0) return showToast('Bitte mind. einen Mitarbeiter wählen', 'error');
+    payload.employee_ids = ids;
+    targetLabel = `${ids.length} Mitarbeiter`;
+  } else if (scope === 'studio') {
+    const id = document.getElementById('manual-studio-id').value;
+    if (!id) return showToast('Bitte Studio wählen', 'error');
+    payload.studio_id = id;
+    const st = allStudios.find(s => s.id === id);
+    targetLabel = st ? st.name : id;
+  } else if (scope === 'role') {
+    const code = document.getElementById('manual-role-code').value;
+    if (!code) return showToast('Bitte Rolle wählen', 'error');
+    payload.role_code = code;
+    const r = allRoles.find(rl => rl.code === code);
+    targetLabel = r ? r.name : code;
+  }
+
+  if (!confirm(`Push an "${targetLabel}" senden?\n\nTitel: ${title}\nNachricht: ${message}`)) return;
+
+  const btn = document.getElementById('manual-send-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Sende…';
+
+  await callEdgeFunction(payload, 'manual');
+
+  btn.disabled = false;
+  btn.innerHTML = '📤 Senden';
+}
+
+function loadTemplate(key) {
+  const templates = {
+    shift_reminder: {
+      title: '⏰ Schichterinnerung',
+      message: 'Deine Schicht beginnt in 30 Minuten. Bis gleich!'
+    },
+    all_hands: {
+      title: '📢 Team-Info',
+      message: 'Wichtige Neuigkeiten — bitte App öffnen.'
+    },
+    emergency: {
+      title: '⚠️ Wichtige Info',
+      message: 'Bitte sofort App öffnen für Details.'
+    },
+    thanks: {
+      title: '🎉 Danke!',
+      message: 'Großartige Arbeit diese Woche — danke an alle!'
+    }
+  };
+  const t = templates[key];
+  if (!t) return;
+  document.getElementById('manual-title').value = t.title;
+  document.getElementById('manual-message').value = t.message;
+}
+
+// ===== EDGE FUNCTION CALL + LOG =====
+async function callEdgeFunction(payload, source = 'manual') {
+  try {
+    const response = await fetch(EDGE_FUNCTION_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': SUPABASE_KEY
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    // Ins Log schreiben (egal ob Edge Function erfolgreich war oder nicht)
+    await logPushAttempt(payload, result, source, response.ok);
+
+    if (!response.ok || result.error) {
+      showToast('Fehler: ' + (result.error || response.statusText), 'error');
+      return false;
+    }
+
+    showToast(`✓ ${result.sent || 0} Push${result.sent === 1 ? '' : 'es'} versendet${result.failed ? ` (${result.failed} fehlgeschlagen)` : ''}`, 'success');
+    return true;
+  } catch (err) {
+    showToast('Netzwerk-Fehler: ' + err.message, 'error');
+    await logPushAttempt(payload, { error: err.message }, source, false);
+    return false;
+  }
+}
+
+async function logPushAttempt(payload, result, source, success) {
+  try {
+    await sb.from('push_notification_log').insert({
+      event_code: payload.event_code || null,
+      title: payload.title,
+      message: payload.message,
+      url: payload.url,
+      target_scope: payload.employee_id ? 'employee'
+        : payload.employee_ids ? 'employees'
+        : payload.studio_id ? 'studio'
+        : payload.role_code ? 'role' : 'all',
+      target_employee_id: payload.employee_id || null,
+      target_studio_id: payload.studio_id || null,
+      target_role_code: payload.role_code || null,
+      recipient_count: result.total || 0,
+      success_count: result.sent || 0,
+      failure_count: result.failed || 0,
+      triggered_by: session.employee_id,
+      trigger_source: source,
+      error_message: success ? null : (result.error || 'Unbekannter Fehler'),
+      payload_snapshot: payload
+    });
+  } catch (e) {
+    console.error('Log-Eintrag fehlgeschlagen:', e);
+  }
+}
+
+// ===== TAB 3: EVENTS =====
+async function loadEvents() {
+  const { data, error } = await sb
+    .from('push_notification_events')
+    .select('*')
+    .order('category')
+    .order('label');
+
+  if (error) {
+    document.getElementById('events-list').innerHTML = `<div class="empty-state">⚠️ ${escapeHtml(error.message)}</div>`;
+    return;
+  }
+
+  allEvents = data;
+  document.getElementById('count-events').textContent = data.filter(e => e.is_enabled).length;
+
+  // Filter-Dropdown für Log
+  const filterSel = document.getElementById('log-filter-event');
+  filterSel.innerHTML = '<option value="">Alle Events</option>' +
+    data.map(e => `<option value="${e.event_code}">${escapeHtml(e.label)}</option>`).join('');
+
+  // Gruppieren nach Kategorie
+  const grouped = {};
+  data.forEach(e => {
+    const cat = e.category || 'Sonstiges';
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(e);
+  });
+
+  const catIcons = { 'Leads': '🎯', 'Termine': '📅', 'Schichten': '⏰', 'Urlaub': '🏖️', 'Allgemein': '📢', 'Sonstiges': '📋' };
+
+  const html = Object.entries(grouped).map(([cat, events]) => `
+    <div class="category-group">
+      <div class="category-title">
+        <span class="cat-icon">${catIcons[cat] || '📋'}</span>
+        <span>${escapeHtml(cat)}</span>
+        <span class="badge muted">${events.length}</span>
+      </div>
+      ${events.map(e => renderEventCard(e)).join('')}
+    </div>
+  `).join('');
+
+  document.getElementById('events-list').innerHTML = html;
+}
+
+function renderEventCard(e) {
+  const scopeBadge = {
+    'employee': '<span class="badge info">Mitarbeiter</span>',
+    'studio': '<span class="badge info">Studio</span>',
+    'role': '<span class="badge info">Rolle</span>',
+    'all': '<span class="badge info">Alle</span>'
+  }[e.target_scope] || '';
+
+  const cronBadge = e.cron_schedule ?
+    `<span class="badge warning" title="${escapeHtml(e.cron_schedule)}">⏱ ${escapeHtml(e.cron_schedule)}</span>`
+    : '<span class="badge muted">Trigger-basiert</span>';
+
+  const lastRun = e.last_run_at ?
+    `<span class="badge muted">Zuletzt: ${formatDate(e.last_run_at)}</span>` : '';
+
+  return `
+    <div class="event-card ${!e.is_enabled ? 'disabled' : ''}">
+      <div class="event-icon">${e.is_enabled ? '⚡' : '⏸'}</div>
+      <div class="event-info">
+        <div class="event-label">${escapeHtml(e.label)}</div>
+        <div class="event-desc">${escapeHtml(e.description || '')}</div>
+        <div class="event-meta">
+          <span class="badge muted">${escapeHtml(e.event_code)}</span>
+          ${scopeBadge}
+          ${cronBadge}
+          ${lastRun}
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center; flex-shrink:0">
+        <button class="btn btn-secondary btn-sm" onclick="editEvent('${e.id}')">✏️ Bearbeiten</button>
+        <label class="toggle">
+          <input type="checkbox" ${e.is_enabled ? 'checked' : ''} onchange="toggleEvent('${e.id}', this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  `;
+}
+
+async function toggleEvent(id, enabled) {
+  const { error } = await sb
+    .from('push_notification_events')
+    .update({ is_enabled: enabled })
+    .eq('id', id);
+  if (error) {
+    showToast('Fehler: ' + error.message, 'error');
+    loadEvents();
+    return;
+  }
+  showToast(enabled ? 'Event aktiviert ✓' : 'Event deaktiviert', 'success');
+  // Counter aktualisieren
+  const ev = allEvents.find(e => e.id === id);
+  if (ev) ev.is_enabled = enabled;
+  document.getElementById('count-events').textContent = allEvents.filter(e => e.is_enabled).length;
+}
+
+function editEvent(id) {
+  const e = allEvents.find(ev => ev.id === id);
+  if (!e) return;
+  document.getElementById('event-edit-id').value = e.id;
+  document.getElementById('event-edit-code').value = e.event_code;
+  document.getElementById('event-edit-label').value = e.label || '';
+  document.getElementById('event-edit-description').value = e.description || '';
+  document.getElementById('event-edit-title').value = e.default_title || '';
+  document.getElementById('event-edit-url').value = e.default_url || '';
+  document.getElementById('event-edit-template').value = e.default_message_template || '';
+  document.getElementById('event-edit-scope').value = e.target_scope || 'employee';
+  document.getElementById('event-edit-cron').value = e.cron_schedule || '';
+  document.getElementById('event-modal-title').textContent = e.label;
+  document.getElementById('event-modal').classList.add('show');
+}
+
+function closeEventModal() {
+  document.getElementById('event-modal').classList.remove('show');
+}
+
+async function saveEvent() {
+  const id = document.getElementById('event-edit-id').value;
+  const updates = {
+    label: document.getElementById('event-edit-label').value.trim(),
+    description: document.getElementById('event-edit-description').value.trim() || null,
+    default_title: document.getElementById('event-edit-title').value.trim() || null,
+    default_url: document.getElementById('event-edit-url').value.trim() || null,
+    default_message_template: document.getElementById('event-edit-template').value.trim() || null,
+    target_scope: document.getElementById('event-edit-scope').value,
+    cron_schedule: document.getElementById('event-edit-cron').value.trim() || null
+  };
+
+  const { error } = await sb
+    .from('push_notification_events')
+    .update(updates)
+    .eq('id', id);
+
+  if (error) return showToast('Fehler: ' + error.message, 'error');
+  showToast('Gespeichert ✓', 'success');
+  closeEventModal();
+  loadEvents();
+}
+
+// ===== TAB 4: LOG =====
+async function loadLog() {
+  const eventFilter = document.getElementById('log-filter-event').value;
+  const sourceFilter = document.getElementById('log-filter-source').value;
+
+  let query = sb
+    .from('push_notification_log')
+    .select(`
+      id, event_code, title, message, url, target_scope,
+      target_employee_id, target_studio_id, target_role_code,
+      recipient_count, success_count, failure_count,
+      trigger_source, error_message, created_at,
+      employees!push_notification_log_target_employee_id_fkey(display_name, first_name, last_name),
+      studios!push_notification_log_target_studio_id_fkey(code, name),
+      triggered:employees!push_notification_log_triggered_by_fkey(display_name, first_name, last_name)
+    `)
+    .order('created_at', { ascending: false })
+    .limit(100);
+
+  if (eventFilter) query = query.eq('event_code', eventFilter);
+  if (sourceFilter) query = query.eq('trigger_source', sourceFilter);
+
+  const { data, error } = await query;
+  const wrap = document.getElementById('log-table-wrap');
+
+  if (error) {
+    wrap.innerHTML = `<div class="empty-state">⚠️ ${escapeHtml(error.message)}</div>`;
+    return;
+  }
+  if (!data || data.length === 0) {
+    wrap.innerHTML = '<div class="empty-state"><div class="icon">📜</div><div>Noch keine Pushes versendet</div></div>';
+    return;
+  }
+
+  wrap.innerHTML = `
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Zeit</th>
+            <th>Titel / Nachricht</th>
+            <th>Empfänger</th>
+            <th>Erfolg</th>
+            <th>Quelle</th>
+            <th>Trigger</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.map(l => {
+            const target = renderLogTarget(l);
+            const sourceLabel = {
+              'manual': '<span class="badge info">Manuell</span>',
+              'auto_trigger': '<span class="badge success">Auto</span>',
+              'cron': '<span class="badge warning">Cron</span>',
+              'api': '<span class="badge muted">API</span>'
+            }[l.trigger_source] || `<span class="badge muted">${escapeHtml(l.trigger_source)}</span>`;
+            const successBadge = l.error_message ?
+              `<span class="badge danger">Fehler</span>`
+              : l.success_count === 0 && l.recipient_count === 0 ?
+                `<span class="badge muted">0/0</span>`
+                : l.success_count === l.recipient_count ?
+                  `<span class="badge success">${l.success_count}/${l.recipient_count}</span>`
+                  : `<span class="badge warning">${l.success_count}/${l.recipient_count}</span>`;
+            const trigger = l.triggered ? (l.triggered.display_name || `${l.triggered.first_name} ${l.triggered.last_name}`) : '—';
+            return `
+              <tr style="cursor:pointer" onclick='showLogDetail(${JSON.stringify(l).replace(/'/g, "&apos;")})'>
+                <td style="white-space:nowrap;font-size:12px;color:var(--text-muted)">${formatDateTime(l.created_at)}</td>
+                <td><strong>${escapeHtml(l.title)}</strong><div style="font-size:12px;color:var(--text-muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(l.message)}</div></td>
+                <td>${target}</td>
+                <td>${successBadge}</td>
+                <td>${sourceLabel}</td>
+                <td style="font-size:12px">${escapeHtml(trigger)}</td>
+                <td style="font-size:11px;color:var(--accent-dark)">Details →</td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderLogTarget(l) {
+  if (l.target_employee_id && l.employees) {
+    const name = l.employees.display_name || `${l.employees.first_name} ${l.employees.last_name}`;
+    return `<span class="badge info">👤 ${escapeHtml(name)}</span>`;
+  }
+  if (l.target_studio_id && l.studios) return `<span class="badge info">🏢 ${escapeHtml(l.studios.code)}</span>`;
+  if (l.target_role_code) return `<span class="badge info">🎭 ${escapeHtml(l.target_role_code)}</span>`;
+  if (l.target_scope === 'employees') return `<span class="badge info">👥 Mehrere</span>`;
+  return `<span class="badge muted">${escapeHtml(l.target_scope || '—')}</span>`;
+}
+
+function showLogDetail(l) {
+  const body = document.getElementById('log-detail-body');
+  body.innerHTML = `
+    <div class="form-group">
+      <label>Titel</label>
+      <div style="padding:10px 14px; background:var(--bg); border-radius:8px"><strong>${escapeHtml(l.title)}</strong></div>
+    </div>
+    <div class="form-group">
+      <label>Nachricht</label>
+      <div style="padding:10px 14px; background:var(--bg); border-radius:8px">${escapeHtml(l.message)}</div>
+    </div>
+    ${l.url ? `<div class="form-group"><label>URL</label><div style="padding:10px 14px; background:var(--bg); border-radius:8px; font-family:monospace; font-size:12px">${escapeHtml(l.url)}</div></div>` : ''}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Event</label>
+        <div style="padding:10px 14px; background:var(--bg); border-radius:8px">${escapeHtml(l.event_code || '—')}</div>
+      </div>
+      <div class="form-group">
+        <label>Quelle</label>
+        <div style="padding:10px 14px; background:var(--bg); border-radius:8px">${escapeHtml(l.trigger_source)}</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Empfänger gesamt</label>
+        <div style="padding:10px 14px; background:var(--bg); border-radius:8px">${l.recipient_count}</div>
+      </div>
+      <div class="form-group">
+        <label>Erfolgreich</label>
+        <div style="padding:10px 14px; background:var(--bg); border-radius:8px"><span style="color:var(--success)">✓ ${l.success_count}</span> · <span style="color:var(--danger)">✗ ${l.failure_count}</span></div>
+      </div>
+    </div>
+    ${l.error_message ? `
+      <div class="form-group">
+        <label style="color:var(--danger)">Fehlermeldung</label>
+        <div style="padding:10px 14px; background:#fde8e8; color:var(--danger); border-radius:8px; font-family:monospace; font-size:12px">${escapeHtml(l.error_message)}</div>
+      </div>
+    ` : ''}
+    <div class="form-group">
+      <label>Zeitstempel</label>
+      <div style="padding:10px 14px; background:var(--bg); border-radius:8px">${formatDateTime(l.created_at, true)}</div>
+    </div>
+  `;
+  document.getElementById('log-detail-modal').classList.add('show');
+}
+
+function closeLogDetail() {
+  document.getElementById('log-detail-modal').classList.remove('show');
+}
+
+// ===== UTILS =====
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function formatDate(iso) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = (now - d) / 1000;
+  if (diff < 60) return 'gerade eben';
+  if (diff < 3600) return `vor ${Math.floor(diff/60)} Min`;
+  if (diff < 86400) return `vor ${Math.floor(diff/3600)} Std`;
+  if (diff < 604800) return `vor ${Math.floor(diff/86400)} Tagen`;
+  return d.toLocaleDateString('de-DE');
+}
+
+function formatDateTime(iso, full = false) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (full) return d.toLocaleString('de-DE');
+  const now = new Date();
+  if (d.toDateString() === now.toDateString()) {
+    return 'heute ' + d.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+  }
+  return d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }) + ' ' +
+    d.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+}
+
+function showToast(message, type = '') {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.className = 'toast show ' + type;
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// Modal beim Klick auf Backdrop schließen
+document.getElementById('event-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'event-modal') closeEventModal();
+});
+document.getElementById('log-detail-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'log-detail-modal') closeLogDetail();
+});
+
+init();
+</script>
+</body>
+</html>

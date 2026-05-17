@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Stundenübersicht · fitbox Studio OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,900&display=swap" rel="stylesheet"/>
+<style>
+:root{--fit:#2f8615;--fit2:#95c11f;--ink:#0f172a;--muted:#64748b;--card:#fff;--line:#dde5dd;--soft:#eef5ea;--danger:#b91c1c;--ok:#166534;--warn:#92400e;--shadow:0 10px 24px rgba(15,23,42,.06);--shadow-strong:0 18px 40px rgba(15,23,42,.14);--radius:20px;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'DM Sans',system-ui,sans-serif;background:#f4f7f4;color:var(--ink)}
+body{background:radial-gradient(900px 380px at 10% 0%,rgba(47,134,21,.08),transparent 55%),linear-gradient(180deg,#fff 0%,#f2f6f0 60%,#f4f7f4 100%);min-height:100vh;}
+
+/* TOPBAR (Standard) */
+.topbar-outer{background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);box-shadow:0 2px 12px rgba(0,0,0,.15);position:sticky;top:0;z-index:200;}
+.topbar{max-width:none;margin:0;height:46px;display:flex;align-items:center;flex-wrap:nowrap;padding:0 18px;gap:14px;overflow:hidden;}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.topbar-spacer{flex:1}
+.topbar-btn-std{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:700 12px/1 'DM Sans',sans-serif;padding:6px 12px;border-radius:8px;cursor:pointer;appearance:none;white-space:nowrap;}
+.topbar-btn-std:hover{background:rgba(255,255,255,.25)}
+
+/* PAGE */
+.page{max-width:1280px;margin:0;padding:20px 16px 40px}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.card-head h2{margin:0;font-size:18px;font-weight:900;letter-spacing:-.01em}
+.card-body{padding:20px}
+
+/* EMP CARD */
+.emp-card{display:flex;align-items:center;gap:14px;background:var(--soft);border:1px solid #c3ddb8;border-radius:16px;padding:14px 16px;margin-bottom:20px}
+.emp-avatar{width:48px;height:48px;border-radius:50%;background:var(--fit);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;flex-shrink:0}
+.emp-name{font-size:16px;font-weight:900;line-height:1.2}
+.emp-sub{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:20px}
+.filter-bar .field{display:flex;flex-direction:column;gap:5px;min-width:160px}
+.filter-bar .field.flex1{flex:1}
+label{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:var(--ink)}
+input,select{width:100%;appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:11px;padding:10px 12px;font:inherit;font-size:13px;transition:border-color .15s,box-shadow .15s;}
+input:focus,select:focus{outline:none;border-color:rgba(47,134,21,.5);box-shadow:0 0 0 3px rgba(47,134,21,.09)}
+
+/* SCOPE TOGGLE */
+.scope-toggle{display:inline-flex;background:#f0f4f0;border:1px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.scope-btn{appearance:none;border:none;background:transparent;border-radius:9px;padding:7px 14px;font:inherit;font-size:12px;font-weight:800;cursor:pointer;color:var(--muted);transition:.15s}
+.scope-btn.active{background:#fff;color:var(--fit);box-shadow:0 2px 8px rgba(15,23,42,.08)}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px}
+.stat .s-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:8px}
+.stat .s-value{font-size:24px;font-weight:900;line-height:1;letter-spacing:-.02em}
+.stat .s-foot{font-size:11px;color:var(--muted);margin-top:5px}
+
+/* PROGRESS */
+.progress-bar{height:8px;background:#e2e8e2;border-radius:999px;overflow:hidden;margin:12px 0 6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--fit),var(--fit2));border-radius:999px;transition:width .4s ease}
+
+/* TABLE */
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
+table{width:100%;border-collapse:collapse;background:#fff;min-width:640px}
+th,td{padding:10px 12px;border-bottom:1px solid #edf1ea;text-align:left;font-size:13px;vertical-align:middle}
+th{background:#f8faf8;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fbfcfb}
+tr.future-row td{color:var(--muted);font-style:italic}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.btn{appearance:none;border-radius:11px;padding:9px 14px;font:inherit;font-weight:900;font-size:13px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:6px;border:none}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(180deg,var(--fit),#256a10);color:#fff;box-shadow:0 4px 14px rgba(47,134,21,.2)}
+.btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}
+
+/* PILLS */
+.pill{display:inline-flex;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:800;border:1px solid transparent}
+.pill.approved,.pill.ok,.pill.neutral{background:#f0fdf4;color:var(--ok);border-color:#bbf7d0}
+.pill.absent,.pill.holiday,.pill.no_work_day{background:#eef2ff;color:#4338ca;border-color:#c7d2fe}
+.pill.locked{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.pill.open,.pill.warn{background:#fff8e1;color:#8a6a00;border-color:#fde68a}
+.pill.review_required,.pill.missing_clock,.pill.danger{background:#fef2f2;color:var(--danger);border-color:#fecaca}
+
+/* STATUS MSG */
+.status-msg{font-size:12px;font-weight:700;padding:8px 12px;border-radius:10px;display:flex;align-items:center;min-height:34px}
+.status-msg.ok{background:#f0fdf4;color:var(--ok);border:1px solid #bbf7d0}
+.status-msg.error{background:#fef2f2;color:var(--danger);border:1px solid #fecaca}
+.status-msg.default{background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+
+/* LOADING + TOAST */
+.loading{position:fixed;inset:0;background:rgba(15,23,42,.3);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:500}
+.loading.show{display:flex}
+.loading-card{background:#fff;border-radius:18px;padding:16px 20px;box-shadow:var(--shadow-strong);display:flex;align-items:center;gap:12px;font-weight:900}
+.spinner{width:18px;height:18px;border-radius:50%;border:3px solid rgba(15,23,42,.12);border-top-color:var(--fit);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#0b1220;color:#fff;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.25);padding:12px 16px;display:none;z-index:600;font-size:14px;min-width:260px}
+#toast b{display:block;margin-bottom:3px}
+
+
+/* INFO MODAL */
+.info-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.42);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:600;padding:16px}
+.info-backdrop.open{display:flex}
+.info-card{width:min(700px,96vw);max-height:min(88vh,900px);overflow:auto;background:#fff;border:1px solid rgba(15,23,42,.08);border-radius:var(--radius);box-shadow:var(--shadow-strong);padding:22px}
+.info-card h3{margin:0 0 8px;font-size:22px;font-weight:900;letter-spacing:-.02em}
+.info-card > p{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.55}
+.info-step{border:1px solid var(--line);border-radius:12px;padding:11px 14px;background:linear-gradient(180deg,#fff,#fbfdfb);margin-bottom:8px}
+.info-step strong{display:block;font-size:14px;margin-bottom:3px}
+.info-step span{font-size:13px;color:var(--muted)}
+.info-sec-label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:14px 0 8px}
+.info-tip{padding:12px 14px;border-radius:12px;background:rgba(47,134,21,.08);border:1px solid rgba(47,134,21,.18);margin-top:14px}
+.info-tip b{display:block;margin-bottom:6px}
+.info-inline-btn{appearance:none;background:#fff;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:6px 12px;font:800 12px/1 'DM Sans',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:.12s}
+.info-inline-btn:hover{border-color:rgba(47,134,21,.4);color:var(--fit)}
+
+/* PRINT */
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .topbar,.page,.loading,#toast{display:none!important}
+  .print-sheet{display:block!important}
+  body{background:#fff;margin:0;padding:0}
+}
+.print-sheet{display:none}
+.print-sheet .title{font-size:22px;font-weight:900;margin-bottom:8px}
+.print-sheet .meta{font-size:13px;margin-bottom:16px;color:var(--muted)}
+
+/* IFRAME */
+
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.filter-bar{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<script>
+if(window.self!==window.top){
+  document.documentElement.classList.add('in-iframe');
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.add('in-iframe');
+    document.body.style.background='#f5f7f4';
+    document.body.style.display='block';
+    var to=document.querySelector('.topbar-outer');
+    if(to){ to.style.width='100%'; }
+    var pg=document.querySelector('.page');
+    if(pg){ pg.style.maxWidth='none';pg.style.width='auto';pg.style.margin='0';pg.style.padding='14px 14px 24px'; }
+  });
+}
+</script>
+<script>
+(function(){
+  var SK='fitbox_session';var TM=8*60*60*1000;var s;
+  try{var r=localStorage.getItem(SK)||sessionStorage.getItem(SK);s=JSON.parse(r);if(s&&!localStorage.getItem(SK))localStorage.setItem(SK,r);}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){
+    if(window.self!==window.top){try{window.top.location.replace('login.html');}catch(e){window.location.replace('login.html');}}
+    else{window.location.replace('login.html');}
+    throw new Error('AUTH');
+  }
+  window._fbSession=s;window._fbToken=s.access_token;
+  var _t;
+  function resetTimer(){clearTimeout(_t);_t=setTimeout(function(){localStorage.removeItem(SK);sessionStorage.removeItem(SK);window.location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet (8h Inaktivität).'));},TM);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+})();
+</script>
+
+<!-- TOPBAR -->
+<div class="topbar-outer"><div class="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">📄</span> Stundenübersicht</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat" id="stat-datum">–</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-uhrzeit">–:–</span></span>
+    <span class="tb-stat" id="topbarBadge" style="font-weight:700;color:#fff;"></span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <button class="topbar-btn-std" id="printBtn">🖨️ Drucken</button>
+  <button class="topbar-btn-std" id="refreshBtn">↻ Neu laden</button>
+  <button class="topbar-btn-std" id="infoBtnTopbar">ℹ️ Info</button>
+</div></div>
+
+<script>
+(function(){
+  function pad(n){return n<10?'0'+n:n;}
+  function tick(){
+    var now=new Date();
+    var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    var weekdays=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    var dEl=document.getElementById('stat-datum');
+    var tEl=document.getElementById('stat-uhrzeit');
+    if(dEl) dEl.textContent=weekdays[now.getDay()]+', '+now.getDate()+'. '+months[now.getMonth()];
+    if(tEl) tEl.textContent=pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+  }
+  document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);});
+})();
+</script>
+
+<div class="page">
+
+  <!-- FILTER CARD -->
+  <div class="card" style="margin-bottom:18px">
+    <div class="card-head">
+      <h2>⏱️ Meine Stundenübersicht</h2>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <div id="statusMsg" class="status-msg default">Wird geladen …</div>
+        </div>
+    </div>
+    <div class="card-body">
+
+      <!-- Mitarbeiter-Badge -->
+      <div class="emp-card">
+        <div class="emp-avatar" id="empInitials">?</div>
+        <div>
+          <div class="emp-name" id="empName">Wird geladen …</div>
+          <div class="emp-sub" id="empSub">Studio wird ermittelt …</div>
+        </div>
+      </div>
+
+      <!-- Filter-Zeile -->
+      <div class="filter-bar">
+        <div class="field">
+          <label for="monthPicker">Monat</label>
+          <input type="month" id="monthPicker"/>
+        </div>
+        <div class="field" style="min-width:0">
+          <label>Ansicht</label>
+          <div class="scope-toggle" id="scopeToggle">
+            <button class="scope-btn active" data-scope="today">Bis heute</button>
+            <button class="scope-btn" data-scope="full">Ganzer Monat</button>
+          </div>
+        </div>
+        <div class="field" style="min-width:0;align-self:flex-end">
+          <button class="btn primary" id="loadBtn">Daten laden</button>
+        </div>
+      </div>
+
+      <div class="status-msg default" id="hintMsg" style="font-size:12px">
+        Standardmäßig werden Kennzahlen <strong>bis heute</strong> gezeigt — so entsteht am Monatsanfang kein künstliches Minus.
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="stats">
+    <div class="stat"><div class="s-label" id="labelTarget">Sollstunden bis heute</div><div class="s-value" id="totalTarget">–</div><div class="s-foot">Std. laut Arbeitsplan</div></div>
+    <div class="stat"><div class="s-label" id="labelActual">Iststunden bis heute</div><div class="s-value" id="totalActual">–</div><div class="s-foot">Geleistete Zeit</div></div>
+    <div class="stat"><div class="s-label" id="labelDelta">Saldo bis heute</div><div class="s-value" id="totalDelta">–</div><div class="s-foot">Differenz</div></div>
+    <div class="stat"><div class="s-label">Stundenkonto</div><div class="s-value" id="balanceHours">–</div><div class="s-foot">Gesamt-Saldo</div></div>
+    <div class="stat">
+      <div class="s-label">Fortschritt</div>
+      <div class="s-value" id="progressValue">– %</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="s-foot" id="progressSummary">Noch keine Daten.</div>
+    </div>
+  </div>
+
+  <!-- TABELLE -->
+  <div class="card">
+    <div class="card-head">
+      <h2>📋 Tagesdetails</h2>
+      <span id="monthLabel" style="font-size:13px;font-weight:700;color:var(--muted)"></span>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Kommen</th>
+              <th>Gehen</th>
+              <th>Soll</th>
+              <th>Ist</th>
+              <th>Erfüllt</th>
+              <th>Saldo</th>
+              <th>Status</th>
+              <th>Hinweis</th>
+            </tr>
+          </thead>
+          <tbody id="daysTbody">
+            <tr><td colspan="9"><div class="empty">Monat wählen und Daten laden.</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- INFO MODAL -->
+<div class="info-backdrop" id="infoModal">
+  <div class="info-card">
+    <h3>ℹ️ Stundenübersicht – Wozu dient diese Seite?</h3>
+    <p>Hier siehst du deine persönliche Zeiterfassung im Detail – aufgeschlüsselt nach Tagen. Die Daten kommen direkt aus der Stempeluhr und werden automatisch mit deinem Arbeitsplan abgeglichen. Du kannst nichts verändern – die Seite ist reine Ansicht.</p>
+
+    <div class="info-sec-label">So wird sie benutzt</div>
+    <div class="info-step">
+      <strong>1. Monat wählen</strong>
+      <span>Über das Monatsfeld oben links wählst du den gewünschten Abrechnungsmonat. Standardmäßig ist der aktuelle Monat voreingestellt.</span>
+    </div>
+    <div class="info-step">
+      <strong>2. Ansicht: „Bis heute" vs. „Ganzer Monat"</strong>
+      <span>Mit dem Toggle kannst du zwischen zwei Ansichten wechseln. <b>Bis heute</b> zeigt Soll/Ist/Saldo nur für die bereits vergangenen Tage – so entsteht am Monatsanfang kein künstliches Minus. <b>Ganzer Monat</b> zeigt alle Tage inklusive Zukunft.</span>
+    </div>
+    <div class="info-step">
+      <strong>3. Kennzahlen oben lesen</strong>
+      <span>Die 5 KPI-Karten zeigen: Sollstunden, Iststunden, Saldo (Differenz), Stundenkonto (kumuliert über alle Monate) und deinen Fortschritt im Monat als Prozentwert.</span>
+    </div>
+    <div class="info-step">
+      <strong>4. Tagesdetails in der Tabelle</strong>
+      <span>Jede Zeile entspricht einem Arbeitstag. Du siehst Kommen/Gehen-Zeiten, Soll- und Iststunden, den tagesbezogenen Saldo und den Status des Tages. Zukünftige Tage sind grau und kursiv dargestellt.</span>
+    </div>
+    <div class="info-step">
+      <strong>5. Drucken / PDF</strong>
+      <span>Über den Drucken-Button (Topbar oder Browser-Menü) kannst du deinen Stundenzettel als PDF exportieren – mit allen Tagesdaten und Monatssummen.</span>
+    </div>
+
+    <div class="info-sec-label">Die Tabellenspalten erklärt</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px">
+      <div style="border:1px solid var(--line);border-radius:11px;padding:9px 12px;background:#f8faf8">
+        <div style="font-weight:900;font-size:12px">Soll</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Geplante Stunden laut Arbeitsplan</div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:11px;padding:9px 12px;background:#f8faf8">
+        <div style="font-weight:900;font-size:12px">Ist</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Tatsächlich gestempelte Arbeitszeit</div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:11px;padding:9px 12px;background:#f8faf8">
+        <div style="font-weight:900;font-size:12px">Erfüllt</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Anrechenbare Zeit (Ist abzgl. Pausen)</div>
+      </div>
+      <div style="border:1px solid var(--line);border-radius:11px;padding:9px 12px;background:#f8faf8">
+        <div style="font-weight:900;font-size:12px">Saldo</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Erfüllt minus Soll – <span style="color:var(--ok)">grün = Plus</span>, <span style="color:var(--danger)">rot = Minus</span></div>
+      </div>
+    </div>
+
+    <div class="info-sec-label">Tagesstatus erklärt</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px">
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:8px 11px">
+        <div style="font-weight:900;color:var(--ok);font-size:12px">✓ Erledigt / Geprüft</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Tag vollständig und korrekt erfasst</div>
+      </div>
+      <div style="background:#fff8e1;border:1px solid #fde68a;border-radius:10px;padding:8px 11px">
+        <div style="font-weight:900;color:#8a6a00;font-size:12px">⏳ Offen</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Buchung vorhanden, noch nicht abgeschlossen</div>
+      </div>
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:8px 11px">
+        <div style="font-weight:900;color:var(--danger);font-size:12px">⚠️ Stempel fehlt / Prüfung nötig</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Fehlerhafte oder fehlende Buchung – Admin informieren</div>
+      </div>
+      <div style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:10px;padding:8px 11px">
+        <div style="font-weight:900;color:#4338ca;font-size:12px">📅 Frei / Urlaub / Feiertag</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">Kein Arbeitstag, Abwesenheit oder Feiertag</div>
+      </div>
+    </div>
+
+    <div class="info-tip">
+      <b>⚠️ Wichtige Hinweise</b>
+      <ul style="margin:0;padding-left:16px;color:var(--muted);font-size:13px;line-height:1.8">
+        <li>Fehler im Stundenkonto oder fehlende Buchungen immer beim Admin melden.</li>
+        <li>Das <b>Stundenkonto</b> summiert alle Salden seit Beginn – nicht nur den aktuellen Monat.</li>
+        <li>Zukünftige Tage (kursiv) haben noch keine Iststunden und zählen nicht in die Saldoberechnung.</li>
+        <li>Kommen/Gehen wird über die <b>Stempeluhr</b> erfasst – nicht hier.</li>
+      </ul>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:18px">
+      <button class="btn secondary" id="infoCloseBtn">Verstanden – Schließen</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRINT SHEET -->
+<section class="print-sheet" id="printSheet"></section>
+
+<div class="loading" id="loading"><div class="loading-card"><div class="spinner"></div><span id="loadingTxt">Bitte warten …</span></div></div>
+<div id="toast"></div>
+
+<script>
+const SB_URL='https://jypbyywxfjniafuygxci.supabase.co';
+const SB_KEY='sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+const _session=window._fbSession;
+const _token=window._fbToken;
+
+const state={
+  employee:null,studioId:'',studioName:'',
+  rows:[],balanceHours:0,selectedMonth:null,
+  viewScope:'today',totals:null
+};
+
+const $=id=>document.getElementById(id);
+function showLoading(t='Bitte warten …'){$('loadingTxt').textContent=t;$('loading').classList.add('show');}
+function hideLoading(){$('loading').classList.remove('show');}
+function toast(title,text=''){const el=$('toast');el.innerHTML=text?`<b>${esc(title)}</b>${esc(text)}`:esc(title);el.style.display='block';clearTimeout(el._t);el._t=setTimeout(()=>el.style.display='none',3200);}
+function setMsg(txt,type='default'){const el=$('statusMsg');el.textContent=txt;el.className='status-msg '+type;}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fmtH(min){return (Number(min||0)/60).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtHours(v){return Number(v||0).toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtDate(d){return new Date(d+'T00:00:00').toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});}
+function fmtTime(t){if(!t)return'–';return String(t).slice(0,5);}
+function getMonthLabel(m){return new Date(m+'-01T00:00:00').toLocaleDateString('de-DE',{month:'long',year:'numeric'});}
+function getMonthRange(m){const[y,mo]=m.split('-').map(Number);const f=new Date(y,mo-1,1),l=new Date(y,mo,0);const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);return{from:iso(f),to:iso(l)};}
+function getTodayISO(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function isFuture(d){return d>getTodayISO();}
+
+const STATUS_LABEL={ok:'Erledigt',verified:'Geprüft',open:'Offen',absent:'Abwesend',holiday:'Feiertag',no_work_day:'Kein Arbeitstag',review_required:'Prüfung nötig',missing_clock:'Stempel fehlt',locked:'Gesperrt'};
+const STATUS_CLS  ={ok:'ok',verified:'ok',open:'warn',absent:'neutral',holiday:'neutral',no_work_day:'neutral',review_required:'danger',missing_clock:'danger',locked:'locked'};
+function statusBadge(s){return `<span class="pill ${STATUS_CLS[s]||'neutral'}">${STATUS_LABEL[s]||s||'–'}</span>`;}
+
+const ABSENCE_DE={vacation:'Urlaub',sick:'Krank',special_leave:'Sonderurlaub',training:'Schulung',lecture:'Fortbildung',unpaid_leave:'Unbezahlter Urlaub',holiday_closure:'Betriebsferien',overtime_reduction:'Überstundenabbau',school_exam:'Schule/Prüfung'};
+function getDayNote(r){
+  if(r.has_holiday)return 'Feiertag';
+  if(r.has_absence)return ABSENCE_DE[r.absence_type]||r.absence_type||'Abwesenheit';
+  if(!r.has_time_entries)return 'Keine Buchung';
+  return '–';
+}
+
+async function sbFetch(path,opts={}){
+  const r=await fetch(SB_URL+'/rest/v1/'+path,{...opts,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+_token,'Content-Type':'application/json','Prefer':'return=representation',...(opts.headers||{})}});
+  const txt=await r.text();if(!r.ok)throw new Error(txt);return txt?JSON.parse(txt):null;
+}
+
+async function loadIdentity(){
+  const empData=await sbFetch('employees?auth_user_id=eq.'+_session.user.id+'&select=id,first_name,last_name,display_name,is_active&limit=1');
+  if(!empData||!empData.length)throw new Error('Mitarbeiter nicht gefunden.');
+  state.employee=empData[0];
+  const stData=await sbFetch('employee_studios?employee_id=eq.'+state.employee.id+'&is_active=eq.true&select=studio_id,is_primary,studios(id,name)&order=is_primary.desc&limit=1');
+  if(!stData||!stData.length)throw new Error('Kein Studio zugewiesen.');
+  state.studioId=stData[0].studio_id;
+  state.studioName=stData[0].studios?.name||'fitbox Studio';
+  const emp=state.employee;
+  const name=emp.display_name||[emp.first_name,emp.last_name].filter(Boolean).join(' ');
+  const ini=((emp.first_name||'')[0]+(emp.last_name||'')[0]).toUpperCase()||'?';
+  $('empInitials').textContent=ini;
+  $('empName').textContent=name;
+  $('empSub').textContent=state.studioName;
+  $('topbarBadge').textContent='📍 '+state.studioName.replace('fitbox ','');
+}
+
+async function loadMonthData(){
+  if(!state.employee||!state.studioId){setMsg('Noch nicht bereit.','error');return;}
+  const monthValue=$('monthPicker').value;
+  if(!monthValue){setMsg('Bitte Monat wählen.','error');return;}
+  state.selectedMonth=monthValue;
+  showLoading('Lade Monatsdaten …');setMsg('Lade …');
+  try{
+    const range=getMonthRange(monthValue);
+    const rows=await sbFetch(
+      'v_time_daily_overview?employee_id=eq.'+state.employee.id+
+      '&studio_id=eq.'+state.studioId+
+      '&work_date=gte.'+range.from+
+      '&work_date=lte.'+range.to+
+      '&order=work_date.asc'
+    );
+    state.rows=rows||[];
+    const bal=await sbFetch('v_time_account_balance?employee_id=eq.'+state.employee.id+'&studio_id=eq.'+state.studioId+'&limit=1');
+    state.balanceHours=Number(bal?.[0]?.balance_hours||0);
+    $('monthLabel').textContent=getMonthLabel(monthValue);
+    renderAll();
+    setMsg(state.rows.length?'Daten geladen.':'Keine Tagesdaten für diesen Monat.', state.rows.length?'ok':'error');
+  }catch(err){
+    console.error(err);setMsg('Fehler: '+err.message,'error');toast('Fehler',err.message);
+  }finally{hideLoading();}
+}
+
+function getSummaryRows(){
+  if(state.viewScope==='today'){
+    const today=getTodayISO();
+    return state.rows.filter(r=>r.work_date<=today);
+  }
+  return state.rows;
+}
+
+function renderTable(){
+  if(!state.rows.length){$('daysTbody').innerHTML='<tr><td colspan="9"><div class="empty">Keine Daten gefunden.</div></td></tr>';return;}
+  $('daysTbody').innerHTML=state.rows.map(r=>{
+    const fut=isFuture(r.work_date);
+    const ci=(!fut&&r.clock_in) ?`<span style="font-size:12px;color:var(--muted)">${fmtTime(r.clock_in)}</span>` :'–';
+    const co=(!fut&&r.clock_out)?`<span style="font-size:12px;color:var(--muted)">${fmtTime(r.clock_out)}</span>`:'–';
+    const delta=Number(r.delta_minutes||0);
+    return `<tr class="${fut?'future-row':''}">
+      <td>${fmtDate(r.work_date)}</td>
+      <td style="text-align:center">${ci}</td>
+      <td style="text-align:center">${co}</td>
+      <td>${fmtH(r.final_target_minutes)}</td>
+      <td>${fmtH(r.actual_minutes)}</td>
+      <td>${fmtH(r.fulfilled_minutes)}</td>
+      <td style="font-weight:${delta<-1?900:400};color:${delta<-1?'var(--danger)':delta>1?'var(--ok)':'inherit'}">${fmtH(r.delta_minutes)}</td>
+      <td>${fut?'<span class="pill warn">Zukünftig</span>':statusBadge(r.day_status)}</td>
+      <td style="color:var(--muted);font-size:12px">${esc(getDayNote(r))}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderStats(){
+  const rows=getSummaryRows();
+  const t=rows.reduce((a,r)=>{a.target+=Number(r.final_target_minutes||0);a.actual+=Number(r.actual_minutes||0);a.delta+=Number(r.delta_minutes||0);return a;},{target:0,actual:0,delta:0});
+  const prog=t.target>0?Math.min((t.actual/t.target)*100,100):0;
+  const suf=state.viewScope==='today'?'bis heute':'im Monat';
+  $('labelTarget').textContent='Sollstunden '+suf;
+  $('labelActual').textContent='Iststunden '+suf;
+  $('labelDelta').textContent='Saldo '+suf;
+  $('totalTarget').textContent=fmtH(t.target);
+  $('totalActual').textContent=fmtH(t.actual);
+  const dh=t.delta/60;
+  $('totalDelta').textContent=(dh>0?'+':'')+fmtHours(dh);
+  $('totalDelta').style.color=dh>0.01?'var(--ok)':dh<-0.01?'var(--danger)':'inherit';
+  $('balanceHours').textContent=(state.balanceHours>0?'+':'')+fmtHours(state.balanceHours)+' h';
+  $('balanceHours').style.color=state.balanceHours>0?'var(--ok)':state.balanceHours<0?'var(--danger)':'inherit';
+  $('progressValue').textContent=prog.toLocaleString('de-DE',{maximumFractionDigits:0})+' %';
+  $('progressFill').style.width=Math.min(prog,100)+'%';
+  let sum='Noch keine Bewertung möglich.';
+  if(rows.length){if(dh>0.01)sum='Du liegst '+fmtHours(dh)+' h im Plus.';else if(dh<-0.01)sum='Du liegst '+fmtHours(Math.abs(dh))+' h im Minus.';else sum='Du liegst genau im Soll.';}
+  $('progressSummary').textContent=sum;
+  state.totals=t;
+}
+
+function buildPrintSheet(){
+  if(!state.rows.length)return;
+  const name=state.employee?state.employee.display_name||[state.employee.first_name,state.employee.last_name].filter(Boolean).join(' '):'–';
+  const rowsHtml=state.rows.map(r=>{
+    const delta=Number(r.delta_minutes||0);
+    const dStr=(delta>=0?'+':'')+fmtH(r.delta_minutes);
+    const dCol=delta<-0.01?'color:#dc2626':delta>0.01?'color:#16a34a':'';
+    return `<tr>
+      <td>${fmtDate(r.work_date)}</td>
+      <td style="text-align:center">${fmtTime(r.clock_in)}</td>
+      <td style="text-align:center">${fmtTime(r.clock_out)}</td>
+      <td style="text-align:right">${fmtH(r.final_target_minutes)}</td>
+      <td style="text-align:right">${fmtH(r.actual_minutes)}</td>
+      <td style="text-align:right">${fmtH(r.fulfilled_minutes)}</td>
+      <td style="text-align:right;font-weight:700;${dCol}">${dStr}</td>
+      <td>${STATUS_LABEL[r.day_status]||r.day_status||'–'}</td>
+      <td style="color:#666">${esc(getDayNote(r))}</td>
+    </tr>`;
+  }).join('');
+  const tg=state.totals?.target??0, ta=state.totals?.actual??0, td=state.totals?.delta??0;
+  const tdH=td/60, tdStr=(tdH>=0?'+':'')+fmtHours(tdH);
+  const tdCol=tdH<-0.01?'color:#dc2626':tdH>0.01?'color:#16a34a':'';
+  const balStr=(state.balanceHours>=0?'+':'')+fmtHours(state.balanceHours);
+  const balCol=state.balanceHours<-0.01?'color:#dc2626':state.balanceHours>0.01?'color:#16a34a':'';
+  $('printSheet').innerHTML=`
+    <div class="title">Stundenzettel</div>
+    <div class="meta">
+      <strong>Mitarbeiter:</strong> ${esc(name)}<br>
+      <strong>Studio:</strong> ${esc(state.studioName)}<br>
+      <strong>Monat:</strong> ${state.selectedMonth?getMonthLabel(state.selectedMonth):'–'}<br>
+      <strong>Erstellt:</strong> ${new Date().toLocaleString('de-DE')}
+    </div>
+    <table>
+      <thead><tr>
+        <th>Datum</th><th>Kommen</th><th>Gehen</th>
+        <th style="text-align:right">Soll</th><th style="text-align:right">Ist</th>
+        <th style="text-align:right">Erfüllt</th><th style="text-align:right">Saldo</th>
+        <th>Status</th><th>Hinweis</th>
+      </tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>
+    <div style="margin-top:14px;font-size:11px;border-top:1px solid #ddd;padding-top:10px;line-height:2">
+      <strong>Monatssummen</strong> &nbsp;·&nbsp;
+      Sollstunden: <strong>${fmtH(tg)}</strong> &nbsp;·&nbsp;
+      Iststunden: <strong>${fmtH(ta)}</strong> &nbsp;·&nbsp;
+      Saldo Monat: <strong style="${tdCol}">${tdStr} h</strong> &nbsp;·&nbsp;
+      Stundenkonto gesamt: <strong style="${balCol}">${balStr} h</strong>
+    </div>
+    </div>`;
+}
+
+function renderAll(){renderTable();renderStats();buildPrintSheet();}
+
+function setScope(scope){
+  state.viewScope=scope;
+  document.querySelectorAll('.scope-btn').forEach(b=>b.classList.toggle('active',b.dataset.scope===scope));
+  if(state.rows.length)renderStats();
+}
+
+// INFO MODAL
+function openInfoModal(){ document.getElementById('infoModal').classList.add('open'); }
+function closeInfoModal(){ document.getElementById('infoModal').classList.remove('open'); }
+document.getElementById('infoBtnTopbar').addEventListener('click', openInfoModal);
+document.getElementById('infoCloseBtn').addEventListener('click', closeInfoModal);
+document.getElementById('infoModal').addEventListener('click', function(e){ if(e.target===this) closeInfoModal(); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeInfoModal(); });
+
+// Bindings
+document.querySelectorAll('.scope-btn').forEach(b=>b.addEventListener('click',()=>setScope(b.dataset.scope)));
+$('loadBtn').addEventListener('click',loadMonthData);
+$('monthPicker').addEventListener('change',()=>{if(state.employee)loadMonthData();});
+$('refreshBtn').addEventListener('click',()=>{if(state.selectedMonth)loadMonthData();});
+$('printBtn').addEventListener('click',()=>{buildPrintSheet();window.print();});
+
+// Default Monat
+(function(){
+  const now=new Date();
+  $('monthPicker').value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+})();
+
+// INIT
+(async function init(){
+  showLoading('Wird geladen …');
+  try{
+    await loadIdentity();
+    setMsg('Bereit. Monat wählen und laden.','ok');
+    // Aktuellen Monat direkt laden
+    await loadMonthData();
+  }catch(err){
+    console.error(err);setMsg('Fehler: '+err.message,'error');
+  }finally{hideLoading();}
+})();
+</script>
+</body>
+</html>

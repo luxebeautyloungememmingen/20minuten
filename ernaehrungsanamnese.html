@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ernährungs-Fragebogen – fitbox</title>
+<style>
+:root{--fit:#2f8615;--fit2:#95c11f;--fit-light:#e8f5e0;--fit-mid:#d0eab8;--bg:#f4f6f3;--border:#dde8d5;--text:#1a2a12;--muted:#6b7f60;--danger:#c0392b;--radius:10px;--shadow:0 2px 12px rgba(47,134,21,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+/* ── TOPBAR (Standard) ── */
+.topbar-outer{background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);box-shadow:0 2px 12px rgba(0,0,0,.15);position:sticky;top:0;z-index:100;}
+.topbar{max-width:none;margin:0;height:46px;display:flex;align-items:center;flex-wrap:nowrap;padding:0 18px;gap:14px;overflow:hidden;}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.topbar-spacer{flex:1}
+.topbar-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:700 12px/1 inherit;padding:6px 12px;border-radius:8px;cursor:pointer;appearance:none;white-space:nowrap;}
+.topbar-btn:hover{background:rgba(255,255,255,.25)}
+.page{max-width:1200px;margin:0;padding:20px}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-header h1{font-size:22px;font-weight:700;color:var(--fit)}
+.page-header p{font-size:13px;color:var(--muted);margin-top:2px}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+.card-head{padding:12px 16px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--fit-light),#fff);display:flex;align-items:center;justify-content:space-between}
+.card-head h2{font-size:14px;font-weight:700;color:var(--fit)}
+.card-body{padding:16px}
+.form-group{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.form-group label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.form-control{border:1.5px solid var(--border);border-radius:7px;padding:8px 11px;font-size:13px;color:var(--text);background:#fff;transition:.2s;width:100%;font-family:inherit}
+.form-control:focus{outline:none;border-color:var(--fit);box-shadow:0 0 0 3px rgba(47,134,21,.12)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.2s;white-space:nowrap}
+.btn-primary{background:var(--fit);color:#fff}.btn-primary:hover{background:#256b10}
+.btn-secondary{background:var(--fit-light);color:var(--fit);border:1px solid var(--fit-mid)}.btn-secondary:hover{background:var(--fit-mid)}
+.btn-outline{background:#fff;color:var(--muted);border:1.5px solid var(--border)}.btn-outline:hover{border-color:var(--fit);color:var(--fit)}
+.btn-danger{background:#fdecea;color:var(--danger);border:1px solid #f5c6c2}
+.btn-sm{padding:4px 10px;font-size:12px}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-offen{background:#fff3cd;color:#856404}
+.badge-ausgefüllt{background:#d1ecf1;color:#0c5460}
+.badge-gesehen{background:var(--fit-light);color:var(--fit)}
+.badge-verarbeitet{background:#e2e8f0;color:#475569}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{background:var(--fit-light);color:var(--fit);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:9px 12px;text-align:left;border-bottom:2px solid var(--fit-mid)}
+td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+tr:hover td{background:#fafff7}
+.search-wrap{position:relative}
+.search-results{position:absolute;top:calc(100%+4px);left:0;right:0;background:#fff;border:1.5px solid var(--fit);border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:50;max-height:200px;overflow-y:auto;display:none}
+.search-results.open{display:block}
+.search-item{padding:9px 12px;cursor:pointer;font-size:13px;transition:.15s}
+.search-item:hover{background:var(--fit-light)}
+.search-item .sub{font-size:11px;color:var(--muted)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.65);z-index:200;align-items:center;justify-content:center;flex-direction:column;gap:10px}
+.overlay.show{display:flex}
+.spinner{width:32px;height:32px;border:3px solid var(--fit-mid);border-top-color:var(--fit);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#toast{position:fixed;bottom:20px;right:20px;background:var(--fit);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.2);transform:translateY(50px);opacity:0;transition:.3s;z-index:999}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.error{background:var(--danger)}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;width:95%;max-width:760px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--fit-light);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
+.modal-head h3{font-size:15px;font-weight:700;color:var(--fit)}
+.modal-body{padding:20px}
+.modal-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;background:#fff;position:sticky;bottom:0}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.detail-section{margin-bottom:16px}
+.detail-section h4{font-size:11px;font-weight:800;color:var(--fit);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--fit-mid)}
+.detail-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f0f4ef;font-size:13px}
+.detail-row .label{color:var(--muted);flex-shrink:0;margin-right:8px}
+.detail-row .val{font-weight:600;text-align:right}
+.pill-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.pill{background:var(--fit-light);border:1px solid var(--fit-mid);border-radius:20px;padding:2px 9px;font-size:12px;font-weight:600;color:var(--fit)}
+.link-box{background:var(--fit-light);border:1px solid var(--fit-mid);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:8px;font-family:monospace;font-size:12px;word-break:break-all}
+.link-box button{flex-shrink:0}
+.info-modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.42);backdrop-filter:blur(4px);z-index:400;align-items:center;justify-content:center;padding:16px}
+.info-modal-bg.open{display:flex}
+.info-modal{background:#fff;border-radius:14px;width:min(680px,96vw);max-height:min(88vh,900px);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.info-modal-head{padding:14px 18px;border-bottom:1px solid var(--border);background:linear-gradient(135deg,var(--fit-light),#fff);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+.info-modal-head h3{font-size:15px;font-weight:800;color:var(--fit);margin:0}
+.info-modal-body{padding:18px;display:flex;flex-direction:column;gap:9px}
+.info-step-b{border:1px solid var(--border);border-radius:10px;padding:10px 13px;background:linear-gradient(180deg,#fff,#fbfdfb)}
+.info-step-b strong{display:block;font-size:13px;margin-bottom:3px}
+.info-step-b span{font-size:12px;color:var(--muted);line-height:1.55}
+.info-sec-lbl{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:4px 0 6px}
+.info-tip-b{padding:11px 13px;border-radius:10px;background:rgba(47,134,21,.08);border:1px solid rgba(47,134,21,.2)}
+.info-inline-b{background:var(--fit-light);border:1px solid var(--fit-mid);color:var(--fit);padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.info-inline-b:hover{background:var(--fit-mid)}
+
+.copy-btn{background:var(--fit);color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:700}
+.copy-btn:hover{background:#256b10}
+.trainer-notiz{border:1.5px solid var(--border);border-radius:8px;padding:10px;font-size:13px;width:100%;min-height:80px;resize:vertical;font-family:inherit}
+.trainer-notiz:focus{outline:none;border-color:var(--fit)}
+</style>
+</head>
+<body>
+<script>
+if(window.self!==window.top){
+  document.documentElement.classList.add('in-iframe');
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.add('in-iframe');
+    document.body.style.background='#f5f7f4';
+    document.body.style.display='block';
+    var to=document.querySelector('.topbar-outer');
+    if(to){ to.style.width='100%'; }
+    var pg=document.querySelector('.page');
+    if(pg){ pg.style.maxWidth='none';pg.style.width='auto';pg.style.margin='0';pg.style.padding='14px 14px 24px'; }
+  });
+}
+</script>
+<script>
+(function(){
+  var SK='fitbox_session';var TM=8*60*60*1000;var s;
+  try{var r=localStorage.getItem(SK)||sessionStorage.getItem(SK);s=JSON.parse(r);if(s&&!localStorage.getItem(SK))localStorage.setItem(SK,r);}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){
+    if(window.self!==window.top){try{window.top.location.replace('login.html');}catch(e){window.location.replace('login.html');}}
+    else{window.location.replace('login.html');}
+    throw new Error('AUTH');
+  }
+  window._fbSession=s;window._fbToken=s.access_token;
+  var _t;
+  function resetTimer(){clearTimeout(_t);_t=setTimeout(function(){localStorage.removeItem(SK);sessionStorage.removeItem(SK);window.location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet (8h Inaktivität).'));},TM);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+})();
+</script>
+
+<!-- TOPBAR -->
+<div class="topbar-outer"><div class="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">🥦</span> Ernährungs-Fragebogen</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat" id="stat-datum">–</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-uhrzeit">–:–</span></span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <button class="topbar-btn" onclick="showCreateForm()">+ Neues Formular</button>
+  <button class="topbar-btn" id="anamneseInfoBtn">ℹ️ Info</button>
+</div></div>
+
+<script>
+(function(){
+  function pad(n){return n<10?'0'+n:n;}
+  function tick(){
+    var now=new Date();
+    var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    var weekdays=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    var dEl=document.getElementById('stat-datum');
+    var tEl=document.getElementById('stat-uhrzeit');
+    if(dEl) dEl.textContent=weekdays[now.getDay()]+', '+now.getDate()+'. '+months[now.getMonth()];
+    if(tEl) tEl.textContent=pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+  }
+  document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);});
+})();
+</script>
+
+<div class="overlay" id="overlay"><div class="spinner"></div><div style="font-size:13px;color:var(--fit);font-weight:600" id="overlayText">Wird geladen...</div></div>
+<div id="toast"></div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-bg" id="detailModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="detailTitle">Anamnese</h3>
+      <button onclick="closeDetail()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)">x</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeDetail()">Schließen</button>
+      <button class="btn btn-secondary" id="btnGesehen" onclick="markGesehen()">Als gesehen markieren</button>
+      <button class="btn btn-primary" id="btnZurAnalyse" onclick="openInAnalyse()">Zur Ernährungsanalyse</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <!-- ERSTELLEN -->
+  <div class="card" id="createForm" style="display:none">
+    <div class="card-head"><h2>Neues Anamnese-Formular</h2></div>
+    <div class="card-body">
+      <div class="form-group">
+        <label>Kunde auswählen (optional – kann auch später zugeordnet werden)</label>
+        <div class="search-wrap">
+          <input type="text" class="form-control" id="kundeSearch" placeholder="Name oder Kundennummer..." oninput="searchKunden(this.value)" autocomplete="off">
+          <div class="search-results" id="kundeResults"></div>
+        </div>
+        <div id="kundeInfo" style="margin-top:8px;font-size:13px;color:var(--fit);font-weight:600"></div>
+        <input type="hidden" id="selectedKundeId">
+      </div>
+      <div class="form-group">
+        <label>Link gültig bis (optional)</label>
+        <input type="date" class="form-control" id="expiresAt" style="width:200px">
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" onclick="createAnamnese()">Link generieren</button>
+        <button class="btn btn-outline" onclick="document.getElementById('createForm').style.display='none'">Abbrechen</button>
+      </div>
+      <!-- Generierter Link -->
+      <div id="generatedLink" style="display:none;margin-top:16px">
+        <div style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Generierter Link</div>
+        <div class="link-box">
+          <span id="linkText" style="flex:1"></span>
+          <button class="copy-btn" onclick="copyLink()">Kopieren</button>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:var(--muted)">Diesen Link per WhatsApp oder E-Mail an den Kunden senden. Der Kunde benötigt keinen Login.</div>
+        <div style="margin-top:8px;display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm" onclick="openWhatsApp()">WhatsApp senden</button>
+          <button class="btn btn-outline btn-sm" onclick="openFormPreview()">Formular testen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTE -->
+  <div class="card">
+    <div class="card-head">
+      <h2>Alle Formulare</h2>
+      <div style="display:flex;gap:8px;align-items:center">
+        <select class="form-control" id="filterStatus" style="width:160px" onchange="loadList()">
+          <option value="">Alle Status</option>
+          <option value="offen">Offen</option>
+          <option value="ausgefüllt">Ausgefüllt</option>
+          <option value="gesehen">Gesehen</option>
+          <option value="verarbeitet">Verarbeitet</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="loadList()">Aktualisieren</button>
+      </div>
+    </div>
+    <div class="card-body" style="padding:0">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Erstellt</th>
+              <th>Kunde</th>
+              <th>Ausgefüllt</th>
+              <th>Status</th>
+              <th>Gultig bis</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+          <tbody id="anamneseTable"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:30px">Wird geladen...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SB_URL='https://jypbyywxfjniafuygxci.supabase.co';
+const SB_KEY='sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+const SK='fitbox_session';
+
+let _s;
+try{_s=JSON.parse(localStorage.getItem(SK)||sessionStorage.getItem(SK));}catch(e){}
+if(!_s||!_s.access_token||_s.expires_at<Date.now()){window.location.replace('login.html');throw new Error('AUTH');}
+window._fbSession=_s;
+const TOKEN=_s.access_token;
+
+// Studio aus Parent oder Session
+let studioId='50de091d-debc-4172-8053-b516f42c4321';
+try{if(window.self!==window.top&&window.parent.STUDIO_ID)studioId=window.parent.STUDIO_ID;}catch(e){}
+
+function goBack(){
+  if(window.self!==window.top){try{if(typeof window.parent.navigate==='function'){window.parent.navigate('welcome','');return;}}catch(e){}}
+  window.location.href='admin_index.html';
+}
+
+async function sb(path,opts={}){
+  const res=await fetch(SB_URL+path,{...opts,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json','Prefer':opts.prefer||'return=representation',...opts.headers}});
+  if(!res.ok){const e=await res.text();throw new Error(e);}
+  const t=await res.text();return t?JSON.parse(t):[];
+}
+
+function toast(msg,isErr=false){const t=document.getElementById('toast');t.textContent=msg;t.className='show'+(isErr?' error':'');setTimeout(()=>t.className='',3200);}
+function showLoad(msg=''){document.getElementById('overlay').classList.add('show');if(msg)document.getElementById('overlayText').textContent=msg;}
+function hideLoad(){document.getElementById('overlay').classList.remove('show');}
+
+// ── KUNDEN SUCHE
+let selKunde=null;
+let searchTimeout;
+function searchKunden(val){
+  clearTimeout(searchTimeout);
+  const res=document.getElementById('kundeResults');
+  if(val.length<2){res.classList.remove('open');return;}
+  searchTimeout=setTimeout(async()=>{
+    try{
+      const data=await sb(`/rest/v1/kunden?select=id,first_name,last_name,kundennummer,telefon,mobil&studio_id=eq.${studioId}&is_active=eq.true&or=(first_name.ilike.*${encodeURIComponent(val)}*,last_name.ilike.*${encodeURIComponent(val)}*,kundennummer.ilike.*${encodeURIComponent(val)}*)&order=last_name&limit=8`);
+      res.innerHTML=data.length?data.map(k=>`<div class="search-item" onclick="selectKunde(${JSON.stringify(k).replace(/"/g,'&quot;')})"><strong>${k.first_name} ${k.last_name}</strong><div class="sub">${k.kundennummer||''}</div></div>`).join(''):'<div class="search-item" style="color:var(--muted)">Keine Ergebnisse</div>';
+      res.classList.add('open');
+    }catch(e){console.error(e);}
+  },300);
+}
+function selectKunde(k){
+  selKunde=k;
+  document.getElementById('selectedKundeId').value=k.id;
+  document.getElementById('kundeSearch').value=k.first_name+' '+k.last_name;
+  document.getElementById('kundeInfo').textContent=k.kundennummer?'Kundennr. '+k.kundennummer:'';
+  document.getElementById('kundeResults').classList.remove('open');
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))document.getElementById('kundeResults').classList.remove('open');});
+
+// ── ERSTELLEN
+function showCreateForm(){
+  document.getElementById('createForm').style.display='block';
+  document.getElementById('generatedLink').style.display='none';
+  document.getElementById('kundeSearch').value='';
+  document.getElementById('selectedKundeId').value='';
+  document.getElementById('kundeInfo').textContent='';
+  selKunde=null;
+}
+
+let currentAnamneseId=null;
+let currentToken=null;
+
+async function createAnamnese(){
+  showLoad('Link wird generiert...');
+  try{
+    const expires=document.getElementById('expiresAt').value;
+    const kundeId=document.getElementById('selectedKundeId').value||null;
+
+    // Kundendaten + letzte Körperanalyse vorausladen wenn Kunde gewählt
+    const payload={
+      studio_id:studioId,
+      kunde_id:kundeId,
+      token_expires_at:expires?new Date(expires+'T23:59:59').toISOString():null,
+      created_by:_s.employee?.id||null
+    };
+
+    if(kundeId){
+      // Stammdaten laden
+      const [kundeData, kaData] = await Promise.all([
+        sb('/rest/v1/kunden?id=eq.'+kundeId+'&select=first_name,last_name,geschlecht,geburtsdatum,telefon,mobil'),
+        sb('/rest/v1/koerperanalyse?kunde_id=eq.'+kundeId+'&studio_id=eq.'+studioId+'&order=datum.desc&limit=1&select=gewicht_kg,koerpergroesse_cm,bmi')
+      ]);
+      const k=kundeData[0];
+      const ka=kaData[0];
+      if(k){
+        payload.vorname=k.first_name;
+        payload.nachname=k.last_name;
+        // Geschlecht mappen: weiblich→frau, maennlich→mann
+        if(k.geschlecht==='w'||k.geschlecht==='weiblich') payload.geschlecht='frau';
+        else if(k.geschlecht==='m'||k.geschlecht==='maennlich') payload.geschlecht='mann';
+        // Alter aus Geburtsdatum
+        if(k.geburtsdatum){
+          const age=Math.floor((new Date()-new Date(k.geburtsdatum))/31557600000);
+          payload.alter_jahre=age;
+        }
+      }
+      if(ka){
+        payload.gewicht_kg=ka.gewicht_kg;
+        payload.koerpergroesse_cm=ka.koerpergroesse_cm;
+        payload.bmi=ka.bmi;
+      }
+    }
+
+    const data=await sb('/rest/v1/kunden_anamnese',{method:'POST',body:JSON.stringify(payload)});
+    const rec=data[0];
+    currentToken=rec.token;
+    currentAnamneseId=rec.id;
+    const baseUrl=window.location.origin+window.location.pathname.replace('ernaehrungsanamnese.html','');
+    const link=baseUrl+'ernaehrungsanamnese_kundenformular.html?token='+rec.token;
+    document.getElementById('linkText').textContent=link;
+    document.getElementById('generatedLink').style.display='block';
+    toast(kundeId?'Link generiert – Kundendaten vorausgefüllt':'Link generiert');
+    loadList();
+  }catch(e){toast('Fehler: '+e.message,true);}
+  hideLoad();
+}
+
+function copyLink(){
+  const link=document.getElementById('linkText').textContent;
+  navigator.clipboard.writeText(link).then(()=>toast('Link kopiert!')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Link kopiert!');
+  });
+}
+
+function openWhatsApp(){
+  const link=document.getElementById('linkText').textContent;
+  const name=selKunde?selKunde.first_name:'';
+  const msg='Hallo'+( name?' '+name:'')+',\n\nbitte fülle vor deiner Ernährungsberatung dieses kurze Formular aus:\n\n'+link+'\n\nEs dauert nur ca. 5 Minuten.\n\nViele Grüße,\nDein fitbox Team';
+
+  // Telefonnummer des Kunden direkt in die WhatsApp-URL einbauen
+  const rawNr = selKunde ? (selKunde.mobil || selKunde.telefon || '') : '';
+  let nr = rawNr.replace(/[^0-9+]/g,''); // nur Ziffern und +
+  if(nr.startsWith('0')) nr = '+49' + nr.slice(1); // deutsche Nummer formatieren
+  const waUrl = nr
+    ? 'https://wa.me/'+nr+'?text='+encodeURIComponent(msg)
+    : 'https://wa.me/?text='+encodeURIComponent(msg);
+  window.open(waUrl,'_blank');
+}
+
+function openFormPreview(){
+  const link=document.getElementById('linkText').textContent;
+  window.open(link,'_blank');
+}
+
+// ── LISTE
+async function loadList(){
+  const status=document.getElementById('filterStatus').value;
+  let query='/rest/v1/kunden_anamnese?studio_id=eq.'+studioId+'&order=created_at.desc&limit=50';
+  if(status) query+='&status=eq.'+status;
+  try{
+    const data=await sb(query);
+    renderTable(data);
+  }catch(e){toast('Fehler: '+e.message,true);}
+}
+
+const STATUS_LABELS={offen:'Offen',ausgefüllt:'Ausgefüllt',gesehen:'Gesehen',verarbeitet:'Verarbeitet'};
+const STATUS_CLASSES={offen:'badge-offen',ausgefüllt:'badge-ausgefüllt',gesehen:'badge-gesehen',verarbeitet:'badge-verarbeitet'};
+
+function renderTable(rows){
+  const body=document.getElementById('anamneseTable');
+  if(!rows.length){body.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:30px">Keine Einträge</td></tr>';return;}
+  body.innerHTML=rows.map(r=>`<tr>
+    <td>${new Date(r.created_at).toLocaleDateString('de')}</td>
+    <td>${r.vorname?'<strong>'+r.vorname+' '+r.nachname+'</strong>':'<span style="color:var(--muted)">Noch nicht ausgefüllt</span>'}</td>
+    <td>${r.token_used_at?new Date(r.token_used_at).toLocaleDateString('de'):'–'}</td>
+    <td><span class="badge ${STATUS_CLASSES[r.status]||'badge-offen'}">${STATUS_LABELS[r.status]||r.status}</span></td>
+    <td>${r.token_expires_at?new Date(r.token_expires_at).toLocaleDateString('de'):'Unbegrenzt'}</td>
+    <td style="display:flex;gap:4px;flex-wrap:wrap">
+      ${r.status==='ausgefuellt'||r.status==='gesehen'?`<button class="btn btn-primary btn-sm" onclick="openDetail('${r.id}')">Antworten ansehen</button>`:''}
+      ${r.status==='ausgefuellt'||r.status==='gesehen'?`<button class="btn btn-ai btn-sm" onclick="starteAnalyse('${r.id}')" style="background:linear-gradient(135deg,#2f8615,#95c11f)">📊 Analyse starten</button>`:''}
+      <button class="btn btn-secondary btn-sm" onclick="sendMailFromTable('${r.id}')" title="Per E-Mail senden">✉️ Mail</button>
+      <button class="btn btn-secondary btn-sm" onclick="sendWhatsAppFromTable('${r.token}','${r.id}')" title="Per WhatsApp">💬 WhatsApp</button>
+      ${r.status==='offen'||r.status==='ausgefuellt'||r.status==='gesehen'?`<button class="btn btn-outline btn-sm" onclick="copyTokenLink('${r.token}')">🔗 Link</button>`:''}
+      ${r.status==='verarbeitet'?'<span style="font-size:12px;color:var(--muted)">✅ Verarbeitet</span>':''}
+      <button class="btn btn-danger btn-sm" onclick="deleteAnamnese('${r.id}')">Löschen</button>
+    </td></tr>`).join('');
+}
+
+async function sendMailFromTable(anamneseId){
+  if(!confirm('Anamnese-Formular per E-Mail an den Kunden senden?'))return;
+  showLoad('E-Mail wird gesendet...');
+  try{
+    const baseUrl=window.location.origin+window.location.pathname.replace('ernaehrungsanamnese.html','');
+    const res=await fetch(SB_URL+'/functions/v1/send-anamnese-mail',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+TOKEN},
+      body:JSON.stringify({anamnese_id:anamneseId,base_url:baseUrl})
+    });
+    const data=await res.json();
+    if(data.success){toast('✅ E-Mail gesendet an '+data.sent_to);}
+    else{toast('Fehler: '+(data.error||'Unbekannt'),true);}
+  }catch(e){toast('Fehler: '+e.message,true);}
+  hideLoad();
+}
+
+async function sendWhatsAppFromTable(token,anamneseId){
+  const baseUrl=window.location.origin+window.location.pathname.replace('ernaehrungsanamnese.html','');
+  const link=baseUrl+'ernaehrungsanamnese_kundenformular.html?token='+token;
+  // Kundendaten für Namen + Telefon laden
+  try{
+    const rows=await sb('/rest/v1/kunden_anamnese?id=eq.'+anamneseId+'&select=vorname,kunde_id');
+    const a=rows[0];
+    let name=a?.vorname||'';
+    let nr='';
+    if(a?.kunde_id){
+      const kd=await sb('/rest/v1/kunden?id=eq.'+a.kunde_id+'&select=first_name,telefon,mobil');
+      const k=kd[0];
+      if(k){
+        name=name||k.first_name||'';
+        const raw=k.mobil||k.telefon||'';
+        nr=raw.replace(/[^0-9+]/g,'');
+        if(nr.startsWith('0'))nr='+49'+nr.slice(1);
+      }
+    }
+    const msg='Hallo'+(name?' '+name:'')+',\n\nbitte fülle vor deiner Ernährungsberatung diesen kurzen Fragebogen aus:\n\n'+link+'\n\nEs dauert nur ca. 5 Minuten.\n\nViele Grüße,\nDein fitbox Team';
+    const waUrl=nr?'https://wa.me/'+nr+'?text='+encodeURIComponent(msg):'https://wa.me/?text='+encodeURIComponent(msg);
+    window.open(waUrl,'_blank');
+  }catch(e){
+    const msg='Hallo,\n\nbitte fülle vor deiner Ernährungsberatung diesen kurzen Fragebogen aus:\n\n'+link+'\n\nViele Grüße,\nDein fitbox Team';
+    window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+  }
+}
+
+function copyTokenLink(token){
+  const baseUrl=window.location.origin+window.location.pathname.replace('ernaehrungsanamnese.html','');
+  const link=baseUrl+'ernaehrungsanamnese_kundenformular.html?token='+token;
+  navigator.clipboard.writeText(link).then(()=>toast('Link kopiert!'));
+}
+
+// ── DETAIL ANSICHT
+let currentDetailId=null;
+
+// Fix 7: Direkt zur Ernährungsanalyse mit Anamnese-ID
+function starteAnalyse(anamneseId) {
+  const baseUrl = window.location.pathname.replace('ernaehrungsanamnese.html', '');
+  // Wenn im iframe: Parent navigieren
+  if (window.self !== window.top) {
+    try {
+      if (typeof window.parent.navigate === 'function') {
+        window.parent.navigate('ernaehrungsanalyse', '?anamnese_id=' + anamneseId);
+        return;
+      }
+    } catch(e) {}
+  }
+  window.location.href = baseUrl + 'ernaehrungsanalyse.html?anamnese_id=' + anamneseId;
+}
+
+async function openDetail(id){
+  showLoad('Anamnese laden...');
+  try{
+    const data=await sb('/rest/v1/kunden_anamnese?id=eq.'+id+'&select=*');
+    const r=data[0];
+    currentDetailId=id;
+    document.getElementById('detailTitle').textContent=(r.vorname?r.vorname+' '+r.nachname+' – ':'')+'Anamnese-Auswertung';
+
+    const yesNo={ja:'Ja',nein:'Nein',sonstige:'Teils/teils'};
+    const haeuf={taeglich:'Täglich',oefters:'Öfters/Woche',mehrmals:'Mehrmals/Woche',selten:'Selten',nie:'Nie'};
+    const taetigk={sitzend:'Sitzend',stehend:'Stehend',laufend:'Laufend/Aktiv',sonstige:'Wechselnd'};
+    const befind={fit:'Fit & leistungsfähig',müde:'Oft müde',gestresst:'Gestresst',verdauung:'Verdauungsprobleme'};
+    const schlafQ={sehr_gut:'Sehr gut',mittel:'Mittelmäßig',schlecht:'Schlecht'};
+    const schlafH={unter6:'< 6 Stunden',_6bis8_:'6-8 Stunden',ueber8:'> 8 Stunden'};
+    const ziel3={_2bis6kg_:'2-6 kg abnehmen',vollgas:'Vollgas Traumgewicht',muskeln:'Muskeldefinition',energie:'Mehr Energie',struktur:'Struktur im Alltag'};
+
+    const row=(label,val)=>val?`<div class="detail-row"><span class="label">${label}</span><span class="val">${val}</span></div>`:'';
+    const pills=(arr)=>arr&&arr.length?'<div class="pill-list">'+arr.map(v=>`<span class="pill">${v}</span>`).join('')+'</div>':'–';
+    const txt=(val)=>val?`<div style="font-size:13px;background:#f8f9fa;border:1px solid var(--border);border-radius:6px;padding:10px;margin-top:4px;line-height:1.5">${val}</div>`:'<span style="color:var(--muted)">Keine Angabe</span>';
+
+    document.getElementById('detailBody').innerHTML = `
+      <div class="detail-grid">
+        <div>
+          <div class="detail-section">
+            <h4>Persönliches</h4>
+            ${row('Name',r.vorname+' '+r.nachname)}
+            ${row('Geschlecht',{frau:'Frau',mann:'Mann',sonstige:'Sonstige'}[r.geschlecht])}
+            ${row('Alter',r.alter_jahre+' Jahre')}
+            ${row('Größe',r.koerpergroesse_cm+' cm')}
+            ${row('Gewicht',r.gewicht_kg+' kg')}
+            ${row('BMI',r.bmi)}
+            ${row('Wunschgewicht',r.wunschgewicht_kg?r.wunschgewicht_kg+' kg':null)}
+          </div>
+          <div class="detail-section">
+            <h4>Beruf & Alltag</h4>
+            ${row('Körperlich anstrengend',yesNo[r.beruf_koerperlich])}
+            ${row('Tätigkeit',taetigk[r.beruf_Tätigkeit])}
+            <div style="margin-top:6px;font-size:12px;color:var(--muted)">Alltagsbeschreibung</div>
+            ${txt(r.alltag_beschreibung)}
+          </div>
+          <div class="detail-section">
+            <h4>Wohlbefinden & Schlaf</h4>
+            ${row('Körperliches Befinden',befind[r.koerperliches_befinden])}
+            ${row('Schlafdauer',{unter6:'< 6h','6bis8':'6-8h',ueber8:'> 8h'}[r.schlaf_stunden])}
+            ${row('Schlafqualität',schlafQ[r.schlaf_qualitaet])}
+          </div>
+        </div>
+        <div>
+          <div class="detail-section">
+            <h4>Ziele</h4>
+            <div style="margin-bottom:6px">${pills(r.ziele)}</div>
+            ${row('Wichtigkeit',r.ziel_wichtigkeit?r.ziel_wichtigkeit+'/10':null)}
+            ${row('Motivation',r.motivation_skala?r.motivation_skala+'/10':null)}
+            ${row('3-Monats-Ziel',ziel3[r.ziel_3monate]||r.ziel_3monate)}
+          </div>
+          <div class="detail-section">
+            <h4>Essverhalten</h4>
+            ${row('Auswärts essen',haeuf[r.auswaerts_haeufigkeit])}
+            ${row('Frisch kochen',haeuf[r.frisch_kochen])}
+            ${row('Süßmittel wann',pills(r.suessmittel_wann))}
+            ${row('Süßmittel Häufigkeit',haeuf[r.suessmittel_haeufigkeit])}
+            ${row('Wasser',r.wasser_liter_täglich)}
+            ${row('Softdrinks',haeuf[r.softdrinks])}
+            ${row('Alkohol',haeuf[r.alkohol])}
+            ${row('Kaffee/Energy',haeuf[r.kaffee_energydrinks])}
+          </div>
+          <div class="detail-section">
+            <h4>Herausforderungen</h4>
+            <div style="margin-bottom:8px">${pills(r.herausforderungen)}</div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-section">
+        <h4>Unverträglichkeiten / Ernährungsform</h4>
+        ${txt(r.unvertraeglichkeiten)}
+      </div>
+      <div class="detail-section">
+        <h4>Nahrungsergänzungsmittel</h4>
+        ${txt(r.nahrungsergaenzung)}
+      </div>
+      <div class="detail-section">
+        <h4>Medikamente (vertraulich)</h4>
+        ${txt(r.medikamente)}
+      </div>
+      <div class="detail-section">
+        <h4>Größtes Ernährungsthema (eigene Worte)</h4>
+        ${txt(r.größtes_thema)}
+      </div>
+      <div class="detail-section">
+        <h4>Trainer-Notizen (intern)</h4>
+        <textarea class="trainer-notiz" id="trainerNotiz" placeholder="Eigene Notizen zum Kunden...">${r.trainer_notizen||''}</textarea>
+        <button class="btn btn-secondary btn-sm" style="margin-top:6px" onclick="saveNotizen()">Notizen speichern</button>
+      </div>
+    `;
+
+    // Als gesehen markieren wenn ausgefüllt
+    if(r.status==='ausgefuellt'){
+      await sb('/rest/v1/kunden_anamnese?id=eq.'+id,{method:'PATCH',prefer:'return=minimal',body:JSON.stringify({status:'gesehen',gesehen_von:_s.employee?.id,gesehen_at:new Date().toISOString()})});
+    }
+
+    document.getElementById('detailModal').classList.add('open');
+  }catch(e){toast('Fehler: '+e.message,true);}
+  hideLoad();
+}
+
+function closeDetail(){document.getElementById('detailModal').classList.remove('open');loadList();}
+
+async function markGesehen(){
+  if(!currentDetailId)return;
+  try{
+    await sb('/rest/v1/kunden_anamnese?id=eq.'+currentDetailId,{method:'PATCH',prefer:'return=minimal',body:JSON.stringify({status:'gesehen'})});
+    toast('Als gesehen markiert');loadList();
+  }catch(e){toast('Fehler: '+e.message,true);}
+}
+
+async function saveNotizen(){
+  if(!currentDetailId)return;
+  const notiz=document.getElementById('trainerNotiz').value;
+  try{
+    await sb('/rest/v1/kunden_anamnese?id=eq.'+currentDetailId,{method:'PATCH',prefer:'return=minimal',body:JSON.stringify({trainer_notizen:notiz})});
+    toast('Notizen gespeichert');
+  }catch(e){toast('Fehler: '+e.message,true);}
+}
+
+async function openInAnalyse(){
+  if(!currentDetailId)return;
+  try{
+    // Status auf verarbeitet setzen
+    await sb('/rest/v1/kunden_anamnese?id=eq.'+currentDetailId,{method:'PATCH',prefer:'return=minimal',
+      body:JSON.stringify({status:'verarbeitet'})});
+    closeDetail();
+    // Zur Ernährungsanalyse mit anamnese_id Parameter navigieren
+    // -> ernaehrungsanalyse.html laedt Kunden, Körperwerte und Anamnese-Daten automatisch
+    const url='./ernaehrungsanalyse.html?anamnese_id='+currentDetailId;
+    if(window.self!==window.top&&typeof window.parent.navigate==='function'){
+      window.parent.navigate('ernaehrung', url);
+    } else {
+      window.location.href=url;
+    }
+    toast('Ernährungsanalyse wird geoeffnet...');
+  }catch(e){toast('Fehler: '+e.message,true);}
+}
+
+async function deleteAnamnese(id){
+  if(!confirm('Anamnese-Eintrag löschen?'))return;
+  try{
+    await sb('/rest/v1/kunden_anamnese?id=eq.'+id,{method:'DELETE',prefer:'return=minimal'});
+    loadList();toast('Gelöscht');
+  }catch(e){toast('Fehler: '+e.message,true);}
+}
+
+// INIT
+loadList();
+
+// Kunde aus URL vorauswählen (wenn von mitglieder.html kommend)
+(async function(){
+  const urlP = new URLSearchParams(window.location.search);
+  const preKundeId = urlP.get('kunde_id');
+  if(preKundeId){
+    try{
+      const kData = await sb('/rest/v1/kunden?id=eq.'+preKundeId+'&select=id,first_name,last_name,kundennummer,telefon,mobil');
+      if(kData[0]) {
+        selectKunde(kData[0]);
+        showCreateForm();
+      }
+    }catch(e){console.error(e);}
+  }
+})();
+</script>
+
+<!-- INFO MODAL -->
+<div class="info-modal-bg" id="anamneseInfoModal">
+  <div class="info-modal">
+    <div class="info-modal-head">
+      <h3>ℹ️ Ernährungsanamnese – Wozu dient diese Seite?</h3>
+      <button onclick="closeAnamneseInfo()" style="background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)">✕</button>
+    </div>
+    <div class="info-modal-body">
+
+      <p style="color:var(--muted);font-size:13px;line-height:1.55">Die Ernährungsanamnese ist ein digitales Fragebogen-System. Du erstellst ein persönliches Formular für einen Kunden, dieser füllt es auf seinem Handy aus – und die Antworten stehen dir dann direkt für die Ernährungsanalyse bereit.</p>
+
+      <div class="info-sec-lbl">So funktioniert der Prozess</div>
+      <div class="info-step-b">
+        <strong>1. Formular erstellen</strong>
+        <span>Über <b>+ Neues Formular erstellen</b> einen Kunden aus der Datenbank wählen. Ein individueller Link wird generiert, den du dem Kunden schickst.</span>
+      </div>
+      <div class="info-step-b">
+        <strong>2. Kunde füllt aus</strong>
+        <span>Der Kunde öffnet den Link auf seinem Handy und beantwortet den Fragebogen zu Ernährungszielen, Essgewohnheiten, Unverträglichkeiten, Schlaf und Aktivität. Das dauert ca. 5–10 Minuten.</span>
+      </div>
+      <div class="info-step-b">
+        <strong>3. Auswertung &amp; Übertragung</strong>
+        <span>Sobald der Kunde abgeschickt hat, erscheint die Anamnese hier in der Liste. Du kannst sie öffnen, als „gesehen" markieren und die Daten direkt in die <b>Ernährungsanalyse</b> übertragen.</span>
+      </div>
+
+      <div class="info-sec-lbl">Status-Übersicht</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px">
+        <div style="background:#fff3cd;border:1px solid #fde68a;border-radius:9px;padding:8px 11px">
+          <div style="font-weight:800;font-size:12px;color:#856404">⏳ Offen</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Formular wurde noch nicht ausgefüllt</div>
+        </div>
+        <div style="background:#d1ecf1;border:1px solid #90d6e8;border-radius:9px;padding:8px 11px">
+          <div style="font-weight:800;font-size:12px;color:#0c5460">✓ Ausgefüllt</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Kunde hat den Fragebogen abgeschickt</div>
+        </div>
+        <div style="background:var(--fit-light);border:1px solid var(--fit-mid);border-radius:9px;padding:8px 11px">
+          <div style="font-weight:800;font-size:12px;color:var(--fit)">👁 Gesehen</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Trainer hat die Anamnese eingesehen</div>
+        </div>
+        <div style="background:#e2e8f0;border:1px solid #cbd5e1;border-radius:9px;padding:8px 11px">
+          <div style="font-weight:800;font-size:12px;color:#475569">✓✓ Verarbeitet</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Daten wurden in eine Analyse übertragen</div>
+        </div>
+      </div>
+
+      <div class="info-tip-b">
+        <b>💡 Hinweise</b>
+        <ul style="margin:0;padding-left:16px;color:var(--muted);font-size:12px;line-height:1.8">
+          <li>Den Link am besten per WhatsApp oder E-Mail direkt nach dem Probetraining schicken.</li>
+          <li>Ist eine Anamnese ausgefüllt, erscheint in der Ernährungsanalyse ein blauer Banner – Daten mit einem Klick übertragen.</li>
+          <li>Jedes Formular ist einmalig und personalisiert – nicht für mehrere Kunden nutzen.</li>
+        </ul>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:4px">
+        <button class="btn btn-primary" onclick="closeAnamneseInfo()">Verstanden – Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openAnamneseInfo(){ document.getElementById('anamneseInfoModal').classList.add('open'); }
+function closeAnamneseInfo(){ document.getElementById('anamneseInfoModal').classList.remove('open'); }
+document.addEventListener('DOMContentLoaded', function(){
+  document.getElementById('anamneseInfoBtn').addEventListener('click', openAnamneseInfo);
+  document.getElementById('anamneseInfoModal').addEventListener('click', function(e){ if(e.target===this) closeAnamneseInfo(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeAnamneseInfo(); });
+});
+</script>
+</body>
+</html>

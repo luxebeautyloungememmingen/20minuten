@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aktionen – fitbox Studio OS</title>
+<style>
+:root {
+  --green:#95c11f; --gd:#2f8615; --bg:#f5f7f2; --card:#fff;
+  --border:#e0e7d5; --text:#1a2010; --muted:#6b7a5a;
+  --red:#e53e3e; --shadow:0 2px 8px rgba(47,134,21,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;display:flex;flex-direction:column;overflow:hidden}
+
+/* TOPBAR (Standard) */
+.topbar-outer{background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);box-shadow:0 2px 12px rgba(0,0,0,.15);position:sticky;top:0;z-index:100;}
+.topbar{max-width:none;margin:0;height:46px;display:flex;align-items:center;flex-wrap:nowrap;padding:0 18px;gap:14px;overflow:hidden;}
+.tb-pagetitle{color:#fff;font-weight:700;font-size:14px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px;flex-shrink:0;white-space:nowrap;}
+.tb-pagetitle-icon{font-size:16px;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);}
+.tb-stats{display:flex;align-items:center;gap:14px;font-size:12px;color:rgba(255,255,255,.85);font-weight:500;}
+.tb-stat{display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat-num{font-weight:700;color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.topbar-spacer{flex:1}
+.topbar-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:700 12px/1 'Segoe UI',sans-serif;padding:6px 12px;border-radius:8px;cursor:pointer;appearance:none;white-space:nowrap;}
+.topbar-btn:hover{background:rgba(255,255,255,.25)}
+
+/* AKTION HEADER */
+.aktion-header{background:var(--card);border-bottom:1px solid var(--border);padding:11px 20px;flex-shrink:0}
+.aktion-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.aktion-row label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.aktion-row select{flex:1;min-width:200px;padding:7px 11px;border:1px solid var(--border);border-radius:7px;font-size:14px;font-weight:600;background:#fff;cursor:pointer}
+.aktion-row select:focus{outline:none;border-color:var(--green)}
+.a-pill{background:linear-gradient(135deg,var(--gd),var(--green));color:#fff;border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700;display:none;white-space:nowrap}
+.a-pill.show{display:inline-block}
+.a-zeit{font-size:12px;color:var(--muted);display:none}
+.a-zeit.show{display:inline}
+
+/* STATS */
+.stats-bar{background:var(--card);border-bottom:1px solid var(--border);padding:9px 20px;display:none;gap:18px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.stats-bar.show{display:flex}
+.stat{display:flex;align-items:center;gap:5px}
+.sd{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.d-grau{background:#d1d5db}.d-orange{background:#f59e0b}.d-blue{background:#3b82f6}
+.d-gruen{background:var(--gd)}.d-rot{background:var(--red)}.d-violet{background:#8b5cf6}
+.sl{font-size:11px;color:var(--muted);font-weight:600}
+.sn{font-size:13px;font-weight:800}
+.ss{flex:1}.st{font-size:11px;color:var(--muted)}
+
+/* FILTER */
+.filter-bar{background:var(--card);border-bottom:2px solid var(--border);padding:9px 20px;display:none;gap:7px;align-items:center;flex-wrap:wrap;flex-shrink:0}
+.filter-bar.show{display:flex}
+.sw{position:relative;flex:1;min-width:150px}
+.sw input{width:100%;padding:7px 10px 7px 30px;border:1px solid var(--border);border-radius:7px;font-size:13px;background:var(--bg)}
+.sw input:focus{outline:none;border-color:var(--green);background:#fff}
+.si{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none}
+.fb{padding:5px 12px;border:1px solid var(--border);border-radius:20px;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted);transition:all .15s;white-space:nowrap}
+.fb:hover{border-color:var(--green);color:var(--gd)}
+.fb.active{background:var(--gd);border-color:var(--gd);color:#fff}
+.wa-btn{width:32px;height:32px;border-radius:50%;border:none;background:#25d366;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s,box-shadow .15s}
+.wa-btn:hover{transform:scale(1.12);box-shadow:0 2px 8px rgba(37,211,102,.4)}
+
+/* WA MODAL */
+.wa-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:600;align-items:center;justify-content:center}
+.wa-overlay.open{display:flex}
+.wa-modal{background:#fff;border-radius:14px;padding:22px 20px;width:min(480px,95vw);box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.wa-modal h3{font-size:15px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.wa-modal .wa-sub{font-size:12px;color:var(--muted);margin-bottom:14px}
+.wa-modal textarea{width:100%;min-height:130px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;line-height:1.5;resize:vertical;font-family:inherit}
+.wa-modal textarea:focus{outline:none;border-color:#25d366;box-shadow:0 0 0 3px rgba(37,211,102,.12)}
+.wa-modal-footer{display:flex;gap:10px;margin-top:14px;justify-content:flex-end}
+.wa-send{background:#25d366;color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .15s}
+.wa-send:hover{background:#1ebc5a}
+.wa-cancel{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.wa-cancel:hover{border-color:var(--green)}
+.wa-char{font-size:11px;color:var(--muted);margin-top:4px;text-align:right}
+.sort-wrap{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.sort-wrap label{font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap}
+.sort-wrap select{padding:5px 10px;border:1px solid var(--border);border-radius:7px;font-size:12px;font-weight:600;background:#fff;cursor:pointer;color:var(--text)}
+.sort-wrap select:focus{outline:none;border-color:var(--green)}
+#zg-badge{flex-shrink:0}
+.sort-dir{padding:5px 8px;border:1px solid var(--border);border-radius:7px;background:#fff;cursor:pointer;font-size:13px;transition:all .15s;color:var(--muted)}
+.sort-dir:hover{border-color:var(--green);color:var(--gd)}
+
+/* LISTE */
+.list-wrap{flex:1;overflow-y:auto;padding:12px 20px}
+.list-wrap::-webkit-scrollbar{width:4px}
+.list-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* MITGLIED KARTE */
+.mc{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:7px;overflow:hidden;transition:border-color .15s,box-shadow .15s}
+.mc:hover{box-shadow:var(--shadow)}
+.mc.s-offen        {border-left:4px solid #d1d5db}
+.mc.s-angesprochen {border-left:4px solid #f59e0b}
+.mc.s-zugesagt     {border-left:4px solid #3b82f6}
+.mc.s-pt_gekommen  {border-left:4px solid #8b5cf6}
+.mc.s-erfolg       {border-left:4px solid var(--gd)}
+.mc.s-misserfolg   {border-left:4px solid var(--red)}
+
+.mc-row{display:flex;align-items:center;gap:11px;padding:10px 15px;cursor:pointer;user-select:none}
+.av{width:35px;height:35px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;background:var(--bg);border:2px solid var(--border);color:var(--muted)}
+.s-angesprochen .av{background:#fef3c7;border-color:#f59e0b;color:#92400e}
+.s-zugesagt     .av{background:#eff6ff;border-color:#3b82f6;color:#1d4ed8}
+.s-pt_gekommen  .av{background:#f5f3ff;border-color:#8b5cf6;color:#6d28d9}
+.s-erfolg       .av{background:#e8f5e2;border-color:var(--gd);color:var(--gd)}
+.s-misserfolg   .av{background:#fdecea;border-color:var(--red);color:var(--red)}
+
+.mi{flex:1;min-width:0}
+.mn{font-size:13px;font-weight:700}
+.ms{font-size:11px;color:var(--muted);margin-top:1px}
+.ms span{margin-right:8px}
+
+.mb{flex-shrink:0;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-offen       {background:#f3f4f6;color:#6b7280}
+.b-angesprochen{background:#fef3c7;color:#92400e}
+.b-zugesagt    {background:#eff6ff;color:#1d4ed8}
+.b-pt_gekommen {background:#f5f3ff;color:#6d28d9}
+.b-erfolg      {background:#e8f5e2;color:var(--gd)}
+.b-misserfolg  {background:#fdecea;color:var(--red)}
+
+.mc-chev{color:var(--muted);font-size:16px;transition:transform .2s;flex-shrink:0}
+.mc.open .mc-chev{transform:rotate(90deg)}
+
+/* DETAIL */
+.mc-det{display:none;border-top:1px solid var(--border);background:#fafcf8}
+.mc.open .mc-det{display:block}
+
+/* WORKFLOW STEPS */
+.workflow{display:flex;padding:14px 18px 0;gap:0;overflow-x:auto;flex-shrink:0}
+.ws{display:flex;align-items:center;flex-shrink:0}
+.ws-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:8px;border:none;background:none;cursor:pointer;transition:background .15s;white-space:nowrap;opacity:.45}
+.ws-btn.done{opacity:.75}
+.ws-btn.active{opacity:1;background:rgba(47,134,21,.08)}
+.ws-btn.active .ws-circle{border-color:var(--gd);background:var(--gd);color:#fff}
+.ws-btn.done .ws-circle{border-color:var(--gd);background:#e8f5e2;color:var(--gd)}
+.ws-circle{width:28px;height:28px;border-radius:50%;border:2px solid #d1d5db;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;background:#fff;color:var(--muted)}
+.ws-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.ws-btn.active .ws-label{color:var(--gd)}
+.ws-btn.done .ws-label{color:var(--gd)}
+.ws-line{width:24px;height:2px;background:#e0e7d5;flex-shrink:0;margin-bottom:14px}
+.ws-line.done{background:var(--green)}
+
+/* STEP PANELS */
+.step-panels{padding:14px 18px 18px}
+.step-panel{display:none}
+.step-panel.show{display:block}
+
+.sp-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* Formular */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+.fg-g{display:flex;flex-direction:column;gap:3px}
+.fg-g.full{grid-column:1/-1}
+.fl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.fc{padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:100%;background:#fff}
+.fc:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(149,193,31,.1)}
+textarea.fc{resize:vertical;min-height:50px}
+
+/* Ergebnis Buttons */
+.ergebnis-row{display:flex;gap:10px;margin-bottom:10px}
+.eb{flex:1;padding:10px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:13px;font-weight:700;text-align:center;transition:all .15s;color:var(--muted)}
+.eb:hover{border-color:var(--green)}
+.eb.sel-erfolg{border-color:var(--gd);background:#e8f5e2;color:var(--gd)}
+.eb.sel-misserfolg{border-color:var(--red);background:#fdecea;color:var(--red)}
+
+/* Erfolg Subfelder */
+.erfolg-fields{display:none;margin-top:8px}
+.erfolg-fields.show{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+/* Actions */
+.det-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
+.btn{padding:7px 15px;border-radius:6px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
+.btn-p{background:var(--gd);color:#fff}.btn-p:hover{background:#1e6a10}
+.btn-g{background:none;color:var(--muted);border:1px solid var(--border)}.btn-g:hover{border-color:var(--green);color:var(--gd)}
+.btn-sm{padding:4px 10px;font-size:11px}
+
+/* Leer-States */
+.empty-st{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty-st .ico{font-size:34px;margin-bottom:10px}
+.empty-st p{font-size:13px;line-height:1.5}
+.loading-st{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+
+/* INFO MODAL */
+.info-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:700;align-items:center;justify-content:center;padding:16px}
+.info-overlay.open{display:flex}
+.info-modal{background:#fff;border-radius:16px;width:min(580px,100%);max-height:88vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.info-modal::-webkit-scrollbar{width:4px}
+.info-modal::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.info-header{background:linear-gradient(135deg,var(--gd),var(--green));color:#fff;padding:20px 22px;border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:space-between}
+.info-header h2{font-size:16px;font-weight:700}
+.info-close{background:rgba(255,255,255,.2);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.info-body{padding:20px 22px}
+.info-step{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start}
+.info-step:last-child{margin-bottom:0}
+.info-num{width:32px;height:32px;border-radius:50%;background:var(--gd);color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.info-step-body h3{font-size:13px;font-weight:700;margin-bottom:4px}
+.info-step-body p{font-size:12px;color:var(--muted);line-height:1.6}
+.info-step-body p b{color:var(--text)}
+.info-divider{height:1px;background:var(--border);margin:16px 0}
+.info-tip{background:#f0fdf4;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted);line-height:1.6;margin-top:4px}
+.info-tip b{color:var(--gd)}
+.info-status-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.info-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+
+@media(max-width:560px){
+  .fg,.erfolg-fields.show{grid-template-columns:1fr}
+  .ws-btn{padding:6px 8px}
+  .ws-line{width:14px}
+}
+</style>
+</head>
+<body>
+
+<script>
+if(window.self!==window.top){
+  document.documentElement.classList.add('in-iframe');
+  document.addEventListener('DOMContentLoaded',function(){
+    document.body.classList.add('in-iframe');
+    document.body.style.background='#f5f7f4';
+    document.body.style.display='flex';
+    var to=document.querySelector('.topbar-outer');
+    if(to){ to.style.width='100%'; }
+  });
+}
+</script>
+<script>
+(function(){
+  var SK='fitbox_session';var TM=8*60*60*1000;var s;
+  try{var r=localStorage.getItem(SK)||sessionStorage.getItem(SK);s=JSON.parse(r);if(s&&!localStorage.getItem(SK))localStorage.setItem(SK,r);}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){
+    if(window.self!==window.top){try{window.top.location.replace('login.html');}catch(e){window.location.replace('login.html');}}
+    else{window.location.replace('login.html');}
+    throw new Error('AUTH');
+  }
+  window._fbSession=s;window._fbToken=s.access_token;
+  var _t;
+  function resetTimer(){clearTimeout(_t);_t=setTimeout(function(){localStorage.removeItem(SK);sessionStorage.removeItem(SK);window.location.replace('login.html?msg='+encodeURIComponent('Automatisch abgemeldet (8h Inaktivität).'));},TM);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,resetTimer,{passive:true});});
+  resetTimer();
+})();
+</script>
+
+<!-- TOPBAR -->
+<div class="topbar-outer"><div class="topbar">
+  <span class="tb-pagetitle"><span class="tb-pagetitle-icon">🎁</span> Aktionen</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stats">
+    <span class="tb-stat" id="stat-datum">–</span>
+    <span class="tb-stat"><span class="tb-stat-dot"></span><span class="tb-stat-num" id="stat-uhrzeit">–:–</span></span>
+  </div>
+  <div class="topbar-spacer"></div>
+  <button class="topbar-btn" onclick="document.getElementById('info-overlay').classList.add('open')">ℹ️ Info</button>
+</div></div>
+
+<script>
+(function(){
+  function pad(n){return n<10?'0'+n:n;}
+  function tick(){
+    var now=new Date();
+    var months=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+    var weekdays=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+    var dEl=document.getElementById('stat-datum');
+    var tEl=document.getElementById('stat-uhrzeit');
+    if(dEl) dEl.textContent=weekdays[now.getDay()]+', '+now.getDate()+'. '+months[now.getMonth()];
+    if(tEl) tEl.textContent=pad(now.getHours())+':'+pad(now.getMinutes())+':'+pad(now.getSeconds());
+  }
+  document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);});
+})();
+</script>
+
+<div class="aktion-header">
+  <div class="aktion-row">
+    <label>Aktion:</label>
+    <select id="aktion-sel" onchange="onAktionChange()">
+      <option value="">– Aktion wählen –</option>
+    </select>
+    <span class="a-pill" id="a-pill"></span>
+    <span class="a-zeit" id="a-zeit"></span>
+  </div>
+</div>
+
+<div class="stats-bar" id="stats-bar">
+  <div class="stat"><div class="sd d-grau"></div><span class="sl">Offen</span><span class="sn" id="s-offen">–</span></div>
+  <div class="stat"><div class="sd d-orange"></div><span class="sl">Angesprochen</span><span class="sn" id="s-ang">–</span></div>
+  <div class="stat"><div class="sd d-blue"></div><span class="sl">Zugesagt</span><span class="sn" id="s-ja">–</span></div>
+  <div class="stat"><div class="sd d-violet"></div><span class="sl">PT gekommen</span><span class="sn" id="s-pt">–</span></div>
+  <div class="stat"><div class="sd d-gruen"></div><span class="sl">Erfolg</span><span class="sn" id="s-erf">–</span></div>
+  <div class="stat"><div class="sd d-rot"></div><span class="sl">Misserfolg</span><span class="sn" id="s-miss">–</span></div>
+  <div class="ss"></div>
+  <span class="st" id="s-ges"></span>
+</div>
+<div id="zg-badge" style="display:none;background:#f0fdf4;border-bottom:1px solid #bbf7d0;padding:6px 20px;font-size:12px;font-weight:700;color:#166534;flex-shrink:0;"></div>
+
+<div class="filter-bar" id="filter-bar">
+  <div class="sw"><span class="si">🔍</span><input type="text" id="search" placeholder="Mitglied suchen…" oninput="renderList()"></div>
+  <button class="fb active" onclick="setFilter('alle',this)">Alle</button>
+  <button class="fb" onclick="setFilter('offen',this)">Offen</button>
+  <button class="fb" onclick="setFilter('angesprochen',this)">Angesprochen</button>
+  <button class="fb" onclick="setFilter('zugesagt',this)">Zugesagt</button>
+  <button class="fb" onclick="setFilter('pt_gekommen',this)">PT gekommen</button>
+  <button class="fb" onclick="setFilter('erfolg',this)">Erfolg</button>
+  <button class="fb" onclick="setFilter('misserfolg',this)">Misserfolg</button>
+  <div class="sort-wrap">
+    <label>Sortierung:</label>
+    <select id="sort-by" onchange="renderList()">
+      <option value="status">Status</option>
+      <option value="name">Name (A–Z)</option>
+      <option value="name_desc">Name (Z–A)</option>
+      <option value="datum">Angesprochen am</option>
+      <option value="kundennummer">Kundennummer</option>
+    </select>
+  </div>
+</div>
+
+<div class="list-wrap" id="list-wrap">
+  <div class="empty-st"><div class="ico">🎯</div><p>Bitte zuerst eine Aktion auswählen.</p></div>
+</div>
+
+<!-- WA MODAL -->
+<div class="wa-overlay" id="wa-overlay" onclick="closeWAModal(event)">
+  <div class="wa-modal">
+    <h3>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.523 5.847L.057 23.428a.5.5 0 0 0 .609.61l5.7-1.494A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.956 9.956 0 0 1-5.362-1.554l-.38-.23-3.986 1.044 1.01-3.888-.247-.4A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      WhatsApp senden
+    </h3>
+    <div class="wa-sub" id="wa-sub">An: –</div>
+    <textarea id="wa-text" oninput="updateCharCount()"></textarea>
+    <div class="wa-char"><span id="wa-char-count">0</span> Zeichen</div>
+    <div class="wa-modal-footer">
+      <button class="wa-cancel" onclick="document.getElementById('wa-overlay').classList.remove('open')">Abbrechen</button>
+      <button class="wa-send" onclick="sendWA()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.523 5.847L.057 23.428a.5.5 0 0 0 .609.61l5.7-1.494A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.956 9.956 0 0 1-5.362-1.554l-.38-.23-3.986 1.044 1.01-3.888-.247-.4A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        In WhatsApp öffnen
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- INFO MODAL -->
+<div class="info-overlay" id="info-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="info-modal">
+    <div class="info-header">
+      <h2>📖 So funktioniert das Aktions-Modul</h2>
+      <button class="info-close" onclick="document.getElementById('info-overlay').classList.remove('open')">×</button>
+    </div>
+    <div class="info-body">
+      <div class="info-step">
+        <div class="info-num">1</div>
+        <div class="info-step-body">
+          <h3>Aktion auswählen</h3>
+          <p>Wähle oben die aktuelle Aktion aus. Es werden automatisch alle aktiven Mitglieder des Studios geladen.</p>
+        </div>
+      </div>
+      <div class="info-step">
+        <div class="info-num">2</div>
+        <div class="info-step-body">
+          <h3>Mitglied ansprechen &amp; dokumentieren</h3>
+          <p>Klicke auf ein Mitglied um es aufzuklappen. Setze den Status auf <b>„Angesprochen"</b> und trage das Datum + eine kurze Notiz ein. Dann <b>Speichern</b>.</p>
+          <div class="info-status-row">
+            <span class="info-badge" style="background:#f3f4f6;color:#6b7280">○ Nicht angesprochen</span>
+            <span class="info-badge" style="background:#fef3c7;color:#92400e">👋 Angesprochen</span>
+          </div>
+        </div>
+      </div>
+      <div class="info-step">
+        <div class="info-num">3</div>
+        <div class="info-step-body">
+          <h3>Hat das Mitglied zugesagt?</h3>
+          <p>Klicke auf <b>„Zugesagt"</b>. Trage die <b>Partner-Daten</b> ein und ob der Rabatt eingelöst wurde.</p>
+          <div class="info-status-row">
+            <span class="info-badge" style="background:#eff6ff;color:#1d4ed8">✅ Zugesagt</span>
+          </div>
+        </div>
+      </div>
+      <div class="info-step">
+        <div class="info-num">4</div>
+        <div class="info-step-body">
+          <h3>Partner zum Probetraining gekommen?</h3>
+          <p>Sobald der Partner erscheint, klicke auf <b>„PT gekommen"</b> und trage das Datum ein.</p>
+          <div class="info-status-row">
+            <span class="info-badge" style="background:#f5f3ff;color:#6d28d9">🏋️ PT gekommen</span>
+          </div>
+        </div>
+      </div>
+      <div class="info-step">
+        <div class="info-num">5</div>
+        <div class="info-step-body">
+          <h3>Ergebnis festhalten</h3>
+          <p>Wähle <b>Erfolg</b> oder <b>Misserfolg</b>. Bei Erfolg: Abschlussdatum und Vertragswert eintragen.</p>
+          <div class="info-status-row">
+            <span class="info-badge" style="background:#e8f5e2;color:#2f8615">🎉 Erfolg</span>
+            <span class="info-badge" style="background:#fdecea;color:#e53e3e">❌ Misserfolg</span>
+          </div>
+        </div>
+      </div>
+      <div class="info-divider"></div>
+      <div class="info-tip">
+        <b>💡 Tipp:</b> Die Liste zeigt standardmäßig die <b>noch nicht angesprochenen Mitglieder zuerst</b>. Der grüne WhatsApp-Button öffnet direkt einen vorbereiteten Text.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SB_URL='https://jypbyywxfjniafuygxci.supabase.co';
+const SB_KEY='sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+
+let aktion=null, employee=null;
+let mitglieder=[], tMap={};
+let filter='alle', openId=null;
+
+const STEPS = ['offen','angesprochen','zugesagt','pt_gekommen','erfolg','misserfolg'];
+const STEP_ICONS = {
+  offen:'○', angesprochen:'👋', zugesagt:'✅',
+  pt_gekommen:'🏋️', erfolg:'🎉', misserfolg:'❌'
+};
+const WORKFLOW_STEPS = ['angesprochen','zugesagt','pt_gekommen','erfolg'];
+const sortW = {offen:0,angesprochen:1,zugesagt:2,pt_gekommen:3,erfolg:4,misserfolg:5};
+
+function hdrs() {
+  const s=JSON.parse(localStorage.getItem('fitbox_session')||'{}');
+  return {'Content-Type':'application/json','apikey':SB_KEY,
+    'Authorization':`Bearer ${s.access_token||SB_KEY}`,'Prefer':'return=representation'};
+}
+async function api(path,opts={}) {
+  const r=await fetch(`${SB_URL}/rest/v1/${path}`,{headers:hdrs(),...opts});
+  if(!r.ok) throw new Error(await r.text());
+  return r.status===204?null:r.json();
+}
+const fmt=d=>d?d.split('-').reverse().join('.'):'–';
+const val=id=>{const e=document.getElementById(id);return e?e.value.trim():''};
+
+async function init() {
+  const s=JSON.parse(localStorage.getItem('fitbox_session')||'{}');
+  if(s.employee_id){
+    try{const r=await api(`employees?id=eq.${s.employee_id}&select=id,first_name,last_name,studio_id`);if(r.length)employee=r[0];}catch(e){}
+  }
+  try {
+    const list=await api('aktionen?is_active=eq.true&order=gueltig_bis.desc&select=*');
+    const sel=document.getElementById('aktion-sel');
+    if(!list||!list.length){sel.innerHTML='<option>Keine aktiven Aktionen</option>';return;}
+    sel.innerHTML='<option value="">– Aktion wählen –</option>'+
+      list.map(a=>`<option value="${a.id}" data-j='${JSON.stringify(a).replace(/'/g,"&#39;")}'>${a.name}</option>`).join('');
+    if(list.length===1){sel.value=list[0].id;onAktionChange();}
+  } catch(e) {
+    document.getElementById('list-wrap').innerHTML=`<div class="empty-st"><div class="ico">⚠️</div><p>Fehler beim Laden: ${e.message}</p></div>`;
+  }
+}
+
+async function onAktionChange() {
+  const sel=document.getElementById('aktion-sel');
+  const opt=sel.options[sel.selectedIndex];
+  openId=null;
+  if(!opt.value){
+    aktion=null;
+    document.getElementById('a-pill').classList.remove('show');
+    document.getElementById('a-zeit').classList.remove('show');
+    document.getElementById('stats-bar').classList.remove('show');
+    document.getElementById('filter-bar').classList.remove('show');
+    document.getElementById('list-wrap').innerHTML='<div class="empty-st"><div class="ico">🎯</div><p>Bitte Aktion wählen.</p></div>';
+    return;
+  }
+  aktion=JSON.parse(opt.getAttribute('data-j'));
+  document.getElementById('a-pill').textContent=`💰 ${aktion.rabatt_prozent}% Rabatt`;
+  document.getElementById('a-pill').classList.add('show');
+  document.getElementById('a-zeit').textContent=`${fmt(aktion.gueltig_von)} – ${fmt(aktion.gueltig_bis)}`;
+  document.getElementById('a-zeit').classList.add('show');
+  document.getElementById('stats-bar').classList.add('show');
+  document.getElementById('filter-bar').classList.add('show');
+  document.getElementById('list-wrap').innerHTML='<div class="loading-st">Lade Mitglieder…</div>';
+  await loadData();
+}
+
+async function loadData() {
+  if(!aktion) return;
+  try {
+    const zf = aktion.zielgruppe_filter;
+    const msFilter = zf?.mitglied_status?.length ? zf.mitglied_status : ['aktiv'];
+    const statusOr = msFilter.map(s => {
+      if (s === 'aktiv') return 'and(is_active.eq.true,status.in.(aktiv))';
+      return `status.eq.${s}`;
+    }).join(',');
+    let alle = await api(
+      `kunden?studio_id=eq.${aktion.studio_id}&or=(${statusOr})`+
+      `&select=id,first_name,last_name,telefon,mobil,kundennummer,wellpass_aktivitaet,status,is_active&order=last_name,first_name`
+    );
+
+    const codes_inc = zf?.codes_inc || [];
+    const codes_exc = zf?.codes_exc || [];
+    const wpCodeId  = zf?.wellpass_code_id || null;
+    const hasAnyFilter = codes_inc.length || codes_exc.length || (zf?.wellpass_status?.length && wpCodeId);
+
+    if (hasAnyFilter) {
+      const assigns = await api(`kunden_codes?select=kunde_id,code_id`);
+      const allLookup = await api(`kunden_codes_lookup?select=id`);
+      const allCodeIds = (allLookup||[]).map(c => c.id);
+      const byKunde = {};
+      assigns.forEach(a => {
+        if (!byKunde[a.kunde_id]) byKunde[a.kunde_id] = new Set();
+        byKunde[a.kunde_id].add(a.code_id);
+      });
+      alle = alle.filter(k => {
+        const kc = byKunde[k.id] || new Set();
+        const kSpecialCodes = allCodeIds.filter(cid => kc.has(cid));
+        const nonWpExc = wpCodeId ? codes_exc.filter(cid => cid !== wpCodeId) : codes_exc;
+        if (nonWpExc.some(cid => kc.has(cid))) return false;
+        if (kSpecialCodes.length > 0) {
+          for (const cid of kSpecialCodes) {
+            if (codes_exc.includes(cid)) {
+              if (cid === wpCodeId && zf.wellpass_status?.length) {
+                const wa = k.wellpass_aktivitaet || 'unset';
+                if (zf.wellpass_status.includes(wa)) return false;
+              } else { return false; }
+            } else if (!codes_inc.includes(cid)) { return false; }
+          }
+          if (wpCodeId && codes_inc.includes(wpCodeId) && kc.has(wpCodeId) && zf.wellpass_status?.length) {
+            const wa = k.wellpass_aktivitaet || 'unset';
+            if (!zf.wellpass_status.includes(wa)) return false;
+          }
+        }
+        return true;
+      });
+    }
+
+    mitglieder = alle;
+    const ts=await api(`aktion_teilnahmen?aktion_id=eq.${aktion.id}&select=*`);
+    tMap={};
+    ts.forEach(t=>{if(t.kunde_id)tMap[t.kunde_id]=t;});
+    updateStats(); renderList();
+    renderZgBadge(zf);
+  } catch(e) {
+    document.getElementById('list-wrap').innerHTML=`<div class="empty-st"><div class="ico">⚠️</div><p>${e.message}</p></div>`;
+  }
+}
+
+function renderZgBadge(zf) {
+  var el = document.getElementById('zg-badge');
+  if (!el) return;
+  if (!zf || (!zf.codes_inc?.length && !zf.codes_exc?.length && !zf.wellpass_status?.length)) {
+    el.style.display='none'; return;
+  }
+  var parts = [];
+  if (zf.mitglied_status?.length) parts.push('👥 Status: '+zf.mitglied_status.join(', '));
+  if (zf.codes_inc?.length) parts.push('✅ '+zf.codes_inc.length+' Code(s) eingeschlossen');
+  if (zf.codes_exc?.length) parts.push('❌ '+zf.codes_exc.length+' Code(s) ausgeschlossen');
+  if (zf.wellpass_status?.length) parts.push('💳 WP: '+zf.wellpass_status.join(', '));
+  el.textContent = '🎯 Zielgruppe: '+parts.join(' | ');
+  el.style.display='';
+}
+
+function getStatus(m) {
+  const t=tMap[m.id];
+  if(!t) return 'offen';
+  if(t.partner_ergebnis==='erfolg')    return 'erfolg';
+  if(t.partner_ergebnis==='misserfolg') return 'misserfolg';
+  if(t.partner_pt_gekommen)             return 'pt_gekommen';
+  if(t.status==='zugesagt')             return 'zugesagt';
+  return 'angesprochen';
+}
+
+function updateStats() {
+  const c={offen:0,angesprochen:0,zugesagt:0,pt_gekommen:0,erfolg:0,misserfolg:0};
+  mitglieder.forEach(m=>c[getStatus(m)]++);
+  document.getElementById('s-offen').textContent=c.offen;
+  document.getElementById('s-ang').textContent=c.angesprochen;
+  document.getElementById('s-ja').textContent=c.zugesagt;
+  document.getElementById('s-pt').textContent=c.pt_gekommen;
+  document.getElementById('s-erf').textContent=c.erfolg;
+  document.getElementById('s-miss').textContent=c.misserfolg;
+  document.getElementById('s-ges').textContent=`${mitglieder.length} Mitglieder gesamt`;
+}
+
+function setFilter(f,btn){
+  filter=f; openId=null;
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderList();
+}
+
+function renderList() {
+  const q=document.getElementById('search').value.toLowerCase();
+  const sortBy=document.getElementById('sort-by')?.value||'status';
+  const wrap=document.getElementById('list-wrap');
+  let list=mitglieder.filter(m=>{
+    if(q&&!(m.first_name+' '+m.last_name).toLowerCase().includes(q)&&!(m.kundennummer||'').toLowerCase().includes(q)) return false;
+    if(filter!=='alle'&&getStatus(m)!==filter) return false;
+    return true;
+  });
+  list.sort((a,b)=>{
+    switch(sortBy) {
+      case 'name': return a.last_name.localeCompare(b.last_name)||a.first_name.localeCompare(b.first_name);
+      case 'name_desc': return b.last_name.localeCompare(a.last_name)||b.first_name.localeCompare(a.first_name);
+      case 'datum': {
+        const ta=tMap[a.id]?.angesprochen_am||'';
+        const tb=tMap[b.id]?.angesprochen_am||'';
+        if(!ta && !tb) return a.last_name.localeCompare(b.last_name);
+        if(!ta) return 1; if(!tb) return -1;
+        return tb.localeCompare(ta);
+      }
+      case 'kundennummer': return (parseInt(a.kundennummer)||99999)-(parseInt(b.kundennummer)||99999);
+      default: return (sortW[getStatus(a)]-sortW[getStatus(b)])||a.last_name.localeCompare(b.last_name);
+    }
+  });
+  if(!list.length){wrap.innerHTML='<div class="empty-st"><div class="ico">🔍</div><p>Keine Mitglieder gefunden.</p></div>';return;}
+  wrap.innerHTML=list.map(m=>cardHtml(m)).join('');
+}
+
+const BADGE_TEXT={
+  offen:'○ Nicht angesprochen', angesprochen:'👋 Angesprochen',
+  zugesagt:'✅ Zugesagt', pt_gekommen:'🏋️ PT gekommen',
+  erfolg:'🎉 Erfolg', misserfolg:'❌ Misserfolg'
+};
+
+function cardHtml(m) {
+  const t=tMap[m.id];
+  const st=getStatus(m);
+  const ini=((m.first_name||'')[0]||'').toUpperCase()+((m.last_name||'')[0]||'').toUpperCase();
+  const tel=m.mobil||m.telefon||'';
+  const isOpen=openId===m.id;
+  const docLine=t?`
+    ${t.angesprochen_am?`<span>Angesprochen: ${fmt(t.angesprochen_am)}</span>`:''}
+    ${t.partner_vorname?`<span>Partner: ${t.partner_vorname} ${t.partner_nachname||''}</span>`:''}
+    ${t.partner_pt_gekommen?`<span>🏋️ PT: ${fmt(t.partner_pt_datum)}</span>`:''}
+    ${t.partner_ergebnis==='erfolg'?`<span>🎉 Abschluss ${t.partner_vertragswert?parseFloat(t.partner_vertragswert).toFixed(2)+' €':''}</span>`:''}
+  `:' ';
+  const workflowHtml=isOpen?buildWorkflow(m,t,st):'';
+  return `<div class="mc s-${st}${isOpen?' open':''}" id="mc-${m.id}">
+  <div class="mc-row" onclick="toggleCard('${m.id}')">
+    <div class="av">${ini}</div>
+    <div class="mi">
+      <div class="mn">${m.first_name} ${m.last_name}</div>
+      <div class="ms">
+        ${m.kundennummer?`<span>#${m.kundennummer}</span>`:''}
+        ${tel?`<span>📞 ${tel}</span>`:''}
+        ${docLine}
+      </div>
+    </div>
+    <span class="mb b-${st}">${BADGE_TEXT[st]}</span>
+    ${tel?`<button class="wa-btn" onclick="openWA(event,'${m.id}')" title="WhatsApp schreiben">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.118 1.523 5.847L.057 23.428a.5.5 0 0 0 .609.61l5.7-1.494A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22a9.956 9.956 0 0 1-5.362-1.554l-.38-.23-3.986 1.044 1.01-3.888-.247-.4A9.956 9.956 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    </button>`:''}
+    <span class="mc-chev">›</span>
+  </div>
+  <div class="mc-det">${workflowHtml}</div>
+</div>`;
+}
+
+function buildWorkflow(m, t, currentSt) {
+  const stIdx = WORKFLOW_STEPS.indexOf(currentSt);
+  const wfBtns = WORKFLOW_STEPS.map((s,i)=>{
+    const isDone = i < stIdx || (currentSt==='misserfolg' && s!=='misserfolg');
+    const isActive = s===currentSt || (currentSt==='misserfolg' && i===stIdx-1);
+    const cls = isDone?'done':isActive?'active':'';
+    const lineCls = i<WORKFLOW_STEPS.length-1?(isDone?'done':''):'';
+    const lineHtml = i<WORKFLOW_STEPS.length-1?`<div class="ws-line ${lineCls}"></div>`:'';
+    return `<div class="ws">
+      <button class="ws-btn ${cls}" onclick="jumpToStep('${m.id}','${s}',event)">
+        <div class="ws-circle">${STEP_ICONS[s]}</div>
+        <span class="ws-label">${s==='angesprochen'?'Angesprochen':s==='zugesagt'?'Zugesagt':s==='pt_gekommen'?'PT gekommen':'Ergebnis'}</span>
+      </button>
+      ${lineHtml}
+    </div>`;
+  }).join('');
+
+  const activeStep = window._pendingStep?.[m.id] || currentSt;
+  const panels = {
+    angesprochen: panelAngesprochen(m,t),
+    zugesagt:     panelZugesagt(m,t),
+    pt_gekommen:  panelPtGekommen(m,t),
+    erfolg:       panelErgebnis(m,t),
+    offen:        panelAngesprochen(m,t),
+    misserfolg:   panelErgebnis(m,t),
+  };
+  const visibleStep = WORKFLOW_STEPS.includes(activeStep) ? activeStep : (currentSt==='offen'?'angesprochen':currentSt);
+  const panelsHtml = WORKFLOW_STEPS.map(s=>`
+    <div class="step-panel${s===visibleStep?' show':''}" id="sp-${s}-${m.id}">
+      ${panels[s]||''}
+    </div>`).join('');
+
+  return `<div class="workflow">${wfBtns}</div>
+<div class="step-panels">
+  ${panelsHtml}
+  <div class="det-actions">
+    <button class="btn btn-g" onclick="toggleCard('${m.id}')">Schließen</button>
+    ${currentSt!=='offen'?`<button class="btn btn-g btn-sm" onclick="resetStatus('${m.id}',event)" style="color:var(--red);border-color:var(--red)">↩ Zurücksetzen</button>`:''}
+    <button class="btn btn-p" onclick="save('${m.id}')">💾 Speichern</button>
+  </div>
+</div>`;
+}
+
+function panelAngesprochen(m,t) {
+  return `<div class="sp-title">Schritt 1 – Mitglied ansprechen</div>
+  <div class="fg">
+    <div class="fg-g">
+      <span class="fl">Angesprochen am</span>
+      <input class="fc" id="ang-datum-${m.id}" type="date" value="${t?.angesprochen_am||today()}">
+    </div>
+    <div class="fg-g full">
+      <span class="fl">Notiz</span>
+      <textarea class="fc" id="noti-${m.id}" placeholder="z.B. sehr interessiert, ruft morgen zurück…">${t?.notizen||''}</textarea>
+    </div>
+  </div>`;
+}
+
+function panelZugesagt(m,t) {
+  return `<div class="sp-title">Schritt 2 – Partner-Daten erfassen</div>
+  <div class="fg">
+    <div class="fg-g">
+      <span class="fl">Vorname Partner</span>
+      <input class="fc" id="pvn-${m.id}" type="text" placeholder="Vorname" value="${t?.partner_vorname||''}">
+    </div>
+    <div class="fg-g">
+      <span class="fl">Nachname Partner</span>
+      <input class="fc" id="pnn-${m.id}" type="text" placeholder="Nachname" value="${t?.partner_nachname||''}">
+    </div>
+    <div class="fg-g">
+      <span class="fl">Telefon Partner</span>
+      <input class="fc" id="ptel-${m.id}" type="tel" placeholder="+49…" value="${t?.partner_telefon||''}">
+    </div>
+    <div class="fg-g">
+      <span class="fl">E-Mail Partner</span>
+      <input class="fc" id="pmail-${m.id}" type="email" placeholder="partner@…" value="${t?.partner_email||''}">
+    </div>
+    <div class="fg-g">
+      <span class="fl">Rabatt eingelöst?</span>
+      <select class="fc" id="rab-${m.id}">
+        <option value="nein"${!t?.rabatt_eingeloest?' selected':''}>Noch nicht</option>
+        <option value="ja"${t?.rabatt_eingeloest?' selected':''}>✅ Ja</option>
+      </select>
+    </div>
+    <div class="fg-g">
+      <span class="fl">Eingelöst am</span>
+      <input class="fc" id="rdatum-${m.id}" type="date" value="${t?.rabatt_eingeloest_am||''}">
+    </div>
+    <div class="fg-g full">
+      <span class="fl">Notiz</span>
+      <textarea class="fc" id="noti-${m.id}" placeholder="Interne Notizen…">${t?.notizen||''}</textarea>
+    </div>
+  </div>`;
+}
+
+function panelPtGekommen(m,t) {
+  return `<div class="sp-title">Schritt 3 – Partner zum Probetraining gekommen</div>
+  <div class="fg">
+    <div class="fg-g">
+      <span class="fl">PT-Datum</span>
+      <input class="fc" id="pt-datum-${m.id}" type="date" value="${t?.partner_pt_datum||today()}">
+    </div>
+    <div class="fg-g full">
+      <span class="fl">Notiz</span>
+      <textarea class="fc" id="noti-${m.id}" placeholder="z.B. sehr motiviert, möchte Vertrag…">${t?.notizen||''}</textarea>
+    </div>
+  </div>`;
+}
+
+function panelErgebnis(m,t) {
+  const erg = t?.partner_ergebnis || window._pendingErgebnis?.[m.id] || '';
+  return `<div class="sp-title">Schritt 4 – Ergebnis festhalten</div>
+  <div class="ergebnis-row">
+    <button class="eb${erg==='erfolg'?' sel-erfolg':''}" id="eb-erfolg-${m.id}" onclick="pickErgebnis('${m.id}','erfolg')">
+      🎉 Erfolg<br><small style="font-weight:400">Vertrag abgeschlossen</small>
+    </button>
+    <button class="eb${erg==='misserfolg'?' sel-misserfolg':''}" id="eb-miss-${m.id}" onclick="pickErgebnis('${m.id}','misserfolg')">
+      ❌ Misserfolg<br><small style="font-weight:400">Kein Abschluss</small>
+    </button>
+  </div>
+  <div class="erfolg-fields${erg==='erfolg'?' show':''}" id="erf-fields-${m.id}">
+    <div class="fg-g">
+      <span class="fl">Abschluss am</span>
+      <input class="fc" id="adatum-${m.id}" type="date" value="${t?.partner_abschluss_am||today()}">
+    </div>
+    <div class="fg-g">
+      <span class="fl">Vertragswert (€)</span>
+      <input class="fc" id="awert-${m.id}" type="number" step="0.01" min="0" placeholder="0.00" value="${t?.partner_vertragswert||''}">
+    </div>
+  </div>
+  <div class="fg-g" style="margin-top:8px">
+    <span class="fl">Notiz</span>
+    <textarea class="fc" id="noti-${m.id}" placeholder="Interne Notizen…">${t?.notizen||''}</textarea>
+  </div>`;
+}
+
+function today() { return new Date().toISOString().split('T')[0]; }
+
+function toggleCard(id) {
+  openId = openId===id ? null : id;
+  if(!openId) {
+    if(window._pendingStep) delete window._pendingStep[id];
+    if(window._pendingErgebnis) delete window._pendingErgebnis[id];
+  }
+  renderList();
+  if(openId) setTimeout(()=>{
+    const c=document.getElementById(`mc-${openId}`);
+    if(c) c.scrollIntoView({behavior:'smooth',block:'nearest'});
+  },50);
+}
+
+function jumpToStep(kundeId, step, e) {
+  e.stopPropagation();
+  if(!window._pendingStep) window._pendingStep={};
+  window._pendingStep[kundeId]=step;
+  WORKFLOW_STEPS.forEach(s=>{
+    const p=document.getElementById(`sp-${s}-${kundeId}`);
+    if(p) p.classList.toggle('show', s===step);
+  });
+  const mc=document.getElementById(`mc-${kundeId}`);
+  if(mc){
+    const clickIdx=WORKFLOW_STEPS.indexOf(step);
+    mc.querySelectorAll('.ws-btn').forEach((btn,i)=>{
+      btn.className='ws-btn';
+      if(i<clickIdx) btn.classList.add('done');
+      else if(i===clickIdx) btn.classList.add('active');
+    });
+  }
+}
+
+function pickErgebnis(kundeId, erg) {
+  if(!window._pendingErgebnis) window._pendingErgebnis={};
+  window._pendingErgebnis[kundeId]=erg;
+  const eE=document.getElementById(`eb-erfolg-${kundeId}`);
+  const eM=document.getElementById(`eb-miss-${kundeId}`);
+  if(eE){eE.className='eb'+(erg==='erfolg'?' sel-erfolg':'');}
+  if(eM){eM.className='eb'+(erg==='misserfolg'?' sel-misserfolg':'');}
+  const ef=document.getElementById(`erf-fields-${kundeId}`);
+  if(ef) ef.classList.toggle('show', erg==='erfolg');
+}
+
+async function resetStatus(kundeId, e) {
+  e.stopPropagation();
+  const t=tMap[kundeId];
+  if(!t) return;
+  if(!confirm('Dokumentation für dieses Mitglied wirklich löschen?')) return;
+  try {
+    await api(`aktion_teilnahmen?id=eq.${t.id}`,{method:'DELETE'});
+    delete tMap[kundeId];
+    if(window._pendingStep) delete window._pendingStep[kundeId];
+    if(window._pendingErgebnis) delete window._pendingErgebnis[kundeId];
+    openId=null; updateStats(); renderList();
+  } catch(err){alert('Fehler: '+err.message);}
+}
+
+async function save(kundeId) {
+  if(!aktion) return;
+  const t=tMap[kundeId];
+  const activeStep=window._pendingStep?.[kundeId]||(getStatus({id:kundeId})==='offen'?'angesprochen':getStatus({id:kundeId}));
+  const erg=window._pendingErgebnis?.[kundeId]||t?.partner_ergebnis||null;
+  const statusMap={angesprochen:'angesprochen',zugesagt:'zugesagt',pt_gekommen:'zugesagt',erfolg:'zugesagt',misserfolg:'zugesagt'};
+  const dbStatus = statusMap[activeStep]||'angesprochen';
+
+  const body={
+    aktion_id:           aktion.id,
+    studio_id:           aktion.studio_id,
+    kunde_id:            kundeId,
+    angesprochen_von:    employee?.id||null,
+    angesprochen_am:     val(`ang-datum-${kundeId}`)||t?.angesprochen_am||today(),
+    status:              dbStatus,
+    notizen:             val(`noti-${kundeId}`)||null,
+    partner_vorname:     val(`pvn-${kundeId}`)||t?.partner_vorname||null,
+    partner_nachname:    val(`pnn-${kundeId}`)||t?.partner_nachname||null,
+    partner_telefon:     val(`ptel-${kundeId}`)||t?.partner_telefon||null,
+    partner_email:       val(`pmail-${kundeId}`)||t?.partner_email||null,
+    rabatt_eingeloest:   document.getElementById(`rab-${kundeId}`)?.value==='ja'||(t?.rabatt_eingeloest||false),
+    rabatt_eingeloest_am:val(`rdatum-${kundeId}`)||t?.rabatt_eingeloest_am||null,
+    partner_pt_gekommen: activeStep==='pt_gekommen'||activeStep==='erfolg'||activeStep==='misserfolg'||(t?.partner_pt_gekommen||false),
+    partner_pt_datum:    val(`pt-datum-${kundeId}`)||t?.partner_pt_datum||null,
+    partner_ergebnis:    erg,
+    partner_abschluss:   erg==='erfolg',
+    partner_abschluss_am:erg==='erfolg'?(val(`adatum-${kundeId}`)||t?.partner_abschluss_am||null):null,
+    partner_vertragswert:erg==='erfolg'?(parseFloat(val(`awert-${kundeId}`))||null):null,
+  };
+
+  try {
+    let res;
+    if(t){
+      res=await api(`aktion_teilnahmen?id=eq.${t.id}`,{method:'PATCH',body:JSON.stringify(body)});
+      tMap[kundeId]={...t,...body,...(Array.isArray(res)?res[0]:{})};
+    } else {
+      res=await api('aktion_teilnahmen',{method:'POST',body:JSON.stringify(body)});
+      tMap[kundeId]=Array.isArray(res)?res[0]:{...body};
+    }
+    if(window._pendingStep) delete window._pendingStep[kundeId];
+    if(window._pendingErgebnis) delete window._pendingErgebnis[kundeId];
+    openId=null; updateStats(); renderList();
+  } catch(err){alert('Fehler: '+err.message);}
+}
+
+let waKundeId = null;
+
+function openWA(e, kundeId) {
+  e.stopPropagation();
+  const m = mitglieder.find(x => x.id === kundeId);
+  if (!m) return;
+  waKundeId = kundeId;
+  const tel = m.mobil || m.telefon || '';
+  const name = m.first_name;
+  const aktionName = aktion?.name || 'unsere aktuelle Aktion';
+  const rabatt = aktion?.rabatt_prozent || 15;
+  const defaultText = [
+    'Hallo ' + name + ' 👋',
+    '',
+    'wir haben gerade eine tolle Aktion bei fitbox Memmingen:',
+    '',
+    '🎁 *' + aktionName + '*',
+    'Bring deinen Partner oder Freund/in mit – bei Abschluss erhalten beide ' + rabatt + '% Rabatt! 💪',
+    '',
+    'Hast du jemanden in deinem Umfeld, der fit werden möchte? Ich freue mich auf deine Antwort! 😊',
+    '',
+    'Viele Grüße',
+    'Dein fitbox Team'
+  ].join('\n');
+  document.getElementById('wa-sub').textContent = `An: ${m.first_name} ${m.last_name} · ${tel}`;
+  document.getElementById('wa-text').value = defaultText;
+  updateCharCount();
+  document.getElementById('wa-overlay').classList.add('open');
+}
+
+function sendWA() {
+  const m = mitglieder.find(x => x.id === waKundeId);
+  if (!m) return;
+  const tel = (m.mobil || m.telefon || '').replace(/[^0-9+]/g, '');
+  const telNorm = tel.startsWith('0') ? '+49' + tel.slice(1) : tel;
+  const text = document.getElementById('wa-text').value;
+  const encoded = encodeURIComponent(text);
+  const nr = telNorm.replace('+','');
+  const nativeUrl = 'whatsapp://send?phone=' + nr + '&text=' + encoded;
+  const webUrl    = 'https://wa.me/' + nr + '?text=' + encoded;
+  const a = document.createElement('a');
+  a.href = nativeUrl;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => {
+    if (!document.hidden) window.open(webUrl, '_blank');
+  }, 1200);
+  document.getElementById('wa-overlay').classList.remove('open');
+}
+
+function closeWAModal(e) {
+  if (e.target === document.getElementById('wa-overlay'))
+    document.getElementById('wa-overlay').classList.remove('open');
+}
+
+function updateCharCount() {
+  document.getElementById('wa-char-count').textContent = document.getElementById('wa-text').value.length;
+}
+
+init();
+</script>
+</body>
+</html>

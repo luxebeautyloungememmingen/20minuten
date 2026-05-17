@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Login · fitbox Studio OS</title>
+  <style>
+    :root{--fit:#2f8615;--ink:#0f172a;--muted:#64748b;--line:#dde5dd;}
+    *{box-sizing:border-box;margin:0;padding:0}html,body{height:100%}
+    body{font-family:system-ui,-apple-system,sans-serif;
+      background:radial-gradient(900px 500px at 0% 0%,rgba(47,134,21,.12),transparent 60%),
+      linear-gradient(180deg,#fff 0%,#f2f6f0 100%);
+      display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+    .card{background:#fff;border:1px solid var(--line);border-radius:24px;
+      box-shadow:0 20px 50px rgba(15,23,42,.10);padding:36px 32px;width:100%;max-width:400px;}
+    .logo-wrap{display:flex;justify-content:center;margin-bottom:24px}
+    .logo{height:36px;width:auto}
+    .title{font-size:22px;font-weight:900;color:var(--ink);text-align:center;margin-bottom:4px;letter-spacing:-.02em}
+    .sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px}
+    .field{margin-bottom:14px}
+    label{display:block;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:var(--ink);margin-bottom:5px}
+    input{width:100%;appearance:none;border:1px solid var(--line);background:#fff;color:var(--ink);
+      border-radius:11px;min-height:42px;padding:10px 12px;font:inherit;font-size:14px;
+      transition:border-color .15s,box-shadow .15s;}
+    input:focus{outline:none;border-color:rgba(47,134,21,.55);box-shadow:0 0 0 3px rgba(47,134,21,.10)}
+    .btn{width:100%;appearance:none;background:linear-gradient(180deg,#2f8615,#256a10);
+      color:#fff;border:1px solid rgba(47,134,21,.3);border-radius:11px;min-height:44px;
+      padding:10px;font:inherit;font-weight:900;font-size:14px;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(47,134,21,.25)}
+    .btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+    .err{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:10px 12px;
+      font-size:12px;font-weight:700;color:#b91c1c;margin-bottom:14px;display:none;}
+    .msg{background:#eef9e6;border:1px solid #c7e8a6;border-radius:10px;padding:10px 12px;
+      font-size:12px;font-weight:700;color:#2f8615;margin-bottom:14px;display:none;}
+    .spinner{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.4);
+      border-top-color:#fff;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .footer{text-align:center;margin-top:20px;font-size:11px;color:var(--muted)}
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo-wrap">
+    <img class="logo" src="https://145725822.fs1.hubspotusercontent-eu1.net/hub/145725822/hubfs/fitbox/images/logo-fitbox.png?width=1500&height=575&name=logo-fitbox.png" alt="fitbox"/>
+  </div>
+  <div class="title">Studio OS</div>
+  <div class="sub">Bitte mit deinem Account anmelden</div>
+  <div class="msg" id="msgBox"></div>
+  <div class="err" id="errBox"></div>
+  <div class="field"><label for="email">E-Mail</label><input id="email" type="email" placeholder="deine@email.de" autocomplete="email"/></div>
+  <div class="field"><label for="password">Passwort</label><input id="password" type="password" placeholder="••••••••" autocomplete="current-password"/></div>
+  <button class="btn" id="submitBtn" type="button"><span id="btnLabel">Anmelden</span></button>
+  <div class="footer">fitbox Studio OS · Nur für autorisierte Mitarbeiter</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const SB_URL='https://jypbyywxfjniafuygxci.supabase.co';
+const SB_KEY='sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+const SESSION_KEY='fitbox_session';
+const params=new URLSearchParams(location.search);
+
+// "msg" Parameter aus URL anzeigen (z.B. Auto-Logout)
+const urlMsg = params.get('msg');
+if (urlMsg) {
+  const m = document.getElementById('msgBox');
+  m.textContent = urlMsg;
+  m.style.display = 'block';
+}
+
+// Supabase SDK Client für Login
+const _sbLogin = supabase.createClient(SB_URL, SB_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false }
+});
+
+// Schon eingeloggt?
+try{
+  var _raw=localStorage.getItem(SESSION_KEY)||sessionStorage.getItem(SESSION_KEY);
+  var _s=JSON.parse(_raw);
+  if(_s&&_s.access_token&&_s.expires_at>Date.now()) goNext();
+}catch(e){}
+
+document.getElementById('submitBtn').addEventListener('click',doLogin);
+document.getElementById('password').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+
+async function doLogin(){
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  const errBox=document.getElementById('errBox');
+  const msgBox=document.getElementById('msgBox');
+  const btn=document.getElementById('submitBtn');
+  const btnLabel=document.getElementById('btnLabel');
+  errBox.style.display='none';
+  msgBox.style.display='none';
+  if(!email||!password){showErr('Bitte E-Mail und Passwort eingeben.');return;}
+  btn.disabled=true;
+  btnLabel.innerHTML='<div class="spinner"></div>';
+  try{
+    // 1. Login via Supabase SDK (setzt role: authenticated korrekt im JWT)
+    const { data: authData, error: authError } = await _sbLogin.auth.signInWithPassword({ email, password });
+    if(authError || !authData?.session?.access_token){
+      showErr(authError?.message || 'E-Mail oder Passwort falsch.');return;
+    }
+    const accessToken = authData.session.access_token;
+    const userId = authData.user.id;
+
+    // Authentifizierten Client für REST-Queries
+    const _sbAuth = supabase.createClient(SB_URL, SB_KEY, {
+      global: { headers: { 'apikey': SB_KEY, Authorization: 'Bearer ' + accessToken } },
+      auth: { persistSession: false, autoRefreshToken: false }
+    });
+
+    // 2. Employee laden
+    const { data: empData } = await _sbAuth
+      .from('employees')
+      .select('id,first_name,last_name,display_name,is_active,role_id')
+      .eq('auth_user_id', userId)
+      .limit(1);
+    const emp = empData?.[0];
+    if(!emp){showErr('Kein Mitarbeitereintrag gefunden. Bitte Administrator kontaktieren.');return;}
+    if(!emp.is_active){showErr('Dein Account ist deaktiviert. Bitte Administrator kontaktieren.');return;}
+
+    // 3. Rolle laden
+    let roleCode='trainer', roleName='Trainer';
+    if(emp.role_id){
+      const { data: roleData } = await _sbAuth
+        .from('roles')
+        .select('code,name')
+        .eq('id', emp.role_id)
+        .limit(1);
+      if(roleData?.[0]){ roleCode=roleData[0].code; roleName=roleData[0].name; }
+    }
+    emp.roles = { code: roleCode, name: roleName };
+
+    // 4. Session speichern
+    const sessionObj = {
+      access_token: accessToken,
+      refresh_token: authData.session.refresh_token || '',
+      expires_at: Date.now() + (8*60*60*1000),
+      user: authData.user,
+      employee: emp
+    };
+    localStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem('fb_sidebar_collapsed');
+    localStorage.setItem(SESSION_KEY, JSON.stringify(sessionObj));
+
+    goNext();
+  }catch(err){
+    showErr('Verbindungsfehler: '+(err.message||String(err)));
+  }finally{
+    btn.disabled=false; btnLabel.textContent='Anmelden';
+  }
+}
+function showErr(msg){const eb=document.getElementById('errBox');eb.textContent=msg;eb.style.display='block';}
+
+function goNext(){
+  // "next" Parameter respektieren (Deep-Link, z.B. wenn jemand admin_index.html aufgerufen hat ohne Login)
+  const next = params.get('next');
+  if (next && next.startsWith('/') && !next.startsWith('//')) {
+    window.location.href = next;
+    return;
+  }
+  // Standard-Flow: über index.html → der routet ins richtige Studio
+  // Von dort kann der User per Admin-Button ins Admin-Panel wechseln
+  window.location.href = 'index.html';
+}
+</script>
+</body>
+</html>

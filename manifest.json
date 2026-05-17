@@ -1,0 +1,47 @@
+{
+  "name": "fitbox Mitarbeiter",
+  "short_name": "fitbox",
+  "description": "Mitarbeiter App für fitbox Memmingen & Senden",
+  "start_url": "/mitarbeiter_app.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#2f8615",
+  "lang": "de",
+  "categories": ["business", "productivity"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Einstempeln",
+      "short_name": "Stempeln",
+      "url": "/mitarbeiter_app.html?action=clockin",
+      "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]
+    },
+    {
+      "name": "Meine Schichten",
+      "short_name": "Schichten",
+      "url": "/mitarbeiter_app.html?view=schichten",
+      "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]
+    }
+  ]
+}

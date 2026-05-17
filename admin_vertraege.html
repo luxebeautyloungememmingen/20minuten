@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vertragsverwaltung – fitbox Studio OS</title>
+<style>
+  :root {
+    --fit:   #2f8615;
+    --fit2:  #95c11f;
+    --bg:    #f4f6f4;
+    --card:  #ffffff;
+    --border:#e0e6dc;
+    --text:  #1a2b18;
+    --muted: #6b7f68;
+    --danger:#d63031;
+    --radius:10px;
+    --shadow:0 1px 4px rgba(0,0,0,.08);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:14px;min-height:100vh;}
+  .topbar-space{flex:1;}
+  .page{max-width:1100px;margin:0 auto;padding:20px 16px 60px;}
+  .studio-tabs{display:flex;gap:6px;margin-bottom:20px;}
+  .studio-tab{padding:8px 20px;border-radius:8px;border:2px solid var(--border);background:var(--card);font-weight:700;font-size:13px;cursor:pointer;color:var(--muted);transition:all .15s;}
+  .studio-tab.active{border-color:var(--fit);background:var(--fit);color:#fff;}
+  .studio-tab:hover:not(.active){border-color:var(--fit2);color:var(--fit);}
+  .section-tabs{display:flex;gap:4px;margin-bottom:18px;border-bottom:2px solid var(--border);}
+  .section-tab{padding:8px 16px;font-weight:700;font-size:13px;cursor:pointer;color:var(--muted);border:none;border-bottom:3px solid transparent;margin-bottom:-2px;background:none;transition:all .15s;}
+  .section-tab.active{color:var(--fit);border-bottom-color:var(--fit);}
+  .section-tab:hover:not(.active){color:var(--text);}
+  .section{display:none;} .section.active{display:block;}
+  .card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden;}
+  .card-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border);background:#fafbfa;}
+  .card-title{font-weight:700;font-size:14px;}
+  /* AKKORDEON */
+  .vtyp-block{border-bottom:1px solid var(--border);}
+  .vtyp-block:last-child{border-bottom:none;}
+  .vtyp-header{display:flex;align-items:center;gap:8px;padding:13px 16px;cursor:pointer;background:#fafbfa;user-select:none;}
+  .vtyp-header:hover{background:#f3f7f2;}
+  .vtyp-name{font-weight:700;font-size:14px;}
+  .vtyp-meta{font-size:12px;color:var(--muted);}
+  .vtyp-chevron{font-size:11px;color:var(--muted);transition:transform .15s;margin-left:4px;}
+  .vtyp-block.open .vtyp-chevron{transform:rotate(180deg);}
+  .vtyp-acts{display:flex;gap:5px;margin-left:auto;}
+  .vtyp-body{display:none;padding:12px 16px 16px;}
+  .vtyp-block.open .vtyp-body{display:block;}
+  /* TABELLEN */
+  .vtbl{width:100%;border-collapse:collapse;margin-top:8px;}
+  .vtbl th{background:#f0f4ef;font-weight:700;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:7px 10px;text-align:left;}
+  .vtbl td{padding:9px 10px;border-top:1px solid var(--border);font-size:13px;vertical-align:middle;}
+  .vtbl tr:hover td{background:#f8fbf7;}
+  .tbl{width:100%;border-collapse:collapse;}
+  .tbl th{background:#f0f4ef;font-weight:700;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:8px 12px;text-align:left;white-space:nowrap;}
+  .tbl td{padding:10px 12px;border-top:1px solid var(--border);vertical-align:middle;}
+  .tbl tr:hover td{background:#f8fbf7;}
+  .empty-row td{text-align:center;color:var(--muted);font-style:italic;padding:20px;}
+  /* PILLS */
+  .pill{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;}
+  .pill-green{background:#e6f4e0;color:var(--fit);}
+  .pill-gray{background:#eee;color:#777;}
+  .pill-blue{background:#e0eaf8;color:#2563eb;}
+  .pill-orange{background:#fef3e2;color:#c05c00;}
+  /* BUTTONS */
+  .btn{display:inline-flex;align-items:center;gap:4px;padding:7px 13px;border-radius:8px;border:1px solid var(--border);background:var(--card);font:600 13px/1 inherit;cursor:pointer;color:var(--text);transition:all .12s;white-space:nowrap;}
+  .btn:hover{border-color:#bbb;background:#f5f5f5;}
+  .btn.primary{background:var(--fit);border-color:var(--fit);color:#fff;}
+  .btn.primary:hover{background:#267312;}
+  .btn.danger{background:#fff5f5;border-color:#f8d7d7;color:var(--danger);}
+  .btn.danger:hover{background:#fee;}
+  .btn.sm{padding:4px 9px;font-size:12px;}
+  /* MODAL */
+  .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;}
+  .backdrop.hidden{display:none;}
+  .modal{background:#fff;border-radius:14px;box-shadow:0 8px 40px rgba(0,0,0,.18);width:100%;max-width:500px;max-height:90vh;overflow-y:auto;}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 14px;border-bottom:1px solid var(--border);}
+  .modal-title{font-weight:700;font-size:15px;}
+  .modal-body{padding:20px;}
+  .modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--border);background:#fafbfa;border-radius:0 0 14px 14px;}
+  /* FORM */
+  .fgrid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;}
+  .c12{grid-column:span 12;} .c6{grid-column:span 6;} .c4{grid-column:span 4;}
+  .field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;}
+  .ctrl{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:8px;font:inherit;font-size:14px;background:#fff;color:var(--text);outline:none;transition:border-color .12s;}
+  .ctrl:focus{border-color:var(--fit);}
+  select.ctrl{cursor:pointer;}
+  .addon{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;}
+  .addon:focus-within{border-color:var(--fit);}
+  .addon .ctrl{border:none;border-radius:0;flex:1;}
+  .addon-unit{padding:0 10px;color:var(--muted);font-size:12px;font-weight:700;background:#f5f7f5;border-left:1.5px solid var(--border);white-space:nowrap;display:flex;align-items:center;height:100%;}
+  .toggle-wrap{display:flex;align-items:center;gap:8px;}
+  .toggle{position:relative;width:38px;height:22px;flex-shrink:0;}
+  .toggle input{opacity:0;width:0;height:0;}
+  .toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:11px;cursor:pointer;transition:.2s;}
+  .toggle-slider:before{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;left:3px;top:3px;transition:.2s;}
+  .toggle input:checked + .toggle-slider{background:var(--fit);}
+  .toggle input:checked + .toggle-slider:before{transform:translateX(16px);}
+  .toggle-label{font-size:13px;color:var(--muted);}
+  /* CONFIRM */
+  #confirmBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;display:flex;align-items:center;justify-content:center;}
+  #confirmBackdrop.hidden{display:none;}
+  #confirmBox{background:#fff;border-radius:12px;padding:24px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.2);}
+  #confirmBox h3{font-size:15px;margin-bottom:8px;}
+  #confirmBox p{color:var(--muted);font-size:13px;margin-bottom:20px;line-height:1.5;}
+  #confirmBox .cacts{display:flex;gap:10px;justify-content:flex-end;}
+  /* TOAST */
+  #toastBox{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px;}
+  .toast{background:#1a2b18;color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:toastIn .2s ease;}
+  .toast.err{background:var(--danger);}
+  @keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ─── TOPBAR ─── */
+.topbar{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#2f8615,#256a10);padding:0 18px;height:46px;box-shadow:0 2px 12px rgba(0,0,0,.15);position:sticky;top:0;z-index:200;}
+.tb-t{color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.tb-divider{width:1px;height:18px;background:rgba(255,255,255,.2);flex-shrink:0;}
+.tb-s{flex:1;}
+.tb-stat{font-size:12px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.tb-stat b{color:#fff;}
+.tb-stat-dot{width:5px;height:5px;border-radius:50%;background:#95c11f;display:inline-block;}
+.tb-btn{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;font:600 12px/1 inherit;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap;}.tb-btn:hover{background:rgba(255,255,255,.25);}
+/* conn-dot */
+.conn-dot{width:9px;height:9px;border-radius:50%;background:#6b7280;flex-shrink:0;box-shadow:0 0 0 2px rgba(255,255,255,.15);transition:background .4s,box-shadow .4s;}
+.conn-dot.connecting{background:#f59e0b;animation:connPulse 1.2s ease-in-out infinite;}
+.conn-dot.ok{background:#95c11f;box-shadow:0 0 0 3px rgba(149,193,31,.3);animation:none;}
+.conn-dot.err{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.3);animation:none;}
+@keyframes connPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.conn-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.75);}
+#connStatus{display:flex;align-items:center;gap:6px;}
+/* ─── INFO MODAL ─── */
+.info-backdrop{position:fixed;inset:0;background:rgba(13,27,42,.55);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:flex-start;justify-content:center;padding:50px 20px;overflow-y:auto;}
+.info-backdrop.show{display:flex;animation:infoFadeIn .2s ease;}
+@keyframes infoFadeIn{from{opacity:0}to{opacity:1}}
+.info-card{background:#fff;border-radius:18px;max-width:640px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.3);overflow:hidden;animation:infoSlideUp .25s cubic-bezier(.4,0,.2,1);}
+@keyframes infoSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.info-head{background:linear-gradient(135deg,#2f8615 0%,#256a10 100%);color:#fff;padding:18px 22px;display:flex;align-items:center;gap:14px;}
+.info-head-icon{font-size:28px;flex-shrink:0;}
+.info-head-title{font-size:17px;font-weight:800;letter-spacing:-.01em;}
+.info-head-sub{font-size:12px;opacity:.85;margin-top:2px;}
+.info-head>div:nth-child(2){flex:1;min-width:0;}
+.info-close{appearance:none;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.22);color:#fff;width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:background .15s;flex-shrink:0;}
+.info-close:hover{background:rgba(255,255,255,.28);}
+.info-body{padding:20px 24px 24px;max-height:65vh;overflow-y:auto;}
+.info-section{margin-bottom:18px;}.info-section:last-child{margin-bottom:0;}
+.info-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#2f8615;margin-bottom:7px;}
+.info-section p,.info-list li{font-size:13px;line-height:1.6;color:#334155;}
+.info-list{margin:0;padding-left:0;list-style:none;}
+.info-list li{padding:7px 0 7px 22px;position:relative;border-bottom:1px solid #f1f5f0;}
+.info-list li:last-child{border-bottom:none;}
+.info-list li::before{content:'';position:absolute;left:6px;top:14px;width:6px;height:6px;border-radius:50%;background:#95c11f;}
+.info-list li b{color:#0d1b2a;font-weight:700;}
+/* ─── IFRAME ─── */
+.in-iframe .page{padding-top:18px;}
+
+</style>
+</head>
+<body>
+<!-- ═══════════ TOPBAR ═══════════ -->
+<div class="topbar" id="topbar">
+  <span class="tb-t">📄 Vertragsverwaltung</span>
+  <span class="tb-divider"></span>
+  <div class="tb-stat"><span class="tb-stat-dot"></span><b id="stat-vtr">–</b> Vertragstypen</div>
+  <div class="tb-stat"><span class="tb-stat-dot"></span><b id="stat-akt2">–</b> Aktiv</div>
+  <span class="tb-s"></span>
+  <span id="connStatus"><span class="conn-dot connecting" id="connDot"></span><span class="conn-label" id="connLabel">Verbinde…</span></span>
+  <button class="tb-btn" id="infoBtnTop" title="Was kann ich auf dieser Seite?">ℹ️ Info</button>
+  <button class="tb-btn" id="reloadBtnTop">↻ Neu laden</button>
+</div>
+
+<!-- ═══════════ INFO MODAL ═══════════ -->
+<div class="info-backdrop" id="infoModal">
+  <div class="info-card">
+    <div class="info-head">
+      <span class="info-head-icon">📄</span>
+      <div>
+        <div class="info-head-title">Vertragsverwaltung</div>
+        <div class="info-head-sub">Vertragstypen, Varianten, Rabatte &amp; Kundenverträge</div>
+      </div>
+      <button class="info-close" id="infoClose" aria-label="Schließen">✕</button>
+    </div>
+    <div class="info-body">
+      <div class="info-section">
+        <div class="info-section-title">Wozu diese Seite?</div>
+        <p>Hier verwaltest du alle Vertragsstrukturen für deine Studios — Vertragstypen, Laufzeitvarianten, Rabattvorlagen, Module und bestehende Kundenverträge.</p>
+      </div>
+      <div class="info-section">
+        <div class="info-section-title">📋 Vertragstypen &amp; Varianten</div>
+        <ul class="info-list">
+          <li><b>Vertragstypen</b> — Erstelle übergeordnete Typen (z. B. Flex One, Wellpass, 10er Karte) mit Kategorie und Angebotsdaten.</li>
+          <li><b>Varianten</b> — Füge Laufzeitvarianten mit Preisen, Kündigungsfristen und Trainingseinheiten pro Typ hinzu. Die Akkordeon-Ansicht zeigt alle Varianten kompakt.</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <div class="info-section-title">🏷️ Rabatte &amp; ➕ Module</div>
+        <ul class="info-list">
+          <li><b>Rabattvorlagen</b> — Als Prozentsatz oder Festbetrag pro Woche, anwendbar beim Vertragsabschluss.</li>
+          <li><b>Module</b> — Optionale Zusatzmodule (z. B. EMS Kraft +1) mit Aufpreis pro Woche für individuelle Upgrades.</li>
+        </ul>
+      </div>
+      <div class="info-section">
+        <div class="info-section-title">👤 Kundenverträge</div>
+        <p>Übersicht aller bestehenden Kundenverträge mit Suchfunktion und Statusfilter. Einzelne Verträge können direkt bearbeitet werden.</p>
+      </div>
+      <div class="info-section">
+        <div class="info-section-title">Wichtig zu wissen</div>
+        <ul class="info-list">
+          <li>Beim Löschen eines Vertragstyps werden <b>alle zugehörigen Varianten mitgelöscht</b>.</li>
+          <li>Vertragstypen mit aktiven Kundenverträgen sollten nicht gelöscht werden.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>(function(){if(window.self!==window.top){document.documentElement.classList.add('in-iframe');document.addEventListener('DOMContentLoaded',function(){document.body.classList.add('in-iframe');});}})();</script>
+<script>
+(function(){
+  var KEY='fitbox_session',TO=60*60*1000,s;
+  try{var r=localStorage.getItem(KEY)||sessionStorage.getItem(KEY);s=JSON.parse(r);}catch(e){}
+  if(!s||!s.access_token||s.expires_at<Date.now()){window.location.replace('login.html');throw new Error('AUTH');}
+  window._fbSession=s;window._fbToken=s.access_token;
+  var t;function reset(){clearTimeout(t);t=setTimeout(function(){localStorage.removeItem(KEY);window.location.replace('login.html');},TO);}
+  ['mousemove','mousedown','keydown','scroll','touchstart','click'].forEach(function(ev){document.addEventListener(ev,reset,{passive:true});});reset();
+})();
+window.$=id=>document.getElementById(id);
+</script>
+
+
+</div>
+
+<div class="page">
+  <div class="studio-tabs" id="studioTabs"></div>
+
+  <div class="section-tabs">
+    <button class="section-tab active" onclick="switchSection('vertraege',this)">📋 Vertragstypen &amp; Varianten</button>
+    <button class="section-tab" onclick="switchSection('rabatte',this)">🏷️ Rabatte</button>
+    <button class="section-tab" onclick="switchSection('module',this)">➕ Module</button>
+    <button class="section-tab" onclick="switchSection('kv',this)">👤 Kundenverträge</button>
+  </div>
+
+  <!-- VERTRAGSTYPEN -->
+  <div class="section active" id="section-vertraege">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Vertragstypen &amp; Laufzeitvarianten</span>
+        <button class="btn primary" onclick="openTypModal()">+ Neuer Vertragstyp</button>
+      </div>
+      <div id="typContainer"><div style="padding:24px;text-align:center;color:var(--muted)">Lädt …</div></div>
+    </div>
+  </div>
+
+  <!-- RABATTE -->
+  <div class="section" id="section-rabatte">
+    <div class="card">
+      <div class="card-head"><span class="card-title">Rabattvorlagen</span><button class="btn primary" onclick="openRabattModal()">+ Neuer Rabatt</button></div>
+      <div style="overflow-x:auto">
+        <table class="tbl"><thead><tr><th>Name</th><th>Typ</th><th>Wert</th><th>Status</th><th style="text-align:right">Aktionen</th></tr></thead>
+        <tbody id="rabattTable"><tr class="empty-row"><td colspan="5">Lädt …</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE -->
+  <div class="section" id="section-module">
+    <div class="card">
+      <div class="card-head"><span class="card-title">Modulvorlagen</span><button class="btn primary" onclick="openModulModal()">+ Neues Modul</button></div>
+      <div style="overflow-x:auto">
+        <table class="tbl"><thead><tr><th>Name</th><th>Aufpreis / Woche</th><th>Status</th><th style="text-align:right">Aktionen</th></tr></thead>
+        <tbody id="modulTable"><tr class="empty-row"><td colspan="4">Lädt …</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- KUNDENVERTRÄGE -->
+  <div class="section" id="section-kv">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Kundenverträge</span>
+        <div style="display:flex;gap:8px">
+          <input class="ctrl" id="kvSearch" placeholder="Kunde suchen …" style="width:180px" oninput="renderKv()"/>
+          <select class="ctrl" id="kvFilter" style="width:140px" onchange="renderKv()">
+            <option value="">Alle Status</option>
+            <option value="aktiv">Aktiv</option>
+            <option value="inaktiv">Inaktiv</option>
+            <option value="gekuendigt">Gekündigt</option>
+          </select>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="tbl"><thead><tr><th>Kunde</th><th>Vertragstyp</th><th>Variante</th><th>Beginn</th><th>Ende</th><th>€/Woche</th><th>Status</th><th style="text-align:right">Aktionen</th></tr></thead>
+        <tbody id="kvTable"><tr class="empty-row"><td colspan="8">Lädt …</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: VERTRAGSTYP -->
+<div class="backdrop hidden" id="typBackdrop">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title" id="typTitle">Vertragstyp</span><button class="btn sm" onclick="closeTypModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="typId"/>
+      <div class="fgrid">
+        <div class="c12 field"><label>Name</label><input class="ctrl" id="typName" placeholder="z. B. Flex One, Wellpass, 10er Karte"/></div>
+        <div class="c6 field"><label>Kategorie</label>
+          <select class="ctrl" id="typKat">
+            <option value="laufzeit">Laufzeitvertrag</option>
+            <option value="zehnerkarte">10er Karte</option>
+            <option value="wellpass">Wellpass</option>
+            <option value="mtt">MTT / PKV</option>
+            <option value="kontingent">Kontingent</option>
+          </select>
+        </div>
+        <div class="c6 field"><label>Sortierung</label><input class="ctrl" id="typSort" type="number" value="100"/></div>
+        <div class="c12 field"><label>Beschreibung (intern)</label><textarea class="ctrl" id="typDesc" rows="2" placeholder="Optional …"></textarea></div>
+        <div class="c12" style="border-top:1px solid var(--border);margin-top:4px;padding-top:14px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:12px">📢 Angebotsdaten (öffentlich / Verkaufstool)</div>
+          <div class="fgrid" style="gap:12px">
+            <div class="c12 field"><label>Öffentlicher Angebotsname</label><input class="ctrl" id="typAngebotsName" placeholder="z. B. Flex One"/></div>
+            <div class="c12 field"><label>Angebotsbeschreibung</label><textarea class="ctrl" id="typAngebotsBeschreibung" rows="3" placeholder="Kurzer Marketing-Text …"></textarea></div>
+            <div class="c12 field"><label>Enthaltene Leistungen (eine pro Zeile, mit - beginnen)</label><textarea class="ctrl" id="typLeistungen" rows="8" placeholder="- 1x EMS Krafttraining pro Woche&#10;- Immer mit fitbox® Personal Trainer&#10;…"></textarea></div>
+            <div class="c12 field"><label>Fußnote</label><textarea class="ctrl" id="typFussnote" rows="3" placeholder="Rechtliche Hinweise …"></textarea></div>
+          </div>
+        </div>
+        <div class="c12"><label class="toggle-wrap"><span class="toggle"><input type="checkbox" id="typActive" checked/><span class="toggle-slider"></span></span><span class="toggle-label">Aktiv</span></label></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeTypModal()">Abbrechen</button><button class="btn primary" onclick="saveTyp()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- MODAL: VARIANTE -->
+<div class="backdrop hidden" id="varBackdrop">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title" id="varTitle">Variante</span><button class="btn sm" onclick="closeVarModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="varId"/>
+      <input type="hidden" id="varTypId"/>
+      <div id="varTypLabel" style="font-weight:700;color:var(--fit);font-size:13px;margin-bottom:14px"></div>
+      <div class="fgrid">
+        <div class="c12 field"><label>Bezeichnung</label><input class="ctrl" id="varBez" placeholder="z. B. 12 Monate, 24 Monate, Zuzahlung"/></div>
+        <div class="c6 field" id="varLaufRow"><label>Laufzeit / Gültigkeit</label>
+          <div class="addon"><input class="ctrl" id="varLauf" type="number" min="0" placeholder="12"/><span class="addon-unit">Mo.</span></div>
+        </div>
+        <div class="c6 field" id="varKuendRow"><label>Kündigungsfrist</label>
+          <div class="addon"><input class="ctrl" id="varKuend" type="number" min="0" value="8"/><span class="addon-unit">Wo.</span></div>
+        </div>
+        <div class="c6 field" id="varKontingentRow" style="display:none"><label>Einheiten</label>
+          <div class="addon"><input class="ctrl" id="varEinheiten" type="number" min="1" placeholder="26"/><span class="addon-unit">Einh.</span></div>
+        </div>
+        <div class="c6 field"><label>Wochenbeitrag</label>
+          <div class="addon"><input class="ctrl" id="varWoche" type="number" min="0" step="0.01" placeholder="19.90"/><span class="addon-unit">€/Wo.</span></div>
+        </div>
+        <div class="c6 field"><label>Einmalzahlung / Startpaket</label>
+          <div class="addon"><input class="ctrl" id="varEinmal" type="number" min="0" step="0.01" placeholder="0.00"/><span class="addon-unit">€</span></div>
+        </div>
+        <div class="c6 field"><label>Trainings / Woche</label><input class="ctrl" id="varTraining" type="number" min="1" max="7" value="1"/></div>
+        <div class="c6 field"><label>Sortierung</label><input class="ctrl" id="varSort" type="number" value="100"/></div>
+        <div class="c12"><label class="toggle-wrap"><span class="toggle"><input type="checkbox" id="varActive" checked/><span class="toggle-slider"></span></span><span class="toggle-label">Aktiv</span></label></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeVarModal()">Abbrechen</button><button class="btn primary" onclick="saveVar()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- MODAL: RABATT -->
+<div class="backdrop hidden" id="rabattBackdrop">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title" id="rabattTitle">Rabatt</span><button class="btn sm" onclick="closeRabattModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="rabattId"/>
+      <div class="fgrid">
+        <div class="c12 field"><label>Name</label><input class="ctrl" id="rabattName" placeholder="z. B. 10% Rabatt"/></div>
+        <div class="c6 field"><label>Typ</label>
+          <select class="ctrl" id="rabattTyp"><option value="prozent">Prozent (%)</option><option value="festbetrag">Festbetrag (€/Wo.)</option></select>
+        </div>
+        <div class="c6 field"><label>Wert</label><input class="ctrl" id="rabattWert" type="number" min="0" step="0.01" placeholder="10"/></div>
+        <div class="c6 field"><label>Sortierung</label><input class="ctrl" id="rabattSort" type="number" value="100"/></div>
+        <div class="c12"><label class="toggle-wrap"><span class="toggle"><input type="checkbox" id="rabattActive" checked/><span class="toggle-slider"></span></span><span class="toggle-label">Aktiv</span></label></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeRabattModal()">Abbrechen</button><button class="btn primary" onclick="saveRabatt()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- MODAL: MODUL -->
+<div class="backdrop hidden" id="modulBackdrop">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title" id="modulTitle">Modul</span><button class="btn sm" onclick="closeModulModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="modulId"/>
+      <div class="fgrid">
+        <div class="c12 field"><label>Name</label><input class="ctrl" id="modulName" placeholder="z. B. EMS Kraft +1"/></div>
+        <div class="c6 field"><label>Aufpreis / Woche</label>
+          <div class="addon"><input class="ctrl" id="modulAufpreis" type="number" min="0" step="0.01" placeholder="0.00"/><span class="addon-unit">€/Wo.</span></div>
+        </div>
+        <div class="c6 field"><label>Sortierung</label><input class="ctrl" id="modulSort" type="number" value="100"/></div>
+        <div class="c12"><label class="toggle-wrap"><span class="toggle"><input type="checkbox" id="modulActive" checked/><span class="toggle-slider"></span></span><span class="toggle-label">Aktiv</span></label></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeModulModal()">Abbrechen</button><button class="btn primary" onclick="saveModul()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- MODAL: KUNDENVERTRAG -->
+<div class="backdrop hidden" id="kvBackdrop">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-head"><span class="modal-title">Kundenvertrag</span><button class="btn sm" onclick="closeKvModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="kvId"/>
+      <div id="kvKundeName" style="font-weight:700;font-size:15px;margin-bottom:14px;color:var(--fit)"></div>
+      <div class="fgrid">
+        <div class="c12 field"><label>Vertragsart / Bezeichnung</label><input class="ctrl" id="kvVertragsart"/></div>
+        <div class="c6 field"><label>Vertragsbeginn</label><input class="ctrl" id="kvBeginn" type="date"/></div>
+        <div class="c6 field"><label>Vertragsende</label><input class="ctrl" id="kvEnde" type="date"/></div>
+        <div class="c6 field"><label>Laufzeit (Monate)</label><input class="ctrl" id="kvLaufzeit" type="number" min="0"/></div>
+        <div class="c6 field"><label>Kündigung (Wochen)</label><input class="ctrl" id="kvKuend" type="number" min="0" value="8"/></div>
+        <div class="c6 field"><label>Wochenbeitrag</label>
+          <div class="addon"><input class="ctrl" id="kvWoche" type="number" min="0" step="0.01"/><span class="addon-unit">€/Wo.</span></div>
+        </div>
+        <div class="c6 field"><label>Trainings / Woche</label><input class="ctrl" id="kvTraining" type="number" min="0" max="7" value="1"/></div>
+        <div class="c6 field"><label>Status</label>
+          <select class="ctrl" id="kvStatus"><option value="aktiv">Aktiv</option><option value="inaktiv">Inaktiv</option><option value="gekuendigt">Gekündigt</option></select>
+        </div>
+        <div class="c6 field"><label>Gekündigt am</label><input class="ctrl" id="kvGekAm" type="date"/></div>
+        <div class="c12 field"><label>Notiz</label><textarea class="ctrl" id="kvNotiz" rows="2"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn" onclick="closeKvModal()">Abbrechen</button><button class="btn primary" onclick="saveKv()">Speichern</button></div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="hidden" id="confirmBackdrop">
+  <div id="confirmBox">
+    <h3 id="confirmTitle">Bestätigen</h3><p id="confirmMsg"></p>
+    <div class="cacts"><button class="btn" id="confirmCancel">Abbrechen</button><button class="btn danger" id="confirmOk">Löschen</button></div>
+  </div>
+</div>
+<div id="toastBox"></div>
+
+<script type="text/javascript">
+'use strict';
+var SB_URL='https://jypbyywxfjniafuygxci.supabase.co',SB_KEY='sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+var sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false,autoRefreshToken:false},global:{headers:{Authorization:'Bearer '+window._fbSession.access_token}}});
+var empId=window._fbSession?.employee?.id||null;
+
+var S = { studios:[], sid:null, typen:[], vorlagen:[], rabatte:[], module:[], kv:[] };
+
+var esc  = function(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+var woche= function(v){return v!=null?Number(v).toFixed(2).replace('.',',')+' €/Wo.':'–';};
+var eur  = function(v){return v!=null?Number(v).toFixed(2).replace('.',',')+' €':'–';};
+var TLAB = {laufzeit:'Laufzeit',zehnerkarte:'10er Karte',wellpass:'Wellpass',mtt:'MTT/PKV',kontingent:'Kontingent'};
+var TPIL = {laufzeit:'pill-green',zehnerkarte:'pill-blue',wellpass:'pill-orange',mtt:'pill-blue',kontingent:'pill-orange'};
+
+function toast(msg,err=false){
+  const d=document.createElement('div');d.className='toast'+(err?' err':'');d.textContent=msg;
+  $('toastBox').appendChild(d);setTimeout(()=>d.remove(),3500);
+}
+function confirm(title,msg){
+  return new Promise(r=>{
+    $('confirmTitle').textContent=title;$('confirmMsg').textContent=msg;
+    $('confirmBackdrop').classList.remove('hidden');
+    const ok=$('confirmOk'),cl=$('confirmCancel');
+    const done=v=>{$('confirmBackdrop').classList.add('hidden');ok.onclick=null;cl.onclick=null;r(v);};
+    ok.onclick=()=>done(true);cl.onclick=()=>done(false);
+  });
+}
+
+window.switchSection=function(name,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.section-tab').forEach(b=>b.classList.remove('active'));
+  $('section-'+name).classList.add('active');btn.classList.add('active');
+  if(name==='kv') loadKv();
+};
+
+window.selectStudio=async function(id){
+  S.sid=id;
+  document.querySelectorAll('.studio-tab').forEach(b=>b.classList.toggle('active',b.dataset.id===id));
+  await Promise.all([loadTypen(),loadRabatte(),loadModule()]);
+};
+
+// ══ VERTRAGSTYPEN ══
+async function loadTypen(){
+  const [tR,vR]=await Promise.all([
+    sb.from('vertragstypen').select('id,studio_id,name,vertragstyp,beschreibung,is_active,sort_order,angebots_name,angebots_beschreibung,enthaltene_leistungen,fussnote').eq('studio_id',S.sid).order('sort_order').order('name'),
+    sb.from('vertragsvorlagen').select('*').eq('studio_id',S.sid).order('sort_order').order('bezeichnung')
+  ]);
+  S.typen=tR.data||[];S.vorlagen=vR.data||[];renderTypen();
+  var sV=document.getElementById("stat-vtr");if(sV)sV.textContent=S.typen.length;
+  var sA=document.getElementById("stat-akt2");if(sA)sA.textContent=S.typen.filter(function(t){return t.is_active;}).length;
+}
+
+function renderTypen(){
+  const con=$('typContainer');
+  if(!S.typen.length){con.innerHTML='<div style="padding:24px;text-align:center;color:var(--muted)">Noch keine Vertragstypen für dieses Studio</div>';return;}
+  con.innerHTML=S.typen.map(t=>{
+    const vars=S.vorlagen.filter(v=>v.vertragstyp_id===t.id);
+    const rows=vars.length?vars.map(v=>`<tr>
+      <td>${esc(v.bezeichnung||'–')}</td>
+      <td>${v.laufzeit_monate?v.laufzeit_monate+' Mo.':'–'}</td>
+      <td>${v.kontingent_einheiten?v.kontingent_einheiten+' Einh.':'–'}</td>
+      <td><strong>${woche(v.wochenbeitrag)}</strong></td>
+      <td>${v.einmalzahlung?eur(v.einmalzahlung):'–'}</td>
+      <td>${v.trainings_pro_woche||1}×/Wo.</td>
+      <td>${v.kuendigungsfrist_wochen!=null?v.kuendigungsfrist_wochen+' Wo.':'–'}</td>
+      <td><span class="pill ${v.is_active?'pill-green':'pill-gray'}">${v.is_active?'Aktiv':'Inaktiv'}</span></td>
+      <td style="text-align:right;white-space:nowrap">
+        <button class="btn sm" onclick="openVarModal('${t.id}','${v.id}')">✏️</button>
+        <button class="btn sm danger" onclick="deleteVar('${v.id}')">🗑️</button>
+      </td></tr>`).join('')
+      :`<tr class="empty-row"><td colspan="8">Noch keine Varianten — füge eine hinzu</td></tr>`;
+    return `<div class="vtyp-block" id="vtyp-${t.id}">
+      <div class="vtyp-header" onclick="toggleTyp('${t.id}')">
+        <span class="pill ${TPIL[t.vertragstyp]||'pill-gray'}" style="font-size:10px">${TLAB[t.vertragstyp]||t.vertragstyp}</span>
+        <span class="vtyp-name">${esc(t.name)}</span>
+        <span class="vtyp-meta">${vars.length} Variante${vars.length!==1?'n':''}</span>
+        <span class="pill ${t.is_active?'pill-green':'pill-gray'}" style="font-size:10px">${t.is_active?'Aktiv':'Inaktiv'}</span>
+        <div class="vtyp-acts" onclick="event.stopPropagation()">
+          <button class="btn sm primary" onclick="openVarModal('${t.id}')">+ Variante</button>
+          <button class="btn sm" onclick="openTypModal('${t.id}')">✏️</button>
+          <button class="btn sm danger" onclick="deleteTyp('${t.id}')">🗑️</button>
+        </div>
+        <span class="vtyp-chevron">▾</span>
+      </div>
+      <div class="vtyp-body">
+        ${t.beschreibung?`<div style="font-size:12px;color:var(--muted);margin-bottom:8px">${esc(t.beschreibung)}</div>`:''}
+        <table class="vtbl"><thead><tr>
+          <th>Bezeichnung</th><th>Laufzeit</th><th>Einheiten</th><th>€/Woche</th><th>Einmalig</th>
+          <th>Training</th><th>Kündigung</th><th>Status</th><th style="text-align:right">Aktionen</th>
+        </tr></thead><tbody>${rows}</tbody></table>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.toggleTyp=id=>document.getElementById('vtyp-'+id)?.classList.toggle('open');
+
+window.openTypModal=function(id=null){
+  const t=id?S.typen.find(x=>x.id===id):null;
+  $('typTitle').textContent=t?'Vertragstyp bearbeiten':'Neuer Vertragstyp';
+  $('typId').value=t?.id||'';$('typName').value=t?.name||'';$('typKat').value=t?.vertragstyp||'laufzeit';
+  $('typSort').value=t?.sort_order||100;$('typDesc').value=t?.beschreibung||'';$('typActive').checked=t?t.is_active:true;
+  $('typAngebotsName').value=t?.angebots_name||'';
+  $('typAngebotsBeschreibung').value=t?.angebots_beschreibung||'';
+  $('typLeistungen').value=t?.enthaltene_leistungen||'';
+  $('typFussnote').value=t?.fussnote||'';
+  $('typBackdrop').classList.remove('hidden');$('typName').focus();
+};
+window.closeTypModal=()=>$('typBackdrop').classList.add('hidden');
+window.saveTyp=async function(){
+  const name=$('typName').value.trim();if(!name){toast('Name ist Pflichtfeld',true);return;}
+  const id=$('typId').value,now=new Date().toISOString();
+  const pay={studio_id:S.sid,name,vertragstyp:$('typKat').value,beschreibung:$('typDesc').value.trim()||null,
+    sort_order:parseInt($('typSort').value)||100,is_active:$('typActive').checked,
+    angebots_name:$('typAngebotsName').value.trim()||null,
+    angebots_beschreibung:$('typAngebotsBeschreibung').value.trim()||null,
+    enthaltene_leistungen:$('typLeistungen').value.trim()||null,
+    fussnote:$('typFussnote').value.trim()||null,
+    updated_at:now,updated_by:empId};
+  let err;
+  if(id){({error:err}=await sb.from('vertragstypen').update(pay).eq('id',id));}
+  else{pay.created_by=empId;({error:err}=await sb.from('vertragstypen').insert(pay));}
+  if(err){toast('Fehler: '+err.message,true);return;}
+  closeTypModal();toast(id?'Typ aktualisiert':'Typ erstellt');await loadTypen();
+};
+window.deleteTyp=async function(id){
+  const vars=S.vorlagen.filter(v=>v.vertragstyp_id===id);
+  const ok=await confirm('Vertragstyp löschen?',vars.length?`Achtung: ${vars.length} Variante(n) werden mitgelöscht.`:'Wird dauerhaft gelöscht.');
+  if(!ok)return;
+  const{error}=await sb.from('vertragstypen').delete().eq('id',id);
+  if(error){toast('Fehler: '+error.message,true);return;}
+  toast('Gelöscht');await loadTypen();
+};
+
+window.openVarModal=function(typId,varId=null){
+  const t=S.typen.find(x=>x.id===typId);
+  const v=varId?S.vorlagen.find(x=>x.id===varId):null;
+  const typ = t?.vertragstyp || 'laufzeit';
+  const isLauf = typ === 'laufzeit';
+  const isKontingent = typ === 'kontingent';
+  $('varTitle').textContent=v?'Variante bearbeiten':'Neue Variante';
+  $('varTypId').value=typId;$('varId').value=v?.id||'';
+  $('varTypLabel').textContent=t?'📋 '+t.name:'';
+  $('varBez').value=v?.bezeichnung||'';$('varLauf').value=v?.laufzeit_monate||v?.kontingent_laufzeit_monate||'';
+  $('varKuend').value=v?.kuendigungsfrist_wochen??8;$('varWoche').value=v?.wochenbeitrag||'';
+  $('varEinmal').value=v?.einmalzahlung||'';$('varTraining').value=v?.trainings_pro_woche||1;
+  $('varSort').value=v?.sort_order||100;$('varActive').checked=v?v.is_active:true;
+  $('varEinheiten').value=v?.kontingent_einheiten||'';
+  $('varLaufRow').style.display=(isLauf||isKontingent)?'':'none';
+  $('varKuendRow').style.display=isLauf?'':'none';
+  $('varKontingentRow').style.display=isKontingent?'':'none';
+  $('varBackdrop').classList.remove('hidden');$('varBez').focus();
+};
+window.closeVarModal=()=>$('varBackdrop').classList.add('hidden');
+window.saveVar=async function(){
+  const typId=$('varTypId').value;const t=S.typen.find(x=>x.id===typId);
+  const id=$('varId').value,now=new Date().toISOString();
+  const typ2 = t?.vertragstyp || 'laufzeit';
+  const isLauf = typ2 === 'laufzeit';
+  const isKontingent = typ2 === 'kontingent';
+  const pay={studio_id:S.sid,vertragstyp_id:typId,bezeichnung:$('varBez').value.trim()||null,
+    laufzeit_monate:(isLauf||isKontingent)?(parseInt($('varLauf').value)||null):null,
+    kontingent_laufzeit_monate:isKontingent?(parseInt($('varLauf').value)||null):null,
+    kontingent_einheiten:isKontingent?(parseInt($('varEinheiten').value)||null):null,
+    kuendigungsfrist_wochen:isLauf?(parseInt($('varKuend').value)??8):null,
+    wochenbeitrag:parseFloat($('varWoche').value)||null,einmalzahlung:parseFloat($('varEinmal').value)||null,
+    trainings_pro_woche:parseInt($('varTraining').value)||1,sort_order:parseInt($('varSort').value)||100,
+    is_active:$('varActive').checked,updated_at:now,updated_by:empId};
+  let err;
+  if(id){({error:err}=await sb.from('vertragsvorlagen').update(pay).eq('id',id));}
+  else{pay.created_by=empId;({error:err}=await sb.from('vertragsvorlagen').insert(pay));}
+  if(err){toast('Fehler: '+err.message,true);return;}
+  closeVarModal();toast(id?'Variante aktualisiert':'Variante erstellt');await loadTypen();
+};
+window.deleteVar=async function(id){
+  const ok=await confirm('Variante löschen?','Wird dauerhaft gelöscht.');if(!ok)return;
+  const{error}=await sb.from('vertragsvorlagen').delete().eq('id',id);
+  if(error){toast('Fehler: '+error.message,true);return;}
+  toast('Variante gelöscht');await loadTypen();
+};
+
+// ══ RABATTE ══
+async function loadRabatte(){
+  const{data,error}=await sb.from('rabattvorlagen').select('*').eq('studio_id',S.sid).order('sort_order').order('name');
+  if(error){toast('Fehler: '+error.message,true);return;}
+  S.rabatte=data||[];
+  const tb=$('rabattTable');
+  if(!S.rabatte.length){tb.innerHTML='<tr class="empty-row"><td colspan="5">Noch keine Rabatte</td></tr>';return;}
+  tb.innerHTML=S.rabatte.map(r=>`<tr>
+    <td><strong>${esc(r.name)}</strong></td>
+    <td>${r.rabatt_typ==='prozent'?'Prozent':'Festbetrag/Wo.'}</td>
+    <td>${r.rabatt_typ==='prozent'?r.rabatt_wert+'%':woche(r.rabatt_wert)}</td>
+    <td><span class="pill ${r.is_active?'pill-green':'pill-gray'}">${r.is_active?'Aktiv':'Inaktiv'}</span></td>
+    <td style="text-align:right;white-space:nowrap">
+      <button class="btn sm" onclick="openRabattModal('${r.id}')">✏️ Bearbeiten</button>
+      <button class="btn sm danger" onclick="deleteRabatt('${r.id}')">🗑️</button>
+    </td></tr>`).join('');
+}
+window.openRabattModal=function(id=null){
+  const r=id?S.rabatte.find(x=>x.id===id):null;
+  $('rabattTitle').textContent=r?'Rabatt bearbeiten':'Neuer Rabatt';
+  $('rabattId').value=r?.id||'';$('rabattName').value=r?.name||'';$('rabattTyp').value=r?.rabatt_typ||'prozent';
+  $('rabattWert').value=r?.rabatt_wert||'';$('rabattSort').value=r?.sort_order||100;$('rabattActive').checked=r?r.is_active:true;
+  $('rabattBackdrop').classList.remove('hidden');$('rabattName').focus();
+};
+window.closeRabattModal=()=>$('rabattBackdrop').classList.add('hidden');
+window.saveRabatt=async function(){
+  const name=$('rabattName').value.trim(),wert=parseFloat($('rabattWert').value);
+  if(!name){toast('Name ist Pflichtfeld',true);return;}if(isNaN(wert)){toast('Wert fehlt',true);return;}
+  const id=$('rabattId').value,now=new Date().toISOString();
+  const pay={studio_id:S.sid,name,rabatt_typ:$('rabattTyp').value,rabatt_wert:wert,
+    sort_order:parseInt($('rabattSort').value)||100,is_active:$('rabattActive').checked,updated_at:now,updated_by:empId};
+  let err;
+  if(id){({error:err}=await sb.from('rabattvorlagen').update(pay).eq('id',id));}
+  else{pay.created_by=empId;({error:err}=await sb.from('rabattvorlagen').insert(pay));}
+  if(err){toast('Fehler: '+err.message,true);return;}
+  closeRabattModal();toast(id?'Rabatt aktualisiert':'Rabatt erstellt');await loadRabatte();
+};
+window.deleteRabatt=async function(id){
+  const ok=await confirm('Rabatt löschen?','Wird dauerhaft gelöscht.');if(!ok)return;
+  const{error}=await sb.from('rabattvorlagen').delete().eq('id',id);
+  if(error){toast('Fehler: '+error.message,true);return;}toast('Gelöscht');await loadRabatte();
+};
+
+// ══ MODULE ══
+async function loadModule(){
+  const{data,error}=await sb.from('modulvorlagen').select('*').eq('studio_id',S.sid).order('sort_order').order('name');
+  if(error){toast('Fehler: '+error.message,true);return;}
+  S.module=data||[];
+  const tb=$('modulTable');
+  if(!S.module.length){tb.innerHTML='<tr class="empty-row"><td colspan="4">Noch keine Module</td></tr>';return;}
+  tb.innerHTML=S.module.map(m=>`<tr>
+    <td><strong>${esc(m.name)}</strong></td>
+    <td>${m.aufpreis?woche(m.aufpreis):'–'}</td>
+    <td><span class="pill ${m.is_active?'pill-green':'pill-gray'}">${m.is_active?'Aktiv':'Inaktiv'}</span></td>
+    <td style="text-align:right;white-space:nowrap">
+      <button class="btn sm" onclick="openModulModal('${m.id}')">✏️ Bearbeiten</button>
+      <button class="btn sm danger" onclick="deleteModul('${m.id}')">🗑️</button>
+    </td></tr>`).join('');
+}
+window.openModulModal=function(id=null){
+  const m=id?S.module.find(x=>x.id===id):null;
+  $('modulTitle').textContent=m?'Modul bearbeiten':'Neues Modul';
+  $('modulId').value=m?.id||'';$('modulName').value=m?.name||'';$('modulAufpreis').value=m?.aufpreis||'';
+  $('modulSort').value=m?.sort_order||100;$('modulActive').checked=m?m.is_active:true;
+  $('modulBackdrop').classList.remove('hidden');$('modulName').focus();
+};
+window.closeModulModal=()=>$('modulBackdrop').classList.add('hidden');
+window.saveModul=async function(){
+  const name=$('modulName').value.trim();if(!name){toast('Name ist Pflichtfeld',true);return;}
+  const id=$('modulId').value,now=new Date().toISOString();
+  const pay={studio_id:S.sid,name,aufpreis:parseFloat($('modulAufpreis').value)||null,
+    sort_order:parseInt($('modulSort').value)||100,is_active:$('modulActive').checked,updated_at:now,updated_by:empId};
+  let err;
+  if(id){({error:err}=await sb.from('modulvorlagen').update(pay).eq('id',id));}
+  else{pay.created_by=empId;({error:err}=await sb.from('modulvorlagen').insert(pay));}
+  if(err){toast('Fehler: '+err.message,true);return;}
+  closeModulModal();toast(id?'Modul aktualisiert':'Modul erstellt');await loadModule();
+};
+window.deleteModul=async function(id){
+  const ok=await confirm('Modul löschen?','Wird dauerhaft gelöscht.');if(!ok)return;
+  const{error}=await sb.from('modulvorlagen').delete().eq('id',id);
+  if(error){toast('Fehler: '+error.message,true);return;}toast('Gelöscht');await loadModule();
+};
+
+// ══ KUNDENVERTRÄGE ══
+async function loadKv(){
+  $('kvTable').innerHTML='<tr class="empty-row"><td colspan="8">Lädt …</td></tr>';
+  const{data,error}=await sb.from('kunden_vertraege')
+    .select('*, kunden(id,first_name,last_name), vertragstypen(id,name)')
+    .eq('studio_id',S.sid).order('created_at',{ascending:false});
+  if(error){toast('Fehler: '+error.message,true);return;}
+  S.kv=data||[];renderKv();
+}
+window.renderKv=function(){
+  const q=($('kvSearch')?.value||'').toLowerCase(),sf=$('kvFilter')?.value||'';
+  let rows=S.kv;
+  if(q)rows=rows.filter(r=>{const n=((r.kunden?.first_name||'')+' '+(r.kunden?.last_name||'')).toLowerCase();return n.includes(q)||(r.vertragsart||'').toLowerCase().includes(q);});
+  if(sf)rows=rows.filter(r=>r.status===sf);
+  const tb=$('kvTable');
+  if(!rows.length){tb.innerHTML='<tr class="empty-row"><td colspan="8">Keine Verträge gefunden</td></tr>';return;}
+  const sp={aktiv:'pill-green',inaktiv:'pill-gray',gekuendigt:'pill-orange'};
+  tb.innerHTML=rows.map(r=>`<tr>
+    <td><strong>${esc((r.kunden?.first_name||'')+' '+(r.kunden?.last_name||''))}</strong></td>
+    <td>${esc(r.vertragstypen?.name||'–')}</td>
+    <td>${esc(r.vertragsart||'–')}</td>
+    <td>${r.vertragsbeginn||'–'}</td>
+    <td>${r.vertragsende||'–'}</td>
+    <td>${r.wochenbeitrag?woche(r.wochenbeitrag):r.monatsbeitrag?'('+eur(r.monatsbeitrag)+'/Mo.)':'–'}</td>
+    <td><span class="pill ${sp[r.status]||'pill-gray'}">${r.status||'–'}</span></td>
+    <td style="text-align:right"><button class="btn sm" onclick="openKvModal('${r.id}')">✏️ Bearbeiten</button></td>
+  </tr>`).join('');
+};
+window.openKvModal=function(id){
+  const r=S.kv.find(x=>x.id===id);if(!r)return;
+  $('kvId').value=r.id;$('kvKundeName').textContent=(r.kunden?.first_name||'')+' '+(r.kunden?.last_name||'');
+  $('kvVertragsart').value=r.vertragsart||'';$('kvBeginn').value=r.vertragsbeginn||'';
+  $('kvEnde').value=r.vertragsende||'';$('kvLaufzeit').value=r.laufzeit_monate||'';
+  $('kvKuend').value=r.kuendigungsfrist_wochen??8;$('kvWoche').value=r.wochenbeitrag||r.monatsbeitrag||'';
+  $('kvTraining').value=r.trainings_pro_woche||1;$('kvStatus').value=r.status||'aktiv';
+  $('kvGekAm').value=r.gekuendigt_am||'';$('kvNotiz').value=r.notiz||'';
+  $('kvBackdrop').classList.remove('hidden');
+};
+window.closeKvModal=()=>$('kvBackdrop').classList.add('hidden');
+window.saveKv=async function(){
+  const id=$('kvId').value,now=new Date().toISOString();
+  const pay={vertragsart:$('kvVertragsart').value.trim()||null,vertragsbeginn:$('kvBeginn').value||null,
+    vertragsende:$('kvEnde').value||null,laufzeit_monate:parseInt($('kvLaufzeit').value)||null,
+    kuendigungsfrist_wochen:parseInt($('kvKuend').value)??8,wochenbeitrag:parseFloat($('kvWoche').value)||null,
+    trainings_pro_woche:parseInt($('kvTraining').value)||1,status:$('kvStatus').value,
+    gekuendigt_am:$('kvGekAm').value||null,notiz:$('kvNotiz').value.trim()||null,updated_at:now,updated_by:empId};
+  const{error}=await sb.from('kunden_vertraege').update(pay).eq('id',id);
+  if(error){toast('Fehler: '+error.message,true);return;}
+  closeKvModal();toast('Vertrag aktualisiert');await loadKv();
+};
+
+// ── INIT mit conn-dot ──
+async function init(){
+  var dot=document.getElementById('connDot'),lbl=document.getElementById('connLabel');
+  if(dot)dot.className='conn-dot connecting';if(lbl)lbl.textContent='Verbinde…';
+  try{
+    var{data,error}=await sb.from('studios').select('id,name').order('name');
+    if(error){toast('Fehler beim Laden der Studios',true);if(dot)dot.className='conn-dot err';if(lbl)lbl.textContent='Fehler';return;}
+    S.studios=data||[];
+    $('studioTabs').innerHTML=S.studios.map(function(s){return'<button class="studio-tab" data-id="'+s.id+'" onclick="selectStudio(\''+s.id+'\')">'+esc(s.name)+'</button>';}).join('');
+    if(S.studios.length)await selectStudio(S.studios[0].id);
+    if(dot)dot.className='conn-dot ok';if(lbl)lbl.textContent='Verbunden';
+  }catch(e){
+    toast('Ladefehler: '+e.message,true);
+    if(dot)dot.className='conn-dot err';if(lbl)lbl.textContent='Fehler';
+  }
+}
+
+// ── Topbar-Handler ──
+(function(){
+  var infoBtn=document.getElementById('infoBtnTop');
+  var infoModal=document.getElementById('infoModal');
+  var infoClose=document.getElementById('infoClose');
+  if(infoBtn&&infoModal){
+    infoBtn.addEventListener('click',function(){infoModal.classList.add('show');});
+    infoClose&&infoClose.addEventListener('click',function(){infoModal.classList.remove('show');});
+    infoModal.addEventListener('click',function(e){if(e.target===infoModal)infoModal.classList.remove('show');});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&infoModal.classList.contains('show'))infoModal.classList.remove('show');});
+  }
+  var rb=document.getElementById('reloadBtnTop');
+  if(rb)rb.addEventListener('click',init);
+})();
+
+init();
+</script>
+</body>
+</html>
