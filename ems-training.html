@@ -1250,7 +1250,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
 
     fetch(SUPA_URL+'/rest/v1/pt_leads', {
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=representation','Accept':'application/json'},
+      headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal','Accept':'application/json'},
       body: JSON.stringify({
         studio_id: st.studioId,
         first_name: firstName,
@@ -1263,7 +1263,13 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
         notes: notes.join(' | ')
       })
     })
-    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(r){
+      if(!r.ok) return null;
+      // ID per SELECT nachholen (anon hat kein return=representation)
+      return fetch(SUPA_URL+'/rest/v1/pt_leads?studio_id=eq.'+st.studioId+'&phone=eq.'+encodeURIComponent(phone)+'&source_code=eq.website&order=created_at.desc&limit=1&select=id', {
+        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Accept':'application/json'}
+      }).then(function(r2){ return r2.ok ? r2.json() : null; });
+    })
     .then(function(rows){
       if(rows && rows[0] && rows[0].id) st.leadId = rows[0].id;
       if(btn){ btn.disabled = false; btn.textContent = 'Weiter zum Termin'; }
@@ -1457,6 +1463,14 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     var st = states[formId];
     var ind = q('[data-form="'+formId+'"]'); if(ind) ind.style.display = 'none';
     qa('[data-step^="'+formId+'"]').forEach(function(s){ s.classList.remove('active'); });
+    // Quiz-Header ausblenden (nur wenn Form A, da der Header zum Quiz-Bereich gehört)
+    if(formId === 'A'){
+      var quizIn = q('.quiz-in');
+      if(quizIn){
+        ['quiz-cta','quiz-t','quiz-s'].forEach(function(id){ var el = $(id); if(el) el.style.display='none'; });
+        var arrow = quizIn.querySelector('.quiz-arrow'); if(arrow) arrow.style.display='none';
+      }
+    }
 
     var waNum = st.studioCode === 'SEN' ? WA.SEN : WA.MEM;
     var msg = 'Hallo, ich habe gerade einen Gutschein f\u00fcr ein Probetraining angefordert (' + firstName + '). Wann k\u00f6nnen wir den Termin besprechen?';
