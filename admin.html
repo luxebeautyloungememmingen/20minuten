@@ -120,7 +120,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 .stat-i{display:grid;grid-template-columns:120px 1fr;gap:12px;margin-bottom:12px;align-items:end;padding:14px;background:var(--bg);border:1px solid var(--bd);border-radius:10px}
 .stat-i:last-child{margin-bottom:0}
 
-.img-prev{margin-top:8px;border-radius:10px;overflow:hidden;height:140px;background:var(--ba);position:relative;border:1px solid var(--bd)}
+.img-spec{display:flex;align-items:center;flex-wrap:wrap;gap:5px;margin-top:8px;padding:8px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;font-size:12px;color:var(--m)}
+.img-spec-px{font-family:'Courier New',monospace;font-size:12px;font-weight:700;color:var(--dg);background:var(--gl);padding:2px 7px;border-radius:4px;letter-spacing:.3px}
+.img-spec-sep{color:var(--bd-strong);font-weight:400}
 .img-prev img{width:100%;height:100%;object-fit:cover}
 .img-ph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--m-l);font-size:13px;text-align:center;padding:8px;font-weight:500}
 .goal-img-prev{margin-top:8px;border-radius:8px;overflow:hidden;height:100px;background:var(--ba);position:relative;border:1px solid var(--bd)}
@@ -267,6 +269,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
               <button class="upl-btn" data-upload="hero_img" data-prev="hero-preview">Bild hochladen</button>
               <button class="upl-clear" data-clear="hero_img" data-prev="hero-preview" type="button">L&ouml;schen</button>
             </div>
+            <div class="img-spec"><span class="img-spec-px">1200 &times; 800 px</span><span class="img-spec-sep">·</span><span>JPG / PNG / WEBP</span><span class="img-spec-sep">·</span><span>Max 5 MB</span><span class="img-spec-sep">·</span><span>Querformat</span></div>
             <input type="hidden" id="cfg-hero_img">
           </div>
         </div>
@@ -355,6 +358,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
               <button class="upl-btn" data-upload="studio_banner_img" data-prev="studio-preview">Bild hochladen</button>
               <button class="upl-clear" data-clear="studio_banner_img" data-prev="studio-preview" type="button">L&ouml;schen</button>
             </div>
+            <div class="img-spec"><span class="img-spec-px">1600 &times; 600 px</span><span class="img-spec-sep">·</span><span>JPG / PNG / WEBP</span><span class="img-spec-sep">·</span><span>Max 5 MB</span><span class="img-spec-sep">·</span><span>Querformat (breit)</span></div>
             <input type="hidden" id="cfg-studio_banner_img">
           </div>
         </div>
@@ -597,7 +601,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
         '<button class="upl-btn" data-goal-upload="'+uid+'" type="button">Bild hochladen</button>'+
         '<button class="upl-clear" data-goal-clear type="button">L&ouml;schen</button>'+
       '</div>'+
-      '<div class="hint">Quadratisches Bild empfohlen. Max 5MB.</div>'+
+      '<div class="img-spec"><span class="img-spec-px">800 &times; 800 px</span><span class="img-spec-sep">&middot;</span><span>JPG / PNG / WEBP</span><span class="img-spec-sep">&middot;</span><span>Max 5 MB</span><span class="img-spec-sep">&middot;</span><span>Quadratisch</span></div>'+
       '</div>';
     div.querySelector('.goal-del').addEventListener('click', function(){ div.remove(); });
 
