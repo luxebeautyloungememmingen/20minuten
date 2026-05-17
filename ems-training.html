@@ -722,7 +722,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
       {key:'gesundheit', label:'Fitter &amp; gesünder werden', img: GOAL_IMG_PLACEHOLDER}
     ],
     stats:[{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}],
-    video_active:false, video_url:'', video_label:'Einblick ins Training', video_title:'Erlebe EMS live.', video_desc:'',
+    video_active:false, video_urls:[], video_label:'Einblick ins Training', video_title:'Erlebe EMS live.', video_desc:'',
     studio_banner_img:'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg',
     mem_adresse:'Memmingen Amendingen', mem_zeiten:'Mo\u2013Fr & nach Vereinbarung', mem_wa:'4915730024124',
     sen_adresse:'Senden (Iller)', sen_zeiten:'Mo\u2013Fr & nach Vereinbarung', sen_wa:'4915561206719',
@@ -936,13 +936,19 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     // Video
     var vsec = $('sec-video');
     if(vsec){
-      vsec.style.display = c.video_active && c.video_url ? '' : 'none';
+      var vurls = c.video_urls || [];
+      vsec.style.display = c.video_active && vurls.length > 0 ? '' : 'none';
       if($('video-label')) $('video-label').textContent = c.video_label || DEFAULTS.video_label;
       if($('video-title')) $('video-title').textContent = c.video_title || DEFAULTS.video_title;
       var vdesc = $('video-desc');
       if(vdesc){ vdesc.textContent = c.video_desc || ''; vdesc.style.display = c.video_desc ? '' : 'none'; }
-      var vplayer = $('video-player');
-      if(vplayer && c.video_url){ vplayer.src = c.video_url; }
+      if(vurls.length > 0){
+        var vplayer = $('video-player');
+        if(vplayer){
+          var picked = vurls[Math.floor(Math.random() * vurls.length)];
+          vplayer.src = picked;
+        }
+      }
     }
 
     // Benefits

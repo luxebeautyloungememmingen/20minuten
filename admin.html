@@ -341,20 +341,18 @@ button,input,select,textarea{font-family:inherit}
 
         <!-- VIDEO -->
         <div class="spanel" id="spanel-video">
-          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Video-Sektion nach den Stats. Video muss in Supabase Storage hochgeladen sein (MP4 empfohlen).</p>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Video-Sektion nach den Stats. Bei mehreren Videos wird beim Seitenaufruf zufällig eines abgespielt.</p>
           <div class="tog-row" style="margin-bottom:16px">
             <label class="tog"><input type="checkbox" id="cfg-video_active"><span class="tog-track"></span></label>
             <span class="tog-lbl">Sektion anzeigen</span>
           </div>
           <div class="field">
-            <label class="fl">Video</label>
-            <div class="img-box" id="video-preview"><div class="img-ph">Kein Video hochgeladen</div></div>
-            <div class="img-spec-bar"><span class="img-spec-px">MP4 empfohlen</span> · 16:9</div>
+            <label class="fl">Videos (Rotation)</label>
+            <div id="video-playlist" style="margin-bottom:8px"></div>
             <div class="upl-row">
               <input type="file" class="upl-input" id="upl-video_url" accept="video/mp4,video/webm,video/quicktime">
               <button class="upl-btn" id="upl-video-btn" type="button">Hochladen</button>
               <button class="upl-btn" id="upl-video-lib-btn" type="button" style="background:var(--gbg);color:var(--g)">📂 Bibliothek</button>
-              <button class="upl-clr" id="upl-video-clr" type="button">Löschen</button>
             </div>
             <div id="video-progress-wrap" style="display:none;margin-top:8px">
               <div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden">
@@ -362,7 +360,6 @@ button,input,select,textarea{font-family:inherit}
               </div>
               <div id="video-progress-label" style="font-size:11px;color:var(--muted);margin-top:4px">0%</div>
             </div>
-            <input type="hidden" id="cfg-video_url">
           </div>
           <div class="field">
             <label class="fl">Label (klein, oben)</label>
@@ -722,13 +719,14 @@ function readAll(){
     'studio_banner_img','mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
     'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
     'benefits_label','benefits_title','trust_label','steps_label','steps_title',
-    'video_url','video_label','video_title','video_desc'
+    'video_label','video_title','video_desc'
   ];
   simpleFields.forEach(function(k){
     var el = $('cfg-'+k); if(el) c[k] = el.value.trim();
   });
   c.banner_active = $('cfg-banner_active').checked;
   c.video_active = $('cfg-video_active') ? $('cfg-video_active').checked : false;
+  c.video_urls = readVideoUrls();
   c.goals = readGoals();
   c.stats = readStats();
   c.reviews = readReviews();
@@ -750,7 +748,7 @@ function renderAll(){
     'studio_banner_img','mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
     'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
     'benefits_label','benefits_title','trust_label','steps_label','steps_title',
-    'video_url','video_label','video_title','video_desc'
+    'video_label','video_title','video_desc'
   ];
   simpleFields.forEach(function(k){
     var el = $('cfg-'+k);
@@ -762,7 +760,7 @@ function renderAll(){
   if(va) va.checked = !!cfg.video_active;
   if(cfg.hero_img) previewImg('hero-preview', cfg.hero_img);
   if(cfg.studio_banner_img) previewImg('studio-preview', cfg.studio_banner_img);
-  if(cfg.video_url) previewVideo(cfg.video_url);
+  renderVideoPlaylist(cfg.video_urls || []);
   renderGoals(cfg.goals || []);
   renderStats(cfg.stats || [{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}]);
   renderReviews(cfg.reviews || []);
@@ -1233,13 +1231,12 @@ function bindAll(){
   // Video Upload
   var vFileInput = $('upl-video_url');
   var vBtn = $('upl-video-btn');
-  var vClr = $('upl-video-clr');
   if(vBtn && vFileInput){
     vBtn.addEventListener('click', function(){ vFileInput.click(); });
     vFileInput.addEventListener('change', function(){
       var file = this.files[0]; if(!file) return;
       uploadVideo(file, function(url){
-        if(url){ $('cfg-video_url').value = url; previewVideo(url); schedulePreview(); }
+        if(url){ addVideoUrl(url); schedulePreview(); }
       });
     });
   }
@@ -1247,11 +1244,7 @@ function bindAll(){
   if(vLibBtn) vLibBtn.addEventListener('click', openVideoLib);
   $('video-lib-close').addEventListener('click', closeVideoLib);
   $('video-lib-overlay').addEventListener('click', function(e){ if(e.target === this) closeVideoLib(); });
-  if(vClr){
-    vClr.addEventListener('click', function(){
-      $('cfg-video_url').value = ''; previewVideo(''); schedulePreview();
-    });
-  }
+
 
   // Farb-Picker Sync (color ↔ hex text)
   var allColorKeys = ['primary_color','cta_bg','hero_bg','banner_bg','banner_color','scarcity_bg','scarcity_color','stats_bg','stats_color','brand_bg','brand_color','brand_accent'];
@@ -1281,7 +1274,7 @@ function bindAll(){
     'mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
     'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
     'benefits_label','benefits_title','trust_label','steps_label','steps_title',
-    'video_url','video_label','video_title','video_desc'
+    'video_label','video_title','video_desc'
   ];
   autoFields.forEach(function(k){
     var el = $('cfg-'+k);
@@ -1334,16 +1327,56 @@ function loadVideoLib(){
           '<button class="vlib-select-btn" type="button">Auswählen</button>'+
         '</div>';
       card.querySelector('.vlib-select-btn').addEventListener('click', function(){
-        $('cfg-video_url').value = url;
-        previewVideo(url);
+        addVideoUrl(url);
         schedulePreview();
         closeVideoLib();
-        toast('Video ausgewählt');
+        toast('Video zur Rotation hinzugefügt');
       });
       grid.appendChild(card);
     });
   })
   .catch(function(err){ status.textContent = 'Fehler beim Laden (' + err + ')'; });
+}
+
+// ── VIDEO PLAYLIST ──
+function readVideoUrls(){
+  var urls = [];
+  qa('#video-playlist [data-video-url]').forEach(function(el){
+    var u = el.getAttribute('data-video-url');
+    if(u) urls.push(u);
+  });
+  return urls;
+}
+function renderVideoPlaylist(urls){
+  var c = $('video-playlist');
+  if(!c) return;
+  c.innerHTML = '';
+  if(!urls || urls.length === 0){
+    c.innerHTML = '<div style="font-size:11px;color:var(--muted);padding:6px 0">Noch keine Videos hinzugefügt.</div>';
+    return;
+  }
+  urls.forEach(function(url, i){
+    var name = url.split('/').pop();
+    var row = document.createElement('div');
+    row.setAttribute('data-video-url', url);
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:7px 10px;margin-bottom:6px';
+    row.innerHTML =
+      '<span style="background:var(--gbg);color:var(--g);font-size:10px;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+(i+1)+'</span>'+
+      '<span style="font-size:11px;color:var(--ink);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+ea(url)+'">'+ea(name)+'</span>'+
+      '<button type="button" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:0 2px;flex-shrink:0" data-remove-video>✕</button>';
+    row.querySelector('[data-remove-video]').addEventListener('click', function(){
+      row.remove();
+      renderVideoPlaylist(readVideoUrls());
+      schedulePreview();
+    });
+    c.appendChild(row);
+  });
+}
+function addVideoUrl(url){
+  var existing = readVideoUrls();
+  if(existing.indexOf(url) !== -1){ toast('Video bereits in der Liste', 'err'); return; }
+  existing.push(url);
+  renderVideoPlaylist(existing);
 }
 
 function init(){
