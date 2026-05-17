@@ -80,9 +80,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 
 .img-prev{margin-top:8px;border-radius:6px;overflow:hidden;height:120px;background:var(--ba);position:relative}
 .img-prev img{width:100%;height:100%;object-fit:cover}
-.img-ph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--m);font-size:13px}
-.goal-img-prev{margin-top:6px;border-radius:6px;overflow:hidden;height:90px;background:var(--ba)}
+.img-ph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--m);font-size:13px;text-align:center;padding:8px}
+.goal-img-prev{margin-top:6px;border-radius:6px;overflow:hidden;height:90px;background:var(--ba);position:relative}
 .goal-img-prev img{width:100%;height:100%;object-fit:cover}
+.upl-row{display:flex;gap:8px;align-items:stretch;margin-top:6px}
+.upl-btn{background:var(--gl);color:var(--dg);border:1.5px dashed var(--g);border-radius:6px;padding:10px 14px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
+.upl-btn:hover{background:#d4eec4}
+.upl-btn:disabled{opacity:.6;cursor:wait;background:var(--bd);border-style:solid;color:var(--m)}
+.upl-btn::before{content:'\2191';font-weight:900;font-size:14px}
+.upl-input{display:none}
+.upl-or{font-size:11px;color:var(--m);text-align:center;margin:6px 0;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.upl-clear{background:none;border:1px solid var(--bd);border-radius:6px;padding:6px 10px;font-family:inherit;font-size:12px;cursor:pointer;color:var(--m)}
+.upl-clear:hover{color:var(--r);border-color:var(--r)}
+.upl-progress{position:absolute;inset:0;background:rgba(255,255,255,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--dg);font-size:13px;font-weight:600;gap:8px}
+.upl-progress::before{content:'';width:24px;height:24px;border:3px solid var(--bd);border-top-color:var(--g);border-radius:50%;animation:upspin .7s linear infinite}
+@keyframes upspin{to{transform:rotate(360deg)}}
 
 #toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--b);color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none;max-width:90vw}
 #toast.show{transform:translateY(0);opacity:1}
@@ -168,6 +180,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
           <div class="row single"><div class="field"><label class="lbl">Beschreibung</label><textarea class="ta" id="cfg-hero_desc" placeholder="In nur 20 Minuten..."></textarea><div class="hint">HTML erlaubt (z.B. &lt;strong&gt;).</div></div></div>
         </div>
         <div class="card">
+          <div class="card-t">Hero-Bild (Hintergrund)</div>
+          <div class="field">
+            <label class="lbl">Bild</label>
+            <div class="img-prev" id="hero-preview"><div class="img-ph">Noch kein Bild hochgeladen</div></div>
+            <div class="upl-row">
+              <input type="file" class="upl-input" id="upl-hero_img" accept="image/jpeg,image/png,image/webp">
+              <button class="upl-btn" data-upload="hero_img" data-prev="hero-preview">Bild hochladen</button>
+              <button class="upl-clear" data-clear="hero_img" data-prev="hero-preview" type="button">L&ouml;schen</button>
+            </div>
+            <div class="hint">Max 5MB. JPG, PNG oder WEBP. Aktuell wird das Bild als dezenter Hintergrund verwendet.</div>
+            <input type="hidden" id="cfg-hero_img">
+          </div>
+        </div>
+        <div class="card">
           <div class="card-t">Scarcity &amp; Nav</div>
           <div class="row single"><div class="field"><label class="lbl">Scarcity-Hinweis (gelbe Box)</label><input type="text" class="inp" id="cfg-scarcity_text" placeholder="Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!"></div></div>
           <div class="row single"><div class="field"><label class="lbl">Nav-CTA (oben rechts)</label><input type="text" class="inp" id="cfg-nav_cta_text" placeholder="Jetzt sichern"></div></div>
@@ -225,7 +251,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
         <div class="p-s">Adresse, &Ouml;ffnungszeiten und WhatsApp-Nummern.</div>
         <div class="card">
           <div class="card-t">Studio-Banner-Bild</div>
-          <div class="row single"><div class="field"><label class="lbl">Bild-URL</label><input type="text" class="inp" id="cfg-studio_banner_img" placeholder="https://..."><div class="img-prev" id="studio-preview"><div class="img-ph">Bild-URL eingeben</div></div></div></div>
+          <div class="field">
+            <label class="lbl">Bild</label>
+            <div class="img-prev" id="studio-preview"><div class="img-ph">Noch kein Bild hochgeladen</div></div>
+            <div class="upl-row">
+              <input type="file" class="upl-input" id="upl-studio_banner_img" accept="image/jpeg,image/png,image/webp">
+              <button class="upl-btn" data-upload="studio_banner_img" data-prev="studio-preview">Bild hochladen</button>
+              <button class="upl-clear" data-clear="studio_banner_img" data-prev="studio-preview" type="button">L&ouml;schen</button>
+            </div>
+            <div class="hint">Max 5MB. JPG, PNG oder WEBP. Empfohlen: 1600x600px (Querformat).</div>
+            <input type="hidden" id="cfg-studio_banner_img">
+          </div>
         </div>
         <div class="card">
           <div class="card-t">fitbox Memmingen</div>
@@ -327,7 +363,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     var fields = [
       'banner_text','banner_link_text','banner_link_url',
       'nav_cta_text',
-      'hero_title','hero_sub','hero_check','hero_desc','scarcity_text',
+      'hero_title','hero_sub','hero_check','hero_desc','hero_img','scarcity_text',
       'quiz_cta','quiz_title','quiz_sub',
       'studio_banner_img',
       'mem_adresse','mem_zeiten','mem_wa',
@@ -344,6 +380,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     var ba = $('cfg-banner_active');
     if(ba){ ba.checked = !!c.banner_active; updateBannerBadge(); }
 
+    if(c.hero_img) previewImg('hero-preview', c.hero_img);
     if(c.studio_banner_img) previewImg('studio-preview', c.studio_banner_img);
 
     renderStats(c.stats || [
@@ -395,6 +432,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     var div = document.createElement('div');
     div.className = 'goal-i';
     var img = (g && g.img) || '';
+    var uid = 'goal-img-' + Math.random().toString(36).substr(2, 9);
     div.innerHTML =
       '<button class="goal-del" title="Entfernen">&times;</button>'+
       '<div class="row">'+
@@ -403,21 +441,40 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
         '<div class="field"><label class="lbl">Label (wird angezeigt)</label>'+
         '<input type="text" class="inp" data-goal-label value="'+escAttr((g && g.label) || '')+'" placeholder="Abnehmen &amp; Figur straffen"></div>'+
       '</div>'+
-      '<div class="field" style="margin-top:8px"><label class="lbl">Bild-URL</label>'+
-      '<input type="text" class="inp" data-goal-img value="'+escAttr(img)+'" placeholder="https://...">'+
-      '<div class="hint">Quadratisches Bild empfohlen. Supabase Storage URL oder externes HTTPS-Bild.</div>'+
-      '<div class="goal-img-prev">' + (img ? '<img src="'+escAttr(img)+'" onerror="this.style.display=\'none\'">' : '<div class="img-ph">Bild-URL eingeben</div>') + '</div>'+
+      '<div class="field" style="margin-top:8px"><label class="lbl">Bild</label>'+
+      '<input type="hidden" data-goal-img value="'+escAttr(img)+'">'+
+      '<div class="goal-img-prev" data-prev-box>' + (img ? '<img src="'+escAttr(img)+'">' : '<div class="img-ph">Noch kein Bild hochgeladen</div>') + '</div>'+
+      '<div class="upl-row">'+
+        '<input type="file" class="upl-input" id="'+uid+'" accept="image/jpeg,image/png,image/webp">'+
+        '<button class="upl-btn" data-goal-upload="'+uid+'" type="button">Bild hochladen</button>'+
+        '<button class="upl-clear" data-goal-clear type="button">L&ouml;schen</button>'+
+      '</div>'+
+      '<div class="hint">Quadratisches Bild empfohlen. Max 5MB.</div>'+
       '</div>';
     div.querySelector('.goal-del').addEventListener('click', function(){ div.remove(); });
-    var imgInp = div.querySelector('[data-goal-img]');
-    var imgPrev = div.querySelector('.goal-img-prev');
-    imgInp.addEventListener('input', function(){
-      if(this.value){
-        imgPrev.innerHTML = '<img src="'+escAttr(this.value)+'" onerror="this.style.display=\'none\'">';
-      } else {
-        imgPrev.innerHTML = '<div class="img-ph">Bild-URL eingeben</div>';
-      }
+
+    var fileInput = div.querySelector('#'+uid);
+    var uploadBtn = div.querySelector('[data-goal-upload]');
+    var clearBtn = div.querySelector('[data-goal-clear]');
+    var prevBox = div.querySelector('[data-prev-box]');
+    var hiddenInp = div.querySelector('[data-goal-img]');
+
+    uploadBtn.addEventListener('click', function(){ fileInput.click(); });
+    fileInput.addEventListener('change', function(){
+      var file = this.files[0];
+      if(!file) return;
+      uploadImageToSupabase(file, function(url){
+        if(url){
+          hiddenInp.value = url;
+          prevBox.innerHTML = '<img src="'+escAttr(url)+'">';
+        }
+      }, prevBox, uploadBtn);
     });
+    clearBtn.addEventListener('click', function(){
+      hiddenInp.value = '';
+      prevBox.innerHTML = '<div class="img-ph">Noch kein Bild hochgeladen</div>';
+    });
+
     c.appendChild(div);
   }
 
@@ -509,8 +566,67 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     if(src){
       c.innerHTML = '<img src="'+escAttr(src)+'" onerror="this.parentElement.innerHTML=\'<div class=img-ph>Bild nicht ladbar</div>\'" alt="">';
     } else {
-      c.innerHTML = '<div class="img-ph">Bild-URL eingeben</div>';
+      c.innerHTML = '<div class="img-ph">Noch kein Bild hochgeladen</div>';
     }
+  }
+
+  // ============ SUPABASE STORAGE UPLOAD ============
+  var SUPA_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+  var SUPA_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+  var BUCKET = 'landing';
+
+  function uploadImageToSupabase(file, onDone, prevBox, btn){
+    if(!file){ onDone(null); return; }
+    if(file.size > 5 * 1024 * 1024){
+      showToast('Datei zu gro\u00df (max 5MB).', 'error');
+      onDone(null); return;
+    }
+    var allowed = ['image/jpeg','image/jpg','image/png','image/webp'];
+    if(allowed.indexOf(file.type) === -1){
+      showToast('Format nicht erlaubt. Nur JPG, PNG oder WEBP.', 'error');
+      onDone(null); return;
+    }
+
+    // Filename: timestamp_originalname (Umlaute/Sonderzeichen raus)
+    var safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').toLowerCase();
+    var ext = safeName.split('.').pop();
+    var filename = Date.now() + '_' + Math.random().toString(36).substr(2, 6) + '.' + ext;
+
+    // Progress-Anzeige in Preview-Box
+    var oldHTML = prevBox ? prevBox.innerHTML : null;
+    if(prevBox) prevBox.innerHTML = '<div class="upl-progress">L\u00e4dt hoch...</div>';
+    if(btn){ btn.disabled = true; btn.textContent = 'L\u00e4dt...'; }
+
+    var uploadUrl = SUPA_URL + '/storage/v1/object/' + BUCKET + '/' + filename;
+
+    fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Content-Type': file.type,
+        'x-upsert': 'false'
+      },
+      body: file
+    })
+    .then(function(r){
+      if(!r.ok){ return r.json().then(function(err){ throw new Error(err.message || ('HTTP '+r.status)); }); }
+      return r.json();
+    })
+    .then(function(){
+      var publicUrl = SUPA_URL + '/storage/v1/object/public/' + BUCKET + '/' + filename;
+      showToast('Bild hochgeladen!', 'success');
+      onDone(publicUrl);
+    })
+    .catch(function(err){
+      console.error('Upload error:', err);
+      showToast('Upload fehlgeschlagen: ' + err.message, 'error');
+      if(prevBox && oldHTML !== null) prevBox.innerHTML = oldHTML;
+      onDone(null);
+    })
+    .then(function(){
+      if(btn){ btn.disabled = false; btn.textContent = 'Bild hochladen'; }
+    });
   }
 
   // ============ SAVE ============
@@ -528,6 +644,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
       hero_sub: $('cfg-hero_sub').value.trim(),
       hero_check: $('cfg-hero_check').value.trim(),
       hero_desc: $('cfg-hero_desc').value.trim(),
+      hero_img: $('cfg-hero_img').value.trim(),
       scarcity_text: $('cfg-scarcity_text').value.trim(),
       quiz_cta: $('cfg-quiz_cta').value.trim(),
       quiz_title: $('cfg-quiz_title').value.trim(),
@@ -582,6 +699,33 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     setTimeout(function(){ t.className = ''; }, 4500);
   }
 
+  function bindUpload(fieldKey, prevId){
+    var fileInput = $('upl-'+fieldKey);
+    var hiddenInp = $('cfg-'+fieldKey);
+    var uploadBtn = document.querySelector('[data-upload="'+fieldKey+'"]');
+    var clearBtn = document.querySelector('[data-clear="'+fieldKey+'"]');
+    var prevBox = $(prevId);
+    if(!fileInput || !uploadBtn || !prevBox) return;
+
+    uploadBtn.addEventListener('click', function(){ fileInput.click(); });
+    fileInput.addEventListener('change', function(){
+      var file = this.files[0];
+      if(!file) return;
+      uploadImageToSupabase(file, function(url){
+        if(url){
+          hiddenInp.value = url;
+          previewImg(prevId, url);
+        }
+      }, prevBox, uploadBtn);
+    });
+    if(clearBtn){
+      clearBtn.addEventListener('click', function(){
+        hiddenInp.value = '';
+        previewImg(prevId, '');
+      });
+    }
+  }
+
   function bindEvents(){
     $('loginBtn').addEventListener('click', doLogin);
     $('loginPw').addEventListener('keydown', function(e){ if(e.key === 'Enter') doLogin(); });
@@ -592,7 +736,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
       n.addEventListener('click', function(){ showPanel(name); });
     });
     $('cfg-banner_active').addEventListener('change', updateBannerBadge);
-    $('cfg-studio_banner_img').addEventListener('input', function(){ previewImg('studio-preview', this.value); });
+    bindUpload('hero_img', 'hero-preview');
+    bindUpload('studio_banner_img', 'studio-preview');
     $('add-review-btn').addEventListener('click', function(){ addReviewEl({}); });
     $('add-goal-btn').addEventListener('click', function(){ addGoalEl({}); });
     $('add-tag-btn').addEventListener('click', function(){ addTagEl(''); });
