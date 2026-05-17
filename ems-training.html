@@ -18,8 +18,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .nav{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--w);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:200}
 .nav img{height:32px;display:block}
 .nav-cta{background:var(--g);color:#fff;font-weight:700;font-size:12px;padding:10px 14px;border-radius:4px;text-decoration:none;white-space:nowrap;cursor:pointer;border:none;font-family:inherit}
-.hero{background:var(--w);padding:24px 16px 28px;border-bottom:1px solid var(--bd);text-align:center}
-.hero-in{max-width:720px;margin:0 auto}
+.hero{background:var(--w);padding:24px 16px 28px;border-bottom:1px solid var(--bd)}
+.hero-in{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:20px;align-items:center}
+.hero-in.has-img{grid-template-columns:1fr}
+.hero-left{min-width:0}
+.hero-right{border-radius:10px;overflow:hidden;max-height:280px}
+.hero-right img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dg);margin-bottom:14px;background:var(--gl);padding:5px 12px;border-radius:2px}
 .hero-eyebrow::before{content:'';display:block;width:12px;height:2px;background:var(--dg)}
 .hero-title{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;letter-spacing:.5px;color:var(--b);margin-bottom:6px}
@@ -196,6 +200,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .foot-l a{font-size:12px;color:var(--m);text-decoration:none}
 
 @media (min-width:640px){
+  .hero-in.has-img{grid-template-columns:1fr}
+  .hero-right{max-height:200px}
   .hero-title{font-size:38px}
   .hero-sub{font-size:54px}
   .bgrid,.rgrid{grid-template-columns:1fr 1fr}
@@ -217,6 +223,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   .nav{padding:18px 40px}
   .nav img{height:40px}
   .hero{padding:56px 40px 40px}
+  .hero-in.has-img{grid-template-columns:1fr 1fr;gap:48px}
+  .hero-right{max-height:420px}
   .sec{padding:72px 40px}
   .hero-title{font-size:48px}
   .hero-sub{font-size:72px}
@@ -249,12 +257,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
 <section class="hero">
   <div class="hero-in">
-    <div class="hero-eyebrow">EMS Personal Training</div>
-    <div class="hero-title" id="hero-title">Sichere dir deinen Gutschein f&uuml;r ein</div>
-    <div class="hero-sub" id="hero-sub">GRATIS EMS-Probetraining!</div>
-    <div class="hero-check" id="hero-check">100% kostenlos und unverbindlich testen!</div>
-    <p class="hero-desc" id="hero-desc">In nur <strong>20 Minuten</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong>. Persönlich betreut. Made in Germany.</p>
-    <div class="scarcity" id="scarcity">&#9888;&#65039; Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!</div>
+    <div class="hero-left">
+      <div class="hero-eyebrow">EMS Personal Training</div>
+      <div class="hero-title" id="hero-title">Sichere dir deinen Gutschein f&uuml;r ein</div>
+      <div class="hero-sub" id="hero-sub">GRATIS EMS-Probetraining!</div>
+      <div class="hero-check" id="hero-check">100% kostenlos und unverbindlich testen!</div>
+      <p class="hero-desc" id="hero-desc">In nur <strong>20 Minuten</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong>. Pers&ouml;nlich betreut. Made in Germany.</p>
+      <div class="scarcity" id="scarcity">&#9888;&#65039; Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!</div>
+    </div>
+    <div class="hero-right" id="hero-img-wrap" style="display:none">
+      <img id="hero-img" src="" alt="EMS Training" loading="eager">
+    </div>
   </div>
 </section>
 
@@ -586,6 +599,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     hero_sub:'GRATIS EMS-Probetraining!',
     hero_check:'100% kostenlos und unverbindlich testen!',
     hero_desc:'In nur 20 Minuten aktivierst du bis zu 90% deiner Muskelfasern. Pers\u00f6nlich betreut. Made in Germany.',
+    hero_img:'',
     scarcity_text:'\u26a0\ufe0f Nur wenige Pl\u00e4tze pro Monat verf\u00fcgbar!',
     quiz_cta:'Klicke auf dein Ziel',
     quiz_title:'Was ist dein Ziel?',
@@ -642,6 +656,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     if($('hero-check')) $('hero-check').textContent = c.hero_check || '';
     if($('hero-desc')) $('hero-desc').innerHTML = c.hero_desc || '';
     if($('scarcity')) $('scarcity').innerHTML = c.scarcity_text || '';
+    // Hero-Bild: einblenden wenn URL vorhanden
+    var heroWrap = $('hero-img-wrap');
+    var heroImg = $('hero-img');
+    var heroIn = document.querySelector('.hero-in');
+    if(c.hero_img && heroWrap && heroImg){
+      heroImg.src = c.hero_img;
+      heroWrap.style.display = '';
+      if(heroIn) heroIn.classList.add('has-img');
+    } else if(heroWrap){
+      heroWrap.style.display = 'none';
+      if(heroIn) heroIn.classList.remove('has-img');
+    }
     if($('quiz-cta')) $('quiz-cta').textContent = c.quiz_cta || '';
     if($('quiz-t')) $('quiz-t').textContent = c.quiz_title || '';
     if($('quiz-s')) $('quiz-s').textContent = c.quiz_sub || '';
@@ -717,7 +743,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       .then(function(r){ return r.ok ? r.json() : []; })
       .then(function(rows){
         var remote = (rows && rows[0] && rows[0].config) ? rows[0].config : null;
-        if(remote){ for(var k in remote) if(remote[k] != null && remote[k] !== '') cfg[k] = remote[k]; }
+        if(remote){ for(var k in remote) if(remote[k] != null) cfg[k] = remote[k]; }
         applyConfig(cfg);
       })
       .catch(function(){ applyConfig(cfg); });
