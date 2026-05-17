@@ -7,101 +7,156 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--g:#2f8614;--dg:#246610;--gl:#e8f5e0;--b:#111;--t:#1a1a1a;--m:#6b7280;--bg:#f9f9f6;--ba:#f2f2ee;--w:#fff;--bd:#e2e2dc;--r:#dc2626}
+:root{
+  --g:#2f8614;--dg:#246610;--gl:#e8f5e0;--gl-deep:#dcefcd;
+  --b:#0c0f0a;--t:#1a1a1a;--m:#6b7280;--m-l:#9ca3af;
+  --bg:#fafaf7;--ba:#f1f1ec;--w:#fff;--bd:#e5e7eb;--bd-strong:#d1d5db;
+  --r:#dc2626;--y:#d97706;
+  --shadow-xs:0 1px 2px rgba(15,15,15,.04);
+  --shadow-sm:0 1px 3px rgba(15,15,15,.06), 0 1px 2px rgba(15,15,15,.04);
+  --shadow-md:0 4px 12px rgba(15,15,15,.06), 0 2px 4px rgba(15,15,15,.04);
+  --shadow-lg:0 12px 28px rgba(15,15,15,.08), 0 4px 12px rgba(15,15,15,.05);
+  --shadow-glow:0 0 0 3px rgba(47,134,21,.12);
+  --ease:cubic-bezier(.4,0,.2,1);
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
-#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
-.lbox{background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:36px 28px;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
-.llogo{text-align:center;margin-bottom:20px}
-.llogo img{height:32px}
-.ltitle{font-size:17px;font-weight:700;text-align:center;margin-bottom:22px;color:var(--b)}
+*::selection{background:var(--gl);color:var(--dg)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh;font-feature-settings:'ss01','cv11';-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;background:linear-gradient(180deg,var(--bg) 0%,#f3f4ef 100%)}
+.lbox{background:var(--w);border:1px solid var(--bd);border-radius:14px;padding:40px 32px;width:100%;max-width:400px;box-shadow:var(--shadow-lg)}
+.llogo{text-align:center;margin-bottom:24px}
+.llogo img{height:34px}
+.ltitle{font-size:18px;font-weight:700;text-align:center;margin-bottom:6px;color:var(--b);letter-spacing:-.01em}
+.lsub{font-size:13px;text-align:center;color:var(--m);margin-bottom:24px}
 .lfield{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.llbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--m)}
-.linp{padding:12px 14px;border:1.5px solid var(--bd);border-radius:6px;font-family:inherit;font-size:15px;outline:none}
-.linp:focus{border-color:var(--g)}
-.lbtn{width:100%;padding:13px;background:var(--g);color:#fff;border:none;border-radius:6px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer}
+.llbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--m)}
+.linp{padding:13px 14px;border:1.5px solid var(--bd);border-radius:8px;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s var(--ease),box-shadow .2s var(--ease);background:var(--w)}
+.linp:focus{border-color:var(--g);box-shadow:var(--shadow-glow)}
+.lbtn{width:100%;padding:14px;background:linear-gradient(180deg,var(--g) 0%,var(--dg) 100%);color:#fff;border:none;border-radius:8px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;transition:transform .15s var(--ease),box-shadow .15s var(--ease);letter-spacing:.01em;box-shadow:0 2px 6px rgba(36,102,16,.18)}
+.lbtn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(36,102,16,.25)}
+.lbtn:active{transform:translateY(0)}
 .lerr{color:var(--r);font-size:13px;text-align:center;margin-top:10px;display:none}
 .lerr.show{display:block}
 
 #admin{display:none;min-height:100vh}
-.top{background:var(--w);border-bottom:1px solid var(--bd);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:12px;flex-wrap:wrap}
-.top-l{display:flex;align-items:center;gap:12px;min-width:0}
-.top-l img{height:28px;flex-shrink:0}
-.top-t{font-size:14px;font-weight:700;color:var(--b);white-space:nowrap}
+.top{background:var(--w);border-bottom:1px solid var(--bd);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:12px;flex-wrap:wrap;backdrop-filter:saturate(180%) blur(8px);background:rgba(255,255,255,.92)}
+.top-l{display:flex;align-items:center;gap:14px;min-width:0}
+.top-l img{height:30px;flex-shrink:0}
+.top-t{font-size:14px;font-weight:700;color:var(--b);white-space:nowrap;letter-spacing:-.01em}
+.top-t::before{content:'';display:inline-block;width:1px;height:18px;background:var(--bd);vertical-align:middle;margin-right:14px}
 .top-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.tbtn{background:none;border:1px solid var(--bd);border-radius:6px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--t);white-space:nowrap}
-.tbtn-prev{background:var(--gl);color:var(--dg);border-color:var(--g)}
-.tbtn-save{background:var(--g);color:#fff;border:none;font-weight:700;padding:9px 18px}
-.tbtn-save:disabled{opacity:.6;cursor:not-allowed}
+.tbtn{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:9px 14px;font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--t);white-space:nowrap;transition:all .15s var(--ease)}
+.tbtn:hover{border-color:var(--bd-strong);background:var(--bg)}
+.tbtn-prev{background:var(--gl);color:var(--dg);border-color:#bedea3;font-weight:600}
+.tbtn-prev:hover{background:var(--gl-deep);border-color:var(--g)}
+.tbtn-save{background:linear-gradient(180deg,var(--g) 0%,var(--dg) 100%);color:#fff;border:none;font-weight:700;padding:10px 20px;box-shadow:0 2px 6px rgba(36,102,16,.2)}
+.tbtn-save:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(36,102,16,.28)}
+.tbtn-save:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
 
 .body{display:flex}
-.side{width:220px;flex-shrink:0;border-right:1px solid var(--bd);background:var(--w);padding:16px 0;min-height:calc(100vh - 57px);position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto}
-.side-sec{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m);padding:12px 20px 6px}
-.side-i{display:flex;align-items:center;gap:8px;padding:10px 20px;font-size:13px;color:var(--t);cursor:pointer;border-left:3px solid transparent}
+.side{width:240px;flex-shrink:0;border-right:1px solid var(--bd);background:var(--w);padding:20px 0;min-height:calc(100vh - 60px);position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
+.side-sec{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m-l);padding:16px 24px 8px}
+.side-i{display:flex;align-items:center;gap:10px;padding:11px 24px;font-size:13.5px;color:var(--t);cursor:pointer;border-left:3px solid transparent;transition:all .15s var(--ease);position:relative}
 .side-i:hover{background:var(--bg)}
 .side-i.active{background:var(--gl);color:var(--dg);border-left-color:var(--g);font-weight:600}
-.side-ic{font-size:16px;width:20px;text-align:center}
+.side-i.active::after{content:'';position:absolute;right:16px;top:50%;transform:translateY(-50%);width:6px;height:6px;border-radius:50%;background:var(--g)}
+.side-ic{font-size:15px;width:20px;text-align:center;opacity:.85}
 
-.content{flex:1;padding:24px;max-width:920px}
-.panel{display:none}
+.content{flex:1;padding:32px;max-width:980px}
+.panel{display:none;animation:fadeUp .35s var(--ease)}
 .panel.active{display:block}
-.p-t{font-size:20px;font-weight:700;color:var(--b);margin-bottom:4px}
-.p-s{font-size:13px;color:var(--m);margin-bottom:24px}
-.card{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:20px;margin-bottom:14px}
-.card-t{font-size:13px;font-weight:700;color:var(--b);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;letter-spacing:.5px;text-transform:uppercase}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.p-t{font-size:24px;font-weight:700;color:var(--b);margin-bottom:6px;letter-spacing:-.02em}
+.p-s{font-size:14px;color:var(--m);margin-bottom:28px;line-height:1.55;max-width:680px}
+.card{background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:var(--shadow-xs);transition:box-shadow .2s var(--ease)}
+.card:hover{box-shadow:var(--shadow-sm)}
+.card-t{font-size:13px;font-weight:700;color:var(--b);margin-bottom:18px;display:flex;align-items:center;gap:8px;letter-spacing:-.005em}
+.card-t::before{content:'';display:inline-block;width:3px;height:14px;background:var(--g);border-radius:100px;flex-shrink:0}
+.badge{font-size:10px;font-weight:600;padding:3px 9px;border-radius:100px;letter-spacing:.5px;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;margin-left:auto}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
 .b-green{background:var(--gl);color:var(--dg)}
 .b-red{background:#fef2f2;color:var(--r)}
 
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .row.single{grid-template-columns:1fr}
-.field{display:flex;flex-direction:column;gap:5px}
-.lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--m)}
-.inp,.ta{padding:10px 12px;border:1.5px solid var(--bd);border-radius:6px;font-family:inherit;font-size:14px;color:var(--t);background:var(--w);outline:none;width:100%}
-.inp:focus,.ta:focus{border-color:var(--g)}
-.ta{min-height:70px;resize:vertical}
-.hint{font-size:11px;color:var(--m);margin-top:3px}
+.row:last-child{margin-bottom:0}
+.field{display:flex;flex-direction:column;gap:6px}
+.lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--m);display:flex;align-items:center;gap:6px}
+.inp,.ta{padding:11px 14px;border:1.5px solid var(--bd);border-radius:8px;font-family:inherit;font-size:14px;color:var(--t);background:var(--w);outline:none;width:100%;transition:border-color .15s var(--ease),box-shadow .15s var(--ease)}
+.inp:focus,.ta:focus{border-color:var(--g);box-shadow:var(--shadow-glow)}
+.inp:hover:not(:focus),.ta:hover:not(:focus){border-color:var(--bd-strong)}
+.ta{min-height:80px;resize:vertical;line-height:1.5}
+.hint{font-size:11.5px;color:var(--m);margin-top:4px;line-height:1.45}
 
-.tog-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.tog{position:relative;width:44px;height:24px;flex-shrink:0}
+/* INFO TOOLTIP */
+.info{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--bd);color:var(--m);font-size:10px;font-weight:700;cursor:help;position:relative;font-family:inherit;border:none;transition:all .15s var(--ease);flex-shrink:0;line-height:1}
+.info::before{content:'i';font-style:italic}
+.info:hover{background:var(--g);color:#fff;transform:scale(1.08)}
+.info:hover .info-pop,.info:focus .info-pop{opacity:1;visibility:visible;transform:translateX(-50%) translateY(-4px)}
+.info-pop{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(0);background:var(--b);color:#fff;font-size:12px;font-weight:400;line-height:1.5;padding:10px 14px;border-radius:8px;width:max-content;max-width:280px;text-align:left;letter-spacing:0;text-transform:none;opacity:0;visibility:hidden;transition:all .2s var(--ease);box-shadow:var(--shadow-lg);z-index:50;pointer-events:none;white-space:normal}
+.info-pop::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--b)}
+.info-pop strong{color:#fff;font-weight:600;display:block;margin-bottom:3px}
+.info-pop em{color:var(--gl);font-style:normal;font-family:'Courier New',monospace;font-size:11.5px;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:3px}
+.lbl .info{margin-left:auto}
+.lbl{justify-content:flex-start}
+.lbl > span{flex:1}
+
+.tog-row{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding:12px 14px;background:var(--bg);border-radius:10px;border:1px solid var(--bd)}
+.tog{position:relative;width:46px;height:26px;flex-shrink:0}
 .tog input{opacity:0;width:0;height:0;position:absolute}
-.tog-s{position:absolute;inset:0;background:var(--bd);border-radius:100px;cursor:pointer}
-.tog-s::after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.tog-s{position:absolute;inset:0;background:var(--bd-strong);border-radius:100px;cursor:pointer;transition:background .25s var(--ease)}
+.tog-s::after{content:'';position:absolute;left:3px;top:3px;width:20px;height:20px;background:#fff;border-radius:50%;transition:transform .25s var(--ease);box-shadow:0 2px 5px rgba(0,0,0,.2)}
 .tog input:checked + .tog-s{background:var(--g)}
 .tog input:checked + .tog-s::after{transform:translateX(20px)}
-.tog-l{font-size:14px;font-weight:500}
+.tog-l{font-size:14px;font-weight:500;color:var(--t)}
 
-.rev-i,.goal-i,.tag-i{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:14px;margin-bottom:10px;position:relative}
-.rev-del,.goal-del,.tag-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--m);cursor:pointer;font-size:16px;padding:2px 6px}
-.rev-del:hover,.goal-del:hover,.tag-del:hover{color:var(--r)}
-.add-btn{background:var(--gl);color:var(--dg);border:1px dashed var(--g);border-radius:6px;padding:10px;width:100%;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.rev-i,.goal-i,.tag-i{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:18px;margin-bottom:12px;position:relative;transition:border-color .15s var(--ease),box-shadow .15s var(--ease)}
+.rev-i:hover,.goal-i:hover,.tag-i:hover{border-color:var(--bd-strong);box-shadow:var(--shadow-xs)}
+.rev-del,.goal-del,.tag-del{position:absolute;top:12px;right:12px;background:var(--w);border:1px solid var(--bd);color:var(--m);cursor:pointer;font-size:14px;padding:0;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all .15s var(--ease);font-family:inherit;line-height:1}
+.rev-del:hover,.goal-del:hover,.tag-del:hover{color:var(--r);border-color:var(--r);background:#fef2f2}
+.add-btn{background:var(--gl);color:var(--dg);border:1.5px dashed var(--g);border-radius:10px;padding:14px;width:100%;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s var(--ease);letter-spacing:.01em}
+.add-btn:hover{background:var(--gl-deep);border-style:solid;transform:translateY(-1px);box-shadow:0 2px 8px rgba(47,134,21,.15)}
 
-.stat-i{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;align-items:end}
+.stat-i{display:grid;grid-template-columns:120px 1fr;gap:12px;margin-bottom:12px;align-items:end;padding:14px;background:var(--bg);border:1px solid var(--bd);border-radius:10px}
+.stat-i:last-child{margin-bottom:0}
 
-.img-prev{margin-top:8px;border-radius:6px;overflow:hidden;height:120px;background:var(--ba);position:relative}
+.img-prev{margin-top:8px;border-radius:10px;overflow:hidden;height:140px;background:var(--ba);position:relative;border:1px solid var(--bd)}
 .img-prev img{width:100%;height:100%;object-fit:cover}
-.img-ph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--m);font-size:13px;text-align:center;padding:8px}
-.goal-img-prev{margin-top:6px;border-radius:6px;overflow:hidden;height:90px;background:var(--ba);position:relative}
+.img-ph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--m-l);font-size:13px;text-align:center;padding:8px;font-weight:500}
+.goal-img-prev{margin-top:8px;border-radius:8px;overflow:hidden;height:100px;background:var(--ba);position:relative;border:1px solid var(--bd)}
 .goal-img-prev img{width:100%;height:100%;object-fit:cover}
-.upl-row{display:flex;gap:8px;align-items:stretch;margin-top:6px}
-.upl-btn{background:var(--gl);color:var(--dg);border:1.5px dashed var(--g);border-radius:6px;padding:10px 14px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;transition:all .15s}
-.upl-btn:hover{background:#d4eec4}
-.upl-btn:disabled{opacity:.6;cursor:wait;background:var(--bd);border-style:solid;color:var(--m)}
+.upl-row{display:flex;gap:8px;align-items:stretch;margin-top:8px;flex-wrap:wrap}
+.upl-btn{background:var(--w);color:var(--dg);border:1.5px solid var(--g);border-radius:8px;padding:10px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;transition:all .15s var(--ease)}
+.upl-btn:hover{background:var(--gl);transform:translateY(-1px);box-shadow:0 3px 8px rgba(47,134,21,.15)}
+.upl-btn:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none;background:var(--bd);border-color:var(--bd);color:var(--m)}
 .upl-btn::before{content:'\2191';font-weight:900;font-size:14px}
 .upl-input{display:none}
-.upl-or{font-size:11px;color:var(--m);text-align:center;margin:6px 0;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-.upl-clear{background:none;border:1px solid var(--bd);border-radius:6px;padding:6px 10px;font-family:inherit;font-size:12px;cursor:pointer;color:var(--m)}
-.upl-clear:hover{color:var(--r);border-color:var(--r)}
-.upl-progress{position:absolute;inset:0;background:rgba(255,255,255,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--dg);font-size:13px;font-weight:600;gap:8px}
-.upl-progress::before{content:'';width:24px;height:24px;border:3px solid var(--bd);border-top-color:var(--g);border-radius:50%;animation:upspin .7s linear infinite}
+.upl-clear{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:9px 14px;font-family:inherit;font-size:12.5px;cursor:pointer;color:var(--m);transition:all .15s var(--ease);font-weight:500}
+.upl-clear:hover{color:var(--r);border-color:var(--r);background:#fef2f2}
+.upl-progress{position:absolute;inset:0;background:rgba(255,255,255,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--dg);font-size:13px;font-weight:600;gap:10px;backdrop-filter:blur(4px)}
+.upl-progress::before{content:'';width:26px;height:26px;border:3px solid var(--bd);border-top-color:var(--g);border-radius:50%;animation:upspin .7s linear infinite}
 @keyframes upspin{to{transform:rotate(360deg)}}
 
-#toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--b);color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none;max-width:90vw}
+#toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--b);color:#fff;padding:14px 22px;border-radius:10px;font-size:14px;font-weight:500;transform:translateY(120px);opacity:0;transition:all .3s var(--ease);pointer-events:none;max-width:90vw;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px}
+#toast::before{content:'';width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center}
 #toast.show{transform:translateY(0);opacity:1}
-#toast.success{background:var(--g)}
+#toast.success{background:linear-gradient(180deg,var(--g) 0%,var(--dg) 100%)}
+#toast.success::before{content:'\2713';background:rgba(255,255,255,.22);color:#fff;font-weight:900;font-size:12px}
 #toast.error{background:var(--r)}
+#toast.error::before{content:'!';background:rgba(255,255,255,.22);color:#fff;font-weight:900;font-size:13px}
 
-@media (max-width:768px){.side{display:none}.row{grid-template-columns:1fr}.content{padding:16px}.top-t{display:none}}
+@media (max-width:768px){
+  .side{display:none}
+  .row{grid-template-columns:1fr}
+  .content{padding:20px 16px}
+  .top-t{display:none}
+  .top-t::before{display:none}
+  .top{padding:12px 16px}
+  .info-pop{max-width:220px;font-size:11.5px}
+  .stat-i{grid-template-columns:1fr}
+  .p-t{font-size:20px}
+  .card{padding:18px}
+}
 </style>
 </head>
 <body>
@@ -110,6 +165,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
   <div class="lbox">
     <div class="llogo"><img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></div>
     <div class="ltitle">Landing Page Admin</div>
+    <div class="lsub">Bitte mit dem Admin-Passwort einloggen</div>
     <div class="lfield">
       <label class="llbl">Passwort</label>
       <input type="password" class="linp" id="loginPw" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
@@ -154,67 +210,104 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 
       <div class="panel active" id="panel-banner">
         <div class="p-t">Aktions-Banner</div>
-        <div class="p-s">Zeigt einen farbigen Banner ganz oben f&uuml;r zeitlich begrenzte Aktionen.</div>
+        <div class="p-s">Zeigt einen gr&uuml;nen Hinweis-Streifen ganz oben auf der Landing Page &mdash; ideal f&uuml;r zeitlich begrenzte Aktionen, Feiertage oder besondere Hinweise.</div>
         <div class="card">
           <div class="card-t">Status <span class="badge b-red" id="badge-banner">Deaktiviert</span></div>
           <div class="tog-row">
             <label class="tog"><input type="checkbox" id="cfg-banner_active"><span class="tog-s"></span></label>
             <span class="tog-l">Banner anzeigen</span>
+            <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>Banner ein-/ausblenden</strong>Schalter aktivieren = der Streifen erscheint oben auf der Landing Page. Ausschalten = Streifen verschwindet komplett, ohne dass du den Text l&ouml;schen musst.</span></button>
           </div>
-          <div class="row single"><div class="field"><label class="lbl">Banner-Text</label><input type="text" class="inp" id="cfg-banner_text" placeholder="Sommer-Aktion: ..."></div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">Banner-Text <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Hauptbotschaft des Banners</strong>Was im Streifen steht. Kurz und auffallend. Emojis sind erlaubt.<br><br>Beispiel:<br><em>&#127881; Sommer-Aktion: 2 Monate zum Preis von 1!</em></span></button></label>
+            <input type="text" class="inp" id="cfg-banner_text" placeholder="&#127881; Sommer-Aktion: 2 Monate zum Preis von 1!">
+          </div></div>
           <div class="row">
-            <div class="field"><label class="lbl">Link-Text (optional)</label><input type="text" class="inp" id="cfg-banner_link_text" placeholder="Jetzt sichern"></div>
-            <div class="field"><label class="lbl">Link-URL (optional)</label><input type="text" class="inp" id="cfg-banner_link_url" placeholder="#quiz"></div>
+            <div class="field">
+              <label class="lbl">Link-Text (optional) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Optionaler Klick-Text</strong>Erscheint unterstrichen nach dem Banner-Text. Wenn leer, ist der Banner nur Info ohne Klick.<br><br>Beispiel: <em>Jetzt sichern</em></span></button></label>
+              <input type="text" class="inp" id="cfg-banner_link_text" placeholder="Jetzt sichern">
+            </div>
+            <div class="field">
+              <label class="lbl">Link-URL (optional) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Wohin der Link f&uuml;hrt</strong>Wenn ein Link-Text gesetzt ist, klickt man darauf und landet hier.<br><br>F&uuml;r das Formular auf derselben Seite: <em>#quiz</em><br>Externe Seite: <em>https://...</em></span></button></label>
+              <input type="text" class="inp" id="cfg-banner_link_url" placeholder="#quiz">
+            </div>
           </div>
         </div>
       </div>
 
       <div class="panel" id="panel-hero">
         <div class="p-t">Hero (Gutschein-Header)</div>
-        <div class="p-s">Die zentrale Headline ganz oben. "Gutschein"-Framing wirkt st&auml;rker als "Probetraining".</div>
+        <div class="p-s">Die zentrale Headline ganz oben auf der Landing Page. <strong>"Gutschein"-Framing</strong> wirkt psychologisch st&auml;rker als "Probetraining" &mdash; ein Gutschein hat einen Wert, den man sich sichert.</div>
         <div class="card">
           <div class="card-t">Headline</div>
-          <div class="row single"><div class="field"><label class="lbl">Zeile 1 (kleiner)</label><input type="text" class="inp" id="cfg-hero_title" placeholder="Sichere dir deinen Gutschein f&uuml;r ein"></div></div>
-          <div class="row single"><div class="field"><label class="lbl">Zeile 2 (gro&szlig;, gr&uuml;n)</label><input type="text" class="inp" id="cfg-hero_sub" placeholder="GRATIS EMS-Probetraining!"></div></div>
-          <div class="row single"><div class="field"><label class="lbl">Check-Zeile (mit gr&uuml;nem H&auml;kchen)</label><input type="text" class="inp" id="cfg-hero_check" placeholder="100% kostenlos und unverbindlich testen!"></div></div>
-          <div class="row single"><div class="field"><label class="lbl">Beschreibung</label><textarea class="ta" id="cfg-hero_desc" placeholder="In nur 20 Minuten..."></textarea><div class="hint">HTML erlaubt (z.B. &lt;strong&gt;).</div></div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">Zeile 1 (kleiner) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Erste Zeile der Headline</strong>Die einleitenden Worte vor der Hauptbotschaft. Wird in schwarzer Schrift angezeigt.<br><br>Beispiel: <em>Sichere dir deinen Gutschein f&uuml;r ein</em></span></button></label>
+            <input type="text" class="inp" id="cfg-hero_title" placeholder="Sichere dir deinen Gutschein f&uuml;r ein">
+          </div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">Zeile 2 (gro&szlig;, gr&uuml;n) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Die Hauptbotschaft</strong>Wird gro&szlig; und in fitbox-Gr&uuml;n hervorgehoben. Das ist der bl&auml;ckfangende Teil.<br><br>Beispiel: <em>GRATIS EMS-Probetraining!</em></span></button></label>
+            <input type="text" class="inp" id="cfg-hero_sub" placeholder="GRATIS EMS-Probetraining!">
+          </div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">Check-Zeile (mit gr&uuml;nem H&auml;kchen) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Vertrauensbildender Zusatz</strong>Erscheint mit einem gr&uuml;nen H&auml;kchen davor &mdash; signalisiert Sicherheit.<br><br>Beispiel: <em>100% kostenlos und unverbindlich testen!</em></span></button></label>
+            <input type="text" class="inp" id="cfg-hero_check" placeholder="100% kostenlos und unverbindlich testen!">
+          </div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">Beschreibung <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Beschreibung unter der Headline</strong>Erkl&auml;rt kurz worum es geht. HTML-Tags wie <em>&lt;strong&gt;</em> sind erlaubt um W&ouml;rter fett zu machen.<br><br>Tipp: Bleibe bei 1-2 S&auml;tzen, sonst wird's zu lang.</span></button></label>
+            <textarea class="ta" id="cfg-hero_desc" placeholder="In nur 20 Minuten..."></textarea>
+          </div></div>
         </div>
         <div class="card">
-          <div class="card-t">Hero-Bild (Hintergrund)</div>
+          <div class="card-t">Hero-Bild (optional)</div>
           <div class="field">
-            <label class="lbl">Bild</label>
+            <label class="lbl">Bild <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Hintergrundbild f&uuml;r den Hero-Bereich</strong>Aktuell wird der Hero textzentriert dargestellt &mdash; das Bild ist optional und kann bei Bedarf sp&auml;ter als dezenter Hintergrund eingebaut werden.<br><br>Max 5 MB. JPG, PNG oder WEBP. Empfohlen: 1600&times;1000px im Querformat.</span></button></label>
             <div class="img-prev" id="hero-preview"><div class="img-ph">Noch kein Bild hochgeladen</div></div>
             <div class="upl-row">
               <input type="file" class="upl-input" id="upl-hero_img" accept="image/jpeg,image/png,image/webp">
               <button class="upl-btn" data-upload="hero_img" data-prev="hero-preview">Bild hochladen</button>
               <button class="upl-clear" data-clear="hero_img" data-prev="hero-preview" type="button">L&ouml;schen</button>
             </div>
-            <div class="hint">Max 5MB. JPG, PNG oder WEBP. Aktuell wird das Bild als dezenter Hintergrund verwendet.</div>
             <input type="hidden" id="cfg-hero_img">
           </div>
         </div>
         <div class="card">
           <div class="card-t">Scarcity &amp; Nav</div>
-          <div class="row single"><div class="field"><label class="lbl">Scarcity-Hinweis (gelbe Box)</label><input type="text" class="inp" id="cfg-scarcity_text" placeholder="Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!"></div></div>
-          <div class="row single"><div class="field"><label class="lbl">Nav-CTA (oben rechts)</label><input type="text" class="inp" id="cfg-nav_cta_text" placeholder="Jetzt sichern"></div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">Scarcity-Hinweis (gelbe Box) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Verknappungs-Hinweis</strong>Wird in einer gelben Warn-Box unter dem Hero angezeigt. Erzeugt Handlungsdruck (FOMO &mdash; Fear of Missing Out).<br><br>Beispiel: <em>&#9888;&#65039; Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!</em></span></button></label>
+            <input type="text" class="inp" id="cfg-scarcity_text" placeholder="Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!">
+          </div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">Nav-CTA (oben rechts) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Button-Text in der Navigation</strong>Der gr&uuml;ne Button oben rechts in der Navigationsleiste. Springt beim Klick zum Quiz.<br><br>Beispiel: <em>Jetzt sichern</em></span></button></label>
+            <input type="text" class="inp" id="cfg-nav_cta_text" placeholder="Jetzt sichern">
+          </div></div>
         </div>
       </div>
 
       <div class="panel" id="panel-quiz">
         <div class="p-t">Quiz-Texte (oben)</div>
-        <div class="p-s">Die Texte im gr&uuml;nen Quiz-Bereich direkt unter dem Hero.</div>
+        <div class="p-s">Die Texte im gr&uuml;nen Quiz-Bereich direkt unter dem Hero. Hier startet der Conversion-Flow &mdash; je klarer die Aufforderung, desto h&ouml;her die Klickrate.</div>
         <div class="card">
-          <div class="row single"><div class="field"><label class="lbl">CTA-Text (klein, dr&uuml;ber)</label><input type="text" class="inp" id="cfg-quiz_cta" placeholder="Klicke auf dein Ziel"></div></div>
-          <div class="row single"><div class="field"><label class="lbl">Quiz-Titel</label><input type="text" class="inp" id="cfg-quiz_title" placeholder="Was ist dein Ziel?"></div></div>
-          <div class="row single"><div class="field"><label class="lbl">Quiz-Untertitel</label><input type="text" class="inp" id="cfg-quiz_sub" placeholder="Klicke HIER auf dein Ziel..."></div></div>
+          <div class="card-t">Quiz-Texte</div>
+          <div class="row single"><div class="field">
+            <label class="lbl">CTA-Text (klein, dr&uuml;ber) <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Kleiner Hinweis &uuml;ber dem Quiz</strong>Erscheint in gr&uuml;ner Versalschrift &uuml;ber dem Quiz-Titel. Eine Art Etikett oder Eyebrow.<br><br>Beispiel: <em>Klicke auf dein Ziel</em><br>oder: <em>Kostenlos &middot; 60 Sekunden</em></span></button></label>
+            <input type="text" class="inp" id="cfg-quiz_cta" placeholder="Klicke auf dein Ziel">
+          </div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">Quiz-Titel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Hauptfrage im Quiz</strong>Direkte Frage an den Besucher. Wird in gro&szlig;er Bebas-Schrift angezeigt.<br><br>Beispiel: <em>Was ist dein Ziel?</em></span></button></label>
+            <input type="text" class="inp" id="cfg-quiz_title" placeholder="Was ist dein Ziel?">
+          </div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">Quiz-Untertitel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Erkl&auml;rung unter der Frage</strong>Gibt Kontext zur Auswahl. Sollte motivieren und die Klick-Aufforderung verst&auml;rken.<br><br>Beispiel: <em>Klicke HIER auf dein Ziel und sichere dir deinen Gutschein!</em></span></button></label>
+            <input type="text" class="inp" id="cfg-quiz_sub" placeholder="Klicke HIER auf dein Ziel...">
+          </div></div>
         </div>
       </div>
 
       <div class="panel" id="panel-goals">
         <div class="p-t">Ziele &amp; Bilder</div>
-        <div class="p-s">Die 4 Goal-Buttons mit Bildern. <strong>Bilder konvertieren 30-50% besser als Emojis</strong>. L&auml;dst du eigene Bilder in dein Supabase Storage und f&uuml;gst hier die URLs ein.</div>
+        <div class="p-s">Die 4 Goal-Buttons mit Bildern. <strong>Bilder konvertieren 30-50% besser als Emojis</strong> &mdash; lade eigene Fotos hoch, die zu jedem Ziel passen. Quadratische Bilder sehen am besten aus.</div>
         <div class="card">
-          <div class="card-t">Ziele verwalten</div>
+          <div class="card-t">Ziele verwalten <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>So funktioniert's</strong>Jedes Ziel hat 3 Felder:<br><br><strong>Key (intern):</strong> Wird in der Datenbank gespeichert. Keine Umlaute, keine Leerzeichen. Beispiel: <em>abnehmen</em><br><br><strong>Label:</strong> Was der Besucher sieht. Hier darf alles rein. Beispiel: <em>Abnehmen &amp; Figur straffen</em><br><br><strong>Bild:</strong> Lade ein passendes Foto hoch (max 5MB).</span></button></div>
           <div id="goals-container"></div>
           <button class="add-btn" id="add-goal-btn">+ Ziel hinzuf&uuml;gen</button>
         </div>
@@ -222,15 +315,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 
       <div class="panel" id="panel-stats">
         <div class="p-t">Stats-Leiste</div>
-        <div class="p-s">Die 4 Kennzahlen im gr&uuml;nen Balken.</div>
-        <div class="card"><div class="card-t">Kennzahlen</div><div id="stats-container"></div></div>
+        <div class="p-s">Die 4 Kennzahlen im gr&uuml;nen Balken zwischen Quiz und Vorteilen. Zeigt soziale Beweise und beeindruckende Fakten.</div>
+        <div class="card">
+          <div class="card-t">Kennzahlen <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>Stats &amp; Trust-Signals</strong>Jede Zahl hat eine Beschriftung darunter. Wirkt am besten mit konkreten Zahlen.<br><br>Beispiele:<br><em>20</em> &middot; Min. pro Session<br><em>90%</em> &middot; Muskelfasern aktiv<br><em>200+</em> &middot; Zufriedene Mitglieder<br><em>2</em> &middot; Studios Region</span></button></div>
+          <div id="stats-container"></div>
+        </div>
       </div>
 
       <div class="panel" id="panel-reviews">
         <div class="p-t">Bewertungen</div>
-        <div class="p-s">Echte Kundenstimmen.</div>
+        <div class="p-s">Echte Kundenstimmen erh&ouml;hen die Conversion massiv. <strong>Authentisch ist besser als perfekt</strong> &mdash; Vornamen + Ort wirken vertrauensw&uuml;rdiger als nur "Kunde".</div>
         <div class="card">
-          <div class="card-t">Bewertungen verwalten</div>
+          <div class="card-t">Bewertungen verwalten <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>So wirken Reviews am besten</strong>3-6 Bewertungen sind optimal.<br><br><strong>Bewertungstext:</strong> 1-3 S&auml;tze, in der Ich-Form. Spezifisch (z.B. "Keine R&uuml;ckenschmerzen mehr") statt allgemein ("super").<br><br><strong>Autor:</strong> Vorname + Ort. Beispiel: <em>Bettina H. aus Memmingen</em></span></button></div>
           <div id="reviews-container"></div>
           <button class="add-btn" id="add-review-btn">+ Bewertung hinzuf&uuml;gen</button>
         </div>
@@ -238,9 +334,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 
       <div class="panel" id="panel-brand">
         <div class="p-t">Brand-Hashtags</div>
-        <div class="p-s">Die Hashtag-Slogan-Zeile im schwarzen Block (z.B. #ImmermitSpa&szlig; #ImmermitTermin).</div>
+        <div class="p-s">Die Hashtag-Slogan-Zeile im schwarzen Block kurz vor dem unteren Formular. Verleiht der Marke eine wiedererkennbare Signatur (wie Berlin: #ImmermitSpa&szlig;).</div>
         <div class="card">
-          <div class="card-t">Hashtags</div>
+          <div class="card-t">Hashtags <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>Brand-Slogan in Hashtag-Form</strong>Wirkt wie ein Social-Media-Slogan und bleibt im Kopf. 3-5 Hashtags sind optimal.<br><br>Das <em>#</em> am Anfang wird automatisch erg&auml;nzt &mdash; du kannst es weglassen oder mitschreiben.<br><br>Beispiele:<br><em>#ImmermitSpa&szlig;</em><br><em>#ImmermitTermin</em><br><em>#ImmermitTrainer</em></span></button></div>
           <div id="tags-container"></div>
           <button class="add-btn" id="add-tag-btn">+ Hashtag hinzuf&uuml;gen</button>
         </div>
@@ -248,28 +344,37 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 
       <div class="panel" id="panel-studios">
         <div class="p-t">Standorte</div>
-        <div class="p-s">Adresse, &Ouml;ffnungszeiten und WhatsApp-Nummern.</div>
+        <div class="p-s">Adresse, &Ouml;ffnungszeiten und WhatsApp-Nummern f&uuml;r beide Studios. Die WhatsApp-Buttons leiten Interessenten direkt in den Chat &mdash; ein wichtiger zweiter Conversion-Pfad neben dem Formular.</div>
         <div class="card">
           <div class="card-t">Studio-Banner-Bild</div>
           <div class="field">
-            <label class="lbl">Bild</label>
+            <label class="lbl">Bild <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Bild &uuml;ber den Studio-Karten</strong>Querformat-Bild mit "MEMMINGEN &amp; SENDEN" Overlay. Idealerweise ein Foto eines Studios oder ein stimmungsvolles Trainings-Foto.<br><br>Max 5MB. Empfohlen: 1600&times;600px im Querformat.</span></button></label>
             <div class="img-prev" id="studio-preview"><div class="img-ph">Noch kein Bild hochgeladen</div></div>
             <div class="upl-row">
               <input type="file" class="upl-input" id="upl-studio_banner_img" accept="image/jpeg,image/png,image/webp">
               <button class="upl-btn" data-upload="studio_banner_img" data-prev="studio-preview">Bild hochladen</button>
               <button class="upl-clear" data-clear="studio_banner_img" data-prev="studio-preview" type="button">L&ouml;schen</button>
             </div>
-            <div class="hint">Max 5MB. JPG, PNG oder WEBP. Empfohlen: 1600x600px (Querformat).</div>
             <input type="hidden" id="cfg-studio_banner_img">
           </div>
         </div>
         <div class="card">
           <div class="card-t">fitbox Memmingen</div>
           <div class="row">
-            <div class="field"><label class="lbl">Adresse</label><input type="text" class="inp" id="cfg-mem_adresse"></div>
-            <div class="field"><label class="lbl">&Ouml;ffnungszeiten</label><input type="text" class="inp" id="cfg-mem_zeiten"></div>
+            <div class="field">
+              <label class="lbl">Adresse <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Studio-Adresse</strong>Wird mit Pin-Symbol auf der Studio-Karte angezeigt. Kurz und klar.<br><br>Beispiel: <em>Memmingen Amendingen</em></span></button></label>
+              <input type="text" class="inp" id="cfg-mem_adresse">
+            </div>
+            <div class="field">
+              <label class="lbl">&Ouml;ffnungszeiten <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>&Ouml;ffnungszeiten oder Hinweis</strong>Da Trainings nur nach Terminvereinbarung stattfinden, reicht oft ein allgemeiner Hinweis.<br><br>Beispiel: <em>Mo&ndash;Fr &amp; nach Vereinbarung</em></span></button></label>
+              <input type="text" class="inp" id="cfg-mem_zeiten">
+            </div>
           </div>
-          <div class="row single"><div class="field"><label class="lbl">WhatsApp-Nummer</label><input type="text" class="inp" id="cfg-mem_wa"><div class="hint">Format: 49151... (ohne + oder 0)</div></div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">WhatsApp-Nummer <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Direkter WhatsApp-Link</strong>Bestimmt den Empf&auml;nger des WhatsApp-Buttons.<br><br><strong>Format:</strong> Mit L&auml;ndervorwahl, ohne <em>+</em> und ohne f&uuml;hrende <em>0</em>.<br><br>Falsch: <em>+49 0151 30024124</em><br>Richtig: <em>4915730024124</em></span></button></label>
+            <input type="text" class="inp" id="cfg-mem_wa">
+            <div class="hint">Format: 49151... (mit L&auml;ndervorwahl, ohne + oder 0)</div>
+          </div></div>
         </div>
         <div class="card">
           <div class="card-t">fitbox Senden</div>
@@ -277,37 +382,58 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
             <div class="field"><label class="lbl">Adresse</label><input type="text" class="inp" id="cfg-sen_adresse"></div>
             <div class="field"><label class="lbl">&Ouml;ffnungszeiten</label><input type="text" class="inp" id="cfg-sen_zeiten"></div>
           </div>
-          <div class="row single"><div class="field"><label class="lbl">WhatsApp-Nummer</label><input type="text" class="inp" id="cfg-sen_wa"></div></div>
+          <div class="row single"><div class="field">
+            <label class="lbl">WhatsApp-Nummer <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Format wie bei Memmingen</strong>Mit L&auml;ndervorwahl, ohne + oder f&uuml;hrende 0.<br><br>Beispiel: <em>4915561206719</em></span></button></label>
+            <input type="text" class="inp" id="cfg-sen_wa">
+          </div></div>
         </div>
       </div>
 
       <div class="panel" id="panel-form">
         <div class="p-t">Formular (unten) &amp; CTA</div>
-        <div class="p-s">Texte f&uuml;r das gro&szlig;e Formular am Ende sowie die mobile Sticky-Bar.</div>
+        <div class="p-s">Texte f&uuml;r das gro&szlig;e Formular am Seitenende sowie die mobile Sticky-Bar (der gr&uuml;ne Balken am unteren Bildschirmrand bei mobilen Ger&auml;ten).</div>
         <div class="card">
           <div class="card-t">Unteres Formular</div>
           <div class="row">
-            <div class="field"><label class="lbl">Titel</label><input type="text" class="inp" id="cfg-form_title" placeholder="Gutschein sichern"></div>
-            <div class="field"><label class="lbl">Untertitel</label><input type="text" class="inp" id="cfg-form_subtitle"></div>
+            <div class="field">
+              <label class="lbl">Titel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>&Uuml;berschrift &uuml;ber dem Formular</strong>Erscheint &uuml;ber dem zweiten gro&szlig;en Formular am Seitenende.<br><br>Beispiel: <em>Gutschein sichern</em></span></button></label>
+              <input type="text" class="inp" id="cfg-form_title" placeholder="Gutschein sichern">
+            </div>
+            <div class="field">
+              <label class="lbl">Untertitel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Beschreibung unter dem Formular-Titel</strong>Kurzer einleitender Satz, der motiviert das Formular auszuf&uuml;llen.<br><br>Beispiel: <em>In 60 Sekunden zu deinem GRATIS EMS-Probetraining.</em></span></button></label>
+              <input type="text" class="inp" id="cfg-form_subtitle">
+            </div>
           </div>
         </div>
         <div class="card">
-          <div class="card-t">Sticky CTA (Mobile)</div>
+          <div class="card-t">Sticky CTA (Mobile) <button class="info" tabindex="0" type="button" style="margin-left:auto"><span class="info-pop"><strong>Mobiler Aktions-Balken</strong>Der gr&uuml;ne Balken, der am unteren Bildschirmrand "klebt", wenn man auf dem Handy nach unten scrollt. Sehr starker Conversion-Treiber.</span></button></div>
           <div class="row">
-            <div class="field"><label class="lbl">Titel</label><input type="text" class="inp" id="cfg-sticky_title" placeholder="Gratis EMS-Probetraining"></div>
-            <div class="field"><label class="lbl">Untertitel</label><input type="text" class="inp" id="cfg-sticky_sub"></div>
+            <div class="field">
+              <label class="lbl">Titel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Wei&szlig;er Titel im Sticky-Balken</strong>Hauptbotschaft, fett.<br><br>Beispiel: <em>Gratis EMS-Probetraining</em></span></button></label>
+              <input type="text" class="inp" id="cfg-sticky_title" placeholder="Gratis EMS-Probetraining">
+            </div>
+            <div class="field">
+              <label class="lbl">Untertitel <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Heller Zusatz unter dem Titel</strong>Verst&auml;rkt mit Scarcity oder Vorteil.<br><br>Beispiel: <em>Nur wenige Pl&auml;tze frei!</em></span></button></label>
+              <input type="text" class="inp" id="cfg-sticky_sub">
+            </div>
           </div>
         </div>
       </div>
 
       <div class="panel" id="panel-links">
         <div class="p-t">Footer-Links</div>
-        <div class="p-s">URLs f&uuml;r Impressum und Datenschutzerkl&auml;rung.</div>
+        <div class="p-s">URLs f&uuml;r Impressum und Datenschutzerkl&auml;rung. <strong>Rechtlich verpflichtend</strong> &mdash; bitte unbedingt korrekt setzen.</div>
         <div class="card">
           <div class="card-t">Rechtliche Links</div>
           <div class="row">
-            <div class="field"><label class="lbl">Impressum-URL</label><input type="text" class="inp" id="cfg-impressum_url"></div>
-            <div class="field"><label class="lbl">Datenschutz-URL</label><input type="text" class="inp" id="cfg-datenschutz_url"></div>
+            <div class="field">
+              <label class="lbl">Impressum-URL <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Pflichtangabe nach &sect; 5 TMG</strong>Vollst&auml;ndige URL zur Impressum-Seite.<br><br>Beispiel: <em>https://fitbox-memmingen.de/impressum</em></span></button></label>
+              <input type="text" class="inp" id="cfg-impressum_url">
+            </div>
+            <div class="field">
+              <label class="lbl">Datenschutz-URL <button class="info" tabindex="0" type="button"><span class="info-pop"><strong>Pflichtangabe nach DSGVO</strong>Vollst&auml;ndige URL zur Datenschutzerkl&auml;rung. Wird auch unter dem Anmeldeformular verlinkt.<br><br>Beispiel: <em>https://fitbox-memmingen.de/datenschutz</em></span></button></label>
+              <input type="text" class="inp" id="cfg-datenschutz_url">
+            </div>
           </div>
         </div>
       </div>
