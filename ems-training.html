@@ -57,6 +57,12 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
 .sec-lbl{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--dg);margin-bottom:8px}
 .sec-t{font-family:'Bebas Neue',sans-serif;font-size:var(--section-title-size);line-height:1;margin-bottom:12px;color:var(--b);letter-spacing:.5px}
 
+.video-s{background:var(--b);border-bottom:1px solid var(--bd);padding:36px 16px;text-align:center}
+.video-s .sec-lbl{color:rgba(255,255,255,.5)}
+.video-s .sec-t{color:var(--w)}
+.video-s .sec-desc{font-size:14px;color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:20px;max-width:540px;margin-left:auto;margin-right:auto}
+.video-wrap{max-width:780px;margin:0 auto;border-radius:10px;overflow:hidden;background:#000;aspect-ratio:16/9;position:relative}
+.video-wrap video{width:100%;height:100%;display:block;object-fit:cover}
 .benefits{background:var(--w);border-bottom:1px solid var(--bd)}
 .bgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
 .benefit{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:16px 14px;display:flex;gap:12px;align-items:flex-start}
@@ -430,6 +436,17 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
   <div class="stat"><div class="snum" data-stat="3">2</div><div class="slbl" data-slbl="3">Studios Region</div></div>
 </div>
 
+<section class="sec video-s" id="sec-video" style="display:none">
+  <div class="sec-in">
+    <div class="sec-lbl" id="video-label">Einblick ins Training</div>
+    <div class="sec-t" id="video-title">Erlebe EMS live.</div>
+    <div class="sec-desc" id="video-desc"></div>
+    <div class="video-wrap">
+      <video id="video-player" controls playsinline preload="metadata"></video>
+    </div>
+  </div>
+</section>
+
 <section class="sec benefits" id="sec-benefits">
   <div class="sec-in">
     <div class="sec-lbl" id="benefits-label">Deine Vorteile</div>
@@ -705,6 +722,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
       {key:'gesundheit', label:'Fitter &amp; gesünder werden', img: GOAL_IMG_PLACEHOLDER}
     ],
     stats:[{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}],
+    video_active:false, video_url:'', video_label:'Einblick ins Training', video_title:'Erlebe EMS live.', video_desc:'',
     studio_banner_img:'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg',
     mem_adresse:'Memmingen Amendingen', mem_zeiten:'Mo\u2013Fr & nach Vereinbarung', mem_wa:'4915730024124',
     sen_adresse:'Senden (Iller)', sen_zeiten:'Mo\u2013Fr & nach Vereinbarung', sen_wa:'4915561206719',
@@ -913,6 +931,18 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
       if(d.hero_sub_size) root.style.setProperty('--hero-sub-size', d.hero_sub_size+'px');
       if(d.body_size) root.style.setProperty('--body-size', d.body_size+'px');
       if(d.section_title_size) root.style.setProperty('--section-title-size', d.section_title_size+'px');
+    }
+
+    // Video
+    var vsec = $('sec-video');
+    if(vsec){
+      vsec.style.display = c.video_active && c.video_url ? '' : 'none';
+      if($('video-label')) $('video-label').textContent = c.video_label || DEFAULTS.video_label;
+      if($('video-title')) $('video-title').textContent = c.video_title || DEFAULTS.video_title;
+      var vdesc = $('video-desc');
+      if(vdesc){ vdesc.textContent = c.video_desc || ''; vdesc.style.display = c.video_desc ? '' : 'none'; }
+      var vplayer = $('video-player');
+      if(vplayer && c.video_url){ vplayer.src = c.video_url; }
     }
 
     // Benefits
@@ -1361,6 +1391,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     'sec-hero':     'hero',
     'sec-quiz':     'quiz',
     'sec-stats':    'stats',
+    'sec-video':    'video',
     'sec-benefits': 'benefits',
     'sec-trust':    'trust',
     'sec-reviews':  'reviews',
@@ -1369,7 +1400,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     'sec-brand':    'brand'
   };
   var SEC_LABELS = {
-    'sec-hero':'Hero','sec-quiz':'Quiz','sec-stats':'Stats',
+    'sec-hero':'Hero','sec-quiz':'Quiz','sec-stats':'Stats','sec-video':'Video',
     'sec-benefits':'Vorteile','sec-trust':'Trust','sec-reviews':'Reviews',
     'sec-steps':'Schritte','sec-studios':'Studios','sec-brand':'Brand'
   };

@@ -227,6 +227,7 @@ button,input,select,textarea{font-family:inherit}
         <button class="snav-btn" data-panel="goals" type="button"><span class="sn-icon">💪</span>Ziele</button>
         <button class="snav-btn" data-panel="ctas" type="button"><span class="sn-icon">🔘</span>CTAs</button>
         <button class="snav-btn" data-panel="stats" type="button"><span class="sn-icon">📊</span>Stats</button>
+        <button class="snav-btn" data-panel="video" type="button"><span class="sn-icon">🎬</span>Video</button>
         <button class="snav-btn" data-panel="reviews" type="button"><span class="sn-icon">⭐</span>Reviews</button>
         <button class="snav-btn" data-panel="studios" type="button"><span class="sn-icon">📍</span>Studios</button>
         <button class="snav-btn" data-panel="brand" type="button"><span class="sn-icon">🔥</span>Brand</button>
@@ -336,6 +337,31 @@ button,input,select,textarea{font-family:inherit}
         <div class="spanel" id="spanel-stats">
           <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5">Die 4 Kennzahlen im grünen Balken. Konkrete Zahlen wirken besser als vage Aussagen.</p>
           <div id="stats-container"></div>
+        </div>
+
+        <!-- VIDEO -->
+        <div class="spanel" id="spanel-video">
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Video-Sektion nach den Stats. Video muss in Supabase Storage hochgeladen sein (max. 30 MB, MP4 empfohlen).</p>
+          <div class="tog-row" style="margin-bottom:16px">
+            <label class="tog"><input type="checkbox" id="cfg-video_active"><span class="tog-track"></span></label>
+            <span class="tog-lbl">Sektion anzeigen</span>
+          </div>
+          <div class="field">
+            <label class="fl">Supabase Video-URL *</label>
+            <input type="text" class="fi" id="cfg-video_url" placeholder="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/...">
+          </div>
+          <div class="field">
+            <label class="fl">Label (klein, oben)</label>
+            <input type="text" class="fi" id="cfg-video_label" placeholder="Einblick ins Training">
+          </div>
+          <div class="field">
+            <label class="fl">Überschrift</label>
+            <input type="text" class="fi" id="cfg-video_title" placeholder="Erlebe EMS live.">
+          </div>
+          <div class="field">
+            <label class="fl">Beschreibung (optional)</label>
+            <textarea class="fa" id="cfg-video_desc" placeholder="Kurzer Text unter der Überschrift..."></textarea>
+          </div>
         </div>
 
         <!-- REVIEWS -->
@@ -681,12 +707,14 @@ function readAll(){
     'quiz_cta','quiz_title','quiz_sub',
     'studio_banner_img','mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
     'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
-    'benefits_label','benefits_title','trust_label','steps_label','steps_title'
+    'benefits_label','benefits_title','trust_label','steps_label','steps_title',
+    'video_url','video_label','video_title','video_desc'
   ];
   simpleFields.forEach(function(k){
     var el = $('cfg-'+k); if(el) c[k] = el.value.trim();
   });
   c.banner_active = $('cfg-banner_active').checked;
+  c.video_active = $('cfg-video_active') ? $('cfg-video_active').checked : false;
   c.goals = readGoals();
   c.stats = readStats();
   c.reviews = readReviews();
@@ -707,7 +735,8 @@ function renderAll(){
     'quiz_cta','quiz_title','quiz_sub',
     'studio_banner_img','mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
     'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
-    'benefits_label','benefits_title','trust_label','steps_label','steps_title'
+    'benefits_label','benefits_title','trust_label','steps_label','steps_title',
+    'video_url','video_label','video_title','video_desc'
   ];
   simpleFields.forEach(function(k){
     var el = $('cfg-'+k);
@@ -715,6 +744,8 @@ function renderAll(){
   });
   var ba = $('cfg-banner_active');
   if(ba){ ba.checked = !!cfg.banner_active; updateBannerBadge(); }
+  var va = $('cfg-video_active');
+  if(va) va.checked = !!cfg.video_active;
   if(cfg.hero_img) previewImg('hero-preview', cfg.hero_img);
   if(cfg.studio_banner_img) previewImg('studio-preview', cfg.studio_banner_img);
   renderGoals(cfg.goals || []);
@@ -1159,7 +1190,8 @@ function bindAll(){
     'quiz_cta','quiz_title','quiz_sub',
     'mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
     'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
-    'benefits_label','benefits_title','trust_label','steps_label','steps_title'
+    'benefits_label','benefits_title','trust_label','steps_label','steps_title',
+    'video_url','video_label','video_title','video_desc'
   ];
   autoFields.forEach(function(k){
     var el = $('cfg-'+k);
