@@ -8,17 +8,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--g:#2f8614;--dg:#246610;--gl:#e8f5e0;--b:#111;--t:#1a1a1a;--m:#6b7280;--bg:#f9f9f6;--ba:#f2f2ee;--w:#fff;--bd:#e2e2dc}
+:root{--g:#2f8614;--dg:#246610;--gl:#e8f5e0;--b:#111;--t:#1a1a1a;--m:#6b7280;--bg:#f9f9f6;--ba:#f2f2ee;--w:#fff;--bd:#e2e2dc;
+/* Design-Variablen (über Admin einstellbar) */
+--brand-primary:#2f8614;--brand-dark:#246610;--brand-light:#e8f5e0;
+--cta-bg:#2f8614;--cta-color:#ffffff;
+--hero-bg:#ffffff;--hero-title-size:32px;--hero-sub-size:42px;
+--body-size:14px;--section-title-size:30px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{overflow-x:hidden}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webkit-font-smoothing:antialiased;padding-bottom:70px}
+body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webkit-font-smoothing:antialiased;padding-bottom:70px}
 #banner{display:none;background:var(--g);color:#fff;text-align:center;font-size:13px;font-weight:600;padding:9px 14px;line-height:1.4}
 #banner.show{display:block}
 #banner a{color:#fff;text-decoration:underline;margin-left:6px;font-weight:700}
 .nav{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--w);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:200}
 .nav img{height:32px;display:block}
-.nav-cta{background:var(--g);color:#fff;font-weight:700;font-size:12px;padding:10px 14px;border-radius:4px;text-decoration:none;white-space:nowrap;cursor:pointer;border:none;font-family:inherit}
-.hero{background:var(--w);padding:24px 16px 28px;border-bottom:1px solid var(--bd)}
+.nav-cta{background:var(--brand-primary);color:#fff;font-weight:700;font-size:12px;padding:10px 14px;border-radius:4px;text-decoration:none;white-space:nowrap;cursor:pointer;border:none;font-family:inherit}
+.hero{background:var(--hero-bg);padding:24px 16px 28px;border-bottom:1px solid var(--bd)}
 .hero-in{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:20px;align-items:center}
 .hero-in.has-img{grid-template-columns:1fr}
 .hero-left{min-width:0}
@@ -26,8 +31,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .hero-right img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dg);margin-bottom:14px;background:var(--gl);padding:5px 12px;border-radius:2px}
 .hero-eyebrow::before{content:'';display:block;width:12px;height:2px;background:var(--dg)}
-.hero-title{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;letter-spacing:.5px;color:var(--b);margin-bottom:6px}
-.hero-sub{font-family:'Bebas Neue',sans-serif;font-size:42px;line-height:1;letter-spacing:1px;color:var(--g);margin-bottom:14px}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:var(--hero-title-size);line-height:1;letter-spacing:.5px;color:var(--b);margin-bottom:6px}
+.hero-sub{font-family:'Bebas Neue',sans-serif;font-size:var(--hero-sub-size);line-height:1;letter-spacing:1px;color:var(--g);margin-bottom:14px}
 .hero-check{font-size:14px;color:var(--t);font-weight:600;margin-bottom:10px}
 .hero-check::before{content:'\2713 \00a0';color:var(--g);font-weight:700}
 .hero-desc{font-size:14px;color:var(--m);line-height:1.55;margin-bottom:14px;max-width:540px;margin-left:auto;margin-right:auto}
@@ -50,7 +55,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .sec{padding:36px 16px}
 .sec-in{max-width:1100px;margin:0 auto}
 .sec-lbl{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--dg);margin-bottom:8px}
-.sec-t{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;margin-bottom:12px;color:var(--b);letter-spacing:.5px}
+.sec-t{font-family:'Bebas Neue',sans-serif;font-size:var(--section-title-size);line-height:1;margin-bottom:12px;color:var(--b);letter-spacing:.5px}
 
 .benefits{background:var(--w);border-bottom:1px solid var(--bd)}
 .bgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
@@ -100,7 +105,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .cta-sec{background:var(--gl);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:28px 16px;text-align:center}
 .cta-sec-in{max-width:680px;margin:0 auto}
 .cta-sec-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--b);margin-bottom:14px;letter-spacing:.3px;line-height:1.1}
-.cta-sec-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(180deg,var(--g) 0%,var(--dg) 100%);color:#fff;font-weight:700;font-size:16px;padding:16px 32px;border-radius:10px;text-decoration:none;border:none;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(47,134,21,.25);transition:all .2s;min-height:54px;width:100%;max-width:400px}
+.cta-sec-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--cta-bg);color:#fff;font-weight:700;font-size:16px;padding:16px 32px;border-radius:10px;text-decoration:none;border:none;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(47,134,21,.25);transition:all .2s;min-height:54px;width:100%;max-width:400px}
 .cta-sec-btn:active{transform:scale(.98)}
 @media(min-width:640px){.cta-sec-title{font-size:28px}.cta-sec-btn{width:auto}}
 .brand-tags-line{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:#fff;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
@@ -386,9 +391,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
 <section class="sec benefits">
   <div class="sec-in">
-    <div class="sec-lbl">Deine Vorteile</div>
-    <div class="sec-t">Warum fitbox?</div>
-    <div class="bgrid">
+    <div class="sec-lbl" id="benefits-label">Deine Vorteile</div>
+    <div class="sec-t" id="benefits-title">Warum fitbox?</div>
+    <div class="bgrid" id="benefits-grid">
       <div class="benefit"><div class="bicon">&#9201;</div><div><h3>Zeiteffizient</h3><p>20 Minuten ersetzen 90 Minuten klassisches Training.</p></div></div>
       <div class="benefit"><div class="bicon">&#128106;</div><div><h3>Immer mit Personal Trainer</h3><p>Wir leiten dich an, korrigieren und motivieren. Nur so wirkt EMS 100%.</p></div></div>
       <div class="benefit"><div class="bicon">&#10084;</div><div><h3>Gelenkschonend</h3><p>Ideal bei R&uuml;ckenschmerzen oder als sanfter Einstieg.</p></div></div>
@@ -401,8 +406,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
 <div class="trust">
   <div class="trust-in">
-    <div class="trust-lbl">Ausgestattet mit professioneller Technologie</div>
-    <div class="tbadges">
+    <div class="trust-lbl" id="trust-label">Ausgestattet mit professioneller Technologie</div>
+    <div class="tbadges" id="trust-grid">
       <div class="titem"><div class="titem-s">EMS-Anzug</div><div class="titem-n">SYMBIONT</div><div class="titem-d">by schwa-medico</div></div>
       <div class="titem"><div class="titem-s">EMS-Ger&auml;t</div><div class="titem-n">MIHA BODYTEC</div><div class="titem-d">Marktf&uuml;hrer seit 2007</div></div>
       <div class="titem"><div class="titem-s">Qualit&auml;t</div><div class="titem-n">MADE IN GERMANY</div><div class="titem-d">Medizinisch zertifiziert</div></div>
@@ -427,9 +432,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
 <section class="sec steps-s">
   <div class="sec-in">
-    <div class="sec-lbl">N&auml;chste Schritte</div>
-    <div class="sec-t">In 3 Schritten zum Probetraining</div>
-    <div class="nsteps">
+    <div class="sec-lbl" id="steps-label">N&auml;chste Schritte</div>
+    <div class="sec-t" id="steps-title">In 3 Schritten zum Probetraining</div>
+    <div class="nsteps" id="steps-grid">
       <div class="nstep"><div class="nsnum">1</div><div><h3>Gutschein online sichern</h3><p>Klick auf dein Ziel, beantworte 3 kurze Fragen, trag dich unverbindlich ein.</p></div></div>
       <div class="nstep"><div class="nsnum">2</div><div><h3>Termin vereinbaren</h3><p>Wir melden uns pers&ouml;nlich oder du buchst direkt einen freien Slot.</p></div></div>
       <div class="nstep"><div class="nsnum">3</div><div><h3>EMS-Training + Infos</h3><p>Erlebe EMS kostenlos und stelle alle deine Fragen.</p></div></div>
@@ -661,6 +666,43 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       {active:true,  title:'Starte noch diese Woche mit EMS!',             btn:'Termin jetzt sichern \u2192'},
       {active:false, title:'',                                             btn:''},
       {active:true,  title:'Jetzt kostenloses Probetraining vereinbaren!', btn:'Gutschein sichern \u2192'}
+    ],
+    // Design
+    design:{
+      primary_color:'#2f8614',
+      cta_bg:'#2f8614',
+      cta_color:'#ffffff',
+      hero_bg:'#ffffff',
+      hero_title_size:'32',
+      hero_sub_size:'42',
+      body_size:'14',
+      section_title_size:'30'
+    },
+    // Vorteile
+    benefits_label:'Deine Vorteile',
+    benefits_title:'Warum fitbox?',
+    benefits:[
+      {icon:'\u23f1\ufe0f', title:'Zeiteffizient', text:'20 Minuten ersetzen 90 Minuten klassisches Training.'},
+      {icon:'\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67', title:'Immer mit Personal Trainer', text:'Wir leiten dich an, korrigieren und motivieren. Nur so wirkt EMS 100%.'},
+      {icon:'\u2764\ufe0f', title:'Gelenkschonend', text:'Ideal bei R\u00fcckenschmerzen oder als sanfter Einstieg.'},
+      {icon:'\ud83d\udcca', title:'Messbare Ergebnisse', text:'K\u00f6rperanalyse, Check-ins und klare Ziele.'},
+      {icon:'\ud83d\udcf1', title:'Modernste Technologie', text:'SYMBIONT & miha bodytec, Made in Germany.'},
+      {icon:'\ud83c\udfcb\ufe0f', title:'F\u00fcr alle geeignet', text:'Anf\u00e4nger, Wiedereinsteiger oder Sportler.'}
+    ],
+    // Trust-Badges
+    trust_label:'Ausgestattet mit professioneller Technologie',
+    trust:[
+      {sub:'EMS-Anzug', name:'SYMBIONT', desc:'by schwa-medico'},
+      {sub:'EMS-Ger\u00e4t', name:'MIHA BODYTEC', desc:'Marktf\u00fchrer seit 2007'},
+      {sub:'Qualit\u00e4t', name:'MADE IN GERMANY', desc:'Medizinisch zertifiziert'}
+    ],
+    // 3 Schritte
+    steps_label:'N\u00e4chste Schritte',
+    steps_title:'In 3 Schritten zum Probetraining',
+    steps:[
+      {title:'Gutschein online sichern', text:'Klick auf dein Ziel, beantworte 3 kurze Fragen, trag dich unverbindlich ein.'},
+      {title:'Termin vereinbaren', text:'Wir melden uns pers\u00f6nlich oder du buchst direkt einen freien Slot.'},
+      {title:'EMS-Training + Infos', text:'Erlebe EMS kostenlos und stelle alle deine Fragen.'}
     ]
   };
 
@@ -771,6 +813,50 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     if($('form-t')) $('form-t').textContent = c.form_title;
     if($('form-st')) $('form-st').textContent = c.form_subtitle;
     if($('wa-float')) $('wa-float').href = 'https://wa.me/'+c.mem_wa;
+
+    // Design-Variablen anwenden
+    var d = c.design || DEFAULTS.design;
+    if(d){
+      var root = document.documentElement;
+      if(d.primary_color){ root.style.setProperty('--g', d.primary_color); root.style.setProperty('--brand-primary', d.primary_color); }
+      if(d.cta_bg) root.style.setProperty('--cta-bg', d.cta_bg);
+      if(d.cta_color) root.style.setProperty('--cta-color', d.cta_color);
+      if(d.hero_bg) root.style.setProperty('--hero-bg', d.hero_bg);
+      if(d.hero_title_size) root.style.setProperty('--hero-title-size', d.hero_title_size+'px');
+      if(d.hero_sub_size) root.style.setProperty('--hero-sub-size', d.hero_sub_size+'px');
+      if(d.body_size) root.style.setProperty('--body-size', d.body_size+'px');
+      if(d.section_title_size) root.style.setProperty('--section-title-size', d.section_title_size+'px');
+    }
+
+    // Benefits
+    if($('benefits-label')) $('benefits-label').textContent = c.benefits_label || DEFAULTS.benefits_label;
+    if($('benefits-title')) $('benefits-title').textContent = c.benefits_title || DEFAULTS.benefits_title;
+    var benefits = c.benefits || DEFAULTS.benefits;
+    if($('benefits-grid') && Array.isArray(benefits)){
+      $('benefits-grid').innerHTML = benefits.map(function(b){
+        return '<div class="benefit"><div class="bicon">'+escapeHTML(b.icon||'')+'</div><div><h3>'+escapeHTML(b.title||'')+'</h3><p>'+escapeHTML(b.text||'')+'</p></div></div>';
+      }).join('');
+    }
+
+    // Trust
+    if($('trust-label')) $('trust-label').textContent = c.trust_label || DEFAULTS.trust_label;
+    var trust = c.trust || DEFAULTS.trust;
+    if($('trust-grid') && Array.isArray(trust)){
+      $('trust-grid').innerHTML = trust.map(function(t){
+        return '<div class="titem"><div class="titem-s">'+escapeHTML(t.sub||'')+'</div><div class="titem-n">'+escapeHTML(t.name||'')+'</div><div class="titem-d">'+escapeHTML(t.desc||'')+'</div></div>';
+      }).join('');
+    }
+
+    // Steps
+    if($('steps-label')) $('steps-label').textContent = c.steps_label || DEFAULTS.steps_label;
+    if($('steps-title')) $('steps-title').textContent = c.steps_title || DEFAULTS.steps_title;
+    var steps = c.steps || DEFAULTS.steps;
+    if($('steps-grid') && Array.isArray(steps)){
+      $('steps-grid').innerHTML = steps.map(function(s, i){
+        return '<div class="nstep"><div class="nsnum">'+(i+1)+'</div><div><h3>'+escapeHTML(s.title||'')+'</h3><p>'+escapeHTML(s.text||'')+'</p></div></div>';
+      }).join('');
+    }
+
     // CTA-Buttons rendern
     var ctas = c.ctas || DEFAULTS.ctas;
     ctas.forEach(function(cta, i){

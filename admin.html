@@ -230,6 +230,10 @@ button,input,select,textarea{font-family:inherit}
         <button class="snav-btn" data-panel="reviews" type="button"><span class="sn-icon">⭐</span>Reviews</button>
         <button class="snav-btn" data-panel="studios" type="button"><span class="sn-icon">📍</span>Studios</button>
         <button class="snav-btn" data-panel="brand" type="button"><span class="sn-icon">🔥</span>Brand</button>
+        <button class="snav-btn" data-panel="design" type="button"><span class="sn-icon">🎨</span>Design</button>
+        <button class="snav-btn" data-panel="benefits" type="button"><span class="sn-icon">✅</span>Vorteile</button>
+        <button class="snav-btn" data-panel="trust" type="button"><span class="sn-icon">🏅</span>Trust</button>
+        <button class="snav-btn" data-panel="steps" type="button"><span class="sn-icon">👣</span>Schritte</button>
         <button class="snav-btn" data-panel="form" type="button"><span class="sn-icon">📝</span>Form</button>
         <button class="snav-btn" data-panel="links" type="button"><span class="sn-icon">🔗</span>Links</button>
       </div>
@@ -384,6 +388,80 @@ button,input,select,textarea{font-family:inherit}
           <div class="field"><label class="fl">Untertitel</label><input type="text" class="fi" id="cfg-sticky_sub"></div>
         </div>
 
+        <!-- DESIGN -->
+        <div class="spanel" id="spanel-design">
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Farben und Schriftgrößen der Landing Page. Änderungen wirken sich sofort auf die Vorschau aus.</p>
+          <div class="sec-label">Farben</div>
+          <div class="field-row">
+            <div class="field">
+              <label class="fl">Primärfarbe <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hauptfarbe der Seite</strong>Wird für Nav-Button, Stats-Balken, grüne Elemente verwendet. Standard: <em>#2f8614</em></span></button></label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-primary_color" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-primary_color_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+            <div class="field">
+              <label class="fl">CTA-Button-Farbe <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Farbe der großen CTA-Buttons</strong>Die Conversion-Buttons auf der Seite. Kann von der Primärfarbe abweichen.</span></button></label>
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="color" id="cfg-design-cta_bg" value="#2f8614" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+                <input type="text" class="fi" id="cfg-design-cta_bg_hex" value="#2f8614" placeholder="#2f8614" style="flex:1;font-family:monospace">
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="fl">Hero-Hintergrundfarbe</label>
+            <div style="display:flex;gap:6px;align-items:center">
+              <input type="color" id="cfg-design-hero_bg" value="#ffffff" style="width:40px;height:36px;border-radius:6px;border:1.5px solid var(--border);padding:2px;cursor:pointer">
+              <input type="text" class="fi" id="cfg-design-hero_bg_hex" value="#ffffff" placeholder="#ffffff" style="flex:1;font-family:monospace">
+            </div>
+          </div>
+          <div class="sec-label">Schriftgrößen (px)</div>
+          <div class="field-row">
+            <div class="field">
+              <label class="fl">Hero Zeile 1 <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Größe der ersten Hero-Zeile</strong>"Sichere dir deinen Gutschein..." — Standard: <em>32</em></span></button></label>
+              <input type="number" class="fi" id="cfg-design-hero_title_size" value="32" min="20" max="80" style="font-family:monospace">
+            </div>
+            <div class="field">
+              <label class="fl">Hero Zeile 2 (grün) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Größe der grünen Hauptzeile</strong>"GRATIS EMS-Probetraining!" — Standard: <em>42</em></span></button></label>
+              <input type="number" class="fi" id="cfg-design-hero_sub_size" value="42" min="24" max="100" style="font-family:monospace">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label class="fl">Abschnitt-Titel <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Größe der Abschnitts-Überschriften</strong>"Warum fitbox?", "Echte Ergebnisse." etc. — Standard: <em>30</em></span></button></label>
+              <input type="number" class="fi" id="cfg-design-section_title_size" value="30" min="20" max="60" style="font-family:monospace">
+            </div>
+            <div class="field">
+              <label class="fl">Fließtext <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Basis-Schriftgröße der Seite</strong>Gilt für Beschreibungen, Vorteile-Texte etc. — Standard: <em>14</em></span></button></label>
+              <input type="number" class="fi" id="cfg-design-body_size" value="14" min="12" max="18" style="font-family:monospace">
+            </div>
+          </div>
+        </div>
+
+        <!-- VORTEILE -->
+        <div class="spanel" id="spanel-benefits">
+          <div class="field"><label class="fl">Abschnitt-Label (klein)</label><input type="text" class="fi" id="cfg-benefits_label" placeholder="Deine Vorteile"></div>
+          <div class="field"><label class="fl">Abschnitt-Titel</label><input type="text" class="fi" id="cfg-benefits_title" placeholder="Warum fitbox?"></div>
+          <div class="sec-label">Vorteile-Karten <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>6 Karten im 2-3 Spalten-Grid</strong>Jede Karte hat ein Emoji-Icon, einen Titel und einen kurzen Text. Emoji direkt eingeben oder Unicode: <em>⏱️ 💪 ❤️</em></span></button></div>
+          <div id="benefits-container"></div>
+          <button class="add-btn" id="add-benefit-btn" type="button">+ Vorteil hinzufügen</button>
+        </div>
+
+        <!-- TRUST -->
+        <div class="spanel" id="spanel-trust">
+          <div class="field"><label class="fl">Label über den Badges</label><input type="text" class="fi" id="cfg-trust_label" placeholder="Ausgestattet mit professioneller Technologie"></div>
+          <div class="sec-label">Technologie-Badges (3 Stück)</div>
+          <div id="trust-container"></div>
+        </div>
+
+        <!-- SCHRITTE -->
+        <div class="spanel" id="spanel-steps">
+          <div class="field"><label class="fl">Abschnitt-Label</label><input type="text" class="fi" id="cfg-steps_label" placeholder="Nächste Schritte"></div>
+          <div class="field"><label class="fl">Abschnitt-Titel</label><input type="text" class="fi" id="cfg-steps_title" placeholder="In 3 Schritten zum Probetraining"></div>
+          <div class="sec-label">Schritte</div>
+          <div id="steps-container"></div>
+        </div>
+
         <!-- LINKS -->
         <div class="spanel" id="spanel-links">
           <p style="font-size:12px;color:var(--r);font-weight:600;margin-bottom:12px">⚠️ Pflichtangaben nach TMG / DSGVO</p>
@@ -528,7 +606,8 @@ function readAll(){
     'nav_cta_text','hero_title','hero_sub','hero_check','hero_desc','hero_img','scarcity_text',
     'quiz_cta','quiz_title','quiz_sub',
     'studio_banner_img','mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
-    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle'
+    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
+    'benefits_label','benefits_title','trust_label','steps_label','steps_title'
   ];
   simpleFields.forEach(function(k){
     var el = $('cfg-'+k); if(el) c[k] = el.value.trim();
@@ -539,6 +618,10 @@ function readAll(){
   c.reviews = readReviews();
   c.brand_tags = readTags();
   c.ctas = readCtas();
+  c.design = readDesign();
+  c.benefits = readBenefits();
+  c.trust = readTrust();
+  c.steps = readSteps();
   return c;
 }
 
@@ -549,7 +632,8 @@ function renderAll(){
     'nav_cta_text','hero_title','hero_sub','hero_check','hero_desc','hero_img','scarcity_text',
     'quiz_cta','quiz_title','quiz_sub',
     'studio_banner_img','mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
-    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle'
+    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
+    'benefits_label','benefits_title','trust_label','steps_label','steps_title'
   ];
   simpleFields.forEach(function(k){
     var el = $('cfg-'+k);
@@ -569,6 +653,103 @@ function renderAll(){
     {active:false, title:'', btn:''},
     {active:true, title:'Jetzt kostenloses Probetraining vereinbaren!', btn:'Gutschein sichern →'}
   ]);
+  renderDesign(cfg.design || {primary_color:'#2f8614',cta_bg:'#2f8614',hero_bg:'#ffffff',hero_title_size:'32',hero_sub_size:'42',body_size:'14',section_title_size:'30'});
+  renderBenefits(cfg.benefits || []);
+  renderTrust(cfg.trust || [{sub:'EMS-Anzug',name:'SYMBIONT',desc:'by schwa-medico'},{sub:'EMS-Gerät',name:'MIHA BODYTEC',desc:'Marktführer seit 2007'},{sub:'Qualität',name:'MADE IN GERMANY',desc:'Medizinisch zertifiziert'}]);
+  renderSteps(cfg.steps || [{title:'Gutschein online sichern',text:'Klick auf dein Ziel...'},{title:'Termin vereinbaren',text:'Wir melden uns persönlich.'},{title:'EMS-Training + Infos',text:'Erlebe EMS kostenlos.'}]);
+}
+
+// ── DESIGN ──
+function renderDesign(d){
+  if(!d) return;
+  var fields = ['primary_color','cta_bg','hero_bg'];
+  fields.forEach(function(k){
+    var col = $('cfg-design-'+k); var hex = $('cfg-design-'+k+'_hex');
+    if(col && d[k]) col.value = d[k];
+    if(hex && d[k]) hex.value = d[k];
+  });
+  var numFields = ['hero_title_size','hero_sub_size','body_size','section_title_size'];
+  numFields.forEach(function(k){
+    var el = $('cfg-design-'+k); if(el && d[k] != null) el.value = d[k];
+  });
+}
+function readDesign(){
+  var d = {};
+  ['primary_color','cta_bg','hero_bg'].forEach(function(k){
+    var hex = $('cfg-design-'+k+'_hex');
+    if(hex) d[k] = hex.value.trim() || $('cfg-design-'+k).value;
+  });
+  ['hero_title_size','hero_sub_size','body_size','section_title_size'].forEach(function(k){
+    var el = $('cfg-design-'+k); if(el) d[k] = el.value;
+  });
+  return d;
+}
+
+// ── BENEFITS ──
+function renderBenefits(benefits){ var c = $('benefits-container'); c.innerHTML = ''; benefits.forEach(function(b){ addBenefitEl(b); }); }
+function addBenefitEl(b){
+  var c = $('benefits-container');
+  var d = document.createElement('div'); d.className = 'item';
+  d.innerHTML =
+    '<button class="item-del" type="button">&times;</button>'+
+    '<div class="field-row">'+
+      '<div class="field" style="max-width:70px"><label class="fl">Icon</label><input type="text" class="fi" data-b-icon value="'+ea((b&&b.icon)||'')+'" placeholder="⏱️" style="font-size:18px;text-align:center"></div>'+
+      '<div class="field" style="flex:1"><label class="fl">Titel</label><input type="text" class="fi" data-b-title value="'+ea((b&&b.title)||'')+'" placeholder="Zeiteffizient"></div>'+
+    '</div>'+
+    '<div class="field"><label class="fl">Text</label><textarea class="fa" data-b-text rows="2" placeholder="Kurze Erklärung...">'+esc((b&&b.text)||'')+'</textarea></div>';
+  d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); schedulePreview(); });
+  d.querySelectorAll('input,textarea').forEach(function(i){ i.addEventListener('input', schedulePreview); });
+  c.appendChild(d);
+}
+function readBenefits(){
+  var r = [];
+  qa('#benefits-container .item').forEach(function(el){
+    r.push({icon:el.querySelector('[data-b-icon]').value.trim(), title:el.querySelector('[data-b-title]').value.trim(), text:el.querySelector('[data-b-text]').value.trim()});
+  });
+  return r;
+}
+
+// ── TRUST ──
+function renderTrust(trust){ var c = $('trust-container'); c.innerHTML = ''; trust.forEach(function(t){ addTrustEl(t); }); }
+function addTrustEl(t){
+  var c = $('trust-container');
+  var d = document.createElement('div'); d.className = 'item';
+  d.innerHTML =
+    '<div class="field-row" style="margin-bottom:8px">'+
+      '<div class="field"><label class="fl">Label (klein)</label><input type="text" class="fi" data-t-sub value="'+ea((t&&t.sub)||'')+'" placeholder="EMS-Anzug"></div>'+
+      '<div class="field"><label class="fl">Name (groß)</label><input type="text" class="fi" data-t-name value="'+ea((t&&t.name)||'')+'" placeholder="SYMBIONT"></div>'+
+    '</div>'+
+    '<div class="field" style="margin:0"><label class="fl">Beschreibung</label><input type="text" class="fi" data-t-desc value="'+ea((t&&t.desc)||'')+'" placeholder="by schwa-medico"></div>';
+  d.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', schedulePreview); });
+  c.appendChild(d);
+}
+function readTrust(){
+  var r = [];
+  qa('#trust-container .item').forEach(function(el){
+    r.push({sub:el.querySelector('[data-t-sub]').value.trim(), name:el.querySelector('[data-t-name]').value.trim(), desc:el.querySelector('[data-t-desc]').value.trim()});
+  });
+  return r;
+}
+
+// ── STEPS ──
+function renderSteps(steps){ var c = $('steps-container'); c.innerHTML = ''; steps.forEach(function(s,i){ addStepEl(s,i); }); }
+function addStepEl(s, i){
+  var c = $('steps-container');
+  var d = document.createElement('div'); d.className = 'item';
+  var num = $('steps-container').children.length + 1;
+  d.innerHTML =
+    '<div class="cta-num"><span>'+(i!==undefined?i+1:num)+'</span></div>'+
+    '<div class="field"><label class="fl">Titel</label><input type="text" class="fi" data-s-title value="'+ea((s&&s.title)||'')+'" placeholder="Gutschein sichern"></div>'+
+    '<div class="field" style="margin:0"><label class="fl">Beschreibung</label><textarea class="fa" data-s-text rows="2" placeholder="Klick auf dein Ziel...">'+esc((s&&s.text)||'')+'</textarea></div>';
+  d.querySelectorAll('input,textarea').forEach(function(i){ i.addEventListener('input', schedulePreview); });
+  c.appendChild(d);
+}
+function readSteps(){
+  var r = [];
+  qa('#steps-container .item').forEach(function(el){
+    r.push({title:el.querySelector('[data-s-title]').value.trim(), text:el.querySelector('[data-s-text]').value.trim()});
+  });
+  return r;
 }
 
 function updateBannerBadge(){
@@ -802,8 +983,28 @@ function bindAll(){
   $('add-goal-btn').addEventListener('click', function(){ addGoalEl({}); });
   $('add-review-btn').addEventListener('click', function(){ addReviewEl({}); });
   $('add-tag-btn').addEventListener('click', function(){ addTagEl(''); });
+  $('add-benefit-btn').addEventListener('click', function(){ addBenefitEl({}); });
   bindUpload('hero_img', 'hero-preview');
   bindUpload('studio_banner_img', 'studio-preview');
+
+  // Farb-Picker Sync (color ↔ hex text)
+  ['primary_color','cta_bg','hero_bg'].forEach(function(k){
+    var col = $('cfg-design-'+k);
+    var hex = $('cfg-design-'+k+'_hex');
+    if(col && hex){
+      col.addEventListener('input', function(){ hex.value = col.value; schedulePreview(); });
+      hex.addEventListener('input', function(){
+        if(/^#[0-9a-fA-F]{6}$/.test(hex.value)){ col.value = hex.value; }
+        schedulePreview();
+      });
+    }
+  });
+
+  // Zahlen-Felder Design
+  ['hero_title_size','hero_sub_size','body_size','section_title_size'].forEach(function(k){
+    var el = $('cfg-design-'+k);
+    if(el) el.addEventListener('input', schedulePreview);
+  });
 
   // Auto-save on any simple field change
   var autoFields = [
@@ -811,7 +1012,8 @@ function bindAll(){
     'nav_cta_text','hero_title','hero_sub','hero_check','hero_desc','scarcity_text',
     'quiz_cta','quiz_title','quiz_sub',
     'mem_adresse','mem_zeiten','mem_wa','sen_adresse','sen_zeiten','sen_wa',
-    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle'
+    'sticky_title','sticky_sub','impressum_url','datenschutz_url','form_title','form_subtitle',
+    'benefits_label','benefits_title','trust_label','steps_label','steps_title'
   ];
   autoFields.forEach(function(k){
     var el = $('cfg-'+k);
