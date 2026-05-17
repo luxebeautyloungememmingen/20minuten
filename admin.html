@@ -760,7 +760,7 @@ function renderAll(){
   if(va) va.checked = !!cfg.video_active;
   if(cfg.hero_img) previewImg('hero-preview', cfg.hero_img);
   if(cfg.studio_banner_img) previewImg('studio-preview', cfg.studio_banner_img);
-  renderVideoPlaylist(cfg.video_urls || []);
+  renderVideoPlaylist(cfg.video_urls || (cfg.video_url ? [cfg.video_url] : []));
   renderGoals(cfg.goals || []);
   renderStats(cfg.stats || [{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}]);
   renderReviews(cfg.reviews || []);
@@ -1313,12 +1313,12 @@ function loadVideoLib(){
     });
     if(videos.length === 0){ status.textContent = 'Keine Videos im Bucket gefunden.'; return; }
     status.textContent = videos.length + ' Video' + (videos.length !== 1 ? 's' : '') + ' gefunden';
-    var currentUrl = $('cfg-video_url').value;
+    var currentUrls = readVideoUrls();
     videos.forEach(function(f){
       var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+f.name;
       var sizeMB = f.metadata && f.metadata.size ? (f.metadata.size/1024/1024).toFixed(1)+' MB' : '';
       var card = document.createElement('div');
-      card.className = 'vlib-card' + (currentUrl === url ? ' selected' : '');
+      card.className = 'vlib-card' + (currentUrls.indexOf(url) !== -1 ? ' selected' : '');
       card.innerHTML =
         '<div class="vlib-thumb"><video src="'+ea(url)+'" preload="metadata" muted playsinline></video></div>'+
         '<div class="vlib-info">'+

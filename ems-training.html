@@ -936,7 +936,8 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     // Video
     var vsec = $('sec-video');
     if(vsec){
-      var vurls = c.video_urls || [];
+      // Migration: alter Key video_url → video_urls
+      var vurls = c.video_urls || (c.video_url ? [c.video_url] : []);
       vsec.style.display = c.video_active && vurls.length > 0 ? '' : 'none';
       if($('video-label')) $('video-label').textContent = c.video_label || DEFAULTS.video_label;
       if($('video-title')) $('video-title').textContent = c.video_title || DEFAULTS.video_title;
