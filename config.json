@@ -4,12 +4,24 @@
   "banner_link_text": "Jetzt sichern",
   "banner_link_url": "#quiz",
 
-  "hero_img": "https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg",
-  "scarcity_text": "Nur noch wenige Plätze pro Monat verfügbar!",
-  "nav_cta_text": "Jetzt starten",
+  "nav_cta_text": "Jetzt sichern",
 
+  "hero_title": "Sichere dir deinen Gutschein für ein",
+  "hero_sub": "GRATIS EMS-Probetraining!",
+  "hero_check": "100% kostenlos und unverbindlich testen!",
+  "hero_desc": "In nur <strong>20 Minuten</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong>. Persönlich betreut. Made in Germany.",
+  "scarcity_text": "⚠️ Nur wenige Plätze pro Monat verfügbar!",
+
+  "quiz_cta": "Klicke auf dein Ziel",
   "quiz_title": "Was ist dein Ziel?",
-  "quiz_sub": "In 60 Sekunden zum kostenlosen Termin.",
+  "quiz_sub": "Klicke HIER auf dein Ziel und sichere dir deinen Gutschein!",
+
+  "goals": [
+    { "key": "abnehmen", "label": "Abnehmen & Figur straffen", "img": "https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg" },
+    { "key": "muskelaufbau", "label": "Muskulatur stärken", "img": "https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg" },
+    { "key": "ruecken", "label": "Rückenschmerzen lindern", "img": "https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg" },
+    { "key": "gesundheit", "label": "Fitter & gesünder werden", "img": "https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg" }
+  ],
 
   "stats": [
     { "num": "20",   "label": "Min. pro Session" },
@@ -27,17 +39,19 @@
   "sen_wa": "4915561206719",
 
   "reviews": [
-    { "text": "Tolles Studio und ein super Trainerteam. Seit fünf Jahren dabei und immer noch begeistert.", "author": "Bettina L. aus Memmingen" },
-    { "text": "Endlich ein Training, das sich in meinen Alltag integrieren lässt. Keine Rückenschmerzen mehr.", "author": "Susanne H. aus Buxheim" },
-    { "text": "Die Trainer holen das Beste aus einem heraus. Modernes und gepflegtes Studio.", "author": "Hermann K. aus Kirchdorf" }
+    { "text": "Tolles Studio, alle Trainer sind kompetent und immer mit Freude dabei. Seit 5 Jahren dabei und fühle mich superfit!", "author": "Bettina H. aus Memmingen" },
+    { "text": "Endlich ein Training, das sich in meinen Alltag integrieren lässt. Keine Rückenschmerzen mehr und bessere Körperhaltung.", "author": "Susanne H. aus Buxheim" },
+    { "text": "Trainer-Team geht individuell auf dich ein, motiviert dich und holt alles aus dir raus. Sehr sympathisch und freundlich.", "author": "Hermann K. aus Kirchdorf" }
   ],
 
-  "sticky_title": "Kostenloses Probetraining",
-  "sticky_sub": "Nur noch wenige Plätze frei!",
+  "brand_tags": ["#ImmermitSpaß", "#ImmermitTermin", "#ImmermitTrainer"],
+
+  "sticky_title": "Gratis EMS-Probetraining",
+  "sticky_sub": "Nur wenige Plätze frei!",
 
   "impressum_url": "#",
   "datenschutz_url": "#",
 
-  "form_title": "Probetraining sichern",
-  "form_subtitle": "In 60 Sekunden zum kostenlosen Termin."
+  "form_title": "Gutschein sichern",
+  "form_subtitle": "In 60 Sekunden zu deinem GRATIS EMS-Probetraining."
 }

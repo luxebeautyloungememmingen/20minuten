@@ -7,11 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--g:#2f8614;--dg:#246610;--gl:#e8f5e0;--b:#111;--t:#1a1a1a;--m:#6b7280;--bg:#f9f9f6;--ba:#f2f2ee;--w:#fff;--bd:#e2e2dc;--r:#dc2626;--y:#d97706}
+:root{--g:#2f8614;--dg:#246610;--gl:#e8f5e0;--b:#111;--t:#1a1a1a;--m:#6b7280;--bg:#f9f9f6;--ba:#f2f2ee;--w:#fff;--bd:#e2e2dc;--r:#dc2626}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
-
-/* LOGIN */
 #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
 .lbox{background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:36px 28px;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
 .llogo{text-align:center;margin-bottom:20px}
@@ -19,14 +17,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 .ltitle{font-size:17px;font-weight:700;text-align:center;margin-bottom:22px;color:var(--b)}
 .lfield{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .llbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--m)}
-.linp{padding:12px 14px;border:1.5px solid var(--bd);border-radius:6px;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s}
+.linp{padding:12px 14px;border:1.5px solid var(--bd);border-radius:6px;font-family:inherit;font-size:15px;outline:none}
 .linp:focus{border-color:var(--g)}
-.lbtn{width:100%;padding:13px;background:var(--g);color:#fff;border:none;border-radius:6px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;transition:background .2s}
-.lbtn:hover{background:var(--dg)}
+.lbtn{width:100%;padding:13px;background:var(--g);color:#fff;border:none;border-radius:6px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer}
 .lerr{color:var(--r);font-size:13px;text-align:center;margin-top:10px;display:none}
 .lerr.show{display:block}
 
-/* ADMIN */
 #admin{display:none;min-height:100vh}
 .top{background:var(--w);border-bottom:1px solid var(--bd);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:12px;flex-wrap:wrap}
 .top-l{display:flex;align-items:center;gap:12px;min-width:0}
@@ -36,23 +32,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 .tbtn{background:none;border:1px solid var(--bd);border-radius:6px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--t);white-space:nowrap}
 .tbtn-prev{background:var(--gl);color:var(--dg);border-color:var(--g)}
 .tbtn-save{background:var(--g);color:#fff;border:none;font-weight:700;padding:9px 18px}
-.tbtn-save:hover{background:var(--dg)}
 .tbtn-save:disabled{opacity:.6;cursor:not-allowed}
 
 .body{display:flex}
 .side{width:220px;flex-shrink:0;border-right:1px solid var(--bd);background:var(--w);padding:16px 0;min-height:calc(100vh - 57px);position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto}
 .side-sec{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m);padding:12px 20px 6px}
-.side-i{display:flex;align-items:center;gap:8px;padding:10px 20px;font-size:13px;color:var(--t);cursor:pointer;transition:background .15s;border-left:3px solid transparent}
+.side-i{display:flex;align-items:center;gap:8px;padding:10px 20px;font-size:13px;color:var(--t);cursor:pointer;border-left:3px solid transparent}
 .side-i:hover{background:var(--bg)}
 .side-i.active{background:var(--gl);color:var(--dg);border-left-color:var(--g);font-weight:600}
 .side-ic{font-size:16px;width:20px;text-align:center}
 
-.content{flex:1;padding:24px;max-width:900px}
+.content{flex:1;padding:24px;max-width:920px}
 .panel{display:none}
 .panel.active{display:block}
 .p-t{font-size:20px;font-weight:700;color:var(--b);margin-bottom:4px}
 .p-s{font-size:13px;color:var(--m);margin-bottom:24px}
-
 .card{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:20px;margin-bottom:14px}
 .card-t{font-size:13px;font-weight:700;color:var(--b);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;letter-spacing:.5px;text-transform:uppercase}
@@ -63,7 +57,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 .row.single{grid-template-columns:1fr}
 .field{display:flex;flex-direction:column;gap:5px}
 .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--m)}
-.inp,.ta{padding:10px 12px;border:1.5px solid var(--bd);border-radius:6px;font-family:inherit;font-size:14px;color:var(--t);background:var(--w);outline:none;transition:border-color .2s;width:100%}
+.inp,.ta{padding:10px 12px;border:1.5px solid var(--bd);border-radius:6px;font-family:inherit;font-size:14px;color:var(--t);background:var(--w);outline:none;width:100%}
 .inp:focus,.ta:focus{border-color:var(--g)}
 .ta{min-height:70px;resize:vertical}
 .hint{font-size:11px;color:var(--m);margin-top:3px}
@@ -71,35 +65,31 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 .tog-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .tog{position:relative;width:44px;height:24px;flex-shrink:0}
 .tog input{opacity:0;width:0;height:0;position:absolute}
-.tog-s{position:absolute;inset:0;background:var(--bd);border-radius:100px;cursor:pointer;transition:background .2s}
+.tog-s{position:absolute;inset:0;background:var(--bd);border-radius:100px;cursor:pointer}
 .tog-s::after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
 .tog input:checked + .tog-s{background:var(--g)}
 .tog input:checked + .tog-s::after{transform:translateX(20px)}
 .tog-l{font-size:14px;font-weight:500}
 
-.rev-i{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:14px;margin-bottom:10px;position:relative}
-.rev-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--m);cursor:pointer;font-size:16px;padding:2px 6px}
-.rev-del:hover{color:var(--r)}
+.rev-i,.goal-i,.tag-i{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:14px;margin-bottom:10px;position:relative}
+.rev-del,.goal-del,.tag-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--m);cursor:pointer;font-size:16px;padding:2px 6px}
+.rev-del:hover,.goal-del:hover,.tag-del:hover{color:var(--r)}
 .add-btn{background:var(--gl);color:var(--dg);border:1px dashed var(--g);border-radius:6px;padding:10px;width:100%;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
-.add-btn:hover{background:#d4eec4}
 
 .stat-i{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;align-items:end}
 
 .img-prev{margin-top:8px;border-radius:6px;overflow:hidden;height:120px;background:var(--ba);position:relative}
 .img-prev img{width:100%;height:100%;object-fit:cover}
 .img-ph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--m);font-size:13px}
+.goal-img-prev{margin-top:6px;border-radius:6px;overflow:hidden;height:90px;background:var(--ba)}
+.goal-img-prev img{width:100%;height:100%;object-fit:cover}
 
 #toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--b);color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none;max-width:90vw}
 #toast.show{transform:translateY(0);opacity:1}
 #toast.success{background:var(--g)}
 #toast.error{background:var(--r)}
 
-@media (max-width:768px){
-  .side{display:none}
-  .row{grid-template-columns:1fr}
-  .content{padding:16px}
-  .top-t{display:none}
-}
+@media (max-width:768px){.side{display:none}.row{grid-template-columns:1fr}.content{padding:16px}.top-t{display:none}}
 </style>
 </head>
 <body>
@@ -134,10 +124,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     <div class="side">
       <div class="side-sec">Seite</div>
       <div class="side-i active" data-panel="banner"><span class="side-ic">&#128227;</span> Aktions-Banner</div>
-      <div class="side-i" data-panel="hero"><span class="side-ic">&#127968;</span> Hero-Bereich</div>
-      <div class="side-i" data-panel="quiz"><span class="side-ic">&#127919;</span> Quiz (oben)</div>
+      <div class="side-i" data-panel="hero"><span class="side-ic">&#127968;</span> Hero (Gutschein-Header)</div>
+      <div class="side-i" data-panel="quiz"><span class="side-ic">&#127919;</span> Quiz-Texte</div>
+      <div class="side-i" data-panel="goals"><span class="side-ic">&#127919;</span> Ziele &amp; Bilder</div>
       <div class="side-i" data-panel="stats"><span class="side-ic">&#128202;</span> Stats-Leiste</div>
       <div class="side-i" data-panel="reviews"><span class="side-ic">&#11088;</span> Bewertungen</div>
+      <div class="side-i" data-panel="brand"><span class="side-ic">&#128293;</span> Brand-Hashtags</div>
       <div class="side-sec">Studios</div>
       <div class="side-i" data-panel="studios"><span class="side-ic">&#128205;</span> Standorte</div>
       <div class="side-sec">Formular</div>
@@ -150,103 +142,81 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
 
       <div class="panel active" id="panel-banner">
         <div class="p-t">Aktions-Banner</div>
-        <div class="p-s">Zeigt einen farbigen Banner ganz oben &mdash; ideal f&uuml;r zeitlich begrenzte Aktionen.</div>
+        <div class="p-s">Zeigt einen farbigen Banner ganz oben f&uuml;r zeitlich begrenzte Aktionen.</div>
         <div class="card">
-          <div class="card-t">Banner-Status <span class="badge b-red" id="badge-banner">Deaktiviert</span></div>
+          <div class="card-t">Status <span class="badge b-red" id="badge-banner">Deaktiviert</span></div>
           <div class="tog-row">
-            <label class="tog">
-              <input type="checkbox" id="cfg-banner_active">
-              <span class="tog-s"></span>
-            </label>
+            <label class="tog"><input type="checkbox" id="cfg-banner_active"><span class="tog-s"></span></label>
             <span class="tog-l">Banner anzeigen</span>
           </div>
-          <div class="row single">
-            <div class="field">
-              <label class="lbl">Banner-Text</label>
-              <input type="text" class="inp" id="cfg-banner_text" placeholder="&#127881; Sommer-Aktion: 2 Monate zum Preis von 1!">
-              <div class="hint">Emojis erlaubt. Wird in Gr&uuml;n angezeigt.</div>
-            </div>
-          </div>
+          <div class="row single"><div class="field"><label class="lbl">Banner-Text</label><input type="text" class="inp" id="cfg-banner_text" placeholder="Sommer-Aktion: ..."></div></div>
           <div class="row">
-            <div class="field">
-              <label class="lbl">Link-Text (optional)</label>
-              <input type="text" class="inp" id="cfg-banner_link_text" placeholder="Jetzt sichern">
-            </div>
-            <div class="field">
-              <label class="lbl">Link-URL (optional)</label>
-              <input type="text" class="inp" id="cfg-banner_link_url" placeholder="#quiz oder https://...">
-            </div>
+            <div class="field"><label class="lbl">Link-Text (optional)</label><input type="text" class="inp" id="cfg-banner_link_text" placeholder="Jetzt sichern"></div>
+            <div class="field"><label class="lbl">Link-URL (optional)</label><input type="text" class="inp" id="cfg-banner_link_url" placeholder="#quiz"></div>
           </div>
         </div>
       </div>
 
       <div class="panel" id="panel-hero">
-        <div class="p-t">Hero-Bereich</div>
-        <div class="p-s">Hauptbild, Scarcity-Hinweis und Nav-CTA.</div>
+        <div class="p-t">Hero (Gutschein-Header)</div>
+        <div class="p-s">Die zentrale Headline ganz oben. "Gutschein"-Framing wirkt st&auml;rker als "Probetraining".</div>
         <div class="card">
-          <div class="card-t">Hero-Bild</div>
-          <div class="row single">
-            <div class="field">
-              <label class="lbl">Bild-URL</label>
-              <input type="text" class="inp" id="cfg-hero_img" placeholder="https://...">
-              <div class="hint">Supabase Storage URL oder externes HTTPS-Bild. Empfohlen: 1200x800px.</div>
-              <div class="img-prev" id="hero-preview"><div class="img-ph">Bild-URL eingeben</div></div>
-            </div>
-          </div>
+          <div class="card-t">Headline</div>
+          <div class="row single"><div class="field"><label class="lbl">Zeile 1 (kleiner)</label><input type="text" class="inp" id="cfg-hero_title" placeholder="Sichere dir deinen Gutschein f&uuml;r ein"></div></div>
+          <div class="row single"><div class="field"><label class="lbl">Zeile 2 (gro&szlig;, gr&uuml;n)</label><input type="text" class="inp" id="cfg-hero_sub" placeholder="GRATIS EMS-Probetraining!"></div></div>
+          <div class="row single"><div class="field"><label class="lbl">Check-Zeile (mit gr&uuml;nem H&auml;kchen)</label><input type="text" class="inp" id="cfg-hero_check" placeholder="100% kostenlos und unverbindlich testen!"></div></div>
+          <div class="row single"><div class="field"><label class="lbl">Beschreibung</label><textarea class="ta" id="cfg-hero_desc" placeholder="In nur 20 Minuten..."></textarea><div class="hint">HTML erlaubt (z.B. &lt;strong&gt;).</div></div></div>
         </div>
         <div class="card">
-          <div class="card-t">Texte</div>
-          <div class="row single">
-            <div class="field">
-              <label class="lbl">Scarcity-Hinweis (gelbe Box im Hero)</label>
-              <input type="text" class="inp" id="cfg-scarcity_text" placeholder="Nur noch wenige Pl&auml;tze pro Monat verf&uuml;gbar!">
-            </div>
-          </div>
-          <div class="row single">
-            <div class="field">
-              <label class="lbl">Nav-CTA (oben rechts)</label>
-              <input type="text" class="inp" id="cfg-nav_cta_text" placeholder="Jetzt starten">
-            </div>
-          </div>
+          <div class="card-t">Scarcity &amp; Nav</div>
+          <div class="row single"><div class="field"><label class="lbl">Scarcity-Hinweis (gelbe Box)</label><input type="text" class="inp" id="cfg-scarcity_text" placeholder="Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!"></div></div>
+          <div class="row single"><div class="field"><label class="lbl">Nav-CTA (oben rechts)</label><input type="text" class="inp" id="cfg-nav_cta_text" placeholder="Jetzt sichern"></div></div>
         </div>
       </div>
 
       <div class="panel" id="panel-quiz">
-        <div class="p-t">Quiz-Bereich (oben)</div>
-        <div class="p-s">Der gr&uuml;ne Quiz-Bereich direkt unter dem Hero &mdash; das prim&auml;re Conversion-Element.</div>
+        <div class="p-t">Quiz-Texte (oben)</div>
+        <div class="p-s">Die Texte im gr&uuml;nen Quiz-Bereich direkt unter dem Hero.</div>
         <div class="card">
-          <div class="card-t">Quiz-Texte</div>
-          <div class="row single">
-            <div class="field">
-              <label class="lbl">Quiz-Titel</label>
-              <input type="text" class="inp" id="cfg-quiz_title" placeholder="Was ist dein Ziel?">
-            </div>
-          </div>
-          <div class="row single">
-            <div class="field">
-              <label class="lbl">Quiz-Untertitel</label>
-              <input type="text" class="inp" id="cfg-quiz_sub" placeholder="In 60 Sekunden zum kostenlosen Termin.">
-            </div>
-          </div>
+          <div class="row single"><div class="field"><label class="lbl">CTA-Text (klein, dr&uuml;ber)</label><input type="text" class="inp" id="cfg-quiz_cta" placeholder="Klicke auf dein Ziel"></div></div>
+          <div class="row single"><div class="field"><label class="lbl">Quiz-Titel</label><input type="text" class="inp" id="cfg-quiz_title" placeholder="Was ist dein Ziel?"></div></div>
+          <div class="row single"><div class="field"><label class="lbl">Quiz-Untertitel</label><input type="text" class="inp" id="cfg-quiz_sub" placeholder="Klicke HIER auf dein Ziel..."></div></div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-goals">
+        <div class="p-t">Ziele &amp; Bilder</div>
+        <div class="p-s">Die 4 Goal-Buttons mit Bildern. <strong>Bilder konvertieren 30-50% besser als Emojis</strong>. L&auml;dst du eigene Bilder in dein Supabase Storage und f&uuml;gst hier die URLs ein.</div>
+        <div class="card">
+          <div class="card-t">Ziele verwalten</div>
+          <div id="goals-container"></div>
+          <button class="add-btn" id="add-goal-btn">+ Ziel hinzuf&uuml;gen</button>
         </div>
       </div>
 
       <div class="panel" id="panel-stats">
         <div class="p-t">Stats-Leiste</div>
         <div class="p-s">Die 4 Kennzahlen im gr&uuml;nen Balken.</div>
-        <div class="card">
-          <div class="card-t">Kennzahlen</div>
-          <div id="stats-container"></div>
-        </div>
+        <div class="card"><div class="card-t">Kennzahlen</div><div id="stats-container"></div></div>
       </div>
 
       <div class="panel" id="panel-reviews">
         <div class="p-t">Bewertungen</div>
-        <div class="p-s">Echte Kundenstimmen &mdash; max. 6 Bewertungen empfohlen.</div>
+        <div class="p-s">Echte Kundenstimmen.</div>
         <div class="card">
           <div class="card-t">Bewertungen verwalten</div>
           <div id="reviews-container"></div>
           <button class="add-btn" id="add-review-btn">+ Bewertung hinzuf&uuml;gen</button>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-brand">
+        <div class="p-t">Brand-Hashtags</div>
+        <div class="p-s">Die Hashtag-Slogan-Zeile im schwarzen Block (z.B. #ImmermitSpa&szlig; #ImmermitTermin).</div>
+        <div class="card">
+          <div class="card-t">Hashtags</div>
+          <div id="tags-container"></div>
+          <button class="add-btn" id="add-tag-btn">+ Hashtag hinzuf&uuml;gen</button>
         </div>
       </div>
 
@@ -255,82 +225,41 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
         <div class="p-s">Adresse, &Ouml;ffnungszeiten und WhatsApp-Nummern.</div>
         <div class="card">
           <div class="card-t">Studio-Banner-Bild</div>
-          <div class="row single">
-            <div class="field">
-              <label class="lbl">Bild-URL</label>
-              <input type="text" class="inp" id="cfg-studio_banner_img" placeholder="https://...">
-              <div class="img-prev" id="studio-preview"><div class="img-ph">Bild-URL eingeben</div></div>
-            </div>
-          </div>
+          <div class="row single"><div class="field"><label class="lbl">Bild-URL</label><input type="text" class="inp" id="cfg-studio_banner_img" placeholder="https://..."><div class="img-prev" id="studio-preview"><div class="img-ph">Bild-URL eingeben</div></div></div></div>
         </div>
         <div class="card">
           <div class="card-t">fitbox Memmingen</div>
           <div class="row">
-            <div class="field">
-              <label class="lbl">Adresse</label>
-              <input type="text" class="inp" id="cfg-mem_adresse" placeholder="Memmingen Amendingen">
-            </div>
-            <div class="field">
-              <label class="lbl">&Ouml;ffnungszeiten</label>
-              <input type="text" class="inp" id="cfg-mem_zeiten" placeholder="Mo&ndash;Fr &amp; nach Vereinbarung">
-            </div>
+            <div class="field"><label class="lbl">Adresse</label><input type="text" class="inp" id="cfg-mem_adresse"></div>
+            <div class="field"><label class="lbl">&Ouml;ffnungszeiten</label><input type="text" class="inp" id="cfg-mem_zeiten"></div>
           </div>
-          <div class="row single">
-            <div class="field">
-              <label class="lbl">WhatsApp-Nummer</label>
-              <input type="text" class="inp" id="cfg-mem_wa" placeholder="4915730024124">
-              <div class="hint">Format: 49151... (mit L&auml;ndervorwahl, ohne + oder 0)</div>
-            </div>
-          </div>
+          <div class="row single"><div class="field"><label class="lbl">WhatsApp-Nummer</label><input type="text" class="inp" id="cfg-mem_wa"><div class="hint">Format: 49151... (ohne + oder 0)</div></div></div>
         </div>
         <div class="card">
           <div class="card-t">fitbox Senden</div>
           <div class="row">
-            <div class="field">
-              <label class="lbl">Adresse</label>
-              <input type="text" class="inp" id="cfg-sen_adresse" placeholder="Senden (Iller)">
-            </div>
-            <div class="field">
-              <label class="lbl">&Ouml;ffnungszeiten</label>
-              <input type="text" class="inp" id="cfg-sen_zeiten" placeholder="Mo&ndash;Fr &amp; nach Vereinbarung">
-            </div>
+            <div class="field"><label class="lbl">Adresse</label><input type="text" class="inp" id="cfg-sen_adresse"></div>
+            <div class="field"><label class="lbl">&Ouml;ffnungszeiten</label><input type="text" class="inp" id="cfg-sen_zeiten"></div>
           </div>
-          <div class="row single">
-            <div class="field">
-              <label class="lbl">WhatsApp-Nummer</label>
-              <input type="text" class="inp" id="cfg-sen_wa" placeholder="4915561206719">
-            </div>
-          </div>
+          <div class="row single"><div class="field"><label class="lbl">WhatsApp-Nummer</label><input type="text" class="inp" id="cfg-sen_wa"></div></div>
         </div>
       </div>
 
       <div class="panel" id="panel-form">
         <div class="p-t">Formular (unten) &amp; CTA</div>
-        <div class="p-s">Das gro&szlig;e Formular am Ende der Seite sowie die mobile Sticky-Bar.</div>
+        <div class="p-s">Texte f&uuml;r das gro&szlig;e Formular am Ende sowie die mobile Sticky-Bar.</div>
         <div class="card">
           <div class="card-t">Unteres Formular</div>
           <div class="row">
-            <div class="field">
-              <label class="lbl">Titel</label>
-              <input type="text" class="inp" id="cfg-form_title" placeholder="Probetraining sichern">
-            </div>
-            <div class="field">
-              <label class="lbl">Untertitel</label>
-              <input type="text" class="inp" id="cfg-form_subtitle" placeholder="In 60 Sekunden zum kostenlosen Termin.">
-            </div>
+            <div class="field"><label class="lbl">Titel</label><input type="text" class="inp" id="cfg-form_title" placeholder="Gutschein sichern"></div>
+            <div class="field"><label class="lbl">Untertitel</label><input type="text" class="inp" id="cfg-form_subtitle"></div>
           </div>
         </div>
         <div class="card">
           <div class="card-t">Sticky CTA (Mobile)</div>
           <div class="row">
-            <div class="field">
-              <label class="lbl">Titel</label>
-              <input type="text" class="inp" id="cfg-sticky_title" placeholder="Kostenloses Probetraining">
-            </div>
-            <div class="field">
-              <label class="lbl">Untertitel</label>
-              <input type="text" class="inp" id="cfg-sticky_sub" placeholder="Nur noch wenige Pl&auml;tze!">
-            </div>
+            <div class="field"><label class="lbl">Titel</label><input type="text" class="inp" id="cfg-sticky_title" placeholder="Gratis EMS-Probetraining"></div>
+            <div class="field"><label class="lbl">Untertitel</label><input type="text" class="inp" id="cfg-sticky_sub"></div>
           </div>
         </div>
       </div>
@@ -341,14 +270,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
         <div class="card">
           <div class="card-t">Rechtliche Links</div>
           <div class="row">
-            <div class="field">
-              <label class="lbl">Impressum-URL</label>
-              <input type="text" class="inp" id="cfg-impressum_url" placeholder="https://fitbox-memmingen.de/impressum">
-            </div>
-            <div class="field">
-              <label class="lbl">Datenschutz-URL</label>
-              <input type="text" class="inp" id="cfg-datenschutz_url" placeholder="https://fitbox-memmingen.de/datenschutz">
-            </div>
+            <div class="field"><label class="lbl">Impressum-URL</label><input type="text" class="inp" id="cfg-impressum_url"></div>
+            <div class="field"><label class="lbl">Datenschutz-URL</label><input type="text" class="inp" id="cfg-datenschutz_url"></div>
           </div>
         </div>
       </div>
@@ -369,10 +292,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
   function escHTML(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function escAttr(s){ return String(s==null?'':s).replace(/"/g,'&quot;'); }
 
-  // ============ AUTH ============
   function doLogin(){
-    var pw = $('loginPw').value;
-    if(pw === ADMIN_PW){
+    if($('loginPw').value === ADMIN_PW){
       sessionStorage.setItem('adm_auth','1');
       $('login').style.display = 'none';
       $('admin').style.display = 'block';
@@ -383,22 +304,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     }
   }
 
-  function doLogout(){
-    sessionStorage.removeItem('adm_auth');
-    location.reload();
-  }
+  function doLogout(){ sessionStorage.removeItem('adm_auth'); location.reload(); }
 
-  // ============ NAVIGATION ============
   function showPanel(name){
     qa('.panel').forEach(function(p){ p.classList.remove('active'); });
     qa('.side-i').forEach(function(n){ n.classList.remove('active'); });
-    var p = $('panel-'+name);
-    if(p) p.classList.add('active');
-    var n = document.querySelector('[data-panel="'+name+'"]');
-    if(n) n.classList.add('active');
+    var p = $('panel-'+name); if(p) p.classList.add('active');
+    var n = document.querySelector('[data-panel="'+name+'"]'); if(n) n.classList.add('active');
   }
 
-  // ============ CONFIG LOAD & RENDER ============
   var currentConfig = {};
 
   function loadAndRender(){
@@ -412,8 +326,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     var c = currentConfig;
     var fields = [
       'banner_text','banner_link_text','banner_link_url',
-      'hero_img','scarcity_text','nav_cta_text',
-      'quiz_title','quiz_sub',
+      'nav_cta_text',
+      'hero_title','hero_sub','hero_check','hero_desc','scarcity_text',
+      'quiz_cta','quiz_title','quiz_sub',
       'studio_banner_img',
       'mem_adresse','mem_zeiten','mem_wa',
       'sen_adresse','sen_zeiten','sen_wa',
@@ -429,7 +344,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     var ba = $('cfg-banner_active');
     if(ba){ ba.checked = !!c.banner_active; updateBannerBadge(); }
 
-    if(c.hero_img) previewImg('hero-preview', c.hero_img);
     if(c.studio_banner_img) previewImg('studio-preview', c.studio_banner_img);
 
     renderStats(c.stats || [
@@ -438,8 +352,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
       {num:'200+', label:'Zufriedene Mitglieder'},
       {num:'2', label:'Studios Region'}
     ]);
-
     renderReviews(c.reviews || []);
+    renderGoals(c.goals || []);
+    renderTags(c.brand_tags || ['#ImmermitSpa\u00df','#ImmermitTermin','#ImmermitTrainer']);
   }
 
   // ============ STATS ============
@@ -451,9 +366,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
       div.className = 'stat-i';
       div.innerHTML =
         '<div class="field"><label class="lbl">Zahl '+(i+1)+'</label>'+
-        '<input type="text" class="inp" data-stat="'+i+'" data-fld="num" value="'+escAttr(s.num)+'" placeholder="20"></div>'+
+        '<input type="text" class="inp" data-stat="'+i+'" data-fld="num" value="'+escAttr(s.num)+'"></div>'+
         '<div class="field"><label class="lbl">Beschriftung '+(i+1)+'</label>'+
-        '<input type="text" class="inp" data-stat="'+i+'" data-fld="label" value="'+escAttr(s.label)+'" placeholder="Min. pro Session"></div>';
+        '<input type="text" class="inp" data-stat="'+i+'" data-fld="label" value="'+escAttr(s.label)+'"></div>';
       c.appendChild(div);
     });
   }
@@ -466,6 +381,55 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
       result[i][el.getAttribute('data-fld')] = el.value.trim();
     });
     return result.filter(Boolean);
+  }
+
+  // ============ GOALS ============
+  function renderGoals(goals){
+    var c = $('goals-container');
+    c.innerHTML = '';
+    goals.forEach(function(g){ addGoalEl(g); });
+  }
+
+  function addGoalEl(g){
+    var c = $('goals-container');
+    var div = document.createElement('div');
+    div.className = 'goal-i';
+    var img = (g && g.img) || '';
+    div.innerHTML =
+      '<button class="goal-del" title="Entfernen">&times;</button>'+
+      '<div class="row">'+
+        '<div class="field"><label class="lbl">Key (intern)</label>'+
+        '<input type="text" class="inp" data-goal-key value="'+escAttr((g && g.key) || '')+'" placeholder="abnehmen"></div>'+
+        '<div class="field"><label class="lbl">Label (wird angezeigt)</label>'+
+        '<input type="text" class="inp" data-goal-label value="'+escAttr((g && g.label) || '')+'" placeholder="Abnehmen &amp; Figur straffen"></div>'+
+      '</div>'+
+      '<div class="field" style="margin-top:8px"><label class="lbl">Bild-URL</label>'+
+      '<input type="text" class="inp" data-goal-img value="'+escAttr(img)+'" placeholder="https://...">'+
+      '<div class="hint">Quadratisches Bild empfohlen. Supabase Storage URL oder externes HTTPS-Bild.</div>'+
+      '<div class="goal-img-prev">' + (img ? '<img src="'+escAttr(img)+'" onerror="this.style.display=\'none\'">' : '<div class="img-ph">Bild-URL eingeben</div>') + '</div>'+
+      '</div>';
+    div.querySelector('.goal-del').addEventListener('click', function(){ div.remove(); });
+    var imgInp = div.querySelector('[data-goal-img]');
+    var imgPrev = div.querySelector('.goal-img-prev');
+    imgInp.addEventListener('input', function(){
+      if(this.value){
+        imgPrev.innerHTML = '<img src="'+escAttr(this.value)+'" onerror="this.style.display=\'none\'">';
+      } else {
+        imgPrev.innerHTML = '<div class="img-ph">Bild-URL eingeben</div>';
+      }
+    });
+    c.appendChild(div);
+  }
+
+  function readGoals(){
+    var result = [];
+    qa('.goal-i').forEach(function(el){
+      var key = el.querySelector('[data-goal-key]').value.trim();
+      var label = el.querySelector('[data-goal-label]').value.trim();
+      var img = el.querySelector('[data-goal-img]').value.trim();
+      if(key && label) result.push({key:key, label:label, img:img});
+    });
+    return result;
   }
 
   // ============ REVIEWS ============
@@ -482,9 +446,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     div.innerHTML =
       '<button class="rev-del" title="Entfernen">&times;</button>'+
       '<div class="field" style="margin-bottom:8px"><label class="lbl">Bewertungstext</label>'+
-      '<textarea class="ta" data-rev-text rows="3" placeholder="Toller Text...">'+escHTML((r && r.text) || '')+'</textarea></div>'+
+      '<textarea class="ta" data-rev-text rows="3">'+escHTML((r && r.text) || '')+'</textarea></div>'+
       '<div class="field"><label class="lbl">Autor</label>'+
-      '<input type="text" class="inp" data-rev-author value="'+escAttr((r && r.author) || '')+'" placeholder="Max M. aus Memmingen"></div>';
+      '<input type="text" class="inp" data-rev-author value="'+escAttr((r && r.author) || '')+'"></div>';
     div.querySelector('.rev-del').addEventListener('click', function(){ div.remove(); });
     c.appendChild(div);
   }
@@ -499,7 +463,39 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     return result;
   }
 
-  // ============ BANNER BADGE ============
+  // ============ TAGS ============
+  function renderTags(tags){
+    var c = $('tags-container');
+    c.innerHTML = '';
+    tags.forEach(function(t){ addTagEl(t); });
+  }
+
+  function addTagEl(t){
+    var c = $('tags-container');
+    var div = document.createElement('div');
+    div.className = 'tag-i';
+    div.innerHTML =
+      '<button class="tag-del" title="Entfernen">&times;</button>'+
+      '<div class="field"><label class="lbl">Hashtag</label>'+
+      '<input type="text" class="inp" data-tag value="'+escAttr(t || '')+'" placeholder="#ImmermitSpa&szlig;">'+
+      '<div class="hint"># wird automatisch erg&auml;nzt falls nicht vorhanden.</div></div>';
+    div.querySelector('.tag-del').addEventListener('click', function(){ div.remove(); });
+    c.appendChild(div);
+  }
+
+  function readTags(){
+    var result = [];
+    qa('[data-tag]').forEach(function(el){
+      var v = el.value.trim();
+      if(v){
+        if(v[0] !== '#') v = '#' + v;
+        result.push(v);
+      }
+    });
+    return result;
+  }
+
+  // ============ BANNER & PREVIEW ============
   function updateBannerBadge(){
     var active = $('cfg-banner_active').checked;
     var badge = $('badge-banner');
@@ -507,7 +503,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     badge.className = 'badge ' + (active ? 'b-green' : 'b-red');
   }
 
-  // ============ IMAGE PREVIEW ============
   function previewImg(containerId, src){
     var c = $(containerId);
     if(!c) return;
@@ -518,7 +513,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     }
   }
 
-  // ============ SAVE CONFIG ============
+  // ============ SAVE ============
   function saveConfig(){
     var btn = $('saveBtn');
     btn.disabled = true; btn.textContent = 'Speichern...';
@@ -528,11 +523,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
       banner_text: $('cfg-banner_text').value.trim(),
       banner_link_text: $('cfg-banner_link_text').value.trim(),
       banner_link_url: $('cfg-banner_link_url').value.trim(),
-      hero_img: $('cfg-hero_img').value.trim(),
-      scarcity_text: $('cfg-scarcity_text').value.trim(),
       nav_cta_text: $('cfg-nav_cta_text').value.trim(),
+      hero_title: $('cfg-hero_title').value.trim(),
+      hero_sub: $('cfg-hero_sub').value.trim(),
+      hero_check: $('cfg-hero_check').value.trim(),
+      hero_desc: $('cfg-hero_desc').value.trim(),
+      scarcity_text: $('cfg-scarcity_text').value.trim(),
+      quiz_cta: $('cfg-quiz_cta').value.trim(),
       quiz_title: $('cfg-quiz_title').value.trim(),
       quiz_sub: $('cfg-quiz_sub').value.trim(),
+      goals: readGoals(),
       stats: readStats(),
       studio_banner_img: $('cfg-studio_banner_img').value.trim(),
       mem_adresse: $('cfg-mem_adresse').value.trim(),
@@ -542,6 +542,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
       sen_zeiten: $('cfg-sen_zeiten').value.trim(),
       sen_wa: $('cfg-sen_wa').value.trim(),
       reviews: readReviews(),
+      brand_tags: readTags(),
       sticky_title: $('cfg-sticky_title').value.trim(),
       sticky_sub: $('cfg-sticky_sub').value.trim(),
       impressum_url: $('cfg-impressum_url').value.trim(),
@@ -558,7 +559,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
       if(!r.ok) throw new Error('HTTP '+r.status);
       currentConfig = config;
       showToast('Gespeichert! Seite ist sofort aktualisiert.', 'success');
-    }).catch(function(err){
+    }).catch(function(){
       downloadJson(config);
       showToast('API nicht verf\u00fcgbar - config.json heruntergeladen. Bitte manuell ins Repo committen.', 'error');
     }).then(function(){
@@ -578,29 +579,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     var t = $('toast');
     t.textContent = msg;
     t.className = 'show ' + (type || '');
-    setTimeout(function(){ t.className = ''; }, 4000);
+    setTimeout(function(){ t.className = ''; }, 4500);
   }
 
-  // ============ EVENT BINDINGS ============
   function bindEvents(){
     $('loginBtn').addEventListener('click', doLogin);
     $('loginPw').addEventListener('keydown', function(e){ if(e.key === 'Enter') doLogin(); });
     $('logoutBtn').addEventListener('click', doLogout);
     $('saveBtn').addEventListener('click', saveConfig);
-
     qa('.side-i').forEach(function(n){
       var name = n.getAttribute('data-panel');
       n.addEventListener('click', function(){ showPanel(name); });
     });
-
     $('cfg-banner_active').addEventListener('change', updateBannerBadge);
-    $('cfg-hero_img').addEventListener('input', function(){ previewImg('hero-preview', this.value); });
     $('cfg-studio_banner_img').addEventListener('input', function(){ previewImg('studio-preview', this.value); });
-
     $('add-review-btn').addEventListener('click', function(){ addReviewEl({}); });
+    $('add-goal-btn').addEventListener('click', function(){ addGoalEl({}); });
+    $('add-tag-btn').addEventListener('click', function(){ addTagEl(''); });
   }
 
-  // ============ INIT ============
   function init(){
     bindEvents();
     if(sessionStorage.getItem('adm_auth') === '1'){
@@ -610,11 +607,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-he
     }
   }
 
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); }
+  else { init(); }
 })();
 </script>
 </body>

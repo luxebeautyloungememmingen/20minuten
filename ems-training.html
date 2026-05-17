@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#2f8614">
-<title>EMS Training Memmingen &amp; Senden – fitbox</title>
+<title>Gratis EMS-Probetraining Memmingen &amp; Senden – fitbox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -18,23 +18,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .nav{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--w);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:200}
 .nav img{height:32px;display:block}
 .nav-cta{background:var(--g);color:#fff;font-weight:700;font-size:12px;padding:10px 14px;border-radius:4px;text-decoration:none;white-space:nowrap;cursor:pointer;border:none;font-family:inherit}
-.hero{background:var(--w);padding:20px 16px 24px;border-bottom:1px solid var(--bd)}
-.hero-in{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:18px}
-.eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dg);margin-bottom:10px;background:var(--gl);padding:4px 10px;border-radius:2px}
-.eyebrow::before{content:'';display:block;width:12px;height:2px;background:var(--dg)}
-.h1{font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:.92;letter-spacing:1px;margin-bottom:12px;color:var(--b)}
-.h1 .acc{color:var(--g)}
-.h1 .out{-webkit-text-stroke:1.5px var(--g);color:transparent}
-.hdesc{font-size:14px;color:var(--m);line-height:1.55;margin-bottom:14px}
-.hdesc strong{color:var(--dg);font-weight:600}
-.scarcity{background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:9px 12px;font-size:12px;font-weight:600;color:#856404;line-height:1.4}
-.hpic{border-radius:6px;overflow:hidden;height:160px}
-.hpic img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block}
-.quiz{background:var(--gl);border-top:3px solid var(--g);border-bottom:1px solid var(--bd);padding:24px 16px}
-.quiz-in{max-width:680px;margin:0 auto}
-.quiz-eb{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);text-align:center;margin-bottom:6px}
-.quiz-t{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;text-align:center;color:var(--b);margin-bottom:4px;letter-spacing:.5px}
-.quiz-s{font-size:13px;color:var(--m);text-align:center;margin-bottom:18px}
+.hero{background:var(--w);padding:24px 16px 28px;border-bottom:1px solid var(--bd);text-align:center}
+.hero-in{max-width:720px;margin:0 auto}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dg);margin-bottom:14px;background:var(--gl);padding:5px 12px;border-radius:2px}
+.hero-eyebrow::before{content:'';display:block;width:12px;height:2px;background:var(--dg)}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:32px;line-height:1;letter-spacing:.5px;color:var(--b);margin-bottom:6px}
+.hero-sub{font-family:'Bebas Neue',sans-serif;font-size:42px;line-height:1;letter-spacing:1px;color:var(--g);margin-bottom:14px}
+.hero-check{font-size:14px;color:var(--t);font-weight:600;margin-bottom:10px}
+.hero-check::before{content:'\2713 \00a0';color:var(--g);font-weight:700}
+.hero-desc{font-size:14px;color:var(--m);line-height:1.55;margin-bottom:14px;max-width:540px;margin-left:auto;margin-right:auto}
+.scarcity{background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:10px 14px;font-size:12px;font-weight:600;color:#856404;line-height:1.4;display:inline-flex;align-items:center;gap:6px;margin-top:4px}
+
+.quiz{background:var(--gl);border-top:3px solid var(--g);border-bottom:1px solid var(--bd);padding:28px 16px}
+.quiz-in{max-width:720px;margin:0 auto}
+.quiz-cta{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);text-align:center;margin-bottom:8px}
+.quiz-t{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1.05;text-align:center;color:var(--b);margin-bottom:6px;letter-spacing:.5px}
+.quiz-s{font-size:13px;color:var(--m);text-align:center;margin-bottom:22px;line-height:1.5}
+.quiz-arrow{display:flex;justify-content:center;margin-bottom:8px}
+.quiz-arrow-inner{background:var(--b);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:6px 16px;border-radius:100px;position:relative}
+.quiz-arrow-inner::after{content:'';position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid var(--b)}
+
 .stats{background:var(--g);padding:16px 12px;display:flex;justify-content:center;flex-wrap:wrap}
 .stat{flex:1;min-width:70px;text-align:center;padding:4px 8px;border-right:1px solid rgba(255,255,255,.2)}
 .stat:last-child{border-right:none}
@@ -44,12 +47,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .sec-in{max-width:1100px;margin:0 auto}
 .sec-lbl{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--dg);margin-bottom:8px}
 .sec-t{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;margin-bottom:12px;color:var(--b);letter-spacing:.5px}
+
 .benefits{background:var(--w);border-bottom:1px solid var(--bd)}
 .bgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
 .benefit{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:16px 14px;display:flex;gap:12px;align-items:flex-start}
 .bicon{width:36px;height:36px;background:var(--gl);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
 .benefit h3{font-size:14px;font-weight:700;color:var(--b);margin-bottom:3px}
 .benefit p{font-size:13px;color:var(--m);line-height:1.5}
+
 .trust{background:var(--ba);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:26px 16px}
 .trust-in{max-width:1100px;margin:0 auto}
 .trust-lbl{text-align:center;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--m);margin-bottom:16px}
@@ -59,18 +64,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .titem-s{font-size:9px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--m);margin-bottom:4px}
 .titem-n{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.2px;color:var(--b)}
 .titem-d{font-size:10px;color:var(--m);margin-top:2px}
+
 .reviews{background:var(--bg);border-bottom:1px solid var(--bd)}
 .rgrid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:22px}
 .review{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:18px 16px}
 .rstars{color:#f59e0b;font-size:15px;margin-bottom:8px}
 .rtext{font-size:13px;color:var(--t);line-height:1.6;margin-bottom:10px;font-style:italic}
 .rauthor{font-size:12px;font-weight:600;color:var(--dg)}
+
 .steps-s{background:var(--ba);border-bottom:1px solid var(--bd)}
 .nsteps{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
 .nstep{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:16px;display:flex;gap:14px;align-items:flex-start}
 .nsnum{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--g);line-height:1;flex-shrink:0;width:30px}
 .nstep h3{font-size:14px;font-weight:700;color:var(--b);margin-bottom:3px}
 .nstep p{font-size:12px;color:var(--m);line-height:1.5}
+
 .studios{background:var(--w);border-bottom:1px solid var(--bd)}
 .sbanner{border-radius:8px;overflow:hidden;height:180px;margin-bottom:20px;position:relative}
 .sbanner img{width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block}
@@ -84,6 +92,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .sinfo{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .sinfo-i{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--m)}
 .wabtn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;font-weight:700;font-size:14px;padding:13px 16px;border-radius:8px;text-decoration:none;min-height:44px}
+
+.brand-tags{background:var(--b);color:#fff;padding:20px 16px;text-align:center}
+.brand-tags-line{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:#fff;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.brand-tag{color:var(--g)}
+
 .form-s{background:var(--gl);border-top:3px solid var(--g)}
 .form-in{max-width:680px;margin:0 auto}
 .form-h{text-align:center;margin-bottom:22px}
@@ -98,18 +111,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .fstep.active{display:block}
 .st-t{font-size:17px;font-weight:700;color:var(--b);margin-bottom:6px;text-align:center;line-height:1.3}
 .st-s{font-size:12px;color:var(--m);margin-bottom:18px;text-align:center;line-height:1.4}
+
+/* GOAL GRID mit Bildern */
 .ggrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.gbtn{background:var(--w);border:2px solid var(--bd);border-radius:8px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit;-webkit-appearance:none;min-height:80px}
+.gbtn{background:var(--w);border:2px solid var(--bd);border-radius:10px;padding:0;cursor:pointer;transition:all .2s;font-family:inherit;-webkit-appearance:none;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;text-align:center}
 .gbtn:active{transform:scale(.97)}
 .gbtn.active{border-color:var(--g);background:var(--gl)}
-.gem{font-size:24px;display:block;margin-bottom:4px;line-height:1}
-.glbl{font-size:12px;font-weight:600;color:var(--b);line-height:1.2}
+.gbtn-img{width:100%;height:100px;background:var(--bg);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:38px;flex-shrink:0}
+.gbtn-img img{width:100%;height:100%;object-fit:cover;display:block}
+.gbtn-lbl{font-size:13px;font-weight:700;color:var(--b);line-height:1.2;padding:10px 8px;min-height:54px;display:flex;align-items:center;justify-content:center}
+
 .spick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
 .sp-btn{border:2px solid var(--bd);background:var(--w);padding:14px 12px;cursor:pointer;text-align:left;transition:all .2s;border-radius:8px;position:relative;font-family:inherit;-webkit-appearance:none;min-height:70px}
 .sp-btn.active{border-color:var(--g);background:var(--gl)}
 .sp-btn.active::after{content:'\2713';position:absolute;top:8px;right:10px;color:var(--dg);font-weight:700;font-size:14px}
 .sp-n{font-weight:700;font-size:13px;color:var(--b);margin-bottom:3px}
 .sp-s{font-size:10px;color:var(--m)}
+
 .slot-s{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:14px}
 .slot-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .slot-nb{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;color:var(--t);min-height:36px;min-width:36px;font-family:inherit;-webkit-appearance:none}
@@ -123,8 +141,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .slot-si{background:var(--gl);border:1px solid var(--g);border-radius:6px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--dg);margin-top:10px;display:none}
 .wunsch{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:14px}
 .wunsch-h{font-size:12px;color:var(--m);margin-bottom:10px;line-height:1.5}
+.reach-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.reach-b{background:var(--w);border:2px solid var(--bd);border-radius:8px;padding:12px 8px;font-size:13px;font-weight:600;color:var(--b);cursor:pointer;font-family:inherit;-webkit-appearance:none;min-height:54px;text-align:center}
+.reach-b:active{transform:scale(.97)}
+.reach-b.active{border-color:var(--g);background:var(--gl)}
 .skip-slot{text-align:center;font-size:12px;color:var(--m);margin-top:10px;padding:8px}
 .skip-slot a{color:var(--dg);text-decoration:underline;cursor:pointer;font-weight:600}
+
 .fgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:10px}
 .field{display:flex;flex-direction:column;gap:4px}
 .lbl{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--m)}
@@ -159,18 +182,60 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .succ-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--g);flex-shrink:0}
 .succ-step p{font-size:12px;line-height:1.5;margin:0}
 .wabtn-s{display:flex;align-items:center;justify-content:center;gap:10px;background:#25d366;color:#fff;font-weight:700;font-size:14px;padding:14px 20px;border-radius:8px;text-decoration:none;min-height:48px}
+
 .sticky{position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--g);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 -4px 20px rgba(0,0,0,.15);transform:translateY(100%);transition:transform .3s;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
 .sticky.visible{transform:translateY(0)}
 .st-tx{color:rgba(255,255,255,.9);font-size:11px;line-height:1.3;flex:1;min-width:0}
 .st-tx strong{color:#fff;font-size:13px;display:block}
 .st-btn{background:#fff;color:var(--dg);font-weight:700;font-size:13px;padding:10px 16px;border-radius:6px;text-decoration:none;white-space:nowrap;flex-shrink:0;min-height:40px;display:flex;align-items:center}
 .wfloat{position:fixed;bottom:70px;right:14px;z-index:299;width:48px;height:48px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.2);text-decoration:none;font-size:24px}
+
 .foot{background:var(--ba);padding:24px 16px;border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:10px;align-items:flex-start}
 .foot img{height:26px}
 .foot-l{display:flex;gap:16px;flex-wrap:wrap}
 .foot-l a{font-size:12px;color:var(--m);text-decoration:none}
-@media (min-width:640px){.h1{font-size:52px}.bgrid,.rgrid{grid-template-columns:1fr 1fr}.tbadges{flex-direction:row}.titem{border-bottom:none;border-right:1px solid var(--bd);flex:1}.titem:last-child{border-right:none}.nsteps{grid-template-columns:1fr 1fr}.slot-g{grid-template-columns:repeat(3,1fr)}.fgrid{grid-template-columns:1fr 1fr}.field.full{grid-column:1/-1}.quiz-t,.sec-t{font-size:36px}.sec{padding:56px 24px}}
-@media (min-width:1024px){.nav{padding:18px 40px}.nav img{height:40px}.hero{padding:56px 40px 36px}.sec{padding:72px 40px}.hero-in{grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}.hpic{height:360px;border-radius:10px}.h1{font-size:clamp(56px,6.5vw,88px);line-height:.9}.hdesc{font-size:16px}.quiz{padding:36px 40px}.quiz-t{font-size:38px}.snum{font-size:38px}.slbl{font-size:12px}.sec-t{font-size:40px}.bgrid,.rgrid{grid-template-columns:repeat(3,1fr)}.sgrid{grid-template-columns:1fr 1fr}.nsteps{grid-template-columns:repeat(3,1fr)}.foot{flex-direction:row;justify-content:space-between;align-items:center;padding:28px 40px}.wfloat{bottom:24px;right:24px;width:56px;height:56px}body{padding-bottom:0}.sticky{display:none}}
+
+@media (min-width:640px){
+  .hero-title{font-size:38px}
+  .hero-sub{font-size:54px}
+  .bgrid,.rgrid{grid-template-columns:1fr 1fr}
+  .tbadges{flex-direction:row}
+  .titem{border-bottom:none;border-right:1px solid var(--bd);flex:1}
+  .titem:last-child{border-right:none}
+  .nsteps{grid-template-columns:1fr 1fr}
+  .slot-g{grid-template-columns:repeat(3,1fr)}
+  .fgrid{grid-template-columns:1fr 1fr}
+  .field.full{grid-column:1/-1}
+  .quiz-t,.sec-t{font-size:36px}
+  .sec{padding:56px 24px}
+  .ggrid{grid-template-columns:repeat(4,1fr)}
+  .gbtn-img{height:130px}
+  .brand-tags-line{font-size:22px;gap:18px}
+}
+
+@media (min-width:1024px){
+  .nav{padding:18px 40px}
+  .nav img{height:40px}
+  .hero{padding:56px 40px 40px}
+  .sec{padding:72px 40px}
+  .hero-title{font-size:48px}
+  .hero-sub{font-size:72px}
+  .hero-desc{font-size:15px}
+  .quiz{padding:44px 40px}
+  .quiz-t{font-size:38px}
+  .snum{font-size:38px}
+  .slbl{font-size:12px}
+  .sec-t{font-size:40px}
+  .bgrid,.rgrid{grid-template-columns:repeat(3,1fr)}
+  .sgrid{grid-template-columns:1fr 1fr}
+  .nsteps{grid-template-columns:repeat(3,1fr)}
+  .gbtn-img{height:160px}
+  .gbtn-lbl{font-size:15px;padding:14px 10px;min-height:64px}
+  .foot{flex-direction:row;justify-content:space-between;align-items:center;padding:28px 40px}
+  .wfloat{bottom:24px;right:24px;width:56px;height:56px}
+  body{padding-bottom:0}
+  .sticky{display:none}
+}
 </style>
 </head>
 <body>
@@ -179,27 +244,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
 <nav class="nav">
   <a href="#"><img id="logo" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></a>
-  <a href="#quiz" class="nav-cta" id="nav-cta">Jetzt starten</a>
+  <a href="#quiz" class="nav-cta" id="nav-cta">Jetzt sichern</a>
 </nav>
 
 <section class="hero">
   <div class="hero-in">
-    <div>
-      <div class="eyebrow">EMS Personal Training</div>
-      <h1 class="h1">20 MIN.<br><span class="acc">MAXIMALE</span><br><span class="out">WIRKUNG.</span></h1>
-      <p class="hdesc">Mit <strong>EMS-Training</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong> gleichzeitig.</p>
-      <div class="scarcity" id="scarcity">Nur noch wenige Pl&auml;tze pro Monat verf&uuml;gbar!</div>
-    </div>
-    <div class="hpic"><img id="hero-img" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg" alt="EMS Training"></div>
+    <div class="hero-eyebrow">EMS Personal Training</div>
+    <div class="hero-title" id="hero-title">Sichere dir deinen Gutschein f&uuml;r ein</div>
+    <div class="hero-sub" id="hero-sub">GRATIS EMS-Probetraining!</div>
+    <div class="hero-check" id="hero-check">100% kostenlos und unverbindlich testen!</div>
+    <p class="hero-desc" id="hero-desc">In nur <strong>20 Minuten</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong>. Persönlich betreut. Made in Germany.</p>
+    <div class="scarcity" id="scarcity">&#9888;&#65039; Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!</div>
   </div>
 </section>
 
-<!-- TOP FORM (Quiz) -->
+<!-- TOP FORM (Quiz with Gutschein-Framing + Bilder) -->
 <section class="quiz" id="quiz">
   <div class="quiz-in">
-    <div class="quiz-eb">Kostenlos &middot; 60 Sekunden</div>
+    <div class="quiz-cta" id="quiz-cta">Klicke auf dein Ziel</div>
     <div class="quiz-t" id="quiz-t">Was ist dein Ziel?</div>
-    <div class="quiz-s" id="quiz-s">In 60 Sekunden zum kostenlosen Termin.</div>
+    <div class="quiz-s" id="quiz-s">Klicke HIER auf dein Ziel und sichere dir deinen Gutschein!</div>
+    <div class="quiz-arrow"><div class="quiz-arrow-inner">Ausw&auml;hlen</div></div>
 
     <div class="ind" data-form="A">
       <div class="dot active" data-dot="A1">1</div>
@@ -212,14 +277,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     </div>
 
     <div class="fstep active" data-step="A1">
-      <div class="st-t">Was ist dein Ziel?</div>
-      <div class="st-s">Damit wir dein Training optimal abstimmen k&ouml;nnen</div>
-      <div class="ggrid" data-goal-grid="A">
-        <button type="button" class="gbtn" data-goal="abnehmen"><span class="gem">&#9878;&#65039;</span><span class="glbl">Abnehmen &amp; straffen</span></button>
-        <button type="button" class="gbtn" data-goal="muskelaufbau"><span class="gem">&#128170;</span><span class="glbl">Muskeln &amp; Kraft</span></button>
-        <button type="button" class="gbtn" data-goal="ruecken"><span class="gem">&#129496;</span><span class="glbl">R&uuml;cken &amp; Haltung</span></button>
-        <button type="button" class="gbtn" data-goal="gesundheit"><span class="gem">&#9889;</span><span class="glbl">Allgemein fitter</span></button>
-      </div>
+      <div class="ggrid" data-goal-grid="A"></div>
       <div class="err" data-err="A1"></div>
     </div>
 
@@ -254,11 +312,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       <div data-wunsch-sec="A" style="display:none">
         <div class="wunsch">
           <p class="wunsch-h">Unser Team in Senden meldet sich pers&ouml;nlich. Wann bist du erreichbar?</p>
-          <div class="ggrid" data-reach-grid="A">
-            <button type="button" class="gbtn" data-reach="morgens" style="padding:12px 8px;min-height:54px"><span class="glbl">Morgens</span></button>
-            <button type="button" class="gbtn" data-reach="mittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Mittags</span></button>
-            <button type="button" class="gbtn" data-reach="nachmittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Nachmittags</span></button>
-            <button type="button" class="gbtn" data-reach="abends" style="padding:12px 8px;min-height:54px"><span class="glbl">Abends</span></button>
+          <div class="reach-g" data-reach-grid="A">
+            <button type="button" class="reach-b" data-reach="morgens">Morgens</button>
+            <button type="button" class="reach-b" data-reach="mittags">Mittags</button>
+            <button type="button" class="reach-b" data-reach="nachmittags">Nachmittags</button>
+            <button type="button" class="reach-b" data-reach="abends">Abends</button>
           </div>
         </div>
       </div>
@@ -274,34 +332,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       <div class="st-s">Wo d&uuml;rfen wir dich erreichen?</div>
       <div class="summary" data-summary="A"></div>
       <div class="fgrid">
-        <div class="field full">
-          <label class="lbl">Vorname *</label>
-          <input class="inp" type="text" data-input="fname" required autocomplete="given-name">
-        </div>
-        <div class="field full">
-          <label class="lbl">Telefon *</label>
-          <input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel">
-        </div>
-        <div class="field">
-          <label class="lbl">Nachname (optional)</label>
-          <input class="inp" type="text" data-input="lname" autocomplete="family-name">
-        </div>
-        <div class="field">
-          <label class="lbl">E-Mail (optional)</label>
-          <input class="inp" type="email" data-input="email" autocomplete="email" inputmode="email">
-        </div>
+        <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
+        <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
+        <div class="field"><label class="lbl">Nachname (optional)</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
+        <div class="field"><label class="lbl">E-Mail (optional)</label><input class="inp" type="email" data-input="email" autocomplete="email" inputmode="email"></div>
       </div>
       <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link">Datenschutzerkl&auml;rung</a></p>
       <div class="fnav">
         <button type="button" class="bback" data-back="A3">Zur&uuml;ck</button>
-        <button type="button" class="bnext" data-submit="A"><span class="btxt">Probetraining sichern</span><div class="spin"></div></button>
+        <button type="button" class="bnext" data-submit="A"><span class="btxt">Gutschein sichern</span><div class="spin"></div></button>
       </div>
       <div class="err" data-err="A4"></div>
     </div>
 
     <div class="succ" data-succ="A">
       <div class="succ-i">&#10003;</div>
-      <h3>Anfrage erhalten!</h3>
+      <h3>Gutschein gesichert!</h3>
       <p data-succ-t="A">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
       <div class="succ-st">
         <div class="succ-step"><div class="succ-num">1</div><p><strong>Best&auml;tigung erhalten</strong></p></div>
@@ -326,7 +372,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     <div class="sec-t">Warum fitbox?</div>
     <div class="bgrid">
       <div class="benefit"><div class="bicon">&#9201;</div><div><h3>Zeiteffizient</h3><p>20 Minuten ersetzen 90 Minuten klassisches Training.</p></div></div>
-      <div class="benefit"><div class="bicon">&#128106;</div><div><h3>Pers&ouml;nliche Betreuung</h3><p>Kein anonymes Fitnessstudio. Dein Trainer begleitet dich.</p></div></div>
+      <div class="benefit"><div class="bicon">&#128106;</div><div><h3>Immer mit Personal Trainer</h3><p>Wir leiten dich an, korrigieren und motivieren. Nur so wirkt EMS 100%.</p></div></div>
       <div class="benefit"><div class="bicon">&#10084;</div><div><h3>Gelenkschonend</h3><p>Ideal bei R&uuml;ckenschmerzen oder als sanfter Einstieg.</p></div></div>
       <div class="benefit"><div class="bicon">&#128202;</div><div><h3>Messbare Ergebnisse</h3><p>K&ouml;rperanalyse, Check-ins und klare Ziele.</p></div></div>
       <div class="benefit"><div class="bicon">&#128241;</div><div><h3>Modernste Technologie</h3><p>SYMBIONT &amp; miha bodytec, Made in Germany.</p></div></div>
@@ -356,12 +402,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
 <section class="sec steps-s">
   <div class="sec-in">
-    <div class="sec-lbl">So einfach geht's</div>
+    <div class="sec-lbl">N&auml;chste Schritte</div>
     <div class="sec-t">In 3 Schritten zum Probetraining</div>
     <div class="nsteps">
-      <div class="nstep"><div class="nsnum">1</div><div><h3>Ziel w&auml;hlen</h3><p>Tippe oben auf dein Ziel.</p></div></div>
-      <div class="nstep"><div class="nsnum">2</div><div><h3>Termin best&auml;tigen</h3><p>Wir melden uns oder du buchst direkt.</p></div></div>
-      <div class="nstep"><div class="nsnum">3</div><div><h3>EMS erleben</h3><p>Kostenlos, ohne Druck.</p></div></div>
+      <div class="nstep"><div class="nsnum">1</div><div><h3>Gutschein online sichern</h3><p>Klick auf dein Ziel, beantworte 3 kurze Fragen, trag dich unverbindlich ein.</p></div></div>
+      <div class="nstep"><div class="nsnum">2</div><div><h3>Termin vereinbaren</h3><p>Wir melden uns pers&ouml;nlich oder du buchst direkt einen freien Slot.</p></div></div>
+      <div class="nstep"><div class="nsnum">3</div><div><h3>EMS-Training + Infos</h3><p>Erlebe EMS kostenlos und stelle alle deine Fragen.</p></div></div>
     </div>
   </div>
 </section>
@@ -397,13 +443,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   </div>
 </section>
 
+<!-- BRAND HASHTAGS -->
+<div class="brand-tags">
+  <div class="brand-tags-line" id="brand-tags-line">
+    <span><span class="brand-tag">#</span>ImmermitSpa&szlig;</span>
+    <span><span class="brand-tag">#</span>ImmermitTermin</span>
+    <span><span class="brand-tag">#</span>ImmermitTrainer</span>
+  </div>
+</div>
+
 <!-- BOTTOM FORM -->
 <section class="sec form-s" id="anmeldung">
   <div class="form-in">
     <div class="form-h">
       <div class="sec-lbl" style="text-align:center">Kostenlos &amp; unverbindlich</div>
-      <div class="form-t" id="form-t">Probetraining sichern</div>
-      <p class="form-st" id="form-st">In 60 Sekunden zum kostenlosen Termin.</p>
+      <div class="form-t" id="form-t">Gutschein sichern</div>
+      <p class="form-st" id="form-st">In 60 Sekunden zu deinem GRATIS EMS-Probetraining.</p>
     </div>
 
     <div class="ind" data-form="B">
@@ -418,13 +473,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
     <div class="fstep active" data-step="B1">
       <div class="st-t">Was ist dein Ziel?</div>
-      <div class="st-s">Damit wir dein Training optimal abstimmen k&ouml;nnen</div>
-      <div class="ggrid" data-goal-grid="B">
-        <button type="button" class="gbtn" data-goal="abnehmen"><span class="gem">&#9878;&#65039;</span><span class="glbl">Abnehmen &amp; straffen</span></button>
-        <button type="button" class="gbtn" data-goal="muskelaufbau"><span class="gem">&#128170;</span><span class="glbl">Muskeln &amp; Kraft</span></button>
-        <button type="button" class="gbtn" data-goal="ruecken"><span class="gem">&#129496;</span><span class="glbl">R&uuml;cken &amp; Haltung</span></button>
-        <button type="button" class="gbtn" data-goal="gesundheit"><span class="gem">&#9889;</span><span class="glbl">Allgemein fitter</span></button>
-      </div>
+      <div class="st-s">Klicke auf dein Ziel, um zu starten</div>
+      <div class="ggrid" data-goal-grid="B"></div>
       <div class="err" data-err="B1"></div>
     </div>
 
@@ -459,11 +509,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       <div data-wunsch-sec="B" style="display:none">
         <div class="wunsch">
           <p class="wunsch-h">Unser Team in Senden meldet sich pers&ouml;nlich. Wann bist du erreichbar?</p>
-          <div class="ggrid" data-reach-grid="B">
-            <button type="button" class="gbtn" data-reach="morgens" style="padding:12px 8px;min-height:54px"><span class="glbl">Morgens</span></button>
-            <button type="button" class="gbtn" data-reach="mittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Mittags</span></button>
-            <button type="button" class="gbtn" data-reach="nachmittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Nachmittags</span></button>
-            <button type="button" class="gbtn" data-reach="abends" style="padding:12px 8px;min-height:54px"><span class="glbl">Abends</span></button>
+          <div class="reach-g" data-reach-grid="B">
+            <button type="button" class="reach-b" data-reach="morgens">Morgens</button>
+            <button type="button" class="reach-b" data-reach="mittags">Mittags</button>
+            <button type="button" class="reach-b" data-reach="nachmittags">Nachmittags</button>
+            <button type="button" class="reach-b" data-reach="abends">Abends</button>
           </div>
         </div>
       </div>
@@ -479,34 +529,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       <div class="st-s">Wo d&uuml;rfen wir dich erreichen?</div>
       <div class="summary" data-summary="B"></div>
       <div class="fgrid">
-        <div class="field full">
-          <label class="lbl">Vorname *</label>
-          <input class="inp" type="text" data-input="fname" required autocomplete="given-name">
-        </div>
-        <div class="field full">
-          <label class="lbl">Telefon *</label>
-          <input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel">
-        </div>
-        <div class="field">
-          <label class="lbl">Nachname (optional)</label>
-          <input class="inp" type="text" data-input="lname" autocomplete="family-name">
-        </div>
-        <div class="field">
-          <label class="lbl">E-Mail (optional)</label>
-          <input class="inp" type="email" data-input="email" autocomplete="email" inputmode="email">
-        </div>
+        <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
+        <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
+        <div class="field"><label class="lbl">Nachname (optional)</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
+        <div class="field"><label class="lbl">E-Mail (optional)</label><input class="inp" type="email" data-input="email" autocomplete="email" inputmode="email"></div>
       </div>
       <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link2">Datenschutzerkl&auml;rung</a></p>
       <div class="fnav">
         <button type="button" class="bback" data-back="B3">Zur&uuml;ck</button>
-        <button type="button" class="bnext" data-submit="B"><span class="btxt">Probetraining sichern</span><div class="spin"></div></button>
+        <button type="button" class="bnext" data-submit="B"><span class="btxt">Gutschein sichern</span><div class="spin"></div></button>
       </div>
       <div class="err" data-err="B4"></div>
     </div>
 
     <div class="succ" data-succ="B">
       <div class="succ-i">&#10003;</div>
-      <h3>Anfrage erhalten!</h3>
+      <h3>Gutschein gesichert!</h3>
       <p data-succ-t="B">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
       <div class="succ-st">
         <div class="succ-step"><div class="succ-num">1</div><p><strong>Best&auml;tigung erhalten</strong></p></div>
@@ -528,10 +566,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
 <div class="sticky" id="sticky">
   <div class="st-tx">
-    <strong id="sticky-t">Kostenloses Probetraining</strong>
-    <span id="sticky-s">Nur noch wenige Pl&auml;tze!</span>
+    <strong id="sticky-t">Gratis EMS-Probetraining</strong>
+    <span id="sticky-s">Nur wenige Pl&auml;tze frei!</span>
   </div>
-  <a href="#quiz" class="st-btn">Jetzt starten</a>
+  <a href="#quiz" class="st-btn">Gutschein sichern</a>
 </div>
 
 <a href="#" class="wfloat" id="wa-float" target="_blank" rel="noopener" title="WhatsApp">&#128172;</a>
@@ -539,47 +577,57 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 <script>
 (function(){
   'use strict';
+
+  var GOAL_IMG_PLACEHOLDER = 'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg';
+
   var DEFAULTS = {
     banner_active:false, banner_text:'', banner_link_text:'', banner_link_url:'#quiz',
-    hero_img:'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg',
-    scarcity_text:'Nur noch wenige Pl\u00e4tze pro Monat verf\u00fcgbar!',
+    nav_cta_text:'Jetzt sichern',
+    hero_title:'Sichere dir deinen Gutschein f\u00fcr ein',
+    hero_sub:'GRATIS EMS-Probetraining!',
+    hero_check:'100% kostenlos und unverbindlich testen!',
+    hero_desc:'In nur 20 Minuten aktivierst du bis zu 90% deiner Muskelfasern. Pers\u00f6nlich betreut. Made in Germany.',
+    scarcity_text:'\u26a0\ufe0f Nur wenige Pl\u00e4tze pro Monat verf\u00fcgbar!',
+    quiz_cta:'Klicke auf dein Ziel',
     quiz_title:'Was ist dein Ziel?',
-    quiz_sub:'In 60 Sekunden zum kostenlosen Termin.',
-    nav_cta_text:'Jetzt starten',
+    quiz_sub:'Klicke HIER auf dein Ziel und sichere dir deinen Gutschein!',
+    goals:[
+      {key:'abnehmen', label:'Abnehmen &amp; Figur straffen', img: GOAL_IMG_PLACEHOLDER},
+      {key:'muskelaufbau', label:'Muskulatur st\u00e4rken', img: GOAL_IMG_PLACEHOLDER},
+      {key:'ruecken', label:'R\u00fcckenschmerzen lindern', img: GOAL_IMG_PLACEHOLDER},
+      {key:'gesundheit', label:'Fitter &amp; gesünder werden', img: GOAL_IMG_PLACEHOLDER}
+    ],
     stats:[{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}],
     studio_banner_img:'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg',
     mem_adresse:'Memmingen Amendingen', mem_zeiten:'Mo\u2013Fr & nach Vereinbarung', mem_wa:'4915730024124',
     sen_adresse:'Senden (Iller)', sen_zeiten:'Mo\u2013Fr & nach Vereinbarung', sen_wa:'4915561206719',
     reviews:[
-      {text:'Tolles Studio und ein super Trainerteam. Seit f\u00fcnf Jahren dabei und immer noch begeistert.', author:'Bettina L. aus Memmingen'},
-      {text:'Endlich ein Training, das sich in meinen Alltag integrieren l\u00e4sst. Keine R\u00fcckenschmerzen mehr.', author:'Susanne H. aus Buxheim'},
-      {text:'Die Trainer holen das Beste aus einem heraus. Modernes und gepflegtes Studio.', author:'Hermann K. aus Kirchdorf'}
+      {text:'Tolles Studio, alle Trainer sind kompetent und immer mit Freude dabei. Seit 5 Jahren dabei und f\u00fchle mich superfit!', author:'Bettina H. aus Memmingen'},
+      {text:'Endlich ein Training, das sich in meinen Alltag integrieren l\u00e4sst. Keine R\u00fcckenschmerzen mehr und bessere K\u00f6rperhaltung.', author:'Susanne H. aus Buxheim'},
+      {text:'Trainer-Team geht individuell auf dich ein, motiviert dich und holt alles aus dir raus. Sehr sympathisch und freundlich.', author:'Hermann K. aus Kirchdorf'}
     ],
-    sticky_title:'Kostenloses Probetraining', sticky_sub:'Nur noch wenige Pl\u00e4tze frei!',
+    sticky_title:'Gratis EMS-Probetraining', sticky_sub:'Nur wenige Pl\u00e4tze frei!',
+    brand_tags:['#ImmermitSpa\u00df','#ImmermitTermin','#ImmermitTrainer'],
     impressum_url:'#', datenschutz_url:'#',
-    form_title:'Probetraining sichern', form_subtitle:'In 60 Sekunden zum kostenlosen Termin.'
+    form_title:'Gutschein sichern', form_subtitle:'In 60 Sekunden zu deinem GRATIS EMS-Probetraining.'
   };
 
   var SUPA_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
   var SUPA_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
   var ML_BASE = 'https://tight-tooth-c9e4.kuersat-oezdemir.workers.dev/proxy';
   var MEM_ID = 1262516030;
-  var GOALS = {abnehmen:'Abnehmen & straffen', muskelaufbau:'Muskeln & Kraft', ruecken:'R\u00fccken & Haltung', gesundheit:'Allgemein fitter'};
+  var GOAL_LABELS = {};
   var REACHES = {morgens:'Morgens', mittags:'Mittags', nachmittags:'Nachmittags', abends:'Abends'};
   var WA = {MEM:'4915730024124', SEN:'4915561206719'};
 
-  // Zwei unabh\u00e4ngige Form-States
   function newState(){ return {step:1, goal:'', studioId:'', studioCode:'', studioName:'', reach:'', slot:null, slots:[], slotWindowStart:null, slotToday:null}; }
   var states = { A: newState(), B: newState() };
 
   function $(id){ return document.getElementById(id); }
   function q(sel,root){ return (root||document).querySelector(sel); }
   function qa(sel,root){ return (root||document).querySelectorAll(sel); }
-
-  function escapeHTML(s){
-    if(s==null) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+  function escapeHTML(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function escAttr(s){ return String(s==null?'':s).replace(/"/g,'&quot;'); }
 
   // ============ CONFIG ============
   function applyConfig(c){
@@ -589,11 +637,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       b.innerHTML = c.banner_text + link;
       b.classList.add('show');
     }
-    if($('hero-img') && c.hero_img) $('hero-img').src = c.hero_img;
-    if($('scarcity')) $('scarcity').textContent = c.scarcity_text || '';
+    if($('nav-cta')) $('nav-cta').textContent = c.nav_cta_text || '';
+    if($('hero-title')) $('hero-title').textContent = c.hero_title || '';
+    if($('hero-sub')) $('hero-sub').textContent = c.hero_sub || '';
+    if($('hero-check')) $('hero-check').textContent = c.hero_check || '';
+    if($('hero-desc')) $('hero-desc').innerHTML = c.hero_desc || '';
+    if($('scarcity')) $('scarcity').innerHTML = c.scarcity_text || '';
+    if($('quiz-cta')) $('quiz-cta').textContent = c.quiz_cta || '';
     if($('quiz-t')) $('quiz-t').textContent = c.quiz_title || '';
     if($('quiz-s')) $('quiz-s').textContent = c.quiz_sub || '';
-    if($('nav-cta')) $('nav-cta').textContent = c.nav_cta_text || '';
+
+    // Goal buttons in beide Forms rendern
+    var goals = c.goals || DEFAULTS.goals;
+    GOAL_LABELS = {};
+    goals.forEach(function(g){ GOAL_LABELS[g.key] = g.label; });
+    ['A','B'].forEach(function(formId){
+      var grid = q('[data-goal-grid="'+formId+'"]');
+      if(!grid) return;
+      grid.innerHTML = goals.map(function(g){
+        var img = g.img || GOAL_IMG_PLACEHOLDER;
+        return '<button type="button" class="gbtn" data-goal="'+escAttr(g.key)+'">'+
+          '<span class="gbtn-img"><img src="'+escAttr(img)+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'\\u2728\'"></span>'+
+          '<span class="gbtn-lbl">'+g.label+'</span>'+
+        '</button>';
+      }).join('');
+      // Re-bind clicks
+      qa('[data-goal-grid="'+formId+'"] .gbtn').forEach(function(btn){
+        btn.addEventListener('click', function(){ selectGoal(formId, btn); });
+      });
+    });
+
     if(Array.isArray(c.stats)){
       c.stats.forEach(function(s,i){
         var n = q('[data-stat="'+i+'"]');
@@ -615,6 +688,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
         return '<div class="review"><div class="rstars">\u2b50\u2b50\u2b50\u2b50\u2b50</div><p class="rtext">'+escapeHTML(r.text)+'</p><div class="rauthor">'+escapeHTML(r.author)+'</div></div>';
       }).join('');
       if($('reviews-grid')) $('reviews-grid').innerHTML = html;
+    }
+    if(Array.isArray(c.brand_tags)){
+      var line = $('brand-tags-line');
+      if(line){
+        line.innerHTML = c.brand_tags.map(function(t){
+          var clean = t.replace(/^#/,'');
+          return '<span><span class="brand-tag">#</span>'+escapeHTML(clean)+'</span>';
+        }).join('');
+      }
     }
     if($('sticky-t')) $('sticky-t').textContent = c.sticky_title;
     if($('sticky-s')) $('sticky-s').textContent = c.sticky_sub;
@@ -639,7 +721,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       .catch(function(){ applyConfig(cfg); });
   }
 
-  // ============ FORM HELPERS ============
+  // ============ FORM LOGIC ============
   function showError(formId, stepNum, msg){
     var e = q('[data-err="'+formId+stepNum+'"]'); if(!e) return;
     e.textContent = msg; e.classList.add('show');
@@ -659,13 +741,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   }
 
   function showStep(formId, step){
-    // Hide success, show stepper
     var succ = q('[data-succ="'+formId+'"]'); if(succ) succ.classList.remove('show');
     var ind = q('[data-form="'+formId+'"]'); if(ind) ind.style.display = '';
-
-    // Switch steps
-    var allSteps = qa('[data-step^="'+formId+'"]');
-    for(var i=0; i<allSteps.length; i++) allSteps[i].classList.remove('active');
+    qa('[data-step^="'+formId+'"]').forEach(function(s){ s.classList.remove('active'); });
     var s = q('[data-step="'+formId+step+'"]'); if(s) s.classList.add('active');
     states[formId].step = step;
     updateIndicator(formId, step);
@@ -703,51 +781,45 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   function setupStep4(formId){
     var st = states[formId];
     var rows = [];
-    if(st.goal) rows.push({l:'Ziel', v: GOALS[st.goal] || st.goal});
+    if(st.goal) rows.push({l:'Ziel', v: stripHTML(GOAL_LABELS[st.goal] || st.goal)});
     if(st.studioName) rows.push({l:'Studio', v: st.studioName});
     if(st.slot) rows.push({l:'Wunschtermin', v: fmtSlot(new Date(st.slot.startDateTime))});
     else if(st.reach) rows.push({l:'Erreichbar', v: REACHES[st.reach]});
     else rows.push({l:'Termin', v: 'Wir rufen zur\u00fcck'});
-    var sum = q('[data-summary="'+formId+'"]');
-    sum.innerHTML = rows.map(function(r){
+    q('[data-summary="'+formId+'"]').innerHTML = rows.map(function(r){
       return '<div class="sum-r"><span class="sum-l">'+r.l+'</span><span class="sum-v">'+escapeHTML(r.v)+'</span></div>';
     }).join('');
   }
 
-  // ============ SELECTION HANDLERS ============
+  function stripHTML(s){ var d = document.createElement('div'); d.innerHTML = s; return d.textContent || d.innerText || ''; }
+
   function selectGoal(formId, btn){
-    var goals = qa('[data-goal-grid="'+formId+'"] .gbtn');
-    for(var i=0; i<goals.length; i++) goals[i].classList.remove('active');
+    qa('[data-goal-grid="'+formId+'"] .gbtn').forEach(function(b){ b.classList.remove('active'); });
     btn.classList.add('active');
     states[formId].goal = btn.getAttribute('data-goal');
-    // Auto-advance zu Step 2
-    setTimeout(function(){ showStep(formId, 2); }, 150);
+    setTimeout(function(){ showStep(formId, 2); }, 200);
   }
 
   function selectStudio(formId, btn){
-    var picks = qa('[data-studio-grid="'+formId+'"] .sp-btn');
-    for(var i=0; i<picks.length; i++) picks[i].classList.remove('active');
+    qa('[data-studio-grid="'+formId+'"] .sp-btn').forEach(function(b){ b.classList.remove('active'); });
     btn.classList.add('active');
     var st = states[formId];
     st.studioId = btn.getAttribute('data-studio');
     st.studioCode = btn.getAttribute('data-code');
     st.studioName = st.studioCode === 'MEM' ? 'fitbox Memmingen' : 'fitbox Senden';
     if($('wa-float')) $('wa-float').href = 'https://wa.me/' + (st.studioCode === 'SEN' ? WA.SEN : WA.MEM);
-    // Auto-advance zu Step 3
     setTimeout(function(){ showStep(formId, 3); }, 150);
   }
 
   function selectReach(formId, btn){
-    var reaches = qa('[data-reach-grid="'+formId+'"] .gbtn');
-    for(var i=0; i<reaches.length; i++) reaches[i].classList.remove('active');
+    qa('[data-reach-grid="'+formId+'"] .reach-b').forEach(function(b){ b.classList.remove('active'); });
     btn.classList.add('active');
     states[formId].reach = btn.getAttribute('data-reach');
   }
 
   function skipSlot(formId){
     states[formId].slot = null;
-    var slots = qa('[data-slot-grid="'+formId+'"] .slot-b');
-    for(var i=0; i<slots.length; i++) slots[i].classList.remove('selected');
+    qa('[data-slot-grid="'+formId+'"] .slot-b').forEach(function(b){ b.classList.remove('selected'); });
     var si = q('[data-slot-si="'+formId+'"]'); if(si) si.style.display = 'none';
     goToStep(formId, 4);
   }
@@ -776,11 +848,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     var si = q('[data-slot-si="'+formId+'"]'); if(si) si.style.display = 'none';
 
     var weekDays = [];
-    for(var i=0; i<6; i++){
-      var d = new Date(st.slotWindowStart);
-      d.setDate(d.getDate()+i);
-      weekDays.push(d);
-    }
+    for(var i=0; i<6; i++){ var d = new Date(st.slotWindowStart); d.setDate(d.getDate()+i); weekDays.push(d); }
     var startDate = toYMD(weekDays[0]);
     var endDay = new Date(weekDays[5]); endDay.setDate(endDay.getDate()+1);
     var endDate = toYMD(endDay);
@@ -788,12 +856,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     var d0 = new Date(weekDays[0]); d0.setHours(12);
     var jan1 = new Date(d0.getFullYear(),0,1);
     var kw = Math.ceil(((d0-jan1)/86400000+jan1.getDay()+1)/7);
-    label.textContent = 'KW '+kw+' \u00b7 '+
-      weekDays[0].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) + '\u2013' +
-      weekDays[5].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
+    label.textContent = 'KW '+kw+' \u00b7 '+ weekDays[0].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) + '\u2013' + weekDays[5].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
 
-    var prevBtn = q('[data-slot-prev="'+formId+'"]');
-    if(prevBtn) prevBtn.disabled = st.slotToday.getTime() >= weekDays[0].getTime();
+    var pb = q('[data-slot-prev="'+formId+'"]');
+    if(pb) pb.disabled = st.slotToday.getTime() >= weekDays[0].getTime();
 
     fetch(ML_BASE+'/connect/v1/trialsession?studioId='+MEM_ID+'&startDate='+startDate+'&endDate='+endDate)
       .then(function(r){ if(!r.ok) throw new Error('API'); return r.json(); })
@@ -812,11 +878,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       return;
     }
     var byDay = {};
-    st.slots.forEach(function(s){
-      var key = toYMD(new Date(s.startDateTime));
-      if(!byDay[key]) byDay[key] = [];
-      byDay[key].push(s);
-    });
+    st.slots.forEach(function(s){ var key = toYMD(new Date(s.startDateTime)); if(!byDay[key]) byDay[key] = []; byDay[key].push(s); });
     grid.innerHTML = '';
     Object.keys(byDay).forEach(function(day){
       var dayLabel = new Date(day+'T12:00:00').toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'});
@@ -824,8 +886,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
         var dt = new Date(s.startDateTime);
         var time = dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
         var btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'slot-b';
+        btn.type = 'button'; btn.className = 'slot-b';
         btn.innerHTML = '<span class="slot-dl">'+dayLabel+'</span>'+time+' Uhr';
         btn.addEventListener('click', function(){ selectSlot(formId, s, btn); });
         grid.appendChild(btn);
@@ -834,8 +895,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   }
 
   function selectSlot(formId, slot, btn){
-    var slots = qa('[data-slot-grid="'+formId+'"] .slot-b');
-    for(var i=0; i<slots.length; i++) slots[i].classList.remove('selected');
+    qa('[data-slot-grid="'+formId+'"] .slot-b').forEach(function(b){ b.classList.remove('selected'); });
     btn.classList.add('selected');
     states[formId].slot = slot;
     var si = q('[data-slot-si="'+formId+'"]');
@@ -859,79 +919,50 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     if(phone.replace(/\D/g,'').length < 6){ showError(formId, 4, 'Bitte gib eine g\u00fcltige Telefonnummer ein.'); return; }
 
     btn.classList.add('loading'); btn.disabled = true;
-
     var bookingSuccess = false, bookingError = null;
     var bookPromise = Promise.resolve();
 
     if(st.studioCode === 'MEM' && st.slot){
       bookPromise = fetch(ML_BASE+'/connect/v1/trialsession/book', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+        method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
-          studioId: MEM_ID,
-          startDateTime: st.slot.startDateTime,
-          trainerRequired: true,
-          leadCustomer: {
-            firstname: firstName, lastname: lastName || firstName,
-            email: email || undefined, phone: phone || undefined,
-            privacyConfiguration: {email:true, phone:true}
-          }
+          studioId: MEM_ID, startDateTime: st.slot.startDateTime, trainerRequired: true,
+          leadCustomer: { firstname: firstName, lastname: lastName || firstName, email: email || undefined, phone: phone || undefined, privacyConfiguration: {email:true, phone:true} }
         })
-      }).then(function(r){
-        if(r.ok) bookingSuccess = true;
-        else { bookingError = 'HTTP '+r.status; }
-      }).catch(function(err){ bookingError = err.message || 'Netzwerkfehler'; });
+      }).then(function(r){ if(r.ok) bookingSuccess = true; else bookingError = 'HTTP '+r.status; })
+        .catch(function(err){ bookingError = err.message || 'Netzwerkfehler'; });
     }
 
     bookPromise.then(function(){
       var notes = [];
-      if(st.goal) notes.push('Ziel: ' + (GOALS[st.goal] || st.goal));
+      if(st.goal) notes.push('Ziel: ' + stripHTML(GOAL_LABELS[st.goal] || st.goal));
       if(st.reach) notes.push('Erreichbar: ' + REACHES[st.reach]);
       if(st.slot){
         notes.push('Wunschtermin: ' + fmtSlot(new Date(st.slot.startDateTime)));
         notes.push(bookingSuccess ? 'Magicline: GEBUCHT' : 'Magicline: FEHLER (' + (bookingError||'unbekannt') + ')');
-      } else if(st.studioCode === 'MEM'){
-        notes.push('Kein Slot gew\u00e4hlt - R\u00fcckruf erw\u00fcnscht');
-      }
+      } else if(st.studioCode === 'MEM'){ notes.push('Kein Slot gew\u00e4hlt - R\u00fcckruf erw\u00fcnscht'); }
       notes.push('Form: ' + (formId === 'A' ? 'oben (Quiz)' : 'unten'));
 
       return fetch(SUPA_URL+'/rest/v1/pt_leads', {
         method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'apikey':SUPA_KEY,
-          'Authorization':'Bearer '+SUPA_KEY,
-          'Prefer':'return=minimal'
-        },
+        headers:{'Content-Type':'application/json','apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Prefer':'return=minimal'},
         body: JSON.stringify({
-          studio_id: st.studioId,
-          first_name: firstName,
-          last_name: lastName || null,
-          phone: phone,
-          email: email || null,
-          source_code: 'website',
-          status_key: 'new',
-          is_active: true,
-          notes: notes.join(' | ')
+          studio_id: st.studioId, first_name: firstName, last_name: lastName || null,
+          phone: phone, email: email || null, source_code: 'website', status_key: 'new',
+          is_active: true, notes: notes.join(' | ')
         })
       });
-    }).catch(function(err){
-      console.error('Lead-Speicherung fehlgeschlagen:', err);
-    }).then(function(){
-      showSuccess(formId, firstName, bookingSuccess);
-      btn.classList.remove('loading'); btn.disabled = false;
-    });
+    }).catch(function(err){ console.error('Lead-Speicherung fehlgeschlagen:', err); })
+    .then(function(){ showSuccess(formId, firstName, bookingSuccess); btn.classList.remove('loading'); btn.disabled = false; });
   }
 
   function showSuccess(formId, firstName, bookingSuccess){
     var st = states[formId];
-    // Hide stepper + all steps
     var ind = q('[data-form="'+formId+'"]'); if(ind) ind.style.display = 'none';
-    var allSteps = qa('[data-step^="'+formId+'"]');
-    for(var i=0; i<allSteps.length; i++) allSteps[i].classList.remove('active');
+    qa('[data-step^="'+formId+'"]').forEach(function(s){ s.classList.remove('active'); });
 
     var waNum = st.studioCode === 'SEN' ? WA.SEN : WA.MEM;
-    var msg = 'Hallo, ich habe gerade ein Probetraining angefragt (' + firstName + '). Wann k\u00f6nnen wir den Termin besprechen?';
+    var msg = 'Hallo, ich habe gerade einen Gutschein f\u00fcr ein Probetraining angefordert (' + firstName + '). Wann k\u00f6nnen wir den Termin besprechen?';
     var waLink = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg);
 
     var succT = q('[data-succ-t="'+formId+'"]');
@@ -945,59 +976,40 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     } else {
       succT.textContent = 'Wir melden uns innerhalb von 24 Stunden bei dir.';
     }
-
     var waBtn = q('[data-wa-succ="'+formId+'"]');
     if(waBtn) waBtn.href = waLink;
     var succ = q('[data-succ="'+formId+'"]'); if(succ) succ.classList.add('show');
   }
 
-  // ============ EVENT BINDINGS ============
+  // ============ BINDINGS ============
   function bindForm(formId){
-    // Goal buttons
-    qa('[data-goal-grid="'+formId+'"] .gbtn').forEach(function(btn){
-      btn.addEventListener('click', function(){ selectGoal(formId, btn); });
-    });
-
-    // Studio buttons
     qa('[data-studio-grid="'+formId+'"] .sp-btn').forEach(function(btn){
       btn.addEventListener('click', function(){ selectStudio(formId, btn); });
     });
-
-    // Reach buttons
-    qa('[data-reach-grid="'+formId+'"] .gbtn').forEach(function(btn){
+    qa('[data-reach-grid="'+formId+'"] .reach-b').forEach(function(btn){
       btn.addEventListener('click', function(){ selectReach(formId, btn); });
     });
-
-    // Next button (only for step 3 -> 4)
     var next3 = q('[data-next="'+formId+'4"]');
     if(next3) next3.addEventListener('click', function(){ goToStep(formId, 4); });
-
-    // Submit
     var sub = q('[data-submit="'+formId+'"]');
     if(sub) sub.addEventListener('click', function(){ submit(formId); });
-
-    // Back buttons
     qa('[data-back^="'+formId+'"]').forEach(function(btn){
       var target = btn.getAttribute('data-back');
       var step = parseInt(target.substring(1), 10);
       btn.addEventListener('click', function(){ showStep(formId, step); });
     });
-
-    // Slot nav
     var sp = q('[data-slot-prev="'+formId+'"]');
     if(sp) sp.addEventListener('click', function(){
       var st = states[formId];
       st.slotWindowStart.setDate(st.slotWindowStart.getDate()-7);
       if(st.slotToday.getTime() > st.slotWindowStart.getTime()) st.slotWindowStart = slotMonday(st.slotToday);
-      st.slot = null;
-      loadSlots(formId);
+      st.slot = null; loadSlots(formId);
     });
     var sn = q('[data-slot-next="'+formId+'"]');
     if(sn) sn.addEventListener('click', function(){
       var st = states[formId];
       st.slotWindowStart.setDate(st.slotWindowStart.getDate()+7);
-      st.slot = null;
-      loadSlots(formId);
+      st.slot = null; loadSlots(formId);
     });
     var sk = q('[data-skip-slot="'+formId+'"]');
     if(sk) sk.addEventListener('click', function(){ skipSlot(formId); });
@@ -1006,8 +1018,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   function bindEvents(){
     bindForm('A');
     bindForm('B');
-
-    // Sticky CTA visibility
     var sticky = $('sticky');
     var quiz = $('quiz');
     if(sticky && quiz){
@@ -1018,13 +1028,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     }
   }
 
-  // URL param: pre-select studio in beiden Formularen
   function handleURLParam(){
     var sp = new URLSearchParams(window.location.search).get('studio');
     if(sp === 'memmingen' || sp === 'senden'){
-      var sel = sp === 'memmingen'
-        ? '[data-studio="50de091d-debc-4172-8053-b516f42c4321"]'
-        : '[data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb"]';
+      var sel = sp === 'memmingen' ? '[data-studio="50de091d-debc-4172-8053-b516f42c4321"]' : '[data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb"]';
       ['A','B'].forEach(function(formId){
         var b = q('[data-studio-grid="'+formId+'"] '+sel);
         if(b){
@@ -1038,20 +1045,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   }
 
   function init(){
-    try {
-      bindEvents();
-      handleURLParam();
-      loadConfig();
-    } catch(e){
-      console.error('Init error:', e);
-    }
+    try { bindEvents(); handleURLParam(); loadConfig(); }
+    catch(e){ console.error('Init error:', e); }
   }
 
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', init); }
+  else { init(); }
 })();
 </script>
 </body>
