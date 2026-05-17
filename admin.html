@@ -5,752 +5,617 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>fitbox Landing Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --green: #2f8614;
-  --dark-green: #246610;
-  --green-light: #e8f5e0;
-  --black: #111;
-  --text: #1a1a1a;
-  --muted: #6b7280;
-  --bg: #f9f9f6;
-  --bg-alt: #f2f2ee;
-  --white: #fff;
-  --border: #e2e2dc;
-  --red: #dc2626;
-  --yellow: #d97706;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+:root{--g:#2f8614;--dg:#246610;--gl:#e8f5e0;--b:#111;--t:#1a1a1a;--m:#6b7280;--bg:#f9f9f6;--ba:#f2f2ee;--w:#fff;--bd:#e2e2dc;--r:#dc2626;--y:#d97706}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);min-height:100vh}
 
 /* LOGIN */
-#login-screen {
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--bg);
-}
-.login-box {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 40px;
-  width: 100%; max-width: 380px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-}
-.login-logo { text-align: center; margin-bottom: 24px; }
-.login-logo img { height: 36px; }
-.login-title { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 24px; color: var(--black); }
-.login-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-.login-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
-.login-input {
-  padding: 12px 14px; border: 1.5px solid var(--border);
-  border-radius: 6px; font-family: 'DM Sans', sans-serif;
-  font-size: 15px; outline: none; transition: border-color .2s;
-}
-.login-input:focus { border-color: var(--green); }
-.login-btn {
-  width: 100%; padding: 13px; background: var(--green);
-  color: #fff; border: none; border-radius: 6px;
-  font-family: 'DM Sans', sans-serif; font-weight: 700;
-  font-size: 15px; cursor: pointer; transition: background .2s;
-}
-.login-btn:hover { background: var(--dark-green); }
-.login-error { color: var(--red); font-size: 13px; text-align: center; margin-top: 10px; display: none; }
-.login-error.show { display: block; }
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.lbox{background:var(--w);border:1px solid var(--bd);border-radius:12px;padding:36px 28px;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.llogo{text-align:center;margin-bottom:20px}
+.llogo img{height:32px}
+.ltitle{font-size:17px;font-weight:700;text-align:center;margin-bottom:22px;color:var(--b)}
+.lfield{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.llbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--m)}
+.linp{padding:12px 14px;border:1.5px solid var(--bd);border-radius:6px;font-family:inherit;font-size:15px;outline:none;transition:border-color .2s}
+.linp:focus{border-color:var(--g)}
+.lbtn{width:100%;padding:13px;background:var(--g);color:#fff;border:none;border-radius:6px;font-family:inherit;font-weight:700;font-size:15px;cursor:pointer;transition:background .2s}
+.lbtn:hover{background:var(--dg)}
+.lerr{color:var(--r);font-size:13px;text-align:center;margin-top:10px;display:none}
+.lerr.show{display:block}
 
-/* ADMIN LAYOUT */
-#admin-screen { display: none; min-height: 100vh; }
+/* ADMIN */
+#admin{display:none;min-height:100vh}
+.top{background:var(--w);border-bottom:1px solid var(--bd);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:12px;flex-wrap:wrap}
+.top-l{display:flex;align-items:center;gap:12px;min-width:0}
+.top-l img{height:28px;flex-shrink:0}
+.top-t{font-size:14px;font-weight:700;color:var(--b);white-space:nowrap}
+.top-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tbtn{background:none;border:1px solid var(--bd);border-radius:6px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit;text-decoration:none;color:var(--t);white-space:nowrap}
+.tbtn-prev{background:var(--gl);color:var(--dg);border-color:var(--g)}
+.tbtn-save{background:var(--g);color:#fff;border:none;font-weight:700;padding:9px 18px}
+.tbtn-save:hover{background:var(--dg)}
+.tbtn-save:disabled{opacity:.6;cursor:not-allowed}
 
-.adm-topbar {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 24px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 100;
-}
-.adm-topbar-left { display: flex; align-items: center; gap: 12px; }
-.adm-topbar-left img { height: 30px; }
-.adm-topbar-title { font-size: 14px; font-weight: 700; color: var(--black); }
-.adm-topbar-right { display: flex; gap: 10px; align-items: center; }
-.adm-preview-btn {
-  background: var(--green-light); color: var(--dark-green);
-  border: 1px solid var(--green); border-radius: 6px;
-  padding: 8px 16px; font-size: 13px; font-weight: 600;
-  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
-}
-.adm-save-btn {
-  background: var(--green); color: #fff;
-  border: none; border-radius: 6px;
-  padding: 9px 20px; font-size: 13px; font-weight: 700;
-  cursor: pointer; font-family: 'DM Sans', sans-serif;
-  transition: background .2s; display: inline-flex; align-items: center; gap: 6px;
-}
-.adm-save-btn:hover { background: var(--dark-green); }
-.adm-save-btn:disabled { opacity: .6; cursor: not-allowed; }
-.adm-logout {
-  background: none; border: 1px solid var(--border);
-  border-radius: 6px; padding: 8px 14px;
-  font-size: 13px; color: var(--muted); cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-}
+.body{display:flex}
+.side{width:220px;flex-shrink:0;border-right:1px solid var(--bd);background:var(--w);padding:16px 0;min-height:calc(100vh - 57px);position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto}
+.side-sec{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m);padding:12px 20px 6px}
+.side-i{display:flex;align-items:center;gap:8px;padding:10px 20px;font-size:13px;color:var(--t);cursor:pointer;transition:background .15s;border-left:3px solid transparent}
+.side-i:hover{background:var(--bg)}
+.side-i.active{background:var(--gl);color:var(--dg);border-left-color:var(--g);font-weight:600}
+.side-ic{font-size:16px;width:20px;text-align:center}
 
-.adm-body { display: flex; gap: 0; }
+.content{flex:1;padding:24px;max-width:900px}
+.panel{display:none}
+.panel.active{display:block}
+.p-t{font-size:20px;font-weight:700;color:var(--b);margin-bottom:4px}
+.p-s{font-size:13px;color:var(--m);margin-bottom:24px}
 
-/* SIDEBAR */
-.adm-sidebar {
-  width: 220px; flex-shrink: 0;
-  border-right: 1px solid var(--border);
-  background: var(--white);
-  padding: 16px 0;
-  min-height: calc(100vh - 57px);
-  position: sticky; top: 57px;
-  height: calc(100vh - 57px);
-  overflow-y: auto;
-}
-.adm-nav-section { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 12px 20px 6px; }
-.adm-nav-item {
-  display: flex; align-items: center; gap: 8px;
-  padding: 9px 20px; font-size: 13px; font-weight: 500;
-  color: var(--text); cursor: pointer; transition: background .15s;
-  border-left: 3px solid transparent;
-}
-.adm-nav-item:hover { background: var(--bg); }
-.adm-nav-item.active { background: var(--green-light); color: var(--dark-green); border-left-color: var(--green); font-weight: 600; }
-.adm-nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+.card{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:20px;margin-bottom:14px}
+.card-t{font-size:13px;font-weight:700;color:var(--b);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;letter-spacing:.5px;text-transform:uppercase}
+.b-green{background:var(--gl);color:var(--dg)}
+.b-red{background:#fef2f2;color:var(--r)}
 
-/* CONTENT */
-.adm-content { flex: 1; padding: 28px; max-width: 860px; }
-.adm-panel { display: none; }
-.adm-panel.active { display: block; }
-.adm-panel-title { font-size: 20px; font-weight: 700; color: var(--black); margin-bottom: 4px; }
-.adm-panel-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.row.single{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:5px}
+.lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--m)}
+.inp,.ta{padding:10px 12px;border:1.5px solid var(--bd);border-radius:6px;font-family:inherit;font-size:14px;color:var(--t);background:var(--w);outline:none;transition:border-color .2s;width:100%}
+.inp:focus,.ta:focus{border-color:var(--g)}
+.ta{min-height:70px;resize:vertical}
+.hint{font-size:11px;color:var(--m);margin-top:3px}
 
-/* Cards */
-.adm-card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 8px; padding: 20px 22px; margin-bottom: 16px;
-}
-.adm-card-title { font-size: 13px; font-weight: 700; color: var(--black); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-.adm-card-title .badge {
-  font-size: 10px; font-weight: 600; padding: 2px 8px;
-  border-radius: 100px; letter-spacing: .5px; text-transform: uppercase;
-}
-.badge-green { background: var(--green-light); color: var(--dark-green); }
-.badge-red { background: #fef2f2; color: var(--red); }
-.badge-yellow { background: #fffbeb; color: var(--yellow); }
+.tog-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.tog{position:relative;width:44px;height:24px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-s{position:absolute;inset:0;background:var(--bd);border-radius:100px;cursor:pointer;transition:background .2s}
+.tog-s::after{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.tog input:checked + .tog-s{background:var(--g)}
+.tog input:checked + .tog-s::after{transform:translateX(20px)}
+.tog-l{font-size:14px;font-weight:500}
 
-/* Form elements */
-.adm-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
-.adm-row.single { grid-template-columns: 1fr; }
-.adm-row.triple { grid-template-columns: 1fr 1fr 1fr; }
-.adm-field { display: flex; flex-direction: column; gap: 5px; }
-.adm-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
-.adm-input, .adm-select, .adm-textarea {
-  padding: 10px 12px; border: 1.5px solid var(--border);
-  border-radius: 6px; font-family: 'DM Sans', sans-serif;
-  font-size: 14px; color: var(--text); background: var(--white);
-  outline: none; transition: border-color .2s; width: 100%;
-}
-.adm-input:focus, .adm-select:focus, .adm-textarea:focus { border-color: var(--green); }
-.adm-textarea { min-height: 80px; resize: vertical; }
-.adm-hint { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.rev-i{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:14px;margin-bottom:10px;position:relative}
+.rev-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--m);cursor:pointer;font-size:16px;padding:2px 6px}
+.rev-del:hover{color:var(--r)}
+.add-btn{background:var(--gl);color:var(--dg);border:1px dashed var(--g);border-radius:6px;padding:10px;width:100%;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.add-btn:hover{background:#d4eec4}
 
-/* Toggle */
-.adm-toggle-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.adm-toggle { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
-.adm-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
-.adm-toggle-slider {
-  position: absolute; inset: 0; background: var(--border);
-  border-radius: 100px; cursor: pointer; transition: background .2s;
-}
-.adm-toggle-slider::after {
-  content: ''; position: absolute;
-  left: 3px; top: 3px; width: 18px; height: 18px;
-  background: white; border-radius: 50%; transition: transform .2s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-}
-.adm-toggle input:checked + .adm-toggle-slider { background: var(--green); }
-.adm-toggle input:checked + .adm-toggle-slider::after { transform: translateX(20px); }
-.adm-toggle-label { font-size: 14px; font-weight: 500; color: var(--text); }
+.stat-i{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;align-items:end}
 
-/* Reviews */
-.adm-review-item {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 6px; padding: 14px; margin-bottom: 10px; position: relative;
-}
-.adm-review-del {
-  position: absolute; top: 10px; right: 10px;
-  background: none; border: none; color: var(--muted); cursor: pointer;
-  font-size: 16px; padding: 2px 6px;
-}
-.adm-review-del:hover { color: var(--red); }
-.adm-add-btn {
-  background: var(--green-light); color: var(--dark-green);
-  border: 1px dashed var(--green); border-radius: 6px;
-  padding: 10px; width: 100%; font-family: 'DM Sans', sans-serif;
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  transition: background .2s;
-}
-.adm-add-btn:hover { background: #d4eec4; }
+.img-prev{margin-top:8px;border-radius:6px;overflow:hidden;height:120px;background:var(--ba);position:relative}
+.img-prev img{width:100%;height:100%;object-fit:cover}
+.img-ph{display:flex;align-items:center;justify-content:center;height:100%;color:var(--m);font-size:13px}
 
-/* Stats */
-.adm-stat-item { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; align-items: end; }
+#toast{position:fixed;bottom:24px;right:24px;z-index:999;background:var(--b);color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:500;transform:translateY(100px);opacity:0;transition:all .3s;pointer-events:none;max-width:90vw}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{background:var(--g)}
+#toast.error{background:var(--r)}
 
-/* Image preview */
-.adm-img-preview {
-  margin-top: 8px; border-radius: 6px; overflow: hidden;
-  height: 120px; background: var(--bg-alt); position: relative;
-}
-.adm-img-preview img { width: 100%; height: 100%; object-fit: cover; }
-.adm-img-preview .adm-img-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 13px; }
-
-/* Toast */
-#adm-toast {
-  position: fixed; bottom: 24px; right: 24px; z-index: 999;
-  background: var(--black); color: #fff;
-  padding: 12px 20px; border-radius: 8px;
-  font-size: 14px; font-weight: 500;
-  transform: translateY(100px); opacity: 0;
-  transition: all .3s; pointer-events: none;
-}
-#adm-toast.show { transform: translateY(0); opacity: 1; }
-#adm-toast.success { background: var(--green); }
-#adm-toast.error { background: var(--red); }
-
-/* Status bar */
-.adm-status-bar {
-  background: var(--green-light); border: 1px solid var(--green);
-  border-radius: 6px; padding: 10px 14px;
-  font-size: 13px; color: var(--dark-green); font-weight: 500;
-  margin-bottom: 20px; display: flex; align-items: center; gap: 8px;
-}
-.adm-status-bar.warn { background: #fffbeb; border-color: #fbbf24; color: var(--yellow); }
-
-@media (max-width: 768px) {
-  .adm-sidebar { display: none; }
-  .adm-row { grid-template-columns: 1fr; }
-  .adm-row.triple { grid-template-columns: 1fr; }
+@media (max-width:768px){
+  .side{display:none}
+  .row{grid-template-columns:1fr}
+  .content{padding:16px}
+  .top-t{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-box">
-    <div class="login-logo">
-      <img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox">
+<div id="login">
+  <div class="lbox">
+    <div class="llogo"><img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></div>
+    <div class="ltitle">Landing Page Admin</div>
+    <div class="lfield">
+      <label class="llbl">Passwort</label>
+      <input type="password" class="linp" id="loginPw" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
     </div>
-    <div class="login-title">Landing Page Admin</div>
-    <div class="login-field">
-      <label class="login-label">Passwort</label>
-      <input type="password" class="login-input" id="loginPw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="login-btn" onclick="doLogin()">Einloggen</button>
-    <div class="login-error" id="loginError">Falsches Passwort</div>
+    <button class="lbtn" id="loginBtn">Einloggen</button>
+    <div class="lerr" id="loginErr">Falsches Passwort</div>
   </div>
 </div>
 
-<!-- ADMIN -->
-<div id="admin-screen">
-  <div class="adm-topbar">
-    <div class="adm-topbar-left">
+<div id="admin">
+  <div class="top">
+    <div class="top-l">
       <img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox">
-      <span class="adm-topbar-title">Landing Page Admin</span>
+      <span class="top-t">Landing Page Admin</span>
     </div>
-    <div class="adm-topbar-right">
-      <a href="ems-training.html" target="_blank" class="adm-preview-btn">👁 Vorschau</a>
-      <button class="adm-save-btn" id="saveBtn" onclick="saveConfig()">💾 Speichern</button>
-      <button class="adm-logout" onclick="doLogout()">Abmelden</button>
+    <div class="top-r">
+      <a href="ems-training.html" target="_blank" class="tbtn tbtn-prev">Vorschau</a>
+      <button class="tbtn tbtn-save" id="saveBtn">Speichern</button>
+      <button class="tbtn" id="logoutBtn">Abmelden</button>
     </div>
   </div>
 
-  <div class="adm-body">
-    <!-- SIDEBAR -->
-    <div class="adm-sidebar">
-      <div class="adm-nav-section">Seite</div>
-      <div class="adm-nav-item active" data-panel="banner" onclick="showPanel('banner')"><span class="icon">📢</span> Aktions-Banner</div>
-      <div class="adm-nav-item" data-panel="hero" onclick="showPanel('hero')"><span class="icon">🏠</span> Hero-Bereich</div>
-      <div class="adm-nav-item" data-panel="stats" onclick="showPanel('stats')"><span class="icon">📊</span> Stats-Leiste</div>
-      <div class="adm-nav-item" data-panel="reviews" onclick="showPanel('reviews')"><span class="icon">⭐</span> Bewertungen</div>
-      <div class="adm-nav-section">Studios</div>
-      <div class="adm-nav-item" data-panel="studios" onclick="showPanel('studios')"><span class="icon">📍</span> Standorte</div>
-      <div class="adm-nav-section">Formular</div>
-      <div class="adm-nav-item" data-panel="form" onclick="showPanel('form')"><span class="icon">📋</span> Formular & CTA</div>
-      <div class="adm-nav-section">Links</div>
-      <div class="adm-nav-item" data-panel="links" onclick="showPanel('links')"><span class="icon">🔗</span> Footer-Links</div>
+  <div class="body">
+    <div class="side">
+      <div class="side-sec">Seite</div>
+      <div class="side-i active" data-panel="banner"><span class="side-ic">&#128227;</span> Aktions-Banner</div>
+      <div class="side-i" data-panel="hero"><span class="side-ic">&#127968;</span> Hero-Bereich</div>
+      <div class="side-i" data-panel="quiz"><span class="side-ic">&#127919;</span> Quiz (oben)</div>
+      <div class="side-i" data-panel="stats"><span class="side-ic">&#128202;</span> Stats-Leiste</div>
+      <div class="side-i" data-panel="reviews"><span class="side-ic">&#11088;</span> Bewertungen</div>
+      <div class="side-sec">Studios</div>
+      <div class="side-i" data-panel="studios"><span class="side-ic">&#128205;</span> Standorte</div>
+      <div class="side-sec">Formular</div>
+      <div class="side-i" data-panel="form"><span class="side-ic">&#128221;</span> Formular &amp; CTA</div>
+      <div class="side-sec">Links</div>
+      <div class="side-i" data-panel="links"><span class="side-ic">&#128279;</span> Footer-Links</div>
     </div>
 
-    <!-- CONTENT -->
-    <div class="adm-content">
+    <div class="content">
 
-      <!-- PANEL: BANNER -->
-      <div class="adm-panel active" id="panel-banner">
-        <div class="adm-panel-title">Aktions-Banner</div>
-        <div class="adm-panel-sub">Zeigt einen farbigen Banner ganz oben — ideal für zeitlich begrenzte Aktionen.</div>
-        <div class="adm-card">
-          <div class="adm-card-title">Banner-Status <span class="badge badge-red" id="badge-banner">Deaktiviert</span></div>
-          <div class="adm-toggle-row">
-            <label class="adm-toggle">
-              <input type="checkbox" id="cfg-banner_active" onchange="updateBannerBadge()">
-              <span class="adm-toggle-slider"></span>
+      <div class="panel active" id="panel-banner">
+        <div class="p-t">Aktions-Banner</div>
+        <div class="p-s">Zeigt einen farbigen Banner ganz oben &mdash; ideal f&uuml;r zeitlich begrenzte Aktionen.</div>
+        <div class="card">
+          <div class="card-t">Banner-Status <span class="badge b-red" id="badge-banner">Deaktiviert</span></div>
+          <div class="tog-row">
+            <label class="tog">
+              <input type="checkbox" id="cfg-banner_active">
+              <span class="tog-s"></span>
             </label>
-            <span class="adm-toggle-label">Banner anzeigen</span>
+            <span class="tog-l">Banner anzeigen</span>
           </div>
-          <div class="adm-row single">
-            <div class="adm-field">
-              <label class="adm-label">Banner-Text</label>
-              <input type="text" class="adm-input" id="cfg-banner_text" placeholder="🎉 Sommer-Aktion: 2 Monate zum Preis von 1 — nur bis 31.07.!">
-              <div class="adm-hint">Emojis erlaubt. Wird fett und grün angezeigt.</div>
-            </div>
-          </div>
-          <div class="adm-row">
-            <div class="adm-field">
-              <label class="adm-label">Link-Text (optional)</label>
-              <input type="text" class="adm-input" id="cfg-banner_link_text" placeholder="Jetzt sichern">
-            </div>
-            <div class="adm-field">
-              <label class="adm-label">Link-URL (optional)</label>
-              <input type="text" class="adm-input" id="cfg-banner_link_url" placeholder="#fb-anmeldung oder https://...">
+          <div class="row single">
+            <div class="field">
+              <label class="lbl">Banner-Text</label>
+              <input type="text" class="inp" id="cfg-banner_text" placeholder="&#127881; Sommer-Aktion: 2 Monate zum Preis von 1!">
+              <div class="hint">Emojis erlaubt. Wird in Gr&uuml;n angezeigt.</div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- PANEL: HERO -->
-      <div class="adm-panel" id="panel-hero">
-        <div class="adm-panel-title">Hero-Bereich</div>
-        <div class="adm-panel-sub">Der erste Eindruck — Hauptbild, Scarcity-Hinweis und CTA-Texte.</div>
-        <div class="adm-card">
-          <div class="adm-card-title">Hero-Bild</div>
-          <div class="adm-row single">
-            <div class="adm-field">
-              <label class="adm-label">Bild-URL</label>
-              <input type="text" class="adm-input" id="cfg-hero_img" placeholder="https://..." oninput="previewImg('hero-preview', this.value)">
-              <div class="adm-hint">Supabase Storage URL oder externes HTTPS-Bild. Empfohlen: 1200×800px.</div>
-              <div class="adm-img-preview" id="hero-preview">
-                <div class="adm-img-placeholder">Bild-URL eingeben</div>
-              </div>
+          <div class="row">
+            <div class="field">
+              <label class="lbl">Link-Text (optional)</label>
+              <input type="text" class="inp" id="cfg-banner_link_text" placeholder="Jetzt sichern">
             </div>
-          </div>
-        </div>
-        <div class="adm-card">
-          <div class="adm-card-title">Texte & CTA</div>
-          <div class="adm-row single">
-            <div class="adm-field">
-              <label class="adm-label">Scarcity-Text (gelber Hinweis)</label>
-              <input type="text" class="adm-input" id="cfg-scarcity_text" placeholder="⚠️ Nur noch wenige Plätze pro Monat verfügbar!">
-            </div>
-          </div>
-          <div class="adm-row">
-            <div class="adm-field">
-              <label class="adm-label">Hero CTA-Button</label>
-              <input type="text" class="adm-input" id="cfg-hero_cta_text" placeholder="🎯 Kostenloses Probetraining sichern">
-            </div>
-            <div class="adm-field">
-              <label class="adm-label">Vertrauens-Hinweis unter Button</label>
-              <input type="text" class="adm-input" id="cfg-hero_note" placeholder="100% kostenlos & unverbindlich">
-            </div>
-          </div>
-          <div class="adm-row single">
-            <div class="adm-field">
-              <label class="adm-label">Nav-CTA (oben rechts)</label>
-              <input type="text" class="adm-input" id="cfg-nav_cta_text" placeholder="Jetzt ausprobieren →">
+            <div class="field">
+              <label class="lbl">Link-URL (optional)</label>
+              <input type="text" class="inp" id="cfg-banner_link_url" placeholder="#quiz oder https://...">
             </div>
           </div>
         </div>
       </div>
 
-      <!-- PANEL: STATS -->
-      <div class="adm-panel" id="panel-stats">
-        <div class="adm-panel-title">Stats-Leiste</div>
-        <div class="adm-panel-sub">Die 4 Kennzahlen im grünen Balken unter dem Hero.</div>
-        <div class="adm-card">
-          <div class="adm-card-title">Kennzahlen</div>
+      <div class="panel" id="panel-hero">
+        <div class="p-t">Hero-Bereich</div>
+        <div class="p-s">Hauptbild, Scarcity-Hinweis und Nav-CTA.</div>
+        <div class="card">
+          <div class="card-t">Hero-Bild</div>
+          <div class="row single">
+            <div class="field">
+              <label class="lbl">Bild-URL</label>
+              <input type="text" class="inp" id="cfg-hero_img" placeholder="https://...">
+              <div class="hint">Supabase Storage URL oder externes HTTPS-Bild. Empfohlen: 1200x800px.</div>
+              <div class="img-prev" id="hero-preview"><div class="img-ph">Bild-URL eingeben</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-t">Texte</div>
+          <div class="row single">
+            <div class="field">
+              <label class="lbl">Scarcity-Hinweis (gelbe Box im Hero)</label>
+              <input type="text" class="inp" id="cfg-scarcity_text" placeholder="Nur noch wenige Pl&auml;tze pro Monat verf&uuml;gbar!">
+            </div>
+          </div>
+          <div class="row single">
+            <div class="field">
+              <label class="lbl">Nav-CTA (oben rechts)</label>
+              <input type="text" class="inp" id="cfg-nav_cta_text" placeholder="Jetzt starten">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-quiz">
+        <div class="p-t">Quiz-Bereich (oben)</div>
+        <div class="p-s">Der gr&uuml;ne Quiz-Bereich direkt unter dem Hero &mdash; das prim&auml;re Conversion-Element.</div>
+        <div class="card">
+          <div class="card-t">Quiz-Texte</div>
+          <div class="row single">
+            <div class="field">
+              <label class="lbl">Quiz-Titel</label>
+              <input type="text" class="inp" id="cfg-quiz_title" placeholder="Was ist dein Ziel?">
+            </div>
+          </div>
+          <div class="row single">
+            <div class="field">
+              <label class="lbl">Quiz-Untertitel</label>
+              <input type="text" class="inp" id="cfg-quiz_sub" placeholder="In 60 Sekunden zum kostenlosen Termin.">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" id="panel-stats">
+        <div class="p-t">Stats-Leiste</div>
+        <div class="p-s">Die 4 Kennzahlen im gr&uuml;nen Balken.</div>
+        <div class="card">
+          <div class="card-t">Kennzahlen</div>
           <div id="stats-container"></div>
         </div>
       </div>
 
-      <!-- PANEL: REVIEWS -->
-      <div class="adm-panel" id="panel-reviews">
-        <div class="adm-panel-title">Bewertungen</div>
-        <div class="adm-panel-sub">Echte Kundenstimmen — max. 6 Bewertungen empfohlen.</div>
-        <div class="adm-card">
-          <div class="adm-card-title">Bewertungen verwalten</div>
+      <div class="panel" id="panel-reviews">
+        <div class="p-t">Bewertungen</div>
+        <div class="p-s">Echte Kundenstimmen &mdash; max. 6 Bewertungen empfohlen.</div>
+        <div class="card">
+          <div class="card-t">Bewertungen verwalten</div>
           <div id="reviews-container"></div>
-          <button class="adm-add-btn" onclick="addReview()">+ Bewertung hinzufügen</button>
+          <button class="add-btn" id="add-review-btn">+ Bewertung hinzuf&uuml;gen</button>
         </div>
       </div>
 
-      <!-- PANEL: STUDIOS -->
-      <div class="adm-panel" id="panel-studios">
-        <div class="adm-panel-title">Standorte</div>
-        <div class="adm-panel-sub">Adresse, Öffnungszeiten und WhatsApp-Nummern der Studios.</div>
-        <div class="adm-card">
-          <div class="adm-card-title">Studio-Banner-Bild</div>
-          <div class="adm-row single">
-            <div class="adm-field">
-              <label class="adm-label">Bild-URL</label>
-              <input type="text" class="adm-input" id="cfg-studio_banner_img" placeholder="https://..." oninput="previewImg('studio-preview', this.value)">
-              <div class="adm-img-preview" id="studio-preview">
-                <div class="adm-img-placeholder">Bild-URL eingeben</div>
-              </div>
+      <div class="panel" id="panel-studios">
+        <div class="p-t">Standorte</div>
+        <div class="p-s">Adresse, &Ouml;ffnungszeiten und WhatsApp-Nummern.</div>
+        <div class="card">
+          <div class="card-t">Studio-Banner-Bild</div>
+          <div class="row single">
+            <div class="field">
+              <label class="lbl">Bild-URL</label>
+              <input type="text" class="inp" id="cfg-studio_banner_img" placeholder="https://...">
+              <div class="img-prev" id="studio-preview"><div class="img-ph">Bild-URL eingeben</div></div>
             </div>
           </div>
         </div>
-        <div class="adm-card">
-          <div class="adm-card-title">fitbox Memmingen</div>
-          <div class="adm-row">
-            <div class="adm-field">
-              <label class="adm-label">Adresse</label>
-              <input type="text" class="adm-input" id="cfg-mem_adresse" placeholder="Memmingen Amendingen">
+        <div class="card">
+          <div class="card-t">fitbox Memmingen</div>
+          <div class="row">
+            <div class="field">
+              <label class="lbl">Adresse</label>
+              <input type="text" class="inp" id="cfg-mem_adresse" placeholder="Memmingen Amendingen">
             </div>
-            <div class="adm-field">
-              <label class="adm-label">Öffnungszeiten</label>
-              <input type="text" class="adm-input" id="cfg-mem_zeiten" placeholder="Mo–Fr & nach Vereinbarung">
+            <div class="field">
+              <label class="lbl">&Ouml;ffnungszeiten</label>
+              <input type="text" class="inp" id="cfg-mem_zeiten" placeholder="Mo&ndash;Fr &amp; nach Vereinbarung">
             </div>
           </div>
-          <div class="adm-row single">
-            <div class="adm-field">
-              <label class="adm-label">WhatsApp-Nummer (nur Ziffern, mit Ländervorwahl)</label>
-              <input type="text" class="adm-input" id="cfg-mem_wa" placeholder="4915730024124">
-              <div class="adm-hint">Format: 49151... (ohne + oder 0)</div>
+          <div class="row single">
+            <div class="field">
+              <label class="lbl">WhatsApp-Nummer</label>
+              <input type="text" class="inp" id="cfg-mem_wa" placeholder="4915730024124">
+              <div class="hint">Format: 49151... (mit L&auml;ndervorwahl, ohne + oder 0)</div>
             </div>
           </div>
         </div>
-        <div class="adm-card">
-          <div class="adm-card-title">fitbox Senden</div>
-          <div class="adm-row">
-            <div class="adm-field">
-              <label class="adm-label">Adresse</label>
-              <input type="text" class="adm-input" id="cfg-sen_adresse" placeholder="Senden (Iller)">
+        <div class="card">
+          <div class="card-t">fitbox Senden</div>
+          <div class="row">
+            <div class="field">
+              <label class="lbl">Adresse</label>
+              <input type="text" class="inp" id="cfg-sen_adresse" placeholder="Senden (Iller)">
             </div>
-            <div class="adm-field">
-              <label class="adm-label">Öffnungszeiten</label>
-              <input type="text" class="adm-input" id="cfg-sen_zeiten" placeholder="Mo–Fr & nach Vereinbarung">
+            <div class="field">
+              <label class="lbl">&Ouml;ffnungszeiten</label>
+              <input type="text" class="inp" id="cfg-sen_zeiten" placeholder="Mo&ndash;Fr &amp; nach Vereinbarung">
             </div>
           </div>
-          <div class="adm-row single">
-            <div class="adm-field">
-              <label class="adm-label">WhatsApp-Nummer (nur Ziffern, mit Ländervorwahl)</label>
-              <input type="text" class="adm-input" id="cfg-sen_wa" placeholder="4915561206719">
+          <div class="row single">
+            <div class="field">
+              <label class="lbl">WhatsApp-Nummer</label>
+              <input type="text" class="inp" id="cfg-sen_wa" placeholder="4915561206719">
             </div>
           </div>
         </div>
       </div>
 
-      <!-- PANEL: FORM -->
-      <div class="adm-panel" id="panel-form">
-        <div class="adm-panel-title">Formular & CTA</div>
-        <div class="adm-panel-sub">Überschrift und Untertext des Anmeldeformulars sowie der mobilen Sticky-Bar.</div>
-        <div class="adm-card">
-          <div class="adm-card-title">Formular-Kopf</div>
-          <div class="adm-row">
-            <div class="adm-field">
-              <label class="adm-label">Formular-Titel</label>
-              <input type="text" class="adm-input" id="cfg-form_title" placeholder="Probetraining sichern">
+      <div class="panel" id="panel-form">
+        <div class="p-t">Formular (unten) &amp; CTA</div>
+        <div class="p-s">Das gro&szlig;e Formular am Ende der Seite sowie die mobile Sticky-Bar.</div>
+        <div class="card">
+          <div class="card-t">Unteres Formular</div>
+          <div class="row">
+            <div class="field">
+              <label class="lbl">Titel</label>
+              <input type="text" class="inp" id="cfg-form_title" placeholder="Probetraining sichern">
             </div>
-            <div class="adm-field">
-              <label class="adm-label">Formular-Untertitel</label>
-              <input type="text" class="adm-input" id="cfg-form_subtitle" placeholder="In 60 Sekunden zum kostenlosen Termin">
-            </div>
-          </div>
-        </div>
-        <div class="adm-card">
-          <div class="adm-card-title">Sticky CTA (Mobile)</div>
-          <div class="adm-row">
-            <div class="adm-field">
-              <label class="adm-label">Titel</label>
-              <input type="text" class="adm-input" id="cfg-sticky_title" placeholder="Kostenloses Probetraining">
-            </div>
-            <div class="adm-field">
-              <label class="adm-label">Untertitel</label>
-              <input type="text" class="adm-input" id="cfg-sticky_sub" placeholder="Nur noch wenige Plätze frei!">
+            <div class="field">
+              <label class="lbl">Untertitel</label>
+              <input type="text" class="inp" id="cfg-form_subtitle" placeholder="In 60 Sekunden zum kostenlosen Termin.">
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- PANEL: LINKS -->
-      <div class="adm-panel" id="panel-links">
-        <div class="adm-panel-title">Footer-Links</div>
-        <div class="adm-panel-sub">URLs für Impressum und Datenschutzerklärung.</div>
-        <div class="adm-card">
-          <div class="adm-card-title">Rechtliche Links</div>
-          <div class="adm-row">
-            <div class="adm-field">
-              <label class="adm-label">Impressum-URL</label>
-              <input type="text" class="adm-input" id="cfg-impressum_url" placeholder="https://fitbox-memmingen.de/impressum">
+        <div class="card">
+          <div class="card-t">Sticky CTA (Mobile)</div>
+          <div class="row">
+            <div class="field">
+              <label class="lbl">Titel</label>
+              <input type="text" class="inp" id="cfg-sticky_title" placeholder="Kostenloses Probetraining">
             </div>
-            <div class="adm-field">
-              <label class="adm-label">Datenschutz-URL</label>
-              <input type="text" class="adm-input" id="cfg-datenschutz_url" placeholder="https://fitbox-memmingen.de/datenschutz">
+            <div class="field">
+              <label class="lbl">Untertitel</label>
+              <input type="text" class="inp" id="cfg-sticky_sub" placeholder="Nur noch wenige Pl&auml;tze!">
             </div>
           </div>
         </div>
       </div>
 
-    </div><!-- end adm-content -->
-  </div><!-- end adm-body -->
-</div><!-- end admin-screen -->
+      <div class="panel" id="panel-links">
+        <div class="p-t">Footer-Links</div>
+        <div class="p-s">URLs f&uuml;r Impressum und Datenschutzerkl&auml;rung.</div>
+        <div class="card">
+          <div class="card-t">Rechtliche Links</div>
+          <div class="row">
+            <div class="field">
+              <label class="lbl">Impressum-URL</label>
+              <input type="text" class="inp" id="cfg-impressum_url" placeholder="https://fitbox-memmingen.de/impressum">
+            </div>
+            <div class="field">
+              <label class="lbl">Datenschutz-URL</label>
+              <input type="text" class="inp" id="cfg-datenschutz_url" placeholder="https://fitbox-memmingen.de/datenschutz">
+            </div>
+          </div>
+        </div>
+      </div>
 
-<div id="adm-toast"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════
-// AUTH — Passwort wird nur client-seitig geprüft.
-// Für produktiven Einsatz: Vercel Password Protection nutzen.
-// ═══════════════════════════════════════
-var ADMIN_PW = 'fitbox2025!';
+(function(){
+  'use strict';
+  var ADMIN_PW = 'fitbox2025!';
 
-function doLogin() {
-  var pw = document.getElementById('loginPw').value;
-  if (pw === ADMIN_PW) {
-    sessionStorage.setItem('adm_auth', '1');
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'block';
-    loadAndRender();
-  } else {
-    document.getElementById('loginError').classList.add('show');
-    setTimeout(() => document.getElementById('loginError').classList.remove('show'), 3000);
+  function $(id){ return document.getElementById(id); }
+  function qa(sel){ return document.querySelectorAll(sel); }
+  function escHTML(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function escAttr(s){ return String(s==null?'':s).replace(/"/g,'&quot;'); }
+
+  // ============ AUTH ============
+  function doLogin(){
+    var pw = $('loginPw').value;
+    if(pw === ADMIN_PW){
+      sessionStorage.setItem('adm_auth','1');
+      $('login').style.display = 'none';
+      $('admin').style.display = 'block';
+      loadAndRender();
+    } else {
+      $('loginErr').classList.add('show');
+      setTimeout(function(){ $('loginErr').classList.remove('show'); }, 3000);
+    }
   }
-}
 
-function doLogout() {
-  sessionStorage.removeItem('adm_auth');
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('admin-screen').style.display = 'none';
-}
-
-// Auto-login wenn Session aktiv
-if (sessionStorage.getItem('adm_auth') === '1') {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('admin-screen').style.display = 'block';
-}
-
-// ═══════════════════════════════════════
-// PANEL NAVIGATION
-// ═══════════════════════════════════════
-function showPanel(name) {
-  document.querySelectorAll('.adm-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.adm-nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  document.querySelector('[data-panel="' + name + '"]').classList.add('active');
-}
-
-// ═══════════════════════════════════════
-// CONFIG LOAD & RENDER
-// ═══════════════════════════════════════
-var currentConfig = {};
-
-async function loadAndRender() {
-  try {
-    const res = await fetch('./config.json?t=' + Date.now());
-    if (res.ok) currentConfig = await res.json();
-    else currentConfig = {};
-  } catch(e) { currentConfig = {}; }
-  renderForm();
-}
-
-function renderForm() {
-  var c = currentConfig;
-
-  // Simple text fields — map config key (dots→underscore) → input id
-  var fields = [
-    'banner_text','banner_link_text','banner_link_url',
-    'hero_img','scarcity_text','hero_cta_text','hero_note','nav_cta_text',
-    'studio_banner_img',
-    'mem_adresse','mem_zeiten','mem_wa',
-    'sen_adresse','sen_zeiten','sen_wa',
-    'sticky_title','sticky_sub',
-    'impressum_url','datenschutz_url',
-    'form_title','form_subtitle'
-  ];
-  fields.forEach(k => {
-    var el = document.getElementById('cfg-' + k.replace(/\./g,'_'));
-    if (el && c[k] != null) el.value = c[k];
-  });
-
-  // Toggle
-  var ba = document.getElementById('cfg-banner_active');
-  if (ba) { ba.checked = !!c.banner_active; updateBannerBadge(); }
-
-  // Image previews
-  if (c.hero_img) previewImg('hero-preview', c.hero_img);
-  if (c.studio_banner_img) previewImg('studio-preview', c.studio_banner_img);
-
-  // Stats
-  renderStats(c.stats || [
-    { num: '20', label: 'Min. pro Session' },
-    { num: '90%', label: 'Muskelfasern aktiv' },
-    { num: '200+', label: 'Zufriedene Mitglieder' },
-    { num: '2', label: 'Studios Region' }
-  ]);
-
-  // Reviews
-  renderReviews(c.reviews || []);
-}
-
-// ── STATS ──
-function renderStats(stats) {
-  var c = document.getElementById('stats-container');
-  c.innerHTML = '';
-  stats.forEach((s, i) => {
-    var div = document.createElement('div');
-    div.className = 'adm-stat-item';
-    div.innerHTML = `
-      <div class="adm-field">
-        <label class="adm-label">Zahl ${i+1}</label>
-        <input type="text" class="adm-input" data-stat="${i}" data-field="num" value="${escHtml(s.num)}" placeholder="20">
-      </div>
-      <div class="adm-field">
-        <label class="adm-label">Beschriftung ${i+1}</label>
-        <input type="text" class="adm-input" data-stat="${i}" data-field="label" value="${escHtml(s.label)}" placeholder="Min. pro Session">
-      </div>`;
-    c.appendChild(div);
-  });
-}
-
-function readStats() {
-  var result = [];
-  document.querySelectorAll('[data-stat]').forEach(el => {
-    var i = parseInt(el.dataset.stat);
-    if (!result[i]) result[i] = {};
-    result[i][el.dataset.field] = el.value.trim();
-  });
-  return result.filter(Boolean);
-}
-
-// ── REVIEWS ──
-function renderReviews(reviews) {
-  var c = document.getElementById('reviews-container');
-  c.innerHTML = '';
-  reviews.forEach((r, i) => addReviewEl(r, i));
-}
-
-function addReviewEl(r, i) {
-  var c = document.getElementById('reviews-container');
-  var idx = i ?? c.children.length;
-  var div = document.createElement('div');
-  div.className = 'adm-review-item';
-  div.dataset.idx = idx;
-  div.innerHTML = `
-    <button class="adm-review-del" title="Entfernen" onclick="removeReview(this)">✕</button>
-    <div class="adm-field" style="margin-bottom:8px;">
-      <label class="adm-label">Bewertungstext</label>
-      <textarea class="adm-textarea" data-review-text rows="3" placeholder="„Toller Text..."">${escHtml(r?.text || '')}</textarea>
-    </div>
-    <div class="adm-field">
-      <label class="adm-label">Autor</label>
-      <input type="text" class="adm-input" data-review-author value="${escHtml(r?.author || '')}" placeholder="Max M. aus Memmingen">
-    </div>`;
-  c.appendChild(div);
-}
-
-function addReview() { addReviewEl({}, null); }
-
-function removeReview(btn) {
-  btn.closest('.adm-review-item').remove();
-}
-
-function readReviews() {
-  return Array.from(document.querySelectorAll('.adm-review-item')).map(el => ({
-    text: el.querySelector('[data-review-text]').value.trim(),
-    author: el.querySelector('[data-review-author]').value.trim()
-  })).filter(r => r.text || r.author);
-}
-
-// ── BANNER BADGE ──
-function updateBannerBadge() {
-  var active = document.getElementById('cfg-banner_active').checked;
-  var badge = document.getElementById('badge-banner');
-  badge.textContent = active ? 'Aktiv' : 'Deaktiviert';
-  badge.className = 'badge ' + (active ? 'badge-green' : 'badge-red');
-}
-
-// ── IMAGE PREVIEW ──
-function previewImg(containerId, src) {
-  var container = document.getElementById(containerId);
-  if (!container) return;
-  if (src) {
-    container.innerHTML = `<img src="${escAttr(src)}" onerror="this.parentElement.innerHTML='<div class=adm-img-placeholder>Bild nicht ladbar</div>'" alt="">`;
-  } else {
-    container.innerHTML = '<div class="adm-img-placeholder">Bild-URL eingeben</div>';
+  function doLogout(){
+    sessionStorage.removeItem('adm_auth');
+    location.reload();
   }
-}
 
-// ═══════════════════════════════════════
-// SAVE CONFIG
-// ═══════════════════════════════════════
-async function saveConfig() {
-  var btn = document.getElementById('saveBtn');
-  btn.disabled = true; btn.textContent = '⏳ Speichern...';
+  // ============ NAVIGATION ============
+  function showPanel(name){
+    qa('.panel').forEach(function(p){ p.classList.remove('active'); });
+    qa('.side-i').forEach(function(n){ n.classList.remove('active'); });
+    var p = $('panel-'+name);
+    if(p) p.classList.add('active');
+    var n = document.querySelector('[data-panel="'+name+'"]');
+    if(n) n.classList.add('active');
+  }
 
-  var config = {
-    banner_active: document.getElementById('cfg-banner_active').checked,
-    banner_text: document.getElementById('cfg-banner_text').value.trim(),
-    banner_link_text: document.getElementById('cfg-banner_link_text').value.trim(),
-    banner_link_url: document.getElementById('cfg-banner_link_url').value.trim(),
-    hero_img: document.getElementById('cfg-hero_img').value.trim(),
-    scarcity_text: document.getElementById('cfg-scarcity_text').value.trim(),
-    hero_cta_text: document.getElementById('cfg-hero_cta_text').value.trim(),
-    hero_note: document.getElementById('cfg-hero_note').value.trim(),
-    nav_cta_text: document.getElementById('cfg-nav_cta_text').value.trim(),
-    stats: readStats(),
-    studio_banner_img: document.getElementById('cfg-studio_banner_img').value.trim(),
-    mem_adresse: document.getElementById('cfg-mem_adresse').value.trim(),
-    mem_zeiten: document.getElementById('cfg-mem_zeiten').value.trim(),
-    mem_wa: document.getElementById('cfg-mem_wa').value.trim(),
-    sen_adresse: document.getElementById('cfg-sen_adresse').value.trim(),
-    sen_zeiten: document.getElementById('cfg-sen_zeiten').value.trim(),
-    sen_wa: document.getElementById('cfg-sen_wa').value.trim(),
-    reviews: readReviews(),
-    sticky_title: document.getElementById('cfg-sticky_title').value.trim(),
-    sticky_sub: document.getElementById('cfg-sticky_sub').value.trim(),
-    impressum_url: document.getElementById('cfg-impressum_url').value.trim(),
-    datenschutz_url: document.getElementById('cfg-datenschutz_url').value.trim(),
-    form_title: document.getElementById('cfg-form_title').value.trim(),
-    form_subtitle: document.getElementById('cfg-form_subtitle').value.trim()
-  };
+  // ============ CONFIG LOAD & RENDER ============
+  var currentConfig = {};
 
-  try {
-    const res = await fetch('/api/save-config', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-admin-token': ADMIN_PW },
-      body: JSON.stringify(config)
+  function loadAndRender(){
+    fetch('./config.json?t='+Date.now())
+      .then(function(r){ return r.ok ? r.json() : {}; })
+      .then(function(c){ currentConfig = c; renderForm(); })
+      .catch(function(){ currentConfig = {}; renderForm(); });
+  }
+
+  function renderForm(){
+    var c = currentConfig;
+    var fields = [
+      'banner_text','banner_link_text','banner_link_url',
+      'hero_img','scarcity_text','nav_cta_text',
+      'quiz_title','quiz_sub',
+      'studio_banner_img',
+      'mem_adresse','mem_zeiten','mem_wa',
+      'sen_adresse','sen_zeiten','sen_wa',
+      'sticky_title','sticky_sub',
+      'impressum_url','datenschutz_url',
+      'form_title','form_subtitle'
+    ];
+    fields.forEach(function(k){
+      var el = $('cfg-'+k);
+      if(el && c[k] != null) el.value = c[k];
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    currentConfig = config;
-    showToast('✓ Gespeichert! Seite wird sofort aktualisiert.', 'success');
-  } catch(err) {
-    // Fallback: JSON download
-    downloadJson(config);
-    showToast('⚠️ API nicht verfügbar — config.json heruntergeladen. Bitte manuell deployen.', 'error');
+
+    var ba = $('cfg-banner_active');
+    if(ba){ ba.checked = !!c.banner_active; updateBannerBadge(); }
+
+    if(c.hero_img) previewImg('hero-preview', c.hero_img);
+    if(c.studio_banner_img) previewImg('studio-preview', c.studio_banner_img);
+
+    renderStats(c.stats || [
+      {num:'20', label:'Min. pro Session'},
+      {num:'90%', label:'Muskelfasern aktiv'},
+      {num:'200+', label:'Zufriedene Mitglieder'},
+      {num:'2', label:'Studios Region'}
+    ]);
+
+    renderReviews(c.reviews || []);
   }
 
-  btn.disabled = false; btn.textContent = '💾 Speichern';
-}
+  // ============ STATS ============
+  function renderStats(stats){
+    var c = $('stats-container');
+    c.innerHTML = '';
+    stats.forEach(function(s,i){
+      var div = document.createElement('div');
+      div.className = 'stat-i';
+      div.innerHTML =
+        '<div class="field"><label class="lbl">Zahl '+(i+1)+'</label>'+
+        '<input type="text" class="inp" data-stat="'+i+'" data-fld="num" value="'+escAttr(s.num)+'" placeholder="20"></div>'+
+        '<div class="field"><label class="lbl">Beschriftung '+(i+1)+'</label>'+
+        '<input type="text" class="inp" data-stat="'+i+'" data-fld="label" value="'+escAttr(s.label)+'" placeholder="Min. pro Session"></div>';
+      c.appendChild(div);
+    });
+  }
 
-function downloadJson(obj) {
-  var blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
-  var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'config.json'; document.body.appendChild(a); a.click(); a.remove();
-}
+  function readStats(){
+    var result = [];
+    qa('[data-stat]').forEach(function(el){
+      var i = parseInt(el.getAttribute('data-stat'),10);
+      if(!result[i]) result[i] = {};
+      result[i][el.getAttribute('data-fld')] = el.value.trim();
+    });
+    return result.filter(Boolean);
+  }
 
-// ── TOAST ──
-function showToast(msg, type) {
-  var t = document.getElementById('adm-toast');
-  t.textContent = msg; t.className = 'show ' + (type || '');
-  setTimeout(() => t.className = '', 4000);
-}
+  // ============ REVIEWS ============
+  function renderReviews(reviews){
+    var c = $('reviews-container');
+    c.innerHTML = '';
+    reviews.forEach(function(r){ addReviewEl(r); });
+  }
 
-// ── UTILS ──
-function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(s) { return String(s).replace(/"/g,'&quot;'); }
+  function addReviewEl(r){
+    var c = $('reviews-container');
+    var div = document.createElement('div');
+    div.className = 'rev-i';
+    div.innerHTML =
+      '<button class="rev-del" title="Entfernen">&times;</button>'+
+      '<div class="field" style="margin-bottom:8px"><label class="lbl">Bewertungstext</label>'+
+      '<textarea class="ta" data-rev-text rows="3" placeholder="Toller Text...">'+escHTML((r && r.text) || '')+'</textarea></div>'+
+      '<div class="field"><label class="lbl">Autor</label>'+
+      '<input type="text" class="inp" data-rev-author value="'+escAttr((r && r.author) || '')+'" placeholder="Max M. aus Memmingen"></div>';
+    div.querySelector('.rev-del').addEventListener('click', function(){ div.remove(); });
+    c.appendChild(div);
+  }
 
-// Init
-if (sessionStorage.getItem('adm_auth') === '1') loadAndRender();
+  function readReviews(){
+    var result = [];
+    qa('.rev-i').forEach(function(el){
+      var t = el.querySelector('[data-rev-text]').value.trim();
+      var a = el.querySelector('[data-rev-author]').value.trim();
+      if(t || a) result.push({text:t, author:a});
+    });
+    return result;
+  }
+
+  // ============ BANNER BADGE ============
+  function updateBannerBadge(){
+    var active = $('cfg-banner_active').checked;
+    var badge = $('badge-banner');
+    badge.textContent = active ? 'Aktiv' : 'Deaktiviert';
+    badge.className = 'badge ' + (active ? 'b-green' : 'b-red');
+  }
+
+  // ============ IMAGE PREVIEW ============
+  function previewImg(containerId, src){
+    var c = $(containerId);
+    if(!c) return;
+    if(src){
+      c.innerHTML = '<img src="'+escAttr(src)+'" onerror="this.parentElement.innerHTML=\'<div class=img-ph>Bild nicht ladbar</div>\'" alt="">';
+    } else {
+      c.innerHTML = '<div class="img-ph">Bild-URL eingeben</div>';
+    }
+  }
+
+  // ============ SAVE CONFIG ============
+  function saveConfig(){
+    var btn = $('saveBtn');
+    btn.disabled = true; btn.textContent = 'Speichern...';
+
+    var config = {
+      banner_active: $('cfg-banner_active').checked,
+      banner_text: $('cfg-banner_text').value.trim(),
+      banner_link_text: $('cfg-banner_link_text').value.trim(),
+      banner_link_url: $('cfg-banner_link_url').value.trim(),
+      hero_img: $('cfg-hero_img').value.trim(),
+      scarcity_text: $('cfg-scarcity_text').value.trim(),
+      nav_cta_text: $('cfg-nav_cta_text').value.trim(),
+      quiz_title: $('cfg-quiz_title').value.trim(),
+      quiz_sub: $('cfg-quiz_sub').value.trim(),
+      stats: readStats(),
+      studio_banner_img: $('cfg-studio_banner_img').value.trim(),
+      mem_adresse: $('cfg-mem_adresse').value.trim(),
+      mem_zeiten: $('cfg-mem_zeiten').value.trim(),
+      mem_wa: $('cfg-mem_wa').value.trim(),
+      sen_adresse: $('cfg-sen_adresse').value.trim(),
+      sen_zeiten: $('cfg-sen_zeiten').value.trim(),
+      sen_wa: $('cfg-sen_wa').value.trim(),
+      reviews: readReviews(),
+      sticky_title: $('cfg-sticky_title').value.trim(),
+      sticky_sub: $('cfg-sticky_sub').value.trim(),
+      impressum_url: $('cfg-impressum_url').value.trim(),
+      datenschutz_url: $('cfg-datenschutz_url').value.trim(),
+      form_title: $('cfg-form_title').value.trim(),
+      form_subtitle: $('cfg-form_subtitle').value.trim()
+    };
+
+    fetch('/api/save-config', {
+      method:'POST',
+      headers:{'Content-Type':'application/json', 'x-admin-token': ADMIN_PW},
+      body: JSON.stringify(config)
+    }).then(function(r){
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      currentConfig = config;
+      showToast('Gespeichert! Seite ist sofort aktualisiert.', 'success');
+    }).catch(function(err){
+      downloadJson(config);
+      showToast('API nicht verf\u00fcgbar - config.json heruntergeladen. Bitte manuell ins Repo committen.', 'error');
+    }).then(function(){
+      btn.disabled = false; btn.textContent = 'Speichern';
+    });
+  }
+
+  function downloadJson(obj){
+    var blob = new Blob([JSON.stringify(obj, null, 2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'config.json';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  function showToast(msg, type){
+    var t = $('toast');
+    t.textContent = msg;
+    t.className = 'show ' + (type || '');
+    setTimeout(function(){ t.className = ''; }, 4000);
+  }
+
+  // ============ EVENT BINDINGS ============
+  function bindEvents(){
+    $('loginBtn').addEventListener('click', doLogin);
+    $('loginPw').addEventListener('keydown', function(e){ if(e.key === 'Enter') doLogin(); });
+    $('logoutBtn').addEventListener('click', doLogout);
+    $('saveBtn').addEventListener('click', saveConfig);
+
+    qa('.side-i').forEach(function(n){
+      var name = n.getAttribute('data-panel');
+      n.addEventListener('click', function(){ showPanel(name); });
+    });
+
+    $('cfg-banner_active').addEventListener('change', updateBannerBadge);
+    $('cfg-hero_img').addEventListener('input', function(){ previewImg('hero-preview', this.value); });
+    $('cfg-studio_banner_img').addEventListener('input', function(){ previewImg('studio-preview', this.value); });
+
+    $('add-review-btn').addEventListener('click', function(){ addReviewEl({}); });
+  }
+
+  // ============ INIT ============
+  function init(){
+    bindEvents();
+    if(sessionStorage.getItem('adm_auth') === '1'){
+      $('login').style.display = 'none';
+      $('admin').style.display = 'block';
+      loadAndRender();
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
 </script>
 </body>
 </html>

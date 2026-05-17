@@ -30,18 +30,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .scarcity{background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:9px 12px;font-size:12px;font-weight:600;color:#856404;line-height:1.4}
 .hpic{border-radius:6px;overflow:hidden;height:160px}
 .hpic img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block}
-.quiz{background:var(--w);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:24px 16px}
-.quiz-in{max-width:720px;margin:0 auto}
+.quiz{background:var(--gl);border-top:3px solid var(--g);border-bottom:1px solid var(--bd);padding:24px 16px}
+.quiz-in{max-width:680px;margin:0 auto}
 .quiz-eb{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);text-align:center;margin-bottom:6px}
 .quiz-t{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;text-align:center;color:var(--b);margin-bottom:4px;letter-spacing:.5px}
 .quiz-s{font-size:13px;color:var(--m);text-align:center;margin-bottom:18px}
-.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.qbtn{background:var(--w);border:2px solid var(--bd);border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit;-webkit-appearance:none;appearance:none;min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.qbtn:active,.qbtn:hover{border-color:var(--g);background:var(--gl)}
-.qbtn .em{font-size:26px;margin-bottom:4px;line-height:1}
-.qbtn .lbl{font-size:13px;font-weight:600;color:var(--b);line-height:1.2}
-.qhint{font-size:11px;color:var(--m);text-align:center;display:flex;align-items:center;justify-content:center;gap:4px}
-.qhint::before{content:'\2713';color:var(--g);font-weight:700}
 .stats{background:var(--g);padding:16px 12px;display:flex;justify-content:center;flex-wrap:wrap}
 .stat{flex:1;min-width:70px;text-align:center;padding:4px 8px;border-right:1px solid rgba(255,255,255,.2)}
 .stat:last-child{border-right:none}
@@ -177,7 +170,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 .foot-l{display:flex;gap:16px;flex-wrap:wrap}
 .foot-l a{font-size:12px;color:var(--m);text-decoration:none}
 @media (min-width:640px){.h1{font-size:52px}.bgrid,.rgrid{grid-template-columns:1fr 1fr}.tbadges{flex-direction:row}.titem{border-bottom:none;border-right:1px solid var(--bd);flex:1}.titem:last-child{border-right:none}.nsteps{grid-template-columns:1fr 1fr}.slot-g{grid-template-columns:repeat(3,1fr)}.fgrid{grid-template-columns:1fr 1fr}.field.full{grid-column:1/-1}.quiz-t,.sec-t{font-size:36px}.sec{padding:56px 24px}}
-@media (min-width:1024px){.nav{padding:18px 40px}.nav img{height:40px}.hero{padding:56px 40px 36px}.sec{padding:72px 40px}.hero-in{grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}.hpic{height:360px;border-radius:10px}.h1{font-size:clamp(56px,6.5vw,88px);line-height:.9}.hdesc{font-size:16px}.quiz{padding:36px 40px}.quiz-t{font-size:38px}.qgrid{grid-template-columns:repeat(4,1fr)}.qbtn{min-height:110px}.qbtn .em{font-size:32px}.qbtn .lbl{font-size:14px}.snum{font-size:38px}.slbl{font-size:12px}.sec-t{font-size:40px}.bgrid,.rgrid{grid-template-columns:repeat(3,1fr)}.sgrid{grid-template-columns:1fr 1fr}.nsteps{grid-template-columns:repeat(3,1fr)}.foot{flex-direction:row;justify-content:space-between;align-items:center;padding:28px 40px}.wfloat{bottom:24px;right:24px;width:56px;height:56px}body{padding-bottom:0}.sticky{display:none}}
+@media (min-width:1024px){.nav{padding:18px 40px}.nav img{height:40px}.hero{padding:56px 40px 36px}.sec{padding:72px 40px}.hero-in{grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}.hpic{height:360px;border-radius:10px}.h1{font-size:clamp(56px,6.5vw,88px);line-height:.9}.hdesc{font-size:16px}.quiz{padding:36px 40px}.quiz-t{font-size:38px}.snum{font-size:38px}.slbl{font-size:12px}.sec-t{font-size:40px}.bgrid,.rgrid{grid-template-columns:repeat(3,1fr)}.sgrid{grid-template-columns:1fr 1fr}.nsteps{grid-template-columns:repeat(3,1fr)}.foot{flex-direction:row;justify-content:space-between;align-items:center;padding:28px 40px}.wfloat{bottom:24px;right:24px;width:56px;height:56px}body{padding-bottom:0}.sticky{display:none}}
 </style>
 </head>
 <body>
@@ -201,18 +194,122 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   </div>
 </section>
 
+<!-- TOP FORM (Quiz) -->
 <section class="quiz" id="quiz">
   <div class="quiz-in">
     <div class="quiz-eb">Kostenlos &middot; 60 Sekunden</div>
     <div class="quiz-t" id="quiz-t">Was ist dein Ziel?</div>
-    <div class="quiz-s" id="quiz-s">W&auml;hle ein Ziel &mdash; wir zeigen dir den schnellsten Weg.</div>
-    <div class="qgrid" id="quiz-grid">
-      <button type="button" class="qbtn" data-goal="abnehmen"><span class="em">&#9878;&#65039;</span><span class="lbl">Abnehmen<br>&amp; straffen</span></button>
-      <button type="button" class="qbtn" data-goal="muskelaufbau"><span class="em">&#128170;</span><span class="lbl">Muskeln<br>&amp; Kraft</span></button>
-      <button type="button" class="qbtn" data-goal="ruecken"><span class="em">&#129496;</span><span class="lbl">R&uuml;cken<br>&amp; Haltung</span></button>
-      <button type="button" class="qbtn" data-goal="gesundheit"><span class="em">&#9889;</span><span class="lbl">Allgemein<br>fitter werden</span></button>
+    <div class="quiz-s" id="quiz-s">In 60 Sekunden zum kostenlosen Termin.</div>
+
+    <div class="ind" data-form="A">
+      <div class="dot active" data-dot="A1">1</div>
+      <div class="line" data-line="A1"></div>
+      <div class="dot" data-dot="A2">2</div>
+      <div class="line" data-line="A2"></div>
+      <div class="dot" data-dot="A3">3</div>
+      <div class="line" data-line="A3"></div>
+      <div class="dot" data-dot="A4">4</div>
     </div>
-    <div class="qhint" id="quiz-h">100% kostenlos &amp; unverbindlich</div>
+
+    <div class="fstep active" data-step="A1">
+      <div class="st-t">Was ist dein Ziel?</div>
+      <div class="st-s">Damit wir dein Training optimal abstimmen k&ouml;nnen</div>
+      <div class="ggrid" data-goal-grid="A">
+        <button type="button" class="gbtn" data-goal="abnehmen"><span class="gem">&#9878;&#65039;</span><span class="glbl">Abnehmen &amp; straffen</span></button>
+        <button type="button" class="gbtn" data-goal="muskelaufbau"><span class="gem">&#128170;</span><span class="glbl">Muskeln &amp; Kraft</span></button>
+        <button type="button" class="gbtn" data-goal="ruecken"><span class="gem">&#129496;</span><span class="glbl">R&uuml;cken &amp; Haltung</span></button>
+        <button type="button" class="gbtn" data-goal="gesundheit"><span class="gem">&#9889;</span><span class="glbl">Allgemein fitter</span></button>
+      </div>
+      <div class="err" data-err="A1"></div>
+    </div>
+
+    <div class="fstep" data-step="A2">
+      <div class="st-t">Welches Studio?</div>
+      <div class="st-s">Beide Studios &mdash; gleiche Qualit&auml;t</div>
+      <div class="spick" data-studio-grid="A">
+        <button type="button" class="sp-btn" data-studio="50de091d-debc-4172-8053-b516f42c4321" data-code="MEM"><div class="sp-n">fitbox Memmingen</div><div class="sp-s">Memmingen Amendingen</div></button>
+        <button type="button" class="sp-btn" data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb" data-code="SEN"><div class="sp-n">fitbox Senden</div><div class="sp-s">Senden (Iller)</div></button>
+      </div>
+      <div class="fnav">
+        <button type="button" class="bback" data-back="A1">Zur&uuml;ck</button>
+      </div>
+      <div class="err" data-err="A2"></div>
+    </div>
+
+    <div class="fstep" data-step="A3">
+      <div class="st-t" data-step3-t="A">Wann passt es dir?</div>
+      <div class="st-s" data-step3-s="A">W&auml;hle deinen Wunschtermin</div>
+      <div data-slot-sec="A" style="display:none">
+        <div class="slot-s">
+          <div class="slot-nav">
+            <button type="button" class="slot-nb" data-slot-prev="A">&lsaquo;</button>
+            <span class="slot-wl" data-slot-wl="A">Lade...</span>
+            <button type="button" class="slot-nb" data-slot-next="A">&rsaquo;</button>
+          </div>
+          <div data-slot-grid="A" class="slot-g"><div class="slot-loading">Lade verf&uuml;gbare Termine...</div></div>
+          <div class="slot-si" data-slot-si="A">Gew&auml;hlter Termin: <span data-slot-sit="A"></span></div>
+        </div>
+        <div class="skip-slot">Kein passender Termin? <a data-skip-slot="A">Lass uns einfach zur&uuml;ckrufen</a></div>
+      </div>
+      <div data-wunsch-sec="A" style="display:none">
+        <div class="wunsch">
+          <p class="wunsch-h">Unser Team in Senden meldet sich pers&ouml;nlich. Wann bist du erreichbar?</p>
+          <div class="ggrid" data-reach-grid="A">
+            <button type="button" class="gbtn" data-reach="morgens" style="padding:12px 8px;min-height:54px"><span class="glbl">Morgens</span></button>
+            <button type="button" class="gbtn" data-reach="mittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Mittags</span></button>
+            <button type="button" class="gbtn" data-reach="nachmittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Nachmittags</span></button>
+            <button type="button" class="gbtn" data-reach="abends" style="padding:12px 8px;min-height:54px"><span class="glbl">Abends</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="fnav">
+        <button type="button" class="bback" data-back="A2">Zur&uuml;ck</button>
+        <button type="button" class="bnext" data-next="A4">Weiter</button>
+      </div>
+      <div class="err" data-err="A3"></div>
+    </div>
+
+    <div class="fstep" data-step="A4">
+      <div class="st-t">Fast geschafft!</div>
+      <div class="st-s">Wo d&uuml;rfen wir dich erreichen?</div>
+      <div class="summary" data-summary="A"></div>
+      <div class="fgrid">
+        <div class="field full">
+          <label class="lbl">Vorname *</label>
+          <input class="inp" type="text" data-input="fname" required autocomplete="given-name">
+        </div>
+        <div class="field full">
+          <label class="lbl">Telefon *</label>
+          <input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel">
+        </div>
+        <div class="field">
+          <label class="lbl">Nachname (optional)</label>
+          <input class="inp" type="text" data-input="lname" autocomplete="family-name">
+        </div>
+        <div class="field">
+          <label class="lbl">E-Mail (optional)</label>
+          <input class="inp" type="email" data-input="email" autocomplete="email" inputmode="email">
+        </div>
+      </div>
+      <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link">Datenschutzerkl&auml;rung</a></p>
+      <div class="fnav">
+        <button type="button" class="bback" data-back="A3">Zur&uuml;ck</button>
+        <button type="button" class="bnext" data-submit="A"><span class="btxt">Probetraining sichern</span><div class="spin"></div></button>
+      </div>
+      <div class="err" data-err="A4"></div>
+    </div>
+
+    <div class="succ" data-succ="A">
+      <div class="succ-i">&#10003;</div>
+      <h3>Anfrage erhalten!</h3>
+      <p data-succ-t="A">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
+      <div class="succ-st">
+        <div class="succ-step"><div class="succ-num">1</div><p><strong>Best&auml;tigung erhalten</strong></p></div>
+        <div class="succ-step"><div class="succ-num">2</div><p data-succ-s2="A"><strong>Wir melden uns</strong></p></div>
+        <div class="succ-step"><div class="succ-num">3</div><p><strong>EMS erleben</strong></p></div>
+      </div>
+      <a data-wa-succ="A" href="#" target="_blank" rel="noopener" class="wabtn-s">Direkt per WhatsApp</a>
+    </div>
   </div>
 </section>
 
@@ -300,6 +397,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   </div>
 </section>
 
+<!-- BOTTOM FORM -->
 <section class="sec form-s" id="anmeldung">
   <div class="form-in">
     <div class="form-h">
@@ -308,62 +406,60 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       <p class="form-st" id="form-st">In 60 Sekunden zum kostenlosen Termin.</p>
     </div>
 
-    <div class="ind" id="ind">
-      <div class="dot active" id="dot1">1</div>
-      <div class="line" id="line1"></div>
-      <div class="dot" id="dot2">2</div>
-      <div class="line" id="line2"></div>
-      <div class="dot" id="dot3">3</div>
-      <div class="line" id="line3"></div>
-      <div class="dot" id="dot4">4</div>
+    <div class="ind" data-form="B">
+      <div class="dot active" data-dot="B1">1</div>
+      <div class="line" data-line="B1"></div>
+      <div class="dot" data-dot="B2">2</div>
+      <div class="line" data-line="B2"></div>
+      <div class="dot" data-dot="B3">3</div>
+      <div class="line" data-line="B3"></div>
+      <div class="dot" data-dot="B4">4</div>
     </div>
 
-    <div class="fstep active" id="step1">
+    <div class="fstep active" data-step="B1">
       <div class="st-t">Was ist dein Ziel?</div>
       <div class="st-s">Damit wir dein Training optimal abstimmen k&ouml;nnen</div>
-      <div class="ggrid" id="goal-grid">
+      <div class="ggrid" data-goal-grid="B">
         <button type="button" class="gbtn" data-goal="abnehmen"><span class="gem">&#9878;&#65039;</span><span class="glbl">Abnehmen &amp; straffen</span></button>
         <button type="button" class="gbtn" data-goal="muskelaufbau"><span class="gem">&#128170;</span><span class="glbl">Muskeln &amp; Kraft</span></button>
         <button type="button" class="gbtn" data-goal="ruecken"><span class="gem">&#129496;</span><span class="glbl">R&uuml;cken &amp; Haltung</span></button>
-        <button type="button" class="gbtn" data-goal="gesundheit"><span class="gem">&#9889;</span><span class="glbl">Allgemein fitter werden</span></button>
+        <button type="button" class="gbtn" data-goal="gesundheit"><span class="gem">&#9889;</span><span class="glbl">Allgemein fitter</span></button>
       </div>
-      <div class="fnav"><button type="button" class="bnext" id="next1" disabled>Weiter</button></div>
-      <div class="err" id="err1"></div>
+      <div class="err" data-err="B1"></div>
     </div>
 
-    <div class="fstep" id="step2">
+    <div class="fstep" data-step="B2">
       <div class="st-t">Welches Studio?</div>
       <div class="st-s">Beide Studios &mdash; gleiche Qualit&auml;t</div>
-      <div class="spick" id="studio-pick">
+      <div class="spick" data-studio-grid="B">
         <button type="button" class="sp-btn" data-studio="50de091d-debc-4172-8053-b516f42c4321" data-code="MEM"><div class="sp-n">fitbox Memmingen</div><div class="sp-s">Memmingen Amendingen</div></button>
         <button type="button" class="sp-btn" data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb" data-code="SEN"><div class="sp-n">fitbox Senden</div><div class="sp-s">Senden (Iller)</div></button>
       </div>
       <div class="fnav">
-        <button type="button" class="bback" data-back="1">Zur&uuml;ck</button>
-        <button type="button" class="bnext" id="next2" disabled>Weiter</button>
+        <button type="button" class="bback" data-back="B1">Zur&uuml;ck</button>
       </div>
-      <div class="err" id="err2"></div>
+      <div class="err" data-err="B2"></div>
     </div>
 
-    <div class="fstep" id="step3">
-      <div class="st-t" id="step3-t">Wann passt es dir?</div>
-      <div class="st-s" id="step3-s">W&auml;hle deinen Wunschtermin</div>
-      <div id="slot-sec" style="display:none">
+    <div class="fstep" data-step="B3">
+      <div class="st-t" data-step3-t="B">Wann passt es dir?</div>
+      <div class="st-s" data-step3-s="B">W&auml;hle deinen Wunschtermin</div>
+      <div data-slot-sec="B" style="display:none">
         <div class="slot-s">
           <div class="slot-nav">
-            <button type="button" class="slot-nb" id="slot-prev">&lsaquo;</button>
-            <span class="slot-wl" id="slot-wl">Lade...</span>
-            <button type="button" class="slot-nb" id="slot-next">&rsaquo;</button>
+            <button type="button" class="slot-nb" data-slot-prev="B">&lsaquo;</button>
+            <span class="slot-wl" data-slot-wl="B">Lade...</span>
+            <button type="button" class="slot-nb" data-slot-next="B">&rsaquo;</button>
           </div>
-          <div id="slot-grid" class="slot-g"><div class="slot-loading">Lade verf&uuml;gbare Termine...</div></div>
-          <div class="slot-si" id="slot-si">Gew&auml;hlter Termin: <span id="slot-sit"></span></div>
+          <div data-slot-grid="B" class="slot-g"><div class="slot-loading">Lade verf&uuml;gbare Termine...</div></div>
+          <div class="slot-si" data-slot-si="B">Gew&auml;hlter Termin: <span data-slot-sit="B"></span></div>
         </div>
-        <div class="skip-slot">Kein passender Termin? <a id="skip-slot">Lass uns einfach zur&uuml;ckrufen</a></div>
+        <div class="skip-slot">Kein passender Termin? <a data-skip-slot="B">Lass uns einfach zur&uuml;ckrufen</a></div>
       </div>
-      <div id="wunsch-sec" style="display:none">
+      <div data-wunsch-sec="B" style="display:none">
         <div class="wunsch">
           <p class="wunsch-h">Unser Team in Senden meldet sich pers&ouml;nlich. Wann bist du erreichbar?</p>
-          <div class="ggrid" id="reach-grid">
+          <div class="ggrid" data-reach-grid="B">
             <button type="button" class="gbtn" data-reach="morgens" style="padding:12px 8px;min-height:54px"><span class="glbl">Morgens</span></button>
             <button type="button" class="gbtn" data-reach="mittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Mittags</span></button>
             <button type="button" class="gbtn" data-reach="nachmittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Nachmittags</span></button>
@@ -372,52 +468,52 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
         </div>
       </div>
       <div class="fnav">
-        <button type="button" class="bback" data-back="2">Zur&uuml;ck</button>
-        <button type="button" class="bnext" id="next3">Weiter</button>
+        <button type="button" class="bback" data-back="B2">Zur&uuml;ck</button>
+        <button type="button" class="bnext" data-next="B4">Weiter</button>
       </div>
-      <div class="err" id="err3"></div>
+      <div class="err" data-err="B3"></div>
     </div>
 
-    <div class="fstep" id="step4">
+    <div class="fstep" data-step="B4">
       <div class="st-t">Fast geschafft!</div>
       <div class="st-s">Wo d&uuml;rfen wir dich erreichen?</div>
-      <div class="summary" id="summary"></div>
+      <div class="summary" data-summary="B"></div>
       <div class="fgrid">
         <div class="field full">
-          <label class="lbl" for="fname">Vorname *</label>
-          <input class="inp" type="text" id="fname" placeholder="Max" required autocomplete="given-name">
+          <label class="lbl">Vorname *</label>
+          <input class="inp" type="text" data-input="fname" required autocomplete="given-name">
         </div>
         <div class="field full">
-          <label class="lbl" for="phone">Telefon *</label>
-          <input class="inp" type="tel" id="phone" placeholder="+49 151 12345678" required autocomplete="tel" inputmode="tel">
+          <label class="lbl">Telefon *</label>
+          <input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel">
         </div>
         <div class="field">
-          <label class="lbl" for="lname">Nachname (optional)</label>
-          <input class="inp" type="text" id="lname" placeholder="Mustermann" autocomplete="family-name">
+          <label class="lbl">Nachname (optional)</label>
+          <input class="inp" type="text" data-input="lname" autocomplete="family-name">
         </div>
         <div class="field">
-          <label class="lbl" for="email">E-Mail (optional)</label>
-          <input class="inp" type="email" id="email" placeholder="max@email.de" autocomplete="email" inputmode="email">
+          <label class="lbl">E-Mail (optional)</label>
+          <input class="inp" type="email" data-input="email" autocomplete="email" inputmode="email">
         </div>
       </div>
-      <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link">Datenschutzerkl&auml;rung</a></p>
+      <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link2">Datenschutzerkl&auml;rung</a></p>
       <div class="fnav">
-        <button type="button" class="bback" data-back="3">Zur&uuml;ck</button>
-        <button type="button" class="bnext" id="submit-btn"><span class="btxt">Probetraining sichern</span><div class="spin"></div></button>
+        <button type="button" class="bback" data-back="B3">Zur&uuml;ck</button>
+        <button type="button" class="bnext" data-submit="B"><span class="btxt">Probetraining sichern</span><div class="spin"></div></button>
       </div>
-      <div class="err" id="err4"></div>
+      <div class="err" data-err="B4"></div>
     </div>
 
-    <div class="succ" id="succ">
+    <div class="succ" data-succ="B">
       <div class="succ-i">&#10003;</div>
       <h3>Anfrage erhalten!</h3>
-      <p id="succ-t">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
+      <p data-succ-t="B">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
       <div class="succ-st">
         <div class="succ-step"><div class="succ-num">1</div><p><strong>Best&auml;tigung erhalten</strong></p></div>
-        <div class="succ-step"><div class="succ-num">2</div><p id="succ-s2"><strong>Wir melden uns</strong></p></div>
+        <div class="succ-step"><div class="succ-num">2</div><p data-succ-s2="B"><strong>Wir melden uns</strong></p></div>
         <div class="succ-step"><div class="succ-num">3</div><p><strong>EMS erleben</strong></p></div>
       </div>
-      <a id="wa-succ" href="#" target="_blank" rel="noopener" class="wabtn-s">Direkt per WhatsApp</a>
+      <a data-wa-succ="B" href="#" target="_blank" rel="noopener" class="wabtn-s">Direkt per WhatsApp</a>
     </div>
   </div>
 </section>
@@ -426,7 +522,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   <img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox">
   <div class="foot-l">
     <a href="#" id="imp-link">Impressum</a>
-    <a href="#" id="ds-link2">Datenschutz</a>
+    <a href="#" id="ds-link3">Datenschutz</a>
   </div>
 </footer>
 
@@ -444,40 +540,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 (function(){
   'use strict';
   var DEFAULTS = {
-    banner_active: false,
-    banner_text: '',
-    banner_link_text: '',
-    banner_link_url: '#quiz',
-    hero_img: 'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg',
-    scarcity_text: 'Nur noch wenige Pl\u00e4tze pro Monat verf\u00fcgbar!',
-    quiz_title: 'Was ist dein Ziel?',
-    quiz_sub: 'W\u00e4hle ein Ziel \u2014 wir zeigen dir den schnellsten Weg.',
-    quiz_hint: '100% kostenlos & unverbindlich',
-    nav_cta_text: 'Jetzt starten',
-    stats: [
-      {num:'20',label:'Min. pro Session'},
-      {num:'90%',label:'Muskelfasern aktiv'},
-      {num:'200+',label:'Zufriedene Mitglieder'},
-      {num:'2',label:'Studios Region'}
-    ],
-    studio_banner_img: 'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg',
-    mem_adresse: 'Memmingen Amendingen',
-    mem_zeiten: 'Mo\u2013Fr & nach Vereinbarung',
-    mem_wa: '4915730024124',
-    sen_adresse: 'Senden (Iller)',
-    sen_zeiten: 'Mo\u2013Fr & nach Vereinbarung',
-    sen_wa: '4915561206719',
-    reviews: [
+    banner_active:false, banner_text:'', banner_link_text:'', banner_link_url:'#quiz',
+    hero_img:'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg',
+    scarcity_text:'Nur noch wenige Pl\u00e4tze pro Monat verf\u00fcgbar!',
+    quiz_title:'Was ist dein Ziel?',
+    quiz_sub:'In 60 Sekunden zum kostenlosen Termin.',
+    nav_cta_text:'Jetzt starten',
+    stats:[{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}],
+    studio_banner_img:'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg',
+    mem_adresse:'Memmingen Amendingen', mem_zeiten:'Mo\u2013Fr & nach Vereinbarung', mem_wa:'4915730024124',
+    sen_adresse:'Senden (Iller)', sen_zeiten:'Mo\u2013Fr & nach Vereinbarung', sen_wa:'4915561206719',
+    reviews:[
       {text:'Tolles Studio und ein super Trainerteam. Seit f\u00fcnf Jahren dabei und immer noch begeistert.', author:'Bettina L. aus Memmingen'},
       {text:'Endlich ein Training, das sich in meinen Alltag integrieren l\u00e4sst. Keine R\u00fcckenschmerzen mehr.', author:'Susanne H. aus Buxheim'},
       {text:'Die Trainer holen das Beste aus einem heraus. Modernes und gepflegtes Studio.', author:'Hermann K. aus Kirchdorf'}
     ],
-    sticky_title: 'Kostenloses Probetraining',
-    sticky_sub: 'Nur noch wenige Pl\u00e4tze frei!',
-    impressum_url: '#',
-    datenschutz_url: '#',
-    form_title: 'Probetraining sichern',
-    form_subtitle: 'In 60 Sekunden zum kostenlosen Termin.'
+    sticky_title:'Kostenloses Probetraining', sticky_sub:'Nur noch wenige Pl\u00e4tze frei!',
+    impressum_url:'#', datenschutz_url:'#',
+    form_title:'Probetraining sichern', form_subtitle:'In 60 Sekunden zum kostenlosen Termin.'
   };
 
   var SUPA_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
@@ -486,17 +566,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   var MEM_ID = 1262516030;
   var GOALS = {abnehmen:'Abnehmen & straffen', muskelaufbau:'Muskeln & Kraft', ruecken:'R\u00fccken & Haltung', gesundheit:'Allgemein fitter'};
   var REACHES = {morgens:'Morgens', mittags:'Mittags', nachmittags:'Nachmittags', abends:'Abends'};
-
-  var state = {step:1, goal:'', studioId:'', studioCode:'', studioName:'', reach:'', slot:null, slots:[], slotWindowStart:null, slotToday:null};
   var WA = {MEM:'4915730024124', SEN:'4915561206719'};
 
-  function $(id){ return document.getElementById(id); }
-  function $$(sel){ return document.querySelectorAll(sel); }
-  function setText(id,v){ var e=$(id); if(e && v!=null) e.textContent = v; }
-  function setHTML(id,v){ var e=$(id); if(e && v!=null) e.innerHTML = v; }
-  function setSrc(id,v){ var e=$(id); if(e && v) e.src = v; }
-  function setHref(id,v){ var e=$(id); if(e && v) e.href = v; }
+  // Zwei unabh\u00e4ngige Form-States
+  function newState(){ return {step:1, goal:'', studioId:'', studioCode:'', studioName:'', reach:'', slot:null, slots:[], slotWindowStart:null, slotToday:null}; }
+  var states = { A: newState(), B: newState() };
 
+  function $(id){ return document.getElementById(id); }
+  function q(sel,root){ return (root||document).querySelector(sel); }
+  function qa(sel,root){ return (root||document).querySelectorAll(sel); }
+
+  function escapeHTML(s){
+    if(s==null) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ============ CONFIG ============
   function applyConfig(c){
     var b = $('banner');
     if(c.banner_active && c.banner_text){
@@ -504,47 +589,42 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       b.innerHTML = c.banner_text + link;
       b.classList.add('show');
     }
-    setSrc('hero-img', c.hero_img);
-    setText('scarcity', c.scarcity_text);
-    setText('quiz-t', c.quiz_title);
-    setText('quiz-s', c.quiz_sub);
-    setText('quiz-h', c.quiz_hint);
-    setText('nav-cta', c.nav_cta_text);
+    if($('hero-img') && c.hero_img) $('hero-img').src = c.hero_img;
+    if($('scarcity')) $('scarcity').textContent = c.scarcity_text || '';
+    if($('quiz-t')) $('quiz-t').textContent = c.quiz_title || '';
+    if($('quiz-s')) $('quiz-s').textContent = c.quiz_sub || '';
+    if($('nav-cta')) $('nav-cta').textContent = c.nav_cta_text || '';
     if(Array.isArray(c.stats)){
       c.stats.forEach(function(s,i){
-        var n = document.querySelector('[data-stat="'+i+'"]');
-        var l = document.querySelector('[data-slbl="'+i+'"]');
+        var n = q('[data-stat="'+i+'"]');
+        var l = q('[data-slbl="'+i+'"]');
         if(n) n.textContent = s.num;
         if(l) l.textContent = s.label;
       });
     }
-    setSrc('studio-banner', c.studio_banner_img);
-    setText('mem-adr', c.mem_adresse);
-    setText('mem-zt', c.mem_zeiten);
-    setText('sen-adr', c.sen_adresse);
-    setText('sen-zt', c.sen_zeiten);
-    setHref('mem-wa', 'https://wa.me/'+c.mem_wa);
-    setHref('sen-wa', 'https://wa.me/'+c.sen_wa);
+    if($('studio-banner') && c.studio_banner_img) $('studio-banner').src = c.studio_banner_img;
+    if($('mem-adr')) $('mem-adr').textContent = c.mem_adresse;
+    if($('mem-zt')) $('mem-zt').textContent = c.mem_zeiten;
+    if($('sen-adr')) $('sen-adr').textContent = c.sen_adresse;
+    if($('sen-zt')) $('sen-zt').textContent = c.sen_zeiten;
+    if($('mem-wa')) $('mem-wa').href = 'https://wa.me/'+c.mem_wa;
+    if($('sen-wa')) $('sen-wa').href = 'https://wa.me/'+c.sen_wa;
     WA = {MEM: c.mem_wa, SEN: c.sen_wa};
     if(Array.isArray(c.reviews)){
       var html = c.reviews.map(function(r){
         return '<div class="review"><div class="rstars">\u2b50\u2b50\u2b50\u2b50\u2b50</div><p class="rtext">'+escapeHTML(r.text)+'</p><div class="rauthor">'+escapeHTML(r.author)+'</div></div>';
       }).join('');
-      setHTML('reviews-grid', html);
+      if($('reviews-grid')) $('reviews-grid').innerHTML = html;
     }
-    setText('sticky-t', c.sticky_title);
-    setText('sticky-s', c.sticky_sub);
-    setHref('imp-link', c.impressum_url);
-    setHref('ds-link', c.datenschutz_url);
-    setHref('ds-link2', c.datenschutz_url);
-    setText('form-t', c.form_title);
-    setText('form-st', c.form_subtitle);
-    setHref('wa-float', 'https://wa.me/'+c.mem_wa);
-  }
-
-  function escapeHTML(s){
-    if(s==null) return '';
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    if($('sticky-t')) $('sticky-t').textContent = c.sticky_title;
+    if($('sticky-s')) $('sticky-s').textContent = c.sticky_sub;
+    if($('imp-link')) $('imp-link').href = c.impressum_url;
+    if($('ds-link')) $('ds-link').href = c.datenschutz_url;
+    if($('ds-link2')) $('ds-link2').href = c.datenschutz_url;
+    if($('ds-link3')) $('ds-link3').href = c.datenschutz_url;
+    if($('form-t')) $('form-t').textContent = c.form_title;
+    if($('form-st')) $('form-st').textContent = c.form_subtitle;
+    if($('wa-float')) $('wa-float').href = 'https://wa.me/'+c.mem_wa;
   }
 
   function loadConfig(){
@@ -559,125 +639,120 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       .catch(function(){ applyConfig(cfg); });
   }
 
-  function showError(id, msg){
-    var e = $(id); if(!e) return;
+  // ============ FORM HELPERS ============
+  function showError(formId, stepNum, msg){
+    var e = q('[data-err="'+formId+stepNum+'"]'); if(!e) return;
     e.textContent = msg; e.classList.add('show');
     setTimeout(function(){ e.classList.remove('show'); }, 5000);
   }
 
-  function updateIndicator(step){
+  function updateIndicator(formId, step){
     for(var i=1; i<=4; i++){
-      var d = $('dot'+i); if(!d) continue;
+      var d = q('[data-dot="'+formId+i+'"]'); if(!d) continue;
       d.classList.remove('active','done');
       if(step > i) d.classList.add('done');
       else if(i === step) d.classList.add('active');
     }
     for(var k=1; k<=3; k++){
-      var l = $('line'+k); if(l) l.classList.toggle('done', step > k);
+      var l = q('[data-line="'+formId+k+'"]'); if(l) l.classList.toggle('done', step > k);
     }
   }
 
-  function showStep(step){
-    var steps = $$('.fstep');
-    for(var i=0; i<steps.length; i++) steps[i].classList.remove('active');
-    var s = $('step'+step); if(s) s.classList.add('active');
-    state.step = step;
-    updateIndicator(step);
-    if(step === 3) setupStep3();
-    if(step === 4) setupStep4();
+  function showStep(formId, step){
+    // Hide success, show stepper
+    var succ = q('[data-succ="'+formId+'"]'); if(succ) succ.classList.remove('show');
+    var ind = q('[data-form="'+formId+'"]'); if(ind) ind.style.display = '';
+
+    // Switch steps
+    var allSteps = qa('[data-step^="'+formId+'"]');
+    for(var i=0; i<allSteps.length; i++) allSteps[i].classList.remove('active');
+    var s = q('[data-step="'+formId+step+'"]'); if(s) s.classList.add('active');
+    states[formId].step = step;
+    updateIndicator(formId, step);
+    if(step === 3) setupStep3(formId);
+    if(step === 4) setupStep4(formId);
   }
 
-  function goToStep(step){
-    if(step === 2 && !state.goal){ showError('err1', 'Bitte w\u00e4hle dein Ziel.'); return; }
-    if(step === 3 && !state.studioId){ showError('err2', 'Bitte w\u00e4hle ein Studio.'); return; }
-    showStep(step);
+  function goToStep(formId, step){
+    var st = states[formId];
+    if(step === 2 && !st.goal){ showError(formId, 1, 'Bitte w\u00e4hle dein Ziel.'); return; }
+    if(step === 3 && !st.studioId){ showError(formId, 2, 'Bitte w\u00e4hle ein Studio.'); return; }
+    showStep(formId, step);
   }
 
-  function setupStep3(){
-    if(state.studioCode === 'MEM'){
-      $('slot-sec').style.display = 'block';
-      $('wunsch-sec').style.display = 'none';
-      $('step3-t').textContent = 'Wann passt es dir?';
-      $('step3-s').textContent = 'W\u00e4hle einen freien Termin in Memmingen';
-      initSlotCal();
+  function setupStep3(formId){
+    var st = states[formId];
+    var slotSec = q('[data-slot-sec="'+formId+'"]');
+    var wunschSec = q('[data-wunsch-sec="'+formId+'"]');
+    var t = q('[data-step3-t="'+formId+'"]');
+    var s = q('[data-step3-s="'+formId+'"]');
+    if(st.studioCode === 'MEM'){
+      slotSec.style.display = 'block';
+      wunschSec.style.display = 'none';
+      t.textContent = 'Wann passt es dir?';
+      s.textContent = 'W\u00e4hle einen freien Termin in Memmingen';
+      initSlotCal(formId);
     } else {
-      $('slot-sec').style.display = 'none';
-      $('wunsch-sec').style.display = 'block';
-      $('step3-t').textContent = 'Wann sollen wir dich anrufen?';
-      $('step3-s').textContent = 'Unser Team in Senden meldet sich pers\u00f6nlich';
+      slotSec.style.display = 'none';
+      wunschSec.style.display = 'block';
+      t.textContent = 'Wann sollen wir dich anrufen?';
+      s.textContent = 'Unser Team in Senden meldet sich pers\u00f6nlich';
     }
   }
 
-  function setupStep4(){
+  function setupStep4(formId){
+    var st = states[formId];
     var rows = [];
-    if(state.goal) rows.push({l:'Ziel', v: GOALS[state.goal] || state.goal});
-    if(state.studioName) rows.push({l:'Studio', v: state.studioName});
-    if(state.slot) rows.push({l:'Wunschtermin', v: fmtSlot(new Date(state.slot.startDateTime))});
-    else if(state.reach) rows.push({l:'Erreichbar', v: REACHES[state.reach]});
+    if(st.goal) rows.push({l:'Ziel', v: GOALS[st.goal] || st.goal});
+    if(st.studioName) rows.push({l:'Studio', v: st.studioName});
+    if(st.slot) rows.push({l:'Wunschtermin', v: fmtSlot(new Date(st.slot.startDateTime))});
+    else if(st.reach) rows.push({l:'Erreichbar', v: REACHES[st.reach]});
     else rows.push({l:'Termin', v: 'Wir rufen zur\u00fcck'});
-    $('summary').innerHTML = rows.map(function(r){
+    var sum = q('[data-summary="'+formId+'"]');
+    sum.innerHTML = rows.map(function(r){
       return '<div class="sum-r"><span class="sum-l">'+r.l+'</span><span class="sum-v">'+escapeHTML(r.v)+'</span></div>';
     }).join('');
   }
 
-  function selectGoal(btn){
-    var goals = $$('#goal-grid .gbtn');
+  // ============ SELECTION HANDLERS ============
+  function selectGoal(formId, btn){
+    var goals = qa('[data-goal-grid="'+formId+'"] .gbtn');
     for(var i=0; i<goals.length; i++) goals[i].classList.remove('active');
     btn.classList.add('active');
-    state.goal = btn.getAttribute('data-goal');
-    $('next1').disabled = false;
+    states[formId].goal = btn.getAttribute('data-goal');
+    // Auto-advance zu Step 2
+    setTimeout(function(){ showStep(formId, 2); }, 150);
   }
 
-  function selectStudio(btn){
-    var picks = $$('.sp-btn');
+  function selectStudio(formId, btn){
+    var picks = qa('[data-studio-grid="'+formId+'"] .sp-btn');
     for(var i=0; i<picks.length; i++) picks[i].classList.remove('active');
     btn.classList.add('active');
-    state.studioId = btn.getAttribute('data-studio');
-    state.studioCode = btn.getAttribute('data-code');
-    state.studioName = state.studioCode === 'MEM' ? 'fitbox Memmingen' : 'fitbox Senden';
-    $('wa-float').href = 'https://wa.me/' + (state.studioCode === 'SEN' ? WA.SEN : WA.MEM);
-    $('next2').disabled = false;
+    var st = states[formId];
+    st.studioId = btn.getAttribute('data-studio');
+    st.studioCode = btn.getAttribute('data-code');
+    st.studioName = st.studioCode === 'MEM' ? 'fitbox Memmingen' : 'fitbox Senden';
+    if($('wa-float')) $('wa-float').href = 'https://wa.me/' + (st.studioCode === 'SEN' ? WA.SEN : WA.MEM);
+    // Auto-advance zu Step 3
+    setTimeout(function(){ showStep(formId, 3); }, 150);
   }
 
-  function selectReach(btn){
-    var reaches = $$('#reach-grid .gbtn');
+  function selectReach(formId, btn){
+    var reaches = qa('[data-reach-grid="'+formId+'"] .gbtn');
     for(var i=0; i<reaches.length; i++) reaches[i].classList.remove('active');
     btn.classList.add('active');
-    state.reach = btn.getAttribute('data-reach');
+    states[formId].reach = btn.getAttribute('data-reach');
   }
 
-  function skipSlot(){
-    state.slot = null;
-    var slots = $$('.slot-b');
+  function skipSlot(formId){
+    states[formId].slot = null;
+    var slots = qa('[data-slot-grid="'+formId+'"] .slot-b');
     for(var i=0; i<slots.length; i++) slots[i].classList.remove('selected');
-    $('slot-si').style.display = 'none';
-    goToStep(4);
+    var si = q('[data-slot-si="'+formId+'"]'); if(si) si.style.display = 'none';
+    goToStep(formId, 4);
   }
 
-  // Quiz: tap goal -> jump to studio
-  function startQuiz(btn){
-    state.goal = btn.getAttribute('data-goal');
-    var quizBtns = $$('#quiz-grid .qbtn');
-    for(var i=0; i<quizBtns.length; i++){
-      quizBtns[i].style.borderColor = '';
-      quizBtns[i].style.background = '';
-    }
-    btn.style.borderColor = 'var(--g)';
-    btn.style.background = 'var(--gl)';
-    // Sync step 1 in form
-    var goals = $$('#goal-grid .gbtn');
-    for(var j=0; j<goals.length; j++){
-      goals[j].classList.toggle('active', goals[j].getAttribute('data-goal') === state.goal);
-    }
-    $('next1').disabled = false;
-    showStep(2);
-    setTimeout(function(){
-      var t = $('anmeldung');
-      if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
-    }, 100);
-  }
-
-  // Slot calendar
+  // ============ SLOT CALENDAR ============
   function slotMonday(d){ var m=new Date(d); var dow=m.getDay()||7; m.setDate(m.getDate()-dow+1); m.setHours(0,0,0,0); return m; }
   function toYMD(d){ return d.toISOString().slice(0,10); }
   function fmtSlot(dt){
@@ -685,22 +760,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
            dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) + ' Uhr';
   }
 
-  function initSlotCal(){
+  function initSlotCal(formId){
+    var st = states[formId];
     var today = new Date(); today.setHours(0,0,0,0);
-    state.slotToday = today;
-    state.slotWindowStart = slotMonday(today);
-    loadSlots();
+    st.slotToday = today;
+    st.slotWindowStart = slotMonday(today);
+    loadSlots(formId);
   }
 
-  function loadSlots(){
-    var grid = $('slot-grid');
-    var label = $('slot-wl');
+  function loadSlots(formId){
+    var st = states[formId];
+    var grid = q('[data-slot-grid="'+formId+'"]');
+    var label = q('[data-slot-wl="'+formId+'"]');
     grid.innerHTML = '<div class="slot-loading">Lade verf\u00fcgbare Termine...</div>';
-    $('slot-si').style.display = 'none';
+    var si = q('[data-slot-si="'+formId+'"]'); if(si) si.style.display = 'none';
 
     var weekDays = [];
     for(var i=0; i<6; i++){
-      var d = new Date(state.slotWindowStart);
+      var d = new Date(st.slotWindowStart);
       d.setDate(d.getDate()+i);
       weekDays.push(d);
     }
@@ -715,25 +792,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
       weekDays[0].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) + '\u2013' +
       weekDays[5].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
 
-    $('slot-prev').disabled = state.slotToday.getTime() >= weekDays[0].getTime();
+    var prevBtn = q('[data-slot-prev="'+formId+'"]');
+    if(prevBtn) prevBtn.disabled = st.slotToday.getTime() >= weekDays[0].getTime();
 
     fetch(ML_BASE+'/connect/v1/trialsession?studioId='+MEM_ID+'&startDate='+startDate+'&endDate='+endDate)
       .then(function(r){ if(!r.ok) throw new Error('API'); return r.json(); })
       .then(function(data){
-        state.slots = (data.slots||[]).sort(function(a,b){ return new Date(a.startDateTime) - new Date(b.startDateTime); });
-        renderSlots();
+        st.slots = (data.slots||[]).sort(function(a,b){ return new Date(a.startDateTime) - new Date(b.startDateTime); });
+        renderSlots(formId);
       })
-      .catch(function(){ state.slots = []; renderSlots(); });
+      .catch(function(){ st.slots = []; renderSlots(formId); });
   }
 
-  function renderSlots(){
-    var grid = $('slot-grid');
-    if(!state.slots.length){
+  function renderSlots(formId){
+    var st = states[formId];
+    var grid = q('[data-slot-grid="'+formId+'"]');
+    if(!st.slots.length){
       grid.innerHTML = '<div class="slot-empty">Keine freien Termine in dieser Woche.<br>Bitte andere Woche w\u00e4hlen oder zur\u00fcckrufen lassen.</div>';
       return;
     }
     var byDay = {};
-    state.slots.forEach(function(s){
+    st.slots.forEach(function(s){
       var key = toYMD(new Date(s.startDateTime));
       if(!byDay[key]) byDay[key] = [];
       byDay[key].push(s);
@@ -748,50 +827,53 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
         btn.type = 'button';
         btn.className = 'slot-b';
         btn.innerHTML = '<span class="slot-dl">'+dayLabel+'</span>'+time+' Uhr';
-        btn.addEventListener('click', function(){ selectSlot(s, btn); });
+        btn.addEventListener('click', function(){ selectSlot(formId, s, btn); });
         grid.appendChild(btn);
       });
     });
   }
 
-  function selectSlot(slot, btn){
-    var slots = $$('.slot-b');
+  function selectSlot(formId, slot, btn){
+    var slots = qa('[data-slot-grid="'+formId+'"] .slot-b');
     for(var i=0; i<slots.length; i++) slots[i].classList.remove('selected');
     btn.classList.add('selected');
-    state.slot = slot;
-    $('slot-si').style.display = 'block';
-    $('slot-sit').textContent = fmtSlot(new Date(slot.startDateTime));
+    states[formId].slot = slot;
+    var si = q('[data-slot-si="'+formId+'"]');
+    var sit = q('[data-slot-sit="'+formId+'"]');
+    if(si) si.style.display = 'block';
+    if(sit) sit.textContent = fmtSlot(new Date(slot.startDateTime));
   }
 
-  function submit(){
-    var btn = $('submit-btn');
-    var firstName = $('fname').value.trim();
-    var phone = $('phone').value.trim();
-    var lastName = $('lname').value.trim();
-    var email = $('email').value.trim();
+  // ============ SUBMIT ============
+  function submit(formId){
+    var st = states[formId];
+    var formEl = q('[data-step="'+formId+'4"]');
+    var btn = q('[data-submit="'+formId+'"]');
+    var firstName = q('[data-input="fname"]', formEl).value.trim();
+    var phone = q('[data-input="phone"]', formEl).value.trim();
+    var lastName = q('[data-input="lname"]', formEl).value.trim();
+    var email = q('[data-input="email"]', formEl).value.trim();
 
-    if(!firstName){ showError('err4','Bitte gib deinen Vornamen ein.'); return; }
-    if(!phone){ showError('err4','Bitte gib deine Telefonnummer ein.'); return; }
-    if(phone.replace(/\D/g,'').length < 6){ showError('err4','Bitte gib eine g\u00fcltige Telefonnummer ein.'); return; }
+    if(!firstName){ showError(formId, 4, 'Bitte gib deinen Vornamen ein.'); return; }
+    if(!phone){ showError(formId, 4, 'Bitte gib deine Telefonnummer ein.'); return; }
+    if(phone.replace(/\D/g,'').length < 6){ showError(formId, 4, 'Bitte gib eine g\u00fcltige Telefonnummer ein.'); return; }
 
     btn.classList.add('loading'); btn.disabled = true;
 
     var bookingSuccess = false, bookingError = null;
     var bookPromise = Promise.resolve();
 
-    if(state.studioCode === 'MEM' && state.slot){
+    if(st.studioCode === 'MEM' && st.slot){
       bookPromise = fetch(ML_BASE+'/connect/v1/trialsession/book', {
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
           studioId: MEM_ID,
-          startDateTime: state.slot.startDateTime,
+          startDateTime: st.slot.startDateTime,
           trainerRequired: true,
           leadCustomer: {
-            firstname: firstName,
-            lastname: lastName || firstName,
-            email: email || undefined,
-            phone: phone || undefined,
+            firstname: firstName, lastname: lastName || firstName,
+            email: email || undefined, phone: phone || undefined,
             privacyConfiguration: {email:true, phone:true}
           }
         })
@@ -803,14 +885,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
 
     bookPromise.then(function(){
       var notes = [];
-      if(state.goal) notes.push('Ziel: ' + (GOALS[state.goal] || state.goal));
-      if(state.reach) notes.push('Erreichbar: ' + REACHES[state.reach]);
-      if(state.slot){
-        notes.push('Wunschtermin: ' + fmtSlot(new Date(state.slot.startDateTime)));
+      if(st.goal) notes.push('Ziel: ' + (GOALS[st.goal] || st.goal));
+      if(st.reach) notes.push('Erreichbar: ' + REACHES[st.reach]);
+      if(st.slot){
+        notes.push('Wunschtermin: ' + fmtSlot(new Date(st.slot.startDateTime)));
         notes.push(bookingSuccess ? 'Magicline: GEBUCHT' : 'Magicline: FEHLER (' + (bookingError||'unbekannt') + ')');
-      } else if(state.studioCode === 'MEM'){
+      } else if(st.studioCode === 'MEM'){
         notes.push('Kein Slot gew\u00e4hlt - R\u00fcckruf erw\u00fcnscht');
       }
+      notes.push('Form: ' + (formId === 'A' ? 'oben (Quiz)' : 'unten'));
 
       return fetch(SUPA_URL+'/rest/v1/pt_leads', {
         method:'POST',
@@ -821,7 +904,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
           'Prefer':'return=minimal'
         },
         body: JSON.stringify({
-          studio_id: state.studioId,
+          studio_id: st.studioId,
           first_name: firstName,
           last_name: lastName || null,
           phone: phone,
@@ -835,124 +918,125 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
     }).catch(function(err){
       console.error('Lead-Speicherung fehlgeschlagen:', err);
     }).then(function(){
-      showSuccess(firstName, bookingSuccess);
+      showSuccess(formId, firstName, bookingSuccess);
       btn.classList.remove('loading'); btn.disabled = false;
     });
   }
 
-  function showSuccess(firstName, bookingSuccess){
-    $('ind').style.display = 'none';
-    var steps = $$('.fstep');
-    for(var i=0; i<steps.length; i++) steps[i].style.display = 'none';
-    var fh = document.querySelector('.form-h');
-    if(fh) fh.style.display = 'none';
+  function showSuccess(formId, firstName, bookingSuccess){
+    var st = states[formId];
+    // Hide stepper + all steps
+    var ind = q('[data-form="'+formId+'"]'); if(ind) ind.style.display = 'none';
+    var allSteps = qa('[data-step^="'+formId+'"]');
+    for(var i=0; i<allSteps.length; i++) allSteps[i].classList.remove('active');
 
-    var waNum = state.studioCode === 'SEN' ? WA.SEN : WA.MEM;
+    var waNum = st.studioCode === 'SEN' ? WA.SEN : WA.MEM;
     var msg = 'Hallo, ich habe gerade ein Probetraining angefragt (' + firstName + '). Wann k\u00f6nnen wir den Termin besprechen?';
     var waLink = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg);
 
-    if(state.studioCode === 'MEM' && state.slot && bookingSuccess){
-      $('succ-t').textContent = 'Dein Termin am ' + fmtSlot(new Date(state.slot.startDateTime)) + ' ist gebucht!';
-      $('succ-s2').innerHTML = '<strong>Termin gebucht</strong> &mdash; ' + fmtSlot(new Date(state.slot.startDateTime));
-    } else if(state.studioCode === 'MEM' && state.slot){
-      $('succ-t').textContent = 'Dein Wunschtermin am ' + fmtSlot(new Date(state.slot.startDateTime)) + ' ist vorgemerkt.';
-      $('succ-s2').innerHTML = '<strong>Wir melden uns</strong> zur Terminbest\u00e4tigung';
+    var succT = q('[data-succ-t="'+formId+'"]');
+    var succS2 = q('[data-succ-s2="'+formId+'"]');
+    if(st.studioCode === 'MEM' && st.slot && bookingSuccess){
+      succT.textContent = 'Dein Termin am ' + fmtSlot(new Date(st.slot.startDateTime)) + ' ist gebucht!';
+      succS2.innerHTML = '<strong>Termin gebucht</strong> &mdash; ' + fmtSlot(new Date(st.slot.startDateTime));
+    } else if(st.studioCode === 'MEM' && st.slot){
+      succT.textContent = 'Dein Wunschtermin am ' + fmtSlot(new Date(st.slot.startDateTime)) + ' ist vorgemerkt.';
+      succS2.innerHTML = '<strong>Wir melden uns</strong> zur Terminbest\u00e4tigung';
     } else {
-      $('succ-t').textContent = 'Wir melden uns innerhalb von 24 Stunden bei dir.';
+      succT.textContent = 'Wir melden uns innerhalb von 24 Stunden bei dir.';
     }
 
-    $('wa-succ').href = waLink;
-    $('succ').classList.add('show');
-    var t = $('anmeldung');
-    if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+    var waBtn = q('[data-wa-succ="'+formId+'"]');
+    if(waBtn) waBtn.href = waLink;
+    var succ = q('[data-succ="'+formId+'"]'); if(succ) succ.classList.add('show');
   }
 
   // ============ EVENT BINDINGS ============
-  function bindEvents(){
-    // Quiz buttons
-    var quizBtns = $$('#quiz-grid .qbtn');
-    for(var i=0; i<quizBtns.length; i++){
-      (function(btn){
-        btn.addEventListener('click', function(){ startQuiz(btn); });
-      })(quizBtns[i]);
-    }
+  function bindForm(formId){
+    // Goal buttons
+    qa('[data-goal-grid="'+formId+'"] .gbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){ selectGoal(formId, btn); });
+    });
 
-    // Step 1 goal buttons
-    var goalBtns = $$('#goal-grid .gbtn');
-    for(var i=0; i<goalBtns.length; i++){
-      (function(btn){
-        btn.addEventListener('click', function(){ selectGoal(btn); });
-      })(goalBtns[i]);
-    }
+    // Studio buttons
+    qa('[data-studio-grid="'+formId+'"] .sp-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){ selectStudio(formId, btn); });
+    });
 
-    // Studio picker
-    var pickBtns = $$('.sp-btn');
-    for(var i=0; i<pickBtns.length; i++){
-      (function(btn){
-        btn.addEventListener('click', function(){ selectStudio(btn); });
-      })(pickBtns[i]);
-    }
+    // Reach buttons
+    qa('[data-reach-grid="'+formId+'"] .gbtn').forEach(function(btn){
+      btn.addEventListener('click', function(){ selectReach(formId, btn); });
+    });
 
-    // Reach (Senden)
-    var reachBtns = $$('#reach-grid .gbtn');
-    for(var i=0; i<reachBtns.length; i++){
-      (function(btn){
-        btn.addEventListener('click', function(){ selectReach(btn); });
-      })(reachBtns[i]);
-    }
+    // Next button (only for step 3 -> 4)
+    var next3 = q('[data-next="'+formId+'4"]');
+    if(next3) next3.addEventListener('click', function(){ goToStep(formId, 4); });
 
-    // Next/back buttons
-    var next1El = $('next1'); if(next1El) next1El.addEventListener('click', function(){ goToStep(2); });
-    var next2El = $('next2'); if(next2El) next2El.addEventListener('click', function(){ goToStep(3); });
-    var next3El = $('next3'); if(next3El) next3El.addEventListener('click', function(){ goToStep(4); });
-    var subEl = $('submit-btn'); if(subEl) subEl.addEventListener('click', submit);
+    // Submit
+    var sub = q('[data-submit="'+formId+'"]');
+    if(sub) sub.addEventListener('click', function(){ submit(formId); });
 
-    var backs = $$('.bback');
-    for(var i=0; i<backs.length; i++){
-      (function(btn){
-        var t = parseInt(btn.getAttribute('data-back'),10);
-        btn.addEventListener('click', function(){ showStep(t); });
-      })(backs[i]);
-    }
+    // Back buttons
+    qa('[data-back^="'+formId+'"]').forEach(function(btn){
+      var target = btn.getAttribute('data-back');
+      var step = parseInt(target.substring(1), 10);
+      btn.addEventListener('click', function(){ showStep(formId, step); });
+    });
 
     // Slot nav
-    var sp = $('slot-prev'); if(sp) sp.addEventListener('click', function(){
-      state.slotWindowStart.setDate(state.slotWindowStart.getDate()-7);
-      if(state.slotToday.getTime() > state.slotWindowStart.getTime()) state.slotWindowStart = slotMonday(state.slotToday);
-      state.slot = null;
-      loadSlots();
+    var sp = q('[data-slot-prev="'+formId+'"]');
+    if(sp) sp.addEventListener('click', function(){
+      var st = states[formId];
+      st.slotWindowStart.setDate(st.slotWindowStart.getDate()-7);
+      if(st.slotToday.getTime() > st.slotWindowStart.getTime()) st.slotWindowStart = slotMonday(st.slotToday);
+      st.slot = null;
+      loadSlots(formId);
     });
-    var sn = $('slot-next'); if(sn) sn.addEventListener('click', function(){
-      state.slotWindowStart.setDate(state.slotWindowStart.getDate()+7);
-      state.slot = null;
-      loadSlots();
+    var sn = q('[data-slot-next="'+formId+'"]');
+    if(sn) sn.addEventListener('click', function(){
+      var st = states[formId];
+      st.slotWindowStart.setDate(st.slotWindowStart.getDate()+7);
+      st.slot = null;
+      loadSlots(formId);
     });
-    var sk = $('skip-slot'); if(sk) sk.addEventListener('click', skipSlot);
+    var sk = q('[data-skip-slot="'+formId+'"]');
+    if(sk) sk.addEventListener('click', function(){ skipSlot(formId); });
+  }
+
+  function bindEvents(){
+    bindForm('A');
+    bindForm('B');
 
     // Sticky CTA visibility
     var sticky = $('sticky');
     var quiz = $('quiz');
     if(sticky && quiz){
       window.addEventListener('scroll', function(){
-        var top = quiz.getBoundingClientRect().bottom;
-        sticky.classList.toggle('visible', top < 0);
+        var bottom = quiz.getBoundingClientRect().bottom;
+        sticky.classList.toggle('visible', bottom < 0);
       }, {passive:true});
     }
   }
 
-  // URL param: pre-select studio
+  // URL param: pre-select studio in beiden Formularen
   function handleURLParam(){
     var sp = new URLSearchParams(window.location.search).get('studio');
-    if(sp === 'memmingen'){
-      var b = document.querySelector('[data-studio="50de091d-debc-4172-8053-b516f42c4321"]');
-      if(b) selectStudio(b);
-    } else if(sp === 'senden'){
-      var b = document.querySelector('[data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb"]');
-      if(b) selectStudio(b);
+    if(sp === 'memmingen' || sp === 'senden'){
+      var sel = sp === 'memmingen'
+        ? '[data-studio="50de091d-debc-4172-8053-b516f42c4321"]'
+        : '[data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb"]';
+      ['A','B'].forEach(function(formId){
+        var b = q('[data-studio-grid="'+formId+'"] '+sel);
+        if(b){
+          states[formId].studioId = b.getAttribute('data-studio');
+          states[formId].studioCode = b.getAttribute('data-code');
+          states[formId].studioName = b.getAttribute('data-code') === 'MEM' ? 'fitbox Memmingen' : 'fitbox Senden';
+          b.classList.add('active');
+        }
+      });
     }
   }
 
-  // Init
   function init(){
     try {
       bindEvents();
