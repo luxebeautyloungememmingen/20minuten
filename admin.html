@@ -558,7 +558,7 @@ button,input,select,textarea{font-family:inherit}
             </div>
             <div class="preview-url">20minuten-fitbox.de</div>
           </div>
-          <iframe id="previewIframe" src="ems-training.html" class="preview-iframe" sandbox="allow-scripts"></iframe>
+          <iframe id="previewIframe" src="ems-training.html?preview=admin" class="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
         </div>
         <div class="preview-loading" id="previewLoading">Vorschau wird aktualisiert...</div>
       </div>
@@ -668,8 +668,7 @@ function refreshPreview(){
   var iframe = $('previewIframe');
   if(!iframe) return;
   $('previewLoading').classList.add('show');
-  var base = iframe.src.split('?')[0];
-  iframe.src = base + '?t=' + Date.now();
+  iframe.src = 'ems-training.html?preview=admin&t=' + Date.now();
   iframe.onload = function(){ $('previewLoading').classList.remove('show'); };
 }
 
@@ -1066,11 +1065,52 @@ function setPreviewMode(mode){
   $('prevMob').classList.toggle('active', mode === 'mobile');
 }
 
+// ── PANEL → SECTION MAPPING ──
+var PANEL_SEC = {
+  'hero':'sec-hero','quiz':'sec-quiz','stats':'sec-stats',
+  'benefits':'sec-benefits','trust':'sec-trust','reviews':'sec-reviews',
+  'steps':'sec-steps','studios':'sec-studios','brand':'sec-brand',
+  'goals':'sec-quiz','ctas':'sec-benefits','form':'anmeldung',
+  'links':'anmeldung','design':'sec-hero','banner':'sec-hero'
+};
+
 // ── NAV ──
-function showPanel(name){
+function showPanel(name, fromIframe){
   qa('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-panel') === name); });
   qa('.spanel').forEach(function(p){ p.classList.toggle('active', p.id === 'spanel-'+name); });
+  // Vorschau zur passenden Section scrollen (außer wenn der Klick vom Iframe kam)
+  if(!fromIframe){
+    var secId = PANEL_SEC[name];
+    if(secId) scrollIframeTo(secId);
+  }
 }
+
+function scrollIframeTo(secId){
+  var iframe = $('previewIframe');
+  if(!iframe || !iframe.contentWindow) return;
+  try {
+    var el = iframe.contentWindow.document.getElementById(secId)
+           || iframe.contentWindow.document.querySelector('[data-sec="'+secId+'"]');
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  } catch(e){}
+}
+
+// ── POSTMESSAGE FROM IFRAME ──
+window.addEventListener('message', function(e){
+  if(!e.data) return;
+  // Iframe sagt: dieser Panel wurde sichtbar (scroll-getriggert)
+  if(e.data.type === 'fitbox-section-visible' && e.data.panel){
+    qa('.snav-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-panel') === e.data.panel); });
+    qa('.spanel').forEach(function(p){ p.classList.toggle('active', p.id === 'spanel-'+e.data.panel); });
+    // Sidebar-Nav sichtbar scrollen
+    var activeBtn = document.querySelector('.snav-btn.active');
+    if(activeBtn) activeBtn.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+  // Iframe sagt: Edit-Button geklickt → Panel öffnen
+  if(e.data.type === 'fitbox-panel-select' && e.data.panel){
+    showPanel(e.data.panel, true);
+  }
+});
 
 // ── BINDINGS ──
 function bindAll(){

@@ -254,6 +254,47 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
   body{padding-bottom:0}
   .sticky{display:none}
 }
+
+/* ── ADMIN PREVIEW OVERLAYS (nur im ?preview=admin Modus) ── */
+body.admin-preview [data-sec-edit]{position:relative}
+body.admin-preview [data-sec-edit]::after{
+  content:attr(data-sec-label);
+  position:absolute;top:8px;right:8px;z-index:999;
+  background:#0d1117;color:#fff;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:.02em;
+  padding:5px 10px 5px 8px;
+  border-radius:6px;
+  display:flex;align-items:center;gap:5px;
+  cursor:pointer;
+  opacity:.7;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+  pointer-events:all;
+  transition:opacity .15s;
+}
+body.admin-preview [data-sec-edit]:hover::after{opacity:1}
+body.admin-preview [data-sec-edit]::before{
+  content:'';
+  position:absolute;inset:0;z-index:998;
+  border:2px solid transparent;
+  border-radius:2px;
+  pointer-events:none;
+  transition:border-color .15s;
+}
+body.admin-preview [data-sec-edit]:hover::before{border-color:rgba(34,160,73,.5)}
+.sec-edit-btn{
+  position:absolute;top:8px;right:8px;z-index:9999;
+  background:#0d1117;color:#fff;border:none;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:11px;font-weight:600;
+  padding:5px 10px;border-radius:6px;cursor:pointer;
+  display:none;align-items:center;gap:5px;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+  white-space:nowrap;
+}
+.sec-edit-btn::before{content:'✏️';font-size:11px}
+body.admin-preview .sec-wrap{position:relative}
+body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
 </style>
 </head>
 <body>
@@ -265,7 +306,7 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
   <a href="#quiz" class="nav-cta" id="nav-cta">Jetzt sichern</a>
 </nav>
 
-<section class="hero">
+<section class="hero" id="sec-hero">
   <div class="hero-in">
     <div class="hero-left">
       <div class="hero-eyebrow">EMS Personal Training</div>
@@ -282,7 +323,7 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
 </section>
 
 <!-- TOP FORM (Quiz with Gutschein-Framing + Bilder) -->
-<section class="quiz" id="quiz">
+<section class="quiz" id="sec-quiz">
   <div class="quiz-in">
     <div class="quiz-cta" id="quiz-cta">Klicke auf dein Ziel</div>
     <div class="quiz-t" id="quiz-t">Was ist dein Ziel?</div>
@@ -382,14 +423,14 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
   </div>
 </section>
 
-<div class="stats">
+<div class="stats" id="sec-stats">
   <div class="stat"><div class="snum" data-stat="0">20</div><div class="slbl" data-slbl="0">Min. pro Session</div></div>
   <div class="stat"><div class="snum" data-stat="1">90%</div><div class="slbl" data-slbl="1">Muskelfasern aktiv</div></div>
   <div class="stat"><div class="snum" data-stat="2">200+</div><div class="slbl" data-slbl="2">Zufriedene Mitglieder</div></div>
   <div class="stat"><div class="snum" data-stat="3">2</div><div class="slbl" data-slbl="3">Studios Region</div></div>
 </div>
 
-<section class="sec benefits">
+<section class="sec benefits" id="sec-benefits">
   <div class="sec-in">
     <div class="sec-lbl" id="benefits-label">Deine Vorteile</div>
     <div class="sec-t" id="benefits-title">Warum fitbox?</div>
@@ -404,7 +445,7 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
   </div>
 </section>
 
-<div class="trust">
+<div class="trust" id="sec-trust">
   <div class="trust-in">
     <div class="trust-lbl" id="trust-label">Ausgestattet mit professioneller Technologie</div>
     <div class="tbadges" id="trust-grid">
@@ -422,7 +463,7 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
   </div>
 </div>
 
-<section class="sec reviews">
+<section class="sec reviews" id="sec-reviews">
   <div class="sec-in">
     <div class="sec-lbl">Das sagen unsere Mitglieder</div>
     <div class="sec-t">Echte Ergebnisse.</div>
@@ -444,7 +485,7 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
   </div>
 </div>
 
-<section class="sec steps-s">
+<section class="sec steps-s" id="sec-steps">
   <div class="sec-in">
     <div class="sec-lbl" id="steps-label">N&auml;chste Schritte</div>
     <div class="sec-t" id="steps-title">In 3 Schritten zum Probetraining</div>
@@ -463,7 +504,7 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
   </div>
 </div>
 
-<section class="sec studios">
+<section class="sec studios" id="sec-studios">
   <div class="sec-in">
     <div class="sec-lbl">Unsere Standorte</div>
     <div class="sec-t">Zwei Studios. Eine Qualit&auml;t.</div>
@@ -502,7 +543,8 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
 </div>
 
 <!-- BRAND HASHTAGS -->
-<div class="brand-tags" id="brand-tags-wrap">
+<!-- sec-brand -->
+<div class="brand-tags" id="brand-tags-wrap" data-sec="sec-brand">
   <div class="brand-tags-line" id="brand-tags-line">
     <span><span class="brand-tag">#</span>ImmermitSpa&szlig;</span>
     <span><span class="brand-tag">#</span>ImmermitTermin</span>
@@ -1314,8 +1356,81 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
     }
   }
 
+  // Section→Panel Mapping
+  var SEC_MAP = {
+    'sec-hero':     'hero',
+    'sec-quiz':     'quiz',
+    'sec-stats':    'stats',
+    'sec-benefits': 'benefits',
+    'sec-trust':    'trust',
+    'sec-reviews':  'reviews',
+    'sec-steps':    'steps',
+    'sec-studios':  'studios',
+    'sec-brand':    'brand'
+  };
+  var SEC_LABELS = {
+    'sec-hero':'Hero','sec-quiz':'Quiz','sec-stats':'Stats',
+    'sec-benefits':'Vorteile','sec-trust':'Trust','sec-reviews':'Reviews',
+    'sec-steps':'Schritte','sec-studios':'Studios','sec-brand':'Brand'
+  };
+
+  function initAdminPreview(){
+    document.body.classList.add('admin-preview');
+    // Sticky + float buttons ausblenden im Preview
+    var sticky = document.getElementById('sticky');
+    var wfloat = document.getElementById('wa-float');
+    if(sticky) sticky.style.display = 'none';
+    if(wfloat) wfloat.style.display = 'none';
+
+    // Edit-Button in jede Section einfügen
+    Object.keys(SEC_MAP).forEach(function(secId){
+      var el = document.getElementById(secId);
+      // Brand-tags hat data-sec
+      if(!el) el = document.querySelector('[data-sec="'+secId+'"]');
+      if(!el) return;
+      el.classList.add('sec-wrap');
+      el.style.position = 'relative';
+      var btn = document.createElement('button');
+      btn.className = 'sec-edit-btn';
+      btn.setAttribute('data-panel', SEC_MAP[secId]);
+      btn.setAttribute('title', SEC_LABELS[secId]+' bearbeiten');
+      btn.textContent = SEC_LABELS[secId]+' bearbeiten';
+      btn.addEventListener('click', function(e){
+        e.preventDefault(); e.stopPropagation();
+        // Nachricht an Admin: Panel wechseln
+        window.parent.postMessage({type:'fitbox-panel-select', panel: SEC_MAP[secId]}, '*');
+      });
+      el.insertBefore(btn, el.firstChild);
+    });
+
+    // IntersectionObserver: sichtbare Section → Admin informieren
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting && entry.intersectionRatio > 0.3){
+          var id = entry.target.id || entry.target.getAttribute('data-sec');
+          if(id && SEC_MAP[id]){
+            window.parent.postMessage({type:'fitbox-section-visible', panel: SEC_MAP[id]}, '*');
+          }
+        }
+      });
+    }, {threshold:0.3});
+
+    Object.keys(SEC_MAP).forEach(function(secId){
+      var el = document.getElementById(secId) || document.querySelector('[data-sec="'+secId+'"]');
+      if(el) observer.observe(el);
+    });
+  }
+
   function init(){
-    try { bindEvents(); handleURLParam(); loadConfig(); }
+    try {
+      bindEvents();
+      handleURLParam();
+      loadConfig();
+      // Admin-Preview-Modus aktivieren wenn ?preview=admin
+      if(window.location.search.indexOf('preview=admin') !== -1){
+        initAdminPreview();
+      }
+    }
     catch(e){ console.error('Init error:', e); }
   }
 
