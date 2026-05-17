@@ -712,10 +712,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webki
   function loadConfig(){
     var cfg = {};
     for(var k in DEFAULTS) cfg[k] = DEFAULTS[k];
-    fetch('./config.json?t='+Date.now())
-      .then(function(r){ return r.ok ? r.json() : null; })
-      .then(function(remote){
-        if(remote){ for(var k in remote) cfg[k] = remote[k]; }
+    fetch(SUPA_URL + '/rest/v1/landing_config?id=eq.main&select=config', {
+      headers: {'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY}
+    })
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .then(function(rows){
+        var remote = (rows && rows[0] && rows[0].config) ? rows[0].config : null;
+        if(remote){ for(var k in remote) if(remote[k] != null && remote[k] !== '') cfg[k] = remote[k]; }
         applyConfig(cfg);
       })
       .catch(function(){ applyConfig(cfg); });
