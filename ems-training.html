@@ -2,277 +2,973 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-<meta name="description" content="EMS Personal Training in Memmingen & Senden – 20 Minuten für maximale Ergebnisse.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#2f8614">
-<title>EMS Training Memmingen & Senden – fitbox</title>
+<title>EMS Training Memmingen &amp; Senden – fitbox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="ems-training.css">
+<style>
+:root{--g:#2f8614;--dg:#246610;--gl:#e8f5e0;--b:#111;--t:#1a1a1a;--m:#6b7280;--bg:#f9f9f6;--ba:#f2f2ee;--w:#fff;--bd:#e2e2dc}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);-webkit-font-smoothing:antialiased;padding-bottom:70px}
+#banner{display:none;background:var(--g);color:#fff;text-align:center;font-size:13px;font-weight:600;padding:9px 14px;line-height:1.4}
+#banner.show{display:block}
+#banner a{color:#fff;text-decoration:underline;margin-left:6px;font-weight:700}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--w);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:200}
+.nav img{height:32px;display:block}
+.nav-cta{background:var(--g);color:#fff;font-weight:700;font-size:12px;padding:10px 14px;border-radius:4px;text-decoration:none;white-space:nowrap;cursor:pointer;border:none;font-family:inherit}
+.hero{background:var(--w);padding:20px 16px 24px;border-bottom:1px solid var(--bd)}
+.hero-in{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:18px}
+.eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--dg);margin-bottom:10px;background:var(--gl);padding:4px 10px;border-radius:2px}
+.eyebrow::before{content:'';display:block;width:12px;height:2px;background:var(--dg)}
+.h1{font-family:'Bebas Neue',sans-serif;font-size:40px;line-height:.92;letter-spacing:1px;margin-bottom:12px;color:var(--b)}
+.h1 .acc{color:var(--g)}
+.h1 .out{-webkit-text-stroke:1.5px var(--g);color:transparent}
+.hdesc{font-size:14px;color:var(--m);line-height:1.55;margin-bottom:14px}
+.hdesc strong{color:var(--dg);font-weight:600}
+.scarcity{background:#fff3cd;border:1px solid #ffc107;border-radius:4px;padding:9px 12px;font-size:12px;font-weight:600;color:#856404;line-height:1.4}
+.hpic{border-radius:6px;overflow:hidden;height:160px}
+.hpic img{width:100%;height:100%;object-fit:cover;object-position:center 30%;display:block}
+.quiz{background:var(--w);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:24px 16px}
+.quiz-in{max-width:720px;margin:0 auto}
+.quiz-eb{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);text-align:center;margin-bottom:6px}
+.quiz-t{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;text-align:center;color:var(--b);margin-bottom:4px;letter-spacing:.5px}
+.quiz-s{font-size:13px;color:var(--m);text-align:center;margin-bottom:18px}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.qbtn{background:var(--w);border:2px solid var(--bd);border-radius:10px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit;-webkit-appearance:none;appearance:none;min-height:88px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.qbtn:active,.qbtn:hover{border-color:var(--g);background:var(--gl)}
+.qbtn .em{font-size:26px;margin-bottom:4px;line-height:1}
+.qbtn .lbl{font-size:13px;font-weight:600;color:var(--b);line-height:1.2}
+.qhint{font-size:11px;color:var(--m);text-align:center;display:flex;align-items:center;justify-content:center;gap:4px}
+.qhint::before{content:'\2713';color:var(--g);font-weight:700}
+.stats{background:var(--g);padding:16px 12px;display:flex;justify-content:center;flex-wrap:wrap}
+.stat{flex:1;min-width:70px;text-align:center;padding:4px 8px;border-right:1px solid rgba(255,255,255,.2)}
+.stat:last-child{border-right:none}
+.snum{font-family:'Bebas Neue',sans-serif;font-size:30px;color:#fff;line-height:1}
+.slbl{font-size:10px;color:rgba(255,255,255,.85);margin-top:2px;line-height:1.2}
+.sec{padding:36px 16px}
+.sec-in{max-width:1100px;margin:0 auto}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--dg);margin-bottom:8px}
+.sec-t{font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;margin-bottom:12px;color:var(--b);letter-spacing:.5px}
+.benefits{background:var(--w);border-bottom:1px solid var(--bd)}
+.bgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
+.benefit{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:16px 14px;display:flex;gap:12px;align-items:flex-start}
+.bicon{width:36px;height:36px;background:var(--gl);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.benefit h3{font-size:14px;font-weight:700;color:var(--b);margin-bottom:3px}
+.benefit p{font-size:13px;color:var(--m);line-height:1.5}
+.trust{background:var(--ba);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:26px 16px}
+.trust-in{max-width:1100px;margin:0 auto}
+.trust-lbl{text-align:center;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--m);margin-bottom:16px}
+.tbadges{display:flex;flex-direction:column;border:1px solid var(--bd);border-radius:8px;overflow:hidden;background:var(--w)}
+.titem{padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;text-align:center}
+.titem:last-child{border-bottom:none}
+.titem-s{font-size:9px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--m);margin-bottom:4px}
+.titem-n{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1.2px;color:var(--b)}
+.titem-d{font-size:10px;color:var(--m);margin-top:2px}
+.reviews{background:var(--bg);border-bottom:1px solid var(--bd)}
+.rgrid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:22px}
+.review{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:18px 16px}
+.rstars{color:#f59e0b;font-size:15px;margin-bottom:8px}
+.rtext{font-size:13px;color:var(--t);line-height:1.6;margin-bottom:10px;font-style:italic}
+.rauthor{font-size:12px;font-weight:600;color:var(--dg)}
+.steps-s{background:var(--ba);border-bottom:1px solid var(--bd)}
+.nsteps{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
+.nstep{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:16px;display:flex;gap:14px;align-items:flex-start}
+.nsnum{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--g);line-height:1;flex-shrink:0;width:30px}
+.nstep h3{font-size:14px;font-weight:700;color:var(--b);margin-bottom:3px}
+.nstep p{font-size:12px;color:var(--m);line-height:1.5}
+.studios{background:var(--w);border-bottom:1px solid var(--bd)}
+.sbanner{border-radius:8px;overflow:hidden;height:180px;margin-bottom:20px;position:relative}
+.sbanner img{width:100%;height:100%;object-fit:cover;object-position:center 40%;display:block}
+.sbanner-t{position:absolute;inset:0;background:rgba(0,0,0,.32);display:flex;align-items:center;justify-content:center}
+.sbanner-t span{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;letter-spacing:1.5px;text-align:center;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.sgrid{display:grid;grid-template-columns:1fr;gap:14px}
+.scard{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:20px 16px;position:relative;overflow:hidden}
+.scard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--g),var(--dg))}
+.sname{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--b);margin-bottom:3px}
+.ssub{font-size:10px;color:var(--dg);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.sinfo{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.sinfo-i{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--m)}
+.wabtn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;font-weight:700;font-size:14px;padding:13px 16px;border-radius:8px;text-decoration:none;min-height:44px}
+.form-s{background:var(--gl);border-top:3px solid var(--g)}
+.form-in{max-width:680px;margin:0 auto}
+.form-h{text-align:center;margin-bottom:22px}
+.form-t{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--b);margin-bottom:8px}
+.form-st{font-size:14px;color:var(--m);margin-top:6px;line-height:1.5}
+.ind{display:flex;align-items:center;justify-content:center;margin-bottom:22px}
+.dot{width:26px;height:26px;border-radius:50%;border:2px solid var(--bd);background:var(--w);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--m);transition:all .3s;flex-shrink:0}
+.dot.active,.dot.done{background:var(--g);border-color:var(--g);color:#fff}
+.line{flex:1;height:2px;background:var(--bd);max-width:36px;transition:background .3s}
+.line.done{background:var(--g)}
+.fstep{display:none}
+.fstep.active{display:block}
+.st-t{font-size:17px;font-weight:700;color:var(--b);margin-bottom:6px;text-align:center;line-height:1.3}
+.st-s{font-size:12px;color:var(--m);margin-bottom:18px;text-align:center;line-height:1.4}
+.ggrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gbtn{background:var(--w);border:2px solid var(--bd);border-radius:8px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit;-webkit-appearance:none;min-height:80px}
+.gbtn:active{transform:scale(.97)}
+.gbtn.active{border-color:var(--g);background:var(--gl)}
+.gem{font-size:24px;display:block;margin-bottom:4px;line-height:1}
+.glbl{font-size:12px;font-weight:600;color:var(--b);line-height:1.2}
+.spick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.sp-btn{border:2px solid var(--bd);background:var(--w);padding:14px 12px;cursor:pointer;text-align:left;transition:all .2s;border-radius:8px;position:relative;font-family:inherit;-webkit-appearance:none;min-height:70px}
+.sp-btn.active{border-color:var(--g);background:var(--gl)}
+.sp-btn.active::after{content:'\2713';position:absolute;top:8px;right:10px;color:var(--dg);font-weight:700;font-size:14px}
+.sp-n{font-weight:700;font-size:13px;color:var(--b);margin-bottom:3px}
+.sp-s{font-size:10px;color:var(--m)}
+.slot-s{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:14px}
+.slot-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.slot-nb{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:6px 12px;font-size:13px;font-weight:600;cursor:pointer;color:var(--t);min-height:36px;min-width:36px;font-family:inherit;-webkit-appearance:none}
+.slot-wl{font-size:12px;font-weight:700;text-align:center}
+.slot-g{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-height:280px;overflow-y:auto}
+.slot-b{background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:10px 6px;font-size:12px;font-weight:600;cursor:pointer;text-align:center;color:var(--t);font-family:inherit;-webkit-appearance:none;min-height:48px}
+.slot-b.selected{background:var(--g);border-color:var(--dg);color:#fff}
+.slot-dl{font-size:10px;color:var(--m);font-weight:500;display:block;margin-bottom:2px}
+.slot-b.selected .slot-dl{color:rgba(255,255,255,.85)}
+.slot-loading,.slot-empty{text-align:center;padding:20px;color:var(--m);font-size:13px;grid-column:1/-1;line-height:1.5}
+.slot-si{background:var(--gl);border:1px solid var(--g);border-radius:6px;padding:10px 12px;font-size:12px;font-weight:600;color:var(--dg);margin-top:10px;display:none}
+.wunsch{background:var(--w);border:1px solid var(--bd);border-radius:8px;padding:14px}
+.wunsch-h{font-size:12px;color:var(--m);margin-bottom:10px;line-height:1.5}
+.skip-slot{text-align:center;font-size:12px;color:var(--m);margin-top:10px;padding:8px}
+.skip-slot a{color:var(--dg);text-decoration:underline;cursor:pointer;font-weight:600}
+.fgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:10px}
+.field{display:flex;flex-direction:column;gap:4px}
+.lbl{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--m)}
+.inp{padding:13px 14px;border:1.5px solid var(--bd);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--t);background:var(--w);outline:none;-webkit-appearance:none;width:100%}
+.inp:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(47,134,21,.12)}
+.priv{font-size:11px;color:var(--m);line-height:1.5;margin:12px 0 16px}
+.priv a{color:var(--dg)}
+.summary{background:var(--w);border:1px solid var(--g);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px}
+.sum-r{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px dashed var(--bd);gap:8px}
+.sum-r:last-child{border-bottom:none}
+.sum-l{color:var(--m);font-size:10px;font-weight:700;text-transform:uppercase;flex-shrink:0}
+.sum-v{color:var(--b);font-weight:600;text-align:right;font-size:12px}
+.fnav{display:flex;gap:8px;margin-top:14px}
+.bback{background:var(--w);border:1.5px solid var(--bd);color:var(--t);font-weight:600;font-size:14px;padding:13px 16px;border-radius:8px;cursor:pointer;-webkit-appearance:none;min-height:48px;font-family:inherit}
+.bnext{background:var(--g);color:#fff;font-weight:700;font-size:15px;padding:14px 18px;border:none;border-radius:8px;cursor:pointer;flex:1;-webkit-appearance:none;min-height:48px;font-family:inherit}
+.bnext:active{background:var(--dg)}
+.bnext:disabled{opacity:.5;cursor:not-allowed}
+.spin{display:none;width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;margin:0 auto}
+.bnext.loading .btxt{display:none}
+.bnext.loading .spin{display:block}
+@keyframes sp{to{transform:rotate(360deg)}}
+.err{display:none;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;padding:10px 12px;border-radius:6px;font-size:13px;margin-top:10px}
+.err.show{display:block}
+.succ{display:none;text-align:center;padding:32px 16px}
+.succ.show{display:block}
+.succ-i{width:60px;height:60px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px;color:#fff;box-shadow:0 8px 24px rgba(47,134,21,.3)}
+.succ h3{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--b);margin-bottom:8px}
+.succ p{font-size:14px;color:var(--m);line-height:1.6;margin-bottom:18px}
+.succ-st{background:var(--w);border-radius:8px;padding:16px;text-align:left;margin-bottom:18px}
+.succ-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.succ-step:last-child{margin-bottom:0}
+.succ-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--g);flex-shrink:0}
+.succ-step p{font-size:12px;line-height:1.5;margin:0}
+.wabtn-s{display:flex;align-items:center;justify-content:center;gap:10px;background:#25d366;color:#fff;font-weight:700;font-size:14px;padding:14px 20px;border-radius:8px;text-decoration:none;min-height:48px}
+.sticky{position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--g);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 -4px 20px rgba(0,0,0,.15);transform:translateY(100%);transition:transform .3s;padding-bottom:calc(10px + env(safe-area-inset-bottom))}
+.sticky.visible{transform:translateY(0)}
+.st-tx{color:rgba(255,255,255,.9);font-size:11px;line-height:1.3;flex:1;min-width:0}
+.st-tx strong{color:#fff;font-size:13px;display:block}
+.st-btn{background:#fff;color:var(--dg);font-weight:700;font-size:13px;padding:10px 16px;border-radius:6px;text-decoration:none;white-space:nowrap;flex-shrink:0;min-height:40px;display:flex;align-items:center}
+.wfloat{position:fixed;bottom:70px;right:14px;z-index:299;width:48px;height:48px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.2);text-decoration:none;font-size:24px}
+.foot{background:var(--ba);padding:24px 16px;border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.foot img{height:26px}
+.foot-l{display:flex;gap:16px;flex-wrap:wrap}
+.foot-l a{font-size:12px;color:var(--m);text-decoration:none}
+@media (min-width:640px){.h1{font-size:52px}.bgrid,.rgrid{grid-template-columns:1fr 1fr}.tbadges{flex-direction:row}.titem{border-bottom:none;border-right:1px solid var(--bd);flex:1}.titem:last-child{border-right:none}.nsteps{grid-template-columns:1fr 1fr}.slot-g{grid-template-columns:repeat(3,1fr)}.fgrid{grid-template-columns:1fr 1fr}.field.full{grid-column:1/-1}.quiz-t,.sec-t{font-size:36px}.sec{padding:56px 24px}}
+@media (min-width:1024px){.nav{padding:18px 40px}.nav img{height:40px}.hero{padding:56px 40px 36px}.sec{padding:72px 40px}.hero-in{grid-template-columns:1.1fr 1fr;gap:48px;align-items:center}.hpic{height:360px;border-radius:10px}.h1{font-size:clamp(56px,6.5vw,88px);line-height:.9}.hdesc{font-size:16px}.quiz{padding:36px 40px}.quiz-t{font-size:38px}.qgrid{grid-template-columns:repeat(4,1fr)}.qbtn{min-height:110px}.qbtn .em{font-size:32px}.qbtn .lbl{font-size:14px}.snum{font-size:38px}.slbl{font-size:12px}.sec-t{font-size:40px}.bgrid,.rgrid{grid-template-columns:repeat(3,1fr)}.sgrid{grid-template-columns:1fr 1fr}.nsteps{grid-template-columns:repeat(3,1fr)}.foot{flex-direction:row;justify-content:space-between;align-items:center;padding:28px 40px}.wfloat{bottom:24px;right:24px;width:56px;height:56px}body{padding-bottom:0}.sticky{display:none}}
+</style>
 </head>
 <body>
 
-<div id="fb-action-banner"></div>
+<div id="banner"></div>
 
-<nav class="fb-nav">
-  <div class="fb-logo"><img id="cfg-logo" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></div>
-  <a href="#fb-inline-quiz" class="fb-nav-cta" id="cfg-nav-cta">Jetzt starten →</a>
+<nav class="nav">
+  <a href="#"><img id="logo" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></a>
+  <a href="#quiz" class="nav-cta" id="nav-cta">Jetzt starten</a>
 </nav>
 
-<section class="fb-hero">
-  <div class="fb-hero-inner">
-    <div class="fb-hero-left">
-      <div class="fb-eyebrow">EMS Personal Training</div>
-      <h1 class="fb-h1">20 MIN.<br><span class="accent">MAXIMALE</span><br><span class="outline">WIRKUNG.</span></h1>
-      <p class="fb-hero-desc">Mit <strong>EMS-Training</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong> gleichzeitig — was klassisches Training in 90 Minuten schafft, schaffst du bei uns in 20.</p>
-      <div class="fb-scarcity" id="cfg-scarcity">⚠️ Nur noch wenige Plätze pro Monat verfügbar!</div>
+<section class="hero">
+  <div class="hero-in">
+    <div>
+      <div class="eyebrow">EMS Personal Training</div>
+      <h1 class="h1">20 MIN.<br><span class="acc">MAXIMALE</span><br><span class="out">WIRKUNG.</span></h1>
+      <p class="hdesc">Mit <strong>EMS-Training</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong> gleichzeitig.</p>
+      <div class="scarcity" id="scarcity">Nur noch wenige Pl&auml;tze pro Monat verf&uuml;gbar!</div>
     </div>
-    <div class="fb-hero-photo"><img id="cfg-hero-img" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg" alt="EMS Training" loading="eager"></div>
+    <div class="hpic"><img id="hero-img" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg" alt="EMS Training"></div>
   </div>
 </section>
 
-<section class="fb-inline-quiz" id="fb-inline-quiz">
-  <div class="fb-inline-quiz-inner">
-    <div class="fb-inline-quiz-eyebrow">Kostenlos · 60 Sekunden</div>
-    <div class="fb-inline-quiz-title" id="cfg-quiz-title">Was ist dein Ziel?</div>
-    <div class="fb-inline-quiz-sub" id="cfg-quiz-sub">Wähle ein Ziel — wir zeigen dir den schnellsten Weg dorthin.</div>
-    <div class="fb-quiz-goal-grid">
-      <button type="button" class="fb-quiz-goal-btn" data-goal="abnehmen" onclick="fbStartQuiz(this)"><span class="emoji">⚖️</span><span class="label">Abnehmen<br>& straffen</span></button>
-      <button type="button" class="fb-quiz-goal-btn" data-goal="muskelaufbau" onclick="fbStartQuiz(this)"><span class="emoji">💪</span><span class="label">Muskeln<br>& Kraft</span></button>
-      <button type="button" class="fb-quiz-goal-btn" data-goal="ruecken" onclick="fbStartQuiz(this)"><span class="emoji">🧘</span><span class="label">Rücken<br>& Haltung</span></button>
-      <button type="button" class="fb-quiz-goal-btn" data-goal="gesundheit" onclick="fbStartQuiz(this)"><span class="emoji">⚡</span><span class="label">Allgemein<br>fitter werden</span></button>
+<section class="quiz" id="quiz">
+  <div class="quiz-in">
+    <div class="quiz-eb">Kostenlos &middot; 60 Sekunden</div>
+    <div class="quiz-t" id="quiz-t">Was ist dein Ziel?</div>
+    <div class="quiz-s" id="quiz-s">W&auml;hle ein Ziel &mdash; wir zeigen dir den schnellsten Weg.</div>
+    <div class="qgrid" id="quiz-grid">
+      <button type="button" class="qbtn" data-goal="abnehmen"><span class="em">&#9878;&#65039;</span><span class="lbl">Abnehmen<br>&amp; straffen</span></button>
+      <button type="button" class="qbtn" data-goal="muskelaufbau"><span class="em">&#128170;</span><span class="lbl">Muskeln<br>&amp; Kraft</span></button>
+      <button type="button" class="qbtn" data-goal="ruecken"><span class="em">&#129496;</span><span class="lbl">R&uuml;cken<br>&amp; Haltung</span></button>
+      <button type="button" class="qbtn" data-goal="gesundheit"><span class="em">&#9889;</span><span class="lbl">Allgemein<br>fitter werden</span></button>
     </div>
-    <div class="fb-quiz-hint" id="cfg-quiz-hint">100% kostenlos & unverbindlich</div>
+    <div class="qhint" id="quiz-h">100% kostenlos &amp; unverbindlich</div>
   </div>
 </section>
 
-<div class="fb-stats-bar">
-  <div class="fb-stat-item"><div class="fb-stat-num" data-stat="0">20</div><div class="fb-stat-label" data-stat-label="0">Min. pro Session</div></div>
-  <div class="fb-stat-item"><div class="fb-stat-num" data-stat="1">90%</div><div class="fb-stat-label" data-stat-label="1">Muskelfasern aktiv</div></div>
-  <div class="fb-stat-item"><div class="fb-stat-num" data-stat="2">200+</div><div class="fb-stat-label" data-stat-label="2">Zufriedene Mitglieder</div></div>
-  <div class="fb-stat-item"><div class="fb-stat-num" data-stat="3">2</div><div class="fb-stat-label" data-stat-label="3">Studios Region</div></div>
+<div class="stats">
+  <div class="stat"><div class="snum" data-stat="0">20</div><div class="slbl" data-slbl="0">Min. pro Session</div></div>
+  <div class="stat"><div class="snum" data-stat="1">90%</div><div class="slbl" data-slbl="1">Muskelfasern aktiv</div></div>
+  <div class="stat"><div class="snum" data-stat="2">200+</div><div class="slbl" data-slbl="2">Zufriedene Mitglieder</div></div>
+  <div class="stat"><div class="snum" data-stat="3">2</div><div class="slbl" data-slbl="3">Studios Region</div></div>
 </div>
 
-<section class="fb-section fb-benefits">
-  <div class="fb-section-inner">
-    <div class="fb-section-label">Deine Vorteile</div>
-    <div class="fb-section-title">Warum fitbox?</div>
-    <div class="fb-benefits-grid">
-      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg></div><div><h3>Zeiteffizient</h3><p>20 Minuten ersetzen 90 Minuten klassisches Training.</p></div></div>
-      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div><div><h3>Persönliche Betreuung</h3><p>Kein anonymes Fitnessstudio. Dein Trainer begleitet dich.</p></div></div>
-      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div><h3>Gelenkschonend</h3><p>Ideal bei Rückenschmerzen oder als sanfter Einstieg.</p></div></div>
-      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div><h3>Messbare Ergebnisse</h3><p>Körperanalyse, Check-ins und klare Ziele — du siehst Fortschritt.</p></div></div>
-      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div><h3>Modernste Technologie</h3><p>SYMBIONT &amp; miha bodytec — Made in Germany.</p></div></div>
-      <div class="fb-benefit"><div class="fb-benefit-icon"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div><h3>Für alle geeignet</h3><p>Anfänger, Wiedereinsteiger oder Sportler — individuell.</p></div></div>
+<section class="sec benefits">
+  <div class="sec-in">
+    <div class="sec-lbl">Deine Vorteile</div>
+    <div class="sec-t">Warum fitbox?</div>
+    <div class="bgrid">
+      <div class="benefit"><div class="bicon">&#9201;</div><div><h3>Zeiteffizient</h3><p>20 Minuten ersetzen 90 Minuten klassisches Training.</p></div></div>
+      <div class="benefit"><div class="bicon">&#128106;</div><div><h3>Pers&ouml;nliche Betreuung</h3><p>Kein anonymes Fitnessstudio. Dein Trainer begleitet dich.</p></div></div>
+      <div class="benefit"><div class="bicon">&#10084;</div><div><h3>Gelenkschonend</h3><p>Ideal bei R&uuml;ckenschmerzen oder als sanfter Einstieg.</p></div></div>
+      <div class="benefit"><div class="bicon">&#128202;</div><div><h3>Messbare Ergebnisse</h3><p>K&ouml;rperanalyse, Check-ins und klare Ziele.</p></div></div>
+      <div class="benefit"><div class="bicon">&#128241;</div><div><h3>Modernste Technologie</h3><p>SYMBIONT &amp; miha bodytec, Made in Germany.</p></div></div>
+      <div class="benefit"><div class="bicon">&#127947;</div><div><h3>F&uuml;r alle geeignet</h3><p>Anf&auml;nger, Wiedereinsteiger oder Sportler.</p></div></div>
     </div>
   </div>
 </section>
 
-<div class="fb-trust">
-  <div class="fb-trust-inner">
-    <div class="fb-trust-label">Ausgestattet mit professioneller Technologie</div>
-    <div class="fb-trust-badges">
-      <div class="fb-trust-item"><div class="fb-trust-item-sub">EMS-Anzug</div><div class="fb-trust-item-name">SYMBIONT</div><div class="fb-trust-item-desc">by schwa-medico</div></div>
-      <div class="fb-trust-item"><div class="fb-trust-item-sub">EMS-Gerät</div><div class="fb-trust-item-name">MIHA BODYTEC</div><div class="fb-trust-item-desc">Marktführer seit 2007</div></div>
-      <div class="fb-trust-item"><div class="fb-trust-item-sub">Qualität</div><div class="fb-trust-item-name">MADE IN GERMANY</div><div class="fb-trust-item-desc">Medizinisch zertifiziert</div></div>
+<div class="trust">
+  <div class="trust-in">
+    <div class="trust-lbl">Ausgestattet mit professioneller Technologie</div>
+    <div class="tbadges">
+      <div class="titem"><div class="titem-s">EMS-Anzug</div><div class="titem-n">SYMBIONT</div><div class="titem-d">by schwa-medico</div></div>
+      <div class="titem"><div class="titem-s">EMS-Ger&auml;t</div><div class="titem-n">MIHA BODYTEC</div><div class="titem-d">Marktf&uuml;hrer seit 2007</div></div>
+      <div class="titem"><div class="titem-s">Qualit&auml;t</div><div class="titem-n">MADE IN GERMANY</div><div class="titem-d">Medizinisch zertifiziert</div></div>
     </div>
   </div>
 </div>
 
-<section class="fb-section fb-reviews">
-  <div class="fb-section-inner">
-    <div class="fb-section-label">Das sagen unsere Mitglieder</div>
-    <div class="fb-section-title">Echte Ergebnisse.</div>
-    <div class="fb-reviews-grid" id="cfg-reviews-grid"></div>
+<section class="sec reviews">
+  <div class="sec-in">
+    <div class="sec-lbl">Das sagen unsere Mitglieder</div>
+    <div class="sec-t">Echte Ergebnisse.</div>
+    <div class="rgrid" id="reviews-grid"></div>
   </div>
 </section>
 
-<section class="fb-section fb-steps-section">
-  <div class="fb-section-inner">
-    <div class="fb-section-label">So einfach geht's</div>
-    <div class="fb-section-title">In 3 Schritten zum Probetraining</div>
-    <div class="fb-next-steps">
-      <div class="fb-next-step"><div class="fb-next-step-num">1</div><div><h3>Ziel wählen</h3><p>Tippe oben auf dein Ziel — wir leiten dich durch die nächsten Schritte.</p></div></div>
-      <div class="fb-next-step"><div class="fb-next-step-num">2</div><div><h3>Termin bestätigen</h3><p>Wir melden uns persönlich oder buche direkt online.</p></div></div>
-      <div class="fb-next-step"><div class="fb-next-step-num">3</div><div><h3>EMS erleben</h3><p>Komm ins Studio, erlebe EMS kostenlos. Ohne Druck.</p></div></div>
+<section class="sec steps-s">
+  <div class="sec-in">
+    <div class="sec-lbl">So einfach geht's</div>
+    <div class="sec-t">In 3 Schritten zum Probetraining</div>
+    <div class="nsteps">
+      <div class="nstep"><div class="nsnum">1</div><div><h3>Ziel w&auml;hlen</h3><p>Tippe oben auf dein Ziel.</p></div></div>
+      <div class="nstep"><div class="nsnum">2</div><div><h3>Termin best&auml;tigen</h3><p>Wir melden uns oder du buchst direkt.</p></div></div>
+      <div class="nstep"><div class="nsnum">3</div><div><h3>EMS erleben</h3><p>Kostenlos, ohne Druck.</p></div></div>
     </div>
   </div>
 </section>
 
-<section class="fb-section fb-studios">
-  <div class="fb-section-inner">
-    <div class="fb-section-label">Unsere Standorte</div>
-    <div class="fb-section-title">Zwei Studios. Eine Qualität.</div>
-    <div class="fb-studio-banner">
-      <img id="cfg-studio-banner-img" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg" alt="fitbox Studio" loading="lazy">
-      <div class="fb-studio-banner-text"><span>MEMMINGEN &amp; SENDEN</span></div>
+<section class="sec studios">
+  <div class="sec-in">
+    <div class="sec-lbl">Unsere Standorte</div>
+    <div class="sec-t">Zwei Studios. Eine Qualit&auml;t.</div>
+    <div class="sbanner">
+      <img id="studio-banner" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg" alt="fitbox">
+      <div class="sbanner-t"><span>MEMMINGEN &amp; SENDEN</span></div>
     </div>
-    <div class="fb-studios-grid">
-      <div class="fb-studio-card">
-        <div class="fb-studio-name">fitbox Memmingen</div>
-        <div class="fb-studio-sub">EMS Personal Training</div>
-        <div class="fb-studio-info">
-          <div class="fb-studio-info-item"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span id="cfg-mem-adresse">Memmingen Amendingen</span></div>
-          <div class="fb-studio-info-item"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span id="cfg-mem-zeiten">Mo–Fr &amp; nach Vereinbarung</span></div>
+    <div class="sgrid">
+      <div class="scard">
+        <div class="sname">fitbox Memmingen</div>
+        <div class="ssub">EMS Personal Training</div>
+        <div class="sinfo">
+          <div class="sinfo-i">&#128205; <span id="mem-adr">Memmingen Amendingen</span></div>
+          <div class="sinfo-i">&#128337; <span id="mem-zt">Mo&ndash;Fr &amp; nach Vereinbarung</span></div>
         </div>
-        <a href="https://wa.me/4915730024124" id="cfg-mem-wa" target="_blank" rel="noopener" class="fb-wa-btn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>WhatsApp Memmingen</a>
+        <a href="https://wa.me/4915730024124" id="mem-wa" target="_blank" rel="noopener" class="wabtn">WhatsApp Memmingen</a>
       </div>
-      <div class="fb-studio-card">
-        <div class="fb-studio-name">fitbox Senden</div>
-        <div class="fb-studio-sub">EMS Personal Training</div>
-        <div class="fb-studio-info">
-          <div class="fb-studio-info-item"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span id="cfg-sen-adresse">Senden (Iller)</span></div>
-          <div class="fb-studio-info-item"><svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg><span id="cfg-sen-zeiten">Mo–Fr &amp; nach Vereinbarung</span></div>
+      <div class="scard">
+        <div class="sname">fitbox Senden</div>
+        <div class="ssub">EMS Personal Training</div>
+        <div class="sinfo">
+          <div class="sinfo-i">&#128205; <span id="sen-adr">Senden (Iller)</span></div>
+          <div class="sinfo-i">&#128337; <span id="sen-zt">Mo&ndash;Fr &amp; nach Vereinbarung</span></div>
         </div>
-        <a href="https://wa.me/4915561206719" id="cfg-sen-wa" target="_blank" rel="noopener" class="fb-wa-btn"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>WhatsApp Senden</a>
+        <a href="https://wa.me/4915561206719" id="sen-wa" target="_blank" rel="noopener" class="wabtn">WhatsApp Senden</a>
       </div>
     </div>
   </div>
 </section>
 
-<section class="fb-section fb-form-section" id="fb-anmeldung">
-  <div class="fb-form-inner">
-    <div class="fb-form-header">
-      <div class="fb-section-label">Kostenlos &amp; unverbindlich</div>
-      <div class="fb-section-title" id="cfg-form-title">Probetraining sichern</div>
-      <p class="fb-form-subtitle" id="cfg-form-subtitle">In 60 Sekunden zum kostenlosen Termin — wir melden uns persönlich.</p>
+<section class="sec form-s" id="anmeldung">
+  <div class="form-in">
+    <div class="form-h">
+      <div class="sec-lbl" style="text-align:center">Kostenlos &amp; unverbindlich</div>
+      <div class="form-t" id="form-t">Probetraining sichern</div>
+      <p class="form-st" id="form-st">In 60 Sekunden zum kostenlosen Termin.</p>
     </div>
 
-    <div class="fb-steps-indicator" id="fbStepsIndicator">
-      <div class="fb-step-dot active" id="fbDot1">1</div>
-      <div class="fb-step-line" id="fbLine1"></div>
-      <div class="fb-step-dot" id="fbDot2">2</div>
-      <div class="fb-step-line" id="fbLine2"></div>
-      <div class="fb-step-dot" id="fbDot3">3</div>
-      <div class="fb-step-line" id="fbLine3"></div>
-      <div class="fb-step-dot" id="fbDot4">4</div>
+    <div class="ind" id="ind">
+      <div class="dot active" id="dot1">1</div>
+      <div class="line" id="line1"></div>
+      <div class="dot" id="dot2">2</div>
+      <div class="line" id="line2"></div>
+      <div class="dot" id="dot3">3</div>
+      <div class="line" id="line3"></div>
+      <div class="dot" id="dot4">4</div>
     </div>
 
-    <div class="fb-form-step active" id="fbStep1">
-      <div class="fb-step-title">Was ist dein Ziel?</div>
-      <div class="fb-step-sub">Damit wir dein Training optimal abstimmen können</div>
-      <div class="fb-goal-grid">
-        <button type="button" class="fb-goal-btn" data-goal="abnehmen" onclick="fbSelectGoal(this)"><span class="fb-goal-emoji">⚖️</span><span class="fb-goal-label">Abnehmen &amp; straffen</span></button>
-        <button type="button" class="fb-goal-btn" data-goal="muskelaufbau" onclick="fbSelectGoal(this)"><span class="fb-goal-emoji">💪</span><span class="fb-goal-label">Muskeln &amp; Kraft</span></button>
-        <button type="button" class="fb-goal-btn" data-goal="ruecken" onclick="fbSelectGoal(this)"><span class="fb-goal-emoji">🧘</span><span class="fb-goal-label">Rücken &amp; Haltung</span></button>
-        <button type="button" class="fb-goal-btn" data-goal="gesundheit" onclick="fbSelectGoal(this)"><span class="fb-goal-emoji">⚡</span><span class="fb-goal-label">Allgemein fitter werden</span></button>
+    <div class="fstep active" id="step1">
+      <div class="st-t">Was ist dein Ziel?</div>
+      <div class="st-s">Damit wir dein Training optimal abstimmen k&ouml;nnen</div>
+      <div class="ggrid" id="goal-grid">
+        <button type="button" class="gbtn" data-goal="abnehmen"><span class="gem">&#9878;&#65039;</span><span class="glbl">Abnehmen &amp; straffen</span></button>
+        <button type="button" class="gbtn" data-goal="muskelaufbau"><span class="gem">&#128170;</span><span class="glbl">Muskeln &amp; Kraft</span></button>
+        <button type="button" class="gbtn" data-goal="ruecken"><span class="gem">&#129496;</span><span class="glbl">R&uuml;cken &amp; Haltung</span></button>
+        <button type="button" class="gbtn" data-goal="gesundheit"><span class="gem">&#9889;</span><span class="glbl">Allgemein fitter werden</span></button>
       </div>
-      <div class="fb-form-nav"><button type="button" class="fb-btn-next" id="fbNext1" onclick="fbGoToStep(2)" disabled>Weiter →</button></div>
-      <div class="fb-error" id="fbError1"></div>
+      <div class="fnav"><button type="button" class="bnext" id="next1" disabled>Weiter</button></div>
+      <div class="err" id="err1"></div>
     </div>
 
-    <div class="fb-form-step" id="fbStep2">
-      <div class="fb-step-title">Welches Studio?</div>
-      <div class="fb-step-sub">Beide Studios — gleiche Qualität, persönliche Betreuung</div>
-      <div class="fb-studio-picker">
-        <button type="button" class="fb-studio-pick-btn" data-studio="50de091d-debc-4172-8053-b516f42c4321" data-code="MEM" onclick="fbSelectStudio(this)"><div class="fb-pick-name">fitbox Memmingen</div><div class="fb-pick-sub">Memmingen Amendingen</div></button>
-        <button type="button" class="fb-studio-pick-btn" data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb" data-code="SEN" onclick="fbSelectStudio(this)"><div class="fb-pick-name">fitbox Senden</div><div class="fb-pick-sub">Senden (Iller)</div></button>
+    <div class="fstep" id="step2">
+      <div class="st-t">Welches Studio?</div>
+      <div class="st-s">Beide Studios &mdash; gleiche Qualit&auml;t</div>
+      <div class="spick" id="studio-pick">
+        <button type="button" class="sp-btn" data-studio="50de091d-debc-4172-8053-b516f42c4321" data-code="MEM"><div class="sp-n">fitbox Memmingen</div><div class="sp-s">Memmingen Amendingen</div></button>
+        <button type="button" class="sp-btn" data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb" data-code="SEN"><div class="sp-n">fitbox Senden</div><div class="sp-s">Senden (Iller)</div></button>
       </div>
-      <div class="fb-form-nav">
-        <button type="button" class="fb-btn-back" onclick="fbGoToStep(1)">← Zurück</button>
-        <button type="button" class="fb-btn-next" id="fbNext2" onclick="fbGoToStep(3)" disabled>Weiter →</button>
+      <div class="fnav">
+        <button type="button" class="bback" data-back="1">Zur&uuml;ck</button>
+        <button type="button" class="bnext" id="next2" disabled>Weiter</button>
       </div>
-      <div class="fb-error" id="fbError2"></div>
+      <div class="err" id="err2"></div>
     </div>
 
-    <div class="fb-form-step" id="fbStep3">
-      <div class="fb-step-title" id="fbStep3Title">Wann passt es dir?</div>
-      <div class="fb-step-sub" id="fbStep3Sub">Wähle deinen Wunschtermin</div>
-      <div id="fbSlotSection" style="display:none;">
-        <div class="fb-slot-section">
-          <div class="fb-slot-nav">
-            <button type="button" class="fb-slot-nav-btn" id="fbSlotPrev" onclick="fbSlotPrevWeek()">‹</button>
-            <span class="fb-slot-week-label" id="fbSlotWeekLabel">Lade...</span>
-            <button type="button" class="fb-slot-nav-btn" id="fbSlotNext" onclick="fbSlotNextWeek()">›</button>
+    <div class="fstep" id="step3">
+      <div class="st-t" id="step3-t">Wann passt es dir?</div>
+      <div class="st-s" id="step3-s">W&auml;hle deinen Wunschtermin</div>
+      <div id="slot-sec" style="display:none">
+        <div class="slot-s">
+          <div class="slot-nav">
+            <button type="button" class="slot-nb" id="slot-prev">&lsaquo;</button>
+            <span class="slot-wl" id="slot-wl">Lade...</span>
+            <button type="button" class="slot-nb" id="slot-next">&rsaquo;</button>
           </div>
-          <div id="fbSlotGrid" class="fb-slot-grid"><div class="fb-slot-loading">Lade verfügbare Termine...</div></div>
-          <div class="fb-slot-selected-info" id="fbSlotSelectedInfo">Gewählter Termin: <span id="fbSlotSelectedText"></span></div>
+          <div id="slot-grid" class="slot-g"><div class="slot-loading">Lade verf&uuml;gbare Termine...</div></div>
+          <div class="slot-si" id="slot-si">Gew&auml;hlter Termin: <span id="slot-sit"></span></div>
         </div>
-        <div class="fb-skip-slot">Kein passender Termin? <a onclick="fbSkipSlot()">Lass uns einfach zurückrufen →</a></div>
+        <div class="skip-slot">Kein passender Termin? <a id="skip-slot">Lass uns einfach zur&uuml;ckrufen</a></div>
       </div>
-      <div id="fbWunschzeitSection" style="display:none;">
-        <div class="fb-wunschzeit">
-          <p class="fb-wunschzeit-hint">Unser Team in Senden meldet sich persönlich. Wann bist du am besten erreichbar?</p>
-          <div class="fb-goal-grid" id="fbReachGrid">
-            <button type="button" class="fb-goal-btn" data-reach="morgens" onclick="fbSelectReach(this)" style="padding:12px 8px;min-height:54px;"><span class="fb-goal-label">Morgens</span></button>
-            <button type="button" class="fb-goal-btn" data-reach="mittags" onclick="fbSelectReach(this)" style="padding:12px 8px;min-height:54px;"><span class="fb-goal-label">Mittags</span></button>
-            <button type="button" class="fb-goal-btn" data-reach="nachmittags" onclick="fbSelectReach(this)" style="padding:12px 8px;min-height:54px;"><span class="fb-goal-label">Nachmittags</span></button>
-            <button type="button" class="fb-goal-btn" data-reach="abends" onclick="fbSelectReach(this)" style="padding:12px 8px;min-height:54px;"><span class="fb-goal-label">Abends</span></button>
+      <div id="wunsch-sec" style="display:none">
+        <div class="wunsch">
+          <p class="wunsch-h">Unser Team in Senden meldet sich pers&ouml;nlich. Wann bist du erreichbar?</p>
+          <div class="ggrid" id="reach-grid">
+            <button type="button" class="gbtn" data-reach="morgens" style="padding:12px 8px;min-height:54px"><span class="glbl">Morgens</span></button>
+            <button type="button" class="gbtn" data-reach="mittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Mittags</span></button>
+            <button type="button" class="gbtn" data-reach="nachmittags" style="padding:12px 8px;min-height:54px"><span class="glbl">Nachmittags</span></button>
+            <button type="button" class="gbtn" data-reach="abends" style="padding:12px 8px;min-height:54px"><span class="glbl">Abends</span></button>
           </div>
         </div>
       </div>
-      <div class="fb-form-nav">
-        <button type="button" class="fb-btn-back" onclick="fbGoToStep(2)">← Zurück</button>
-        <button type="button" class="fb-btn-next" id="fbNext3" onclick="fbGoToStep(4)">Weiter →</button>
+      <div class="fnav">
+        <button type="button" class="bback" data-back="2">Zur&uuml;ck</button>
+        <button type="button" class="bnext" id="next3">Weiter</button>
       </div>
-      <div class="fb-error" id="fbError3"></div>
+      <div class="err" id="err3"></div>
     </div>
 
-    <div class="fb-form-step" id="fbStep4">
-      <div class="fb-step-title">Fast geschafft!</div>
-      <div class="fb-step-sub">Wo dürfen wir dich erreichen?</div>
-      <div class="fb-summary" id="fbSummary"></div>
-      <div class="fb-form-grid">
-        <div class="fb-field full">
-          <label class="fb-label" for="fbFirstName">Vorname *</label>
-          <input class="fb-input" type="text" id="fbFirstName" placeholder="Max" required autocomplete="given-name">
+    <div class="fstep" id="step4">
+      <div class="st-t">Fast geschafft!</div>
+      <div class="st-s">Wo d&uuml;rfen wir dich erreichen?</div>
+      <div class="summary" id="summary"></div>
+      <div class="fgrid">
+        <div class="field full">
+          <label class="lbl" for="fname">Vorname *</label>
+          <input class="inp" type="text" id="fname" placeholder="Max" required autocomplete="given-name">
         </div>
-        <div class="fb-field full">
-          <label class="fb-label" for="fbPhone">Telefon * <span style="font-weight:400;text-transform:none;">(Wir rufen dich an)</span></label>
-          <input class="fb-input" type="tel" id="fbPhone" placeholder="+49 151 12345678" required autocomplete="tel" inputmode="tel">
+        <div class="field full">
+          <label class="lbl" for="phone">Telefon *</label>
+          <input class="inp" type="tel" id="phone" placeholder="+49 151 12345678" required autocomplete="tel" inputmode="tel">
         </div>
-        <div class="fb-field">
-          <label class="fb-label" for="fbLastName">Nachname <span style="font-weight:400;text-transform:none;color:#999;">(optional)</span></label>
-          <input class="fb-input" type="text" id="fbLastName" placeholder="Mustermann" autocomplete="family-name">
+        <div class="field">
+          <label class="lbl" for="lname">Nachname (optional)</label>
+          <input class="inp" type="text" id="lname" placeholder="Mustermann" autocomplete="family-name">
         </div>
-        <div class="fb-field">
-          <label class="fb-label" for="fbEmail">E-Mail <span style="font-weight:400;text-transform:none;color:#999;">(optional)</span></label>
-          <input class="fb-input" type="email" id="fbEmail" placeholder="max@email.de" autocomplete="email" inputmode="email">
+        <div class="field">
+          <label class="lbl" for="email">E-Mail (optional)</label>
+          <input class="inp" type="email" id="email" placeholder="max@email.de" autocomplete="email" inputmode="email">
         </div>
       </div>
-      <p class="fb-privacy">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung deiner Anfrage nutzen. Mehr in unserer <a href="#" id="cfg-datenschutz-link">Datenschutzerklärung</a>.</p>
-      <div class="fb-form-nav">
-        <button type="button" class="fb-btn-back" onclick="fbGoToStep(3)">← Zurück</button>
-        <button type="button" class="fb-btn-next" id="fbSubmitBtn" onclick="fbSubmit()"><span class="fb-btn-text">Probetraining sichern 🎯</span><div class="fb-spinner"></div></button>
+      <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link">Datenschutzerkl&auml;rung</a></p>
+      <div class="fnav">
+        <button type="button" class="bback" data-back="3">Zur&uuml;ck</button>
+        <button type="button" class="bnext" id="submit-btn"><span class="btxt">Probetraining sichern</span><div class="spin"></div></button>
       </div>
-      <div class="fb-error" id="fbError4"></div>
+      <div class="err" id="err4"></div>
     </div>
 
-    <div class="fb-success" id="fbSuccessMsg">
-      <div class="fb-success-icon">✓</div>
+    <div class="succ" id="succ">
+      <div class="succ-i">&#10003;</div>
       <h3>Anfrage erhalten!</h3>
-      <p id="fbSuccessText">Wir melden uns innerhalb von 24 Stunden persönlich bei dir.</p>
-      <div class="fb-success-steps">
-        <div class="fb-success-step"><div class="fb-success-step-num">1</div><p><strong>Bestätigung erhalten</strong> — Deine Anfrage ist eingegangen.</p></div>
-        <div class="fb-success-step"><div class="fb-success-step-num">2</div><p id="fbSuccessStep2"><strong>Wir melden uns</strong> — Persönlich per Telefon.</p></div>
-        <div class="fb-success-step"><div class="fb-success-step-num">3</div><p><strong>EMS erleben</strong> — Kostenlos, unverbindlich.</p></div>
+      <p id="succ-t">Wir melden uns innerhalb von 24 Stunden bei dir.</p>
+      <div class="succ-st">
+        <div class="succ-step"><div class="succ-num">1</div><p><strong>Best&auml;tigung erhalten</strong></p></div>
+        <div class="succ-step"><div class="succ-num">2</div><p id="succ-s2"><strong>Wir melden uns</strong></p></div>
+        <div class="succ-step"><div class="succ-num">3</div><p><strong>EMS erleben</strong></p></div>
       </div>
-      <a id="fbWaSuccessBtn" href="#" target="_blank" rel="noopener" class="fb-wa-success-btn"><svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>Direkt per WhatsApp schreiben</a>
+      <a id="wa-succ" href="#" target="_blank" rel="noopener" class="wabtn-s">Direkt per WhatsApp</a>
     </div>
   </div>
 </section>
 
-<footer class="fb-footer">
-  <div class="fb-footer-logo"><img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></div>
-  <div class="fb-footer-links">
-    <a href="#" id="cfg-impressum-link">Impressum</a>
-    <a href="#" id="cfg-datenschutz-link2">Datenschutz</a>
+<footer class="foot">
+  <img src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox">
+  <div class="foot-l">
+    <a href="#" id="imp-link">Impressum</a>
+    <a href="#" id="ds-link2">Datenschutz</a>
   </div>
 </footer>
 
-<div class="fb-sticky-cta" id="fbStickyCta">
-  <div class="fb-sticky-cta-text">
-    <strong id="cfg-sticky-title">Kostenloses Probetraining</strong>
-    <span id="cfg-sticky-sub">Nur noch wenige Plätze frei!</span>
+<div class="sticky" id="sticky">
+  <div class="st-tx">
+    <strong id="sticky-t">Kostenloses Probetraining</strong>
+    <span id="sticky-s">Nur noch wenige Pl&auml;tze!</span>
   </div>
-  <a href="#fb-inline-quiz" class="fb-sticky-cta-btn">Jetzt starten</a>
+  <a href="#quiz" class="st-btn">Jetzt starten</a>
 </div>
 
-<a href="#" class="fb-wa-float" id="fbWaFloat" target="_blank" rel="noopener" title="WhatsApp">
-  <svg viewBox="0 0 24 24"><path d="M11.999 2C6.476 2 2 6.477 2 12.001c0 1.765.461 3.524 1.34 5.079L2 22l5.077-1.322A9.956 9.956 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
-</a>
+<a href="#" class="wfloat" id="wa-float" target="_blank" rel="noopener" title="WhatsApp">&#128172;</a>
 
-<script src="ems-training.js"></script>
+<script>
+(function(){
+  'use strict';
+  var DEFAULTS = {
+    banner_active: false,
+    banner_text: '',
+    banner_link_text: '',
+    banner_link_url: '#quiz',
+    hero_img: 'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/TWR64073.jpg',
+    scarcity_text: 'Nur noch wenige Pl\u00e4tze pro Monat verf\u00fcgbar!',
+    quiz_title: 'Was ist dein Ziel?',
+    quiz_sub: 'W\u00e4hle ein Ziel \u2014 wir zeigen dir den schnellsten Weg.',
+    quiz_hint: '100% kostenlos & unverbindlich',
+    nav_cta_text: 'Jetzt starten',
+    stats: [
+      {num:'20',label:'Min. pro Session'},
+      {num:'90%',label:'Muskelfasern aktiv'},
+      {num:'200+',label:'Zufriedene Mitglieder'},
+      {num:'2',label:'Studios Region'}
+    ],
+    studio_banner_img: 'https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/landing/1-212.jpg',
+    mem_adresse: 'Memmingen Amendingen',
+    mem_zeiten: 'Mo\u2013Fr & nach Vereinbarung',
+    mem_wa: '4915730024124',
+    sen_adresse: 'Senden (Iller)',
+    sen_zeiten: 'Mo\u2013Fr & nach Vereinbarung',
+    sen_wa: '4915561206719',
+    reviews: [
+      {text:'Tolles Studio und ein super Trainerteam. Seit f\u00fcnf Jahren dabei und immer noch begeistert.', author:'Bettina L. aus Memmingen'},
+      {text:'Endlich ein Training, das sich in meinen Alltag integrieren l\u00e4sst. Keine R\u00fcckenschmerzen mehr.', author:'Susanne H. aus Buxheim'},
+      {text:'Die Trainer holen das Beste aus einem heraus. Modernes und gepflegtes Studio.', author:'Hermann K. aus Kirchdorf'}
+    ],
+    sticky_title: 'Kostenloses Probetraining',
+    sticky_sub: 'Nur noch wenige Pl\u00e4tze frei!',
+    impressum_url: '#',
+    datenschutz_url: '#',
+    form_title: 'Probetraining sichern',
+    form_subtitle: 'In 60 Sekunden zum kostenlosen Termin.'
+  };
+
+  var SUPA_URL = 'https://jypbyywxfjniafuygxci.supabase.co';
+  var SUPA_KEY = 'sb_publishable_ue_bdtrmkW4NP76h114wqQ__pIkA-YU';
+  var ML_BASE = 'https://tight-tooth-c9e4.kuersat-oezdemir.workers.dev/proxy';
+  var MEM_ID = 1262516030;
+  var GOALS = {abnehmen:'Abnehmen & straffen', muskelaufbau:'Muskeln & Kraft', ruecken:'R\u00fccken & Haltung', gesundheit:'Allgemein fitter'};
+  var REACHES = {morgens:'Morgens', mittags:'Mittags', nachmittags:'Nachmittags', abends:'Abends'};
+
+  var state = {step:1, goal:'', studioId:'', studioCode:'', studioName:'', reach:'', slot:null, slots:[], slotWindowStart:null, slotToday:null};
+  var WA = {MEM:'4915730024124', SEN:'4915561206719'};
+
+  function $(id){ return document.getElementById(id); }
+  function $$(sel){ return document.querySelectorAll(sel); }
+  function setText(id,v){ var e=$(id); if(e && v!=null) e.textContent = v; }
+  function setHTML(id,v){ var e=$(id); if(e && v!=null) e.innerHTML = v; }
+  function setSrc(id,v){ var e=$(id); if(e && v) e.src = v; }
+  function setHref(id,v){ var e=$(id); if(e && v) e.href = v; }
+
+  function applyConfig(c){
+    var b = $('banner');
+    if(c.banner_active && c.banner_text){
+      var link = c.banner_link_text ? ' <a href="'+(c.banner_link_url||'#quiz')+'">'+c.banner_link_text+'</a>' : '';
+      b.innerHTML = c.banner_text + link;
+      b.classList.add('show');
+    }
+    setSrc('hero-img', c.hero_img);
+    setText('scarcity', c.scarcity_text);
+    setText('quiz-t', c.quiz_title);
+    setText('quiz-s', c.quiz_sub);
+    setText('quiz-h', c.quiz_hint);
+    setText('nav-cta', c.nav_cta_text);
+    if(Array.isArray(c.stats)){
+      c.stats.forEach(function(s,i){
+        var n = document.querySelector('[data-stat="'+i+'"]');
+        var l = document.querySelector('[data-slbl="'+i+'"]');
+        if(n) n.textContent = s.num;
+        if(l) l.textContent = s.label;
+      });
+    }
+    setSrc('studio-banner', c.studio_banner_img);
+    setText('mem-adr', c.mem_adresse);
+    setText('mem-zt', c.mem_zeiten);
+    setText('sen-adr', c.sen_adresse);
+    setText('sen-zt', c.sen_zeiten);
+    setHref('mem-wa', 'https://wa.me/'+c.mem_wa);
+    setHref('sen-wa', 'https://wa.me/'+c.sen_wa);
+    WA = {MEM: c.mem_wa, SEN: c.sen_wa};
+    if(Array.isArray(c.reviews)){
+      var html = c.reviews.map(function(r){
+        return '<div class="review"><div class="rstars">\u2b50\u2b50\u2b50\u2b50\u2b50</div><p class="rtext">'+escapeHTML(r.text)+'</p><div class="rauthor">'+escapeHTML(r.author)+'</div></div>';
+      }).join('');
+      setHTML('reviews-grid', html);
+    }
+    setText('sticky-t', c.sticky_title);
+    setText('sticky-s', c.sticky_sub);
+    setHref('imp-link', c.impressum_url);
+    setHref('ds-link', c.datenschutz_url);
+    setHref('ds-link2', c.datenschutz_url);
+    setText('form-t', c.form_title);
+    setText('form-st', c.form_subtitle);
+    setHref('wa-float', 'https://wa.me/'+c.mem_wa);
+  }
+
+  function escapeHTML(s){
+    if(s==null) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function loadConfig(){
+    var cfg = {};
+    for(var k in DEFAULTS) cfg[k] = DEFAULTS[k];
+    fetch('./config.json?t='+Date.now())
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(remote){
+        if(remote){ for(var k in remote) cfg[k] = remote[k]; }
+        applyConfig(cfg);
+      })
+      .catch(function(){ applyConfig(cfg); });
+  }
+
+  function showError(id, msg){
+    var e = $(id); if(!e) return;
+    e.textContent = msg; e.classList.add('show');
+    setTimeout(function(){ e.classList.remove('show'); }, 5000);
+  }
+
+  function updateIndicator(step){
+    for(var i=1; i<=4; i++){
+      var d = $('dot'+i); if(!d) continue;
+      d.classList.remove('active','done');
+      if(step > i) d.classList.add('done');
+      else if(i === step) d.classList.add('active');
+    }
+    for(var k=1; k<=3; k++){
+      var l = $('line'+k); if(l) l.classList.toggle('done', step > k);
+    }
+  }
+
+  function showStep(step){
+    var steps = $$('.fstep');
+    for(var i=0; i<steps.length; i++) steps[i].classList.remove('active');
+    var s = $('step'+step); if(s) s.classList.add('active');
+    state.step = step;
+    updateIndicator(step);
+    if(step === 3) setupStep3();
+    if(step === 4) setupStep4();
+  }
+
+  function goToStep(step){
+    if(step === 2 && !state.goal){ showError('err1', 'Bitte w\u00e4hle dein Ziel.'); return; }
+    if(step === 3 && !state.studioId){ showError('err2', 'Bitte w\u00e4hle ein Studio.'); return; }
+    showStep(step);
+  }
+
+  function setupStep3(){
+    if(state.studioCode === 'MEM'){
+      $('slot-sec').style.display = 'block';
+      $('wunsch-sec').style.display = 'none';
+      $('step3-t').textContent = 'Wann passt es dir?';
+      $('step3-s').textContent = 'W\u00e4hle einen freien Termin in Memmingen';
+      initSlotCal();
+    } else {
+      $('slot-sec').style.display = 'none';
+      $('wunsch-sec').style.display = 'block';
+      $('step3-t').textContent = 'Wann sollen wir dich anrufen?';
+      $('step3-s').textContent = 'Unser Team in Senden meldet sich pers\u00f6nlich';
+    }
+  }
+
+  function setupStep4(){
+    var rows = [];
+    if(state.goal) rows.push({l:'Ziel', v: GOALS[state.goal] || state.goal});
+    if(state.studioName) rows.push({l:'Studio', v: state.studioName});
+    if(state.slot) rows.push({l:'Wunschtermin', v: fmtSlot(new Date(state.slot.startDateTime))});
+    else if(state.reach) rows.push({l:'Erreichbar', v: REACHES[state.reach]});
+    else rows.push({l:'Termin', v: 'Wir rufen zur\u00fcck'});
+    $('summary').innerHTML = rows.map(function(r){
+      return '<div class="sum-r"><span class="sum-l">'+r.l+'</span><span class="sum-v">'+escapeHTML(r.v)+'</span></div>';
+    }).join('');
+  }
+
+  function selectGoal(btn){
+    var goals = $$('#goal-grid .gbtn');
+    for(var i=0; i<goals.length; i++) goals[i].classList.remove('active');
+    btn.classList.add('active');
+    state.goal = btn.getAttribute('data-goal');
+    $('next1').disabled = false;
+  }
+
+  function selectStudio(btn){
+    var picks = $$('.sp-btn');
+    for(var i=0; i<picks.length; i++) picks[i].classList.remove('active');
+    btn.classList.add('active');
+    state.studioId = btn.getAttribute('data-studio');
+    state.studioCode = btn.getAttribute('data-code');
+    state.studioName = state.studioCode === 'MEM' ? 'fitbox Memmingen' : 'fitbox Senden';
+    $('wa-float').href = 'https://wa.me/' + (state.studioCode === 'SEN' ? WA.SEN : WA.MEM);
+    $('next2').disabled = false;
+  }
+
+  function selectReach(btn){
+    var reaches = $$('#reach-grid .gbtn');
+    for(var i=0; i<reaches.length; i++) reaches[i].classList.remove('active');
+    btn.classList.add('active');
+    state.reach = btn.getAttribute('data-reach');
+  }
+
+  function skipSlot(){
+    state.slot = null;
+    var slots = $$('.slot-b');
+    for(var i=0; i<slots.length; i++) slots[i].classList.remove('selected');
+    $('slot-si').style.display = 'none';
+    goToStep(4);
+  }
+
+  // Quiz: tap goal -> jump to studio
+  function startQuiz(btn){
+    state.goal = btn.getAttribute('data-goal');
+    var quizBtns = $$('#quiz-grid .qbtn');
+    for(var i=0; i<quizBtns.length; i++){
+      quizBtns[i].style.borderColor = '';
+      quizBtns[i].style.background = '';
+    }
+    btn.style.borderColor = 'var(--g)';
+    btn.style.background = 'var(--gl)';
+    // Sync step 1 in form
+    var goals = $$('#goal-grid .gbtn');
+    for(var j=0; j<goals.length; j++){
+      goals[j].classList.toggle('active', goals[j].getAttribute('data-goal') === state.goal);
+    }
+    $('next1').disabled = false;
+    showStep(2);
+    setTimeout(function(){
+      var t = $('anmeldung');
+      if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 100);
+  }
+
+  // Slot calendar
+  function slotMonday(d){ var m=new Date(d); var dow=m.getDay()||7; m.setDate(m.getDate()-dow+1); m.setHours(0,0,0,0); return m; }
+  function toYMD(d){ return d.toISOString().slice(0,10); }
+  function fmtSlot(dt){
+    return dt.toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'}) + ' ' +
+           dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) + ' Uhr';
+  }
+
+  function initSlotCal(){
+    var today = new Date(); today.setHours(0,0,0,0);
+    state.slotToday = today;
+    state.slotWindowStart = slotMonday(today);
+    loadSlots();
+  }
+
+  function loadSlots(){
+    var grid = $('slot-grid');
+    var label = $('slot-wl');
+    grid.innerHTML = '<div class="slot-loading">Lade verf\u00fcgbare Termine...</div>';
+    $('slot-si').style.display = 'none';
+
+    var weekDays = [];
+    for(var i=0; i<6; i++){
+      var d = new Date(state.slotWindowStart);
+      d.setDate(d.getDate()+i);
+      weekDays.push(d);
+    }
+    var startDate = toYMD(weekDays[0]);
+    var endDay = new Date(weekDays[5]); endDay.setDate(endDay.getDate()+1);
+    var endDate = toYMD(endDay);
+
+    var d0 = new Date(weekDays[0]); d0.setHours(12);
+    var jan1 = new Date(d0.getFullYear(),0,1);
+    var kw = Math.ceil(((d0-jan1)/86400000+jan1.getDay()+1)/7);
+    label.textContent = 'KW '+kw+' \u00b7 '+
+      weekDays[0].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) + '\u2013' +
+      weekDays[5].toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'2-digit'});
+
+    $('slot-prev').disabled = state.slotToday.getTime() >= weekDays[0].getTime();
+
+    fetch(ML_BASE+'/connect/v1/trialsession?studioId='+MEM_ID+'&startDate='+startDate+'&endDate='+endDate)
+      .then(function(r){ if(!r.ok) throw new Error('API'); return r.json(); })
+      .then(function(data){
+        state.slots = (data.slots||[]).sort(function(a,b){ return new Date(a.startDateTime) - new Date(b.startDateTime); });
+        renderSlots();
+      })
+      .catch(function(){ state.slots = []; renderSlots(); });
+  }
+
+  function renderSlots(){
+    var grid = $('slot-grid');
+    if(!state.slots.length){
+      grid.innerHTML = '<div class="slot-empty">Keine freien Termine in dieser Woche.<br>Bitte andere Woche w\u00e4hlen oder zur\u00fcckrufen lassen.</div>';
+      return;
+    }
+    var byDay = {};
+    state.slots.forEach(function(s){
+      var key = toYMD(new Date(s.startDateTime));
+      if(!byDay[key]) byDay[key] = [];
+      byDay[key].push(s);
+    });
+    grid.innerHTML = '';
+    Object.keys(byDay).forEach(function(day){
+      var dayLabel = new Date(day+'T12:00:00').toLocaleDateString('de-DE',{weekday:'short',day:'2-digit',month:'2-digit'});
+      byDay[day].forEach(function(s){
+        var dt = new Date(s.startDateTime);
+        var time = dt.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'slot-b';
+        btn.innerHTML = '<span class="slot-dl">'+dayLabel+'</span>'+time+' Uhr';
+        btn.addEventListener('click', function(){ selectSlot(s, btn); });
+        grid.appendChild(btn);
+      });
+    });
+  }
+
+  function selectSlot(slot, btn){
+    var slots = $$('.slot-b');
+    for(var i=0; i<slots.length; i++) slots[i].classList.remove('selected');
+    btn.classList.add('selected');
+    state.slot = slot;
+    $('slot-si').style.display = 'block';
+    $('slot-sit').textContent = fmtSlot(new Date(slot.startDateTime));
+  }
+
+  function submit(){
+    var btn = $('submit-btn');
+    var firstName = $('fname').value.trim();
+    var phone = $('phone').value.trim();
+    var lastName = $('lname').value.trim();
+    var email = $('email').value.trim();
+
+    if(!firstName){ showError('err4','Bitte gib deinen Vornamen ein.'); return; }
+    if(!phone){ showError('err4','Bitte gib deine Telefonnummer ein.'); return; }
+    if(phone.replace(/\D/g,'').length < 6){ showError('err4','Bitte gib eine g\u00fcltige Telefonnummer ein.'); return; }
+
+    btn.classList.add('loading'); btn.disabled = true;
+
+    var bookingSuccess = false, bookingError = null;
+    var bookPromise = Promise.resolve();
+
+    if(state.studioCode === 'MEM' && state.slot){
+      bookPromise = fetch(ML_BASE+'/connect/v1/trialsession/book', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          studioId: MEM_ID,
+          startDateTime: state.slot.startDateTime,
+          trainerRequired: true,
+          leadCustomer: {
+            firstname: firstName,
+            lastname: lastName || firstName,
+            email: email || undefined,
+            phone: phone || undefined,
+            privacyConfiguration: {email:true, phone:true}
+          }
+        })
+      }).then(function(r){
+        if(r.ok) bookingSuccess = true;
+        else { bookingError = 'HTTP '+r.status; }
+      }).catch(function(err){ bookingError = err.message || 'Netzwerkfehler'; });
+    }
+
+    bookPromise.then(function(){
+      var notes = [];
+      if(state.goal) notes.push('Ziel: ' + (GOALS[state.goal] || state.goal));
+      if(state.reach) notes.push('Erreichbar: ' + REACHES[state.reach]);
+      if(state.slot){
+        notes.push('Wunschtermin: ' + fmtSlot(new Date(state.slot.startDateTime)));
+        notes.push(bookingSuccess ? 'Magicline: GEBUCHT' : 'Magicline: FEHLER (' + (bookingError||'unbekannt') + ')');
+      } else if(state.studioCode === 'MEM'){
+        notes.push('Kein Slot gew\u00e4hlt - R\u00fcckruf erw\u00fcnscht');
+      }
+
+      return fetch(SUPA_URL+'/rest/v1/pt_leads', {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'apikey':SUPA_KEY,
+          'Authorization':'Bearer '+SUPA_KEY,
+          'Prefer':'return=minimal'
+        },
+        body: JSON.stringify({
+          studio_id: state.studioId,
+          first_name: firstName,
+          last_name: lastName || null,
+          phone: phone,
+          email: email || null,
+          source_code: 'website',
+          status_key: 'new',
+          is_active: true,
+          notes: notes.join(' | ')
+        })
+      });
+    }).catch(function(err){
+      console.error('Lead-Speicherung fehlgeschlagen:', err);
+    }).then(function(){
+      showSuccess(firstName, bookingSuccess);
+      btn.classList.remove('loading'); btn.disabled = false;
+    });
+  }
+
+  function showSuccess(firstName, bookingSuccess){
+    $('ind').style.display = 'none';
+    var steps = $$('.fstep');
+    for(var i=0; i<steps.length; i++) steps[i].style.display = 'none';
+    var fh = document.querySelector('.form-h');
+    if(fh) fh.style.display = 'none';
+
+    var waNum = state.studioCode === 'SEN' ? WA.SEN : WA.MEM;
+    var msg = 'Hallo, ich habe gerade ein Probetraining angefragt (' + firstName + '). Wann k\u00f6nnen wir den Termin besprechen?';
+    var waLink = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg);
+
+    if(state.studioCode === 'MEM' && state.slot && bookingSuccess){
+      $('succ-t').textContent = 'Dein Termin am ' + fmtSlot(new Date(state.slot.startDateTime)) + ' ist gebucht!';
+      $('succ-s2').innerHTML = '<strong>Termin gebucht</strong> &mdash; ' + fmtSlot(new Date(state.slot.startDateTime));
+    } else if(state.studioCode === 'MEM' && state.slot){
+      $('succ-t').textContent = 'Dein Wunschtermin am ' + fmtSlot(new Date(state.slot.startDateTime)) + ' ist vorgemerkt.';
+      $('succ-s2').innerHTML = '<strong>Wir melden uns</strong> zur Terminbest\u00e4tigung';
+    } else {
+      $('succ-t').textContent = 'Wir melden uns innerhalb von 24 Stunden bei dir.';
+    }
+
+    $('wa-succ').href = waLink;
+    $('succ').classList.add('show');
+    var t = $('anmeldung');
+    if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  // ============ EVENT BINDINGS ============
+  function bindEvents(){
+    // Quiz buttons
+    var quizBtns = $$('#quiz-grid .qbtn');
+    for(var i=0; i<quizBtns.length; i++){
+      (function(btn){
+        btn.addEventListener('click', function(){ startQuiz(btn); });
+      })(quizBtns[i]);
+    }
+
+    // Step 1 goal buttons
+    var goalBtns = $$('#goal-grid .gbtn');
+    for(var i=0; i<goalBtns.length; i++){
+      (function(btn){
+        btn.addEventListener('click', function(){ selectGoal(btn); });
+      })(goalBtns[i]);
+    }
+
+    // Studio picker
+    var pickBtns = $$('.sp-btn');
+    for(var i=0; i<pickBtns.length; i++){
+      (function(btn){
+        btn.addEventListener('click', function(){ selectStudio(btn); });
+      })(pickBtns[i]);
+    }
+
+    // Reach (Senden)
+    var reachBtns = $$('#reach-grid .gbtn');
+    for(var i=0; i<reachBtns.length; i++){
+      (function(btn){
+        btn.addEventListener('click', function(){ selectReach(btn); });
+      })(reachBtns[i]);
+    }
+
+    // Next/back buttons
+    var next1El = $('next1'); if(next1El) next1El.addEventListener('click', function(){ goToStep(2); });
+    var next2El = $('next2'); if(next2El) next2El.addEventListener('click', function(){ goToStep(3); });
+    var next3El = $('next3'); if(next3El) next3El.addEventListener('click', function(){ goToStep(4); });
+    var subEl = $('submit-btn'); if(subEl) subEl.addEventListener('click', submit);
+
+    var backs = $$('.bback');
+    for(var i=0; i<backs.length; i++){
+      (function(btn){
+        var t = parseInt(btn.getAttribute('data-back'),10);
+        btn.addEventListener('click', function(){ showStep(t); });
+      })(backs[i]);
+    }
+
+    // Slot nav
+    var sp = $('slot-prev'); if(sp) sp.addEventListener('click', function(){
+      state.slotWindowStart.setDate(state.slotWindowStart.getDate()-7);
+      if(state.slotToday.getTime() > state.slotWindowStart.getTime()) state.slotWindowStart = slotMonday(state.slotToday);
+      state.slot = null;
+      loadSlots();
+    });
+    var sn = $('slot-next'); if(sn) sn.addEventListener('click', function(){
+      state.slotWindowStart.setDate(state.slotWindowStart.getDate()+7);
+      state.slot = null;
+      loadSlots();
+    });
+    var sk = $('skip-slot'); if(sk) sk.addEventListener('click', skipSlot);
+
+    // Sticky CTA visibility
+    var sticky = $('sticky');
+    var quiz = $('quiz');
+    if(sticky && quiz){
+      window.addEventListener('scroll', function(){
+        var top = quiz.getBoundingClientRect().bottom;
+        sticky.classList.toggle('visible', top < 0);
+      }, {passive:true});
+    }
+  }
+
+  // URL param: pre-select studio
+  function handleURLParam(){
+    var sp = new URLSearchParams(window.location.search).get('studio');
+    if(sp === 'memmingen'){
+      var b = document.querySelector('[data-studio="50de091d-debc-4172-8053-b516f42c4321"]');
+      if(b) selectStudio(b);
+    } else if(sp === 'senden'){
+      var b = document.querySelector('[data-studio="3bf3c6bf-e9a1-45ba-a6f5-6dbdfee92dfb"]');
+      if(b) selectStudio(b);
+    }
+  }
+
+  // Init
+  function init(){
+    try {
+      bindEvents();
+      handleURLParam();
+      loadConfig();
+    } catch(e){
+      console.error('Init error:', e);
+    }
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 </body>
 </html>
