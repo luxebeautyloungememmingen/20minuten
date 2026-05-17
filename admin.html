@@ -341,14 +341,27 @@ button,input,select,textarea{font-family:inherit}
 
         <!-- VIDEO -->
         <div class="spanel" id="spanel-video">
-          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Video-Sektion nach den Stats. Video muss in Supabase Storage hochgeladen sein (max. 30 MB, MP4 empfohlen).</p>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.5">Video-Sektion nach den Stats. Video muss in Supabase Storage hochgeladen sein (MP4 empfohlen).</p>
           <div class="tog-row" style="margin-bottom:16px">
             <label class="tog"><input type="checkbox" id="cfg-video_active"><span class="tog-track"></span></label>
             <span class="tog-lbl">Sektion anzeigen</span>
           </div>
           <div class="field">
-            <label class="fl">Supabase Video-URL *</label>
-            <input type="text" class="fi" id="cfg-video_url" placeholder="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/...">
+            <label class="fl">Video</label>
+            <div class="img-box" id="video-preview"><div class="img-ph">Kein Video hochgeladen</div></div>
+            <div class="img-spec-bar"><span class="img-spec-px">MP4 empfohlen</span> · 16:9</div>
+            <div class="upl-row">
+              <input type="file" class="upl-input" id="upl-video_url" accept="video/mp4,video/webm,video/quicktime">
+              <button class="upl-btn" id="upl-video-btn" type="button">Hochladen</button>
+              <button class="upl-clr" id="upl-video-clr" type="button">Löschen</button>
+            </div>
+            <div id="video-progress-wrap" style="display:none;margin-top:8px">
+              <div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden">
+                <div id="video-progress-bar" style="height:100%;background:var(--g);width:0%;transition:width .1s"></div>
+              </div>
+              <div id="video-progress-label" style="font-size:11px;color:var(--muted);margin-top:4px">0%</div>
+            </div>
+            <input type="hidden" id="cfg-video_url">
           </div>
           <div class="field">
             <label class="fl">Label (klein, oben)</label>
@@ -748,6 +761,7 @@ function renderAll(){
   if(va) va.checked = !!cfg.video_active;
   if(cfg.hero_img) previewImg('hero-preview', cfg.hero_img);
   if(cfg.studio_banner_img) previewImg('studio-preview', cfg.studio_banner_img);
+  if(cfg.video_url) previewVideo(cfg.video_url);
   renderGoals(cfg.goals || []);
   renderStats(cfg.stats || [{num:'20',label:'Min. pro Session'},{num:'90%',label:'Muskelfasern aktiv'},{num:'200+',label:'Zufriedene Mitglieder'},{num:'2',label:'Studios Region'}]);
   renderReviews(cfg.reviews || []);
@@ -867,7 +881,59 @@ function previewImg(id, src){
   c.innerHTML = src ? '<img src="'+ea(src)+'" onerror="this.parentElement.innerHTML=\'<div class=img-ph>Bild nicht ladbar</div>\'" alt="">' : '<div class="img-ph">Kein Bild hochgeladen</div>';
 }
 
-// ── UPLOAD ──
+function uploadVideo(file, onDone){
+  var allowed = ['video/mp4','video/webm','video/quicktime'];
+  if(allowed.indexOf(file.type) === -1){ toast('Nur MP4, WebM oder MOV erlaubt', 'err'); onDone(null); return; }
+  var ext = file.name.split('.').pop().toLowerCase();
+  var name = Date.now()+'_'+Math.random().toString(36).substr(2,6)+'.'+ext;
+  var btn = $('upl-video-btn');
+  var wrap = $('video-progress-wrap');
+  var bar  = $('video-progress-bar');
+  var lbl  = $('video-progress-label');
+  if(btn){ btn.disabled = true; btn.textContent = 'Lädt...'; }
+  if(wrap) wrap.style.display = '';
+  var xhr = new XMLHttpRequest();
+  xhr.upload.addEventListener('progress', function(e){
+    if(e.lengthComputable){
+      var pct = Math.round(e.loaded/e.total*100);
+      if(bar) bar.style.width = pct+'%';
+      if(lbl) lbl.textContent = pct+'%';
+    }
+  });
+  xhr.addEventListener('load', function(){
+    if(wrap) wrap.style.display = 'none';
+    if(btn){ btn.disabled = false; btn.textContent = 'Hochladen'; }
+    if(xhr.status >= 200 && xhr.status < 300){
+      var url = SUPA_URL+'/storage/v1/object/public/'+BUCKET+'/'+name;
+      toast('Video hochgeladen!');
+      onDone(url);
+    } else {
+      toast('Upload fehlgeschlagen ('+xhr.status+')','err');
+      onDone(null);
+    }
+  });
+  xhr.addEventListener('error', function(){
+    if(wrap) wrap.style.display = 'none';
+    if(btn){ btn.disabled = false; btn.textContent = 'Hochladen'; }
+    toast('Upload fehlgeschlagen','err');
+    onDone(null);
+  });
+  xhr.open('POST', SUPA_URL+'/storage/v1/object/'+BUCKET+'/'+name);
+  xhr.setRequestHeader('apikey', SUPA_KEY);
+  xhr.setRequestHeader('Authorization', 'Bearer '+SUPA_KEY);
+  xhr.setRequestHeader('Content-Type', file.type);
+  xhr.setRequestHeader('x-upsert', 'false');
+  xhr.send(file);
+}
+
+function previewVideo(url){
+  var box = $('video-preview');
+  if(!box) return;
+  if(!url){ box.innerHTML = '<div class="img-ph">Kein Video hochgeladen</div>'; return; }
+  box.innerHTML = '<video src="'+ea(url)+'" controls playsinline preload="metadata" style="width:100%;border-radius:6px;max-height:160px;background:#000"></video>';
+}
+
+
 function bindUpload(key, prevId){
   var fileInput = $('upl-'+key);
   var hidden = $('cfg-'+key);
@@ -1162,6 +1228,24 @@ function bindAll(){
   $('add-benefit-btn').addEventListener('click', function(){ addBenefitEl({}); });
   bindUpload('hero_img', 'hero-preview');
   bindUpload('studio_banner_img', 'studio-preview');
+  // Video Upload
+  var vFileInput = $('upl-video_url');
+  var vBtn = $('upl-video-btn');
+  var vClr = $('upl-video-clr');
+  if(vBtn && vFileInput){
+    vBtn.addEventListener('click', function(){ vFileInput.click(); });
+    vFileInput.addEventListener('change', function(){
+      var file = this.files[0]; if(!file) return;
+      uploadVideo(file, function(url){
+        if(url){ $('cfg-video_url').value = url; previewVideo(url); schedulePreview(); }
+      });
+    });
+  }
+  if(vClr){
+    vClr.addEventListener('click', function(){
+      $('cfg-video_url').value = ''; previewVideo(''); schedulePreview();
+    });
+  }
 
   // Farb-Picker Sync (color ↔ hex text)
   var allColorKeys = ['primary_color','cta_bg','hero_bg','banner_bg','banner_color','scarcity_bg','scarcity_color','stats_bg','stats_color','brand_bg','brand_color','brand_accent'];
