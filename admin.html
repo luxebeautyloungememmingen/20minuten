@@ -56,17 +56,17 @@ button,input,select,textarea{font-family:inherit}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* WORKSPACE */
-.workspace{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 46px);overflow:hidden}
+.workspace{display:grid;grid-template-columns:52px 340px 1fr;height:calc(100vh - 46px);overflow:hidden}
 
 /* SIDEBAR */
-.sidebar{background:var(--card);border-right:1px solid var(--border);display:grid;grid-template-columns:48px 1fr;overflow:hidden}
+.sidebar{display:contents}
 .sidebar-nav{display:flex;flex-direction:column;border-right:1px solid var(--border);background:var(--bg);padding:6px 0;gap:1px;overflow-y:auto}
 .sidebar-nav::-webkit-scrollbar{display:none}
-.snav-btn{width:48px;min-height:44px;padding:6px 4px;font-size:9px;font-weight:700;color:var(--muted);border:none;background:none;cursor:pointer;border-left:2px solid transparent;transition:.12s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-transform:uppercase;letter-spacing:.04em;line-height:1.2}
+.snav-btn{width:52px;min-height:48px;padding:6px 4px;font-size:9px;font-weight:700;color:var(--muted);border:none;background:none;cursor:pointer;border-left:2px solid transparent;transition:.12s;white-space:nowrap;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-transform:uppercase;letter-spacing:.03em;line-height:1.2}
 .snav-btn:hover:not(.active){background:var(--hover);color:var(--ink)}
 .snav-btn.active{color:var(--g);border-left-color:var(--g);background:var(--gbg)}
-.snav-btn .sn-icon{font-size:15px;line-height:1}
-.sidebar-body{flex:1;overflow-y:auto;padding:16px;min-width:0}
+.snav-btn .sn-icon{font-size:16px;line-height:1}
+.sidebar-body{background:var(--card);border-right:1px solid var(--border);overflow-y:auto;padding:18px 16px}
 .sidebar-body::-webkit-scrollbar{width:4px}
 .sidebar-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 
@@ -122,7 +122,7 @@ button,input,select,textarea{font-family:inherit}
 .add-btn:hover{background:var(--gbg2);border-style:solid}
 
 /* STATS */
-.stat-row{display:grid;grid-template-columns:90px 1fr;gap:8px;margin-bottom:8px;align-items:end;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.stat-row{display:grid;grid-template-columns:100px 1fr;gap:10px;margin-bottom:8px;align-items:end;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
 
 /* IMAGE UPLOAD */
 .img-box{border:1px solid var(--border);border-radius:10px;overflow:hidden;height:120px;background:var(--bg);position:relative;margin-bottom:8px}
@@ -148,19 +148,19 @@ button,input,select,textarea{font-family:inherit}
 .cta-num span{background:var(--g);color:#fff;width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
 
 /* PREVIEW PANE */
-.preview-pane{background:#d4dfd4;overflow-y:auto;display:flex;justify-content:center;padding:24px;position:relative}
+.preview-pane{background:#d4dfd4;overflow-y:auto;display:flex;justify-content:flex-end;padding:0;position:relative}
 .preview-pane::-webkit-scrollbar{width:5px}
 .preview-pane::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px}
 .preview-frame-wrap{width:100%;transition:max-width .3s;position:relative}
-.preview-frame-wrap.mobile{max-width:390px}
+.preview-frame-wrap.mobile{max-width:420px;margin-left:auto}
 .preview-frame-wrap.desktop{max-width:100%}
-.preview-browser{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.15)}
-.preview-bar{background:#f3f4f6;padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e5e7eb}
+.preview-browser{background:#fff;height:calc(100vh - 46px);display:flex;flex-direction:column}
+.preview-bar{background:#f3f4f6;padding:8px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #e5e7eb;flex-shrink:0}
 .preview-dots{display:flex;gap:5px}
 .preview-dot{width:10px;height:10px;border-radius:50%}
 .preview-url{flex:1;background:#fff;border:1px solid #e5e7eb;border-radius:6px;padding:5px 10px;font-size:11px;color:#6b7280;font-family:monospace}
-.preview-iframe{width:100%;border:none;display:block;height:calc(100vh - 46px - 48px - 48px)}
-.preview-loading{position:absolute;inset:0;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;border-radius:12px;font-size:13px;font-weight:600;color:var(--g);gap:10px;pointer-events:none;opacity:0;transition:.3s}
+.preview-iframe{width:100%;border:none;flex:1;display:block}
+.preview-loading{position:absolute;inset:0;background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--g);gap:10px;pointer-events:none;opacity:0;transition:.3s}
 .preview-loading.show{opacity:1;pointer-events:all}
 .preview-loading::before{content:'';width:20px;height:20px;border:2.5px solid #d1fae5;border-top-color:var(--g);border-radius:50%;animation:upspin .7s linear infinite}
 
@@ -219,9 +219,8 @@ button,input,select,textarea{font-family:inherit}
   <!-- WORKSPACE -->
   <div class="workspace">
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="sidebar-nav">
+    <!-- SIDEBAR NAV -->
+    <div class="sidebar-nav">
         <button class="snav-btn active" data-panel="banner" type="button"><span class="sn-icon">📢</span>Banner</button>
         <button class="snav-btn" data-panel="hero" type="button"><span class="sn-icon">🏠</span>Hero</button>
         <button class="snav-btn" data-panel="quiz" type="button"><span class="sn-icon">🎯</span>Quiz</button>
@@ -393,7 +392,6 @@ button,input,select,textarea{font-family:inherit}
         </div>
 
       </div>
-    </div>
 
     <!-- PREVIEW PANE -->
     <div class="preview-pane" id="previewPane">
