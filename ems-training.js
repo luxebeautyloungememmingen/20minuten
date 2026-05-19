@@ -349,6 +349,64 @@ window.fbSubmit = async function() {
     });
   } catch(err) { console.error('Lead-Speicherung fehlgeschlagen:', err); }
 
+  // ─── META CAPI + PIXEL — Lead Event mit Deduplizierung ───────────────────
+  // Beide (Pixel + CAPI) bekommen dieselbe eventId → Meta zählt nur EINEN Lead.
+  // fbc = Facebook Click ID aus URL (?fbclid=...), fbp = Facebook Browser Cookie.
+  // Fehler hier brechen die Success-Anzeige NIE ab.
+  try {
+    var eventId = 'lead-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+
+    // fbc Cookie lesen (wird vom Pixel gesetzt wenn fbclid in URL)
+    var fbc = (document.cookie.match(/(?:^|;\s*)_fbc=([^;]*)/) || [])[1] || null;
+    // fbp Cookie lesen (wird vom Pixel automatisch gesetzt)
+    var fbp = (document.cookie.match(/(?:^|;\s*)_fbp=([^;]*)/) || [])[1] || null;
+    // fbclid direkt aus URL lesen (falls Cookie noch nicht gesetzt)
+    if (!fbc) {
+      var fbclid = new URLSearchParams(window.location.search).get('fbclid');
+      if (fbclid) fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+    }
+
+    // 1. Pixel feuern (Browser-seitig) mit eventID für Deduplizierung
+    if (typeof fbq === 'function') {
+      fbq('track', 'Lead', {
+        content_name: 'EMS Probetraining',
+        content_category: 'EMS Fitness',
+        currency: 'EUR',
+        value: 0
+      }, { eventID: eventId });
+    }
+
+    // 2. CAPI feuern (Server-seitig) mit derselben eventID
+    var capiPayload = {
+      event_name: 'Lead',
+      event_time: Math.floor(Date.now() / 1000),
+      event_source_url: window.location.href,
+      event_id: eventId,
+      user_data: {
+        first_name: firstName,
+        last_name:  lastName  || null,
+        phone:      phone     || null,
+        email:      email     || null,
+        city:       state.studioCode === 'SEN' ? 'senden' : 'memmingen',
+        country:    'de',
+        fbc:        fbc,
+        fbp:        fbp
+      },
+      custom_data: {
+        currency:     'EUR',
+        value:        0,
+        content_name: 'EMS Probetraining',
+        studio:       state.studioCode === 'SEN' ? 'fitbox Senden' : 'fitbox Memmingen'
+      }
+    };
+    fetch('https://jypbyywxfjniafuygxci.supabase.co/functions/v1/meta-capi-event', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(capiPayload)
+    }).catch(function(e) { console.warn('CAPI Lead fehlgeschlagen:', e); });
+  } catch(capiErr) { console.warn('CAPI Lead Block fehlgeschlagen:', capiErr); }
+  // ─────────────────────────────────────────────────────────────────────────
+
   showSuccess(firstName, bookingSuccess);
   btn.classList.remove('loading'); btn.disabled = false;
 };
