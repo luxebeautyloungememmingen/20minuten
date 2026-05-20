@@ -745,7 +745,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
   <a href="#quiz" class="st-btn">Gutschein sichern</a>
 </div>
 
-<a href="#" class="wfloat" id="wa-float" target="_blank" rel="noopener" title="WhatsApp">&#128172;</a>
+<!-- WhatsApp Float Button entfernt -->
 
 <script>
 (function(){
@@ -1733,6 +1733,41 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     email:         null,
   };
 
+  // ── State Persistence (sessionStorage) ──────────────────────────────────────
+  var STORAGE_KEY = 'fbw_state_v1';
+  function saveState() {
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify({
+        msgs: msgs,
+        isOpen: isOpen,
+        greeted: greeted,
+        bookingDone: bookingDone,
+        collected: collected,
+        rejectedSlots: rejectedSlots,
+        ts: Date.now()
+      }));
+    } catch(e) { /* sessionStorage voll oder disabled */ }
+  }
+  function loadState() {
+    try {
+      var raw = sessionStorage.getItem(STORAGE_KEY);
+      if (!raw) return false;
+      var s = JSON.parse(raw);
+      // Verfalldatum 4h -- danach Frischstart
+      if (!s.ts || (Date.now() - s.ts) > 4*3600*1000) {
+        sessionStorage.removeItem(STORAGE_KEY);
+        return false;
+      }
+      msgs          = Array.isArray(s.msgs) ? s.msgs : [];
+      isOpen        = !!s.isOpen;
+      greeted       = !!s.greeted;
+      bookingDone   = !!s.bookingDone;
+      collected     = Object.assign(collected, s.collected || {});
+      rejectedSlots = Array.isArray(s.rejectedSlots) ? s.rejectedSlots : [];
+      return true;
+    } catch(e) { return false; }
+  }
+
   // ── Styles ───────────────────────────────────────────────────────────────────
   function injectStyles() {
     var s = document.createElement('style');
@@ -1782,11 +1817,11 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
       '.fbw-typing span{width:7px;height:7px;border-radius:50%;background:#aaa;animation:fbwb 1.2s infinite}',
       '.fbw-typing span:nth-child(2){animation-delay:.2s}.fbw-typing span:nth-child(3){animation-delay:.4s}',
       '@keyframes fbwb{0%,60%,100%{transform:translateY(0);background:#bbb}30%{transform:translateY(-5px);background:'+CFG.green+'}}',
-      // Quick replies - horizontal scrollbar mit Fade-Hint rechts
-      '#fbw-qr-wrap{position:relative;flex-shrink:0;border-top:1px solid #eef0ec;background:#fafbfa}',
-      '#fbw-qr-wrap::after{content:"";position:absolute;right:0;top:0;bottom:0;width:24px;background:linear-gradient(90deg,transparent,#fafbfa);pointer-events:none}',
+      // Quick replies - horizontal scrollbar mit Padding-Trick (letzter Button bekommt rechts Luft)
+      '#fbw-qr-wrap{flex-shrink:0;border-top:1px solid #eef0ec;background:#fafbfa}',
       '#fbw-qr{padding:10px 14px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}',
       '#fbw-qr::-webkit-scrollbar{display:none}',
+      '#fbw-qr::after{content:"";flex-shrink:0;width:6px}',
       '.fbw-qb{background:#fff;border:1.5px solid '+CFG.green+';color:'+CFG.darkGreen+';border-radius:18px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;flex-shrink:0}',
       '.fbw-qb:hover,.fbw-qb:active{background:'+CFG.green+';color:#fff}',
       // Input
@@ -1872,6 +1907,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
   }
   function addMsg(role, text, meta) {
     msgs.push({ id: Date.now()+Math.random(), role: role, text: text, meta: meta||null });
+    saveState();
   }
 
   // ── Slots laden ──────────────────────────────────────────────────────────────
@@ -2168,6 +2204,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     document.getElementById('fbw-btn').classList.toggle('open', isOpen);
     document.getElementById('fbw-win').classList.toggle('vis', isOpen);
     var p = document.getElementById('fbw-pulse'); if(p) p.style.display='none';
+    saveState();
 
     if (isOpen && !greeted) {
       greeted = true;
@@ -2231,9 +2268,21 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
   // ── Init ─────────────────────────────────────────────────────────────────────
   function init() {
     if (document.getElementById('fbw')) return;
+    var restored = loadState();
     injectStyles();
     createDOM();
     bindEvents();
+    if (restored) {
+      // State wiederhergestellt -- DOM mit alten Messages befuellen
+      renderMsgs();
+      if (isOpen) {
+        document.getElementById('fbw-btn').classList.add('open');
+        document.getElementById('fbw-win').classList.add('vis');
+        var p = document.getElementById('fbw-pulse'); if(p) p.style.display='none';
+        // Slots im Hintergrund neu laden (fuer Buchungen)
+        loadSlots();
+      }
+    }
     renderQR();
   }
 
