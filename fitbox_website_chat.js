@@ -94,10 +94,12 @@
       '.fbw-typing span{width:7px;height:7px;border-radius:50%;background:#aaa;animation:fbwb 1.2s infinite}',
       '.fbw-typing span:nth-child(2){animation-delay:.2s}.fbw-typing span:nth-child(3){animation-delay:.4s}',
       '@keyframes fbwb{0%,60%,100%{transform:translateY(0);background:#bbb}30%{transform:translateY(-5px);background:'+CFG.green+'}}',
-      // Quick replies - horizontal scrollbar statt umbrechen
-      '#fbw-qr{padding:8px 12px;display:flex;gap:6px;flex-shrink:0;border-top:1px solid #eef0ec;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;background:#fafbfa}',
+      // Quick replies - horizontal scrollbar mit Fade-Hint rechts
+      '#fbw-qr-wrap{position:relative;flex-shrink:0;border-top:1px solid #eef0ec;background:#fafbfa}',
+      '#fbw-qr-wrap::after{content:"";position:absolute;right:0;top:0;bottom:0;width:24px;background:linear-gradient(90deg,transparent,#fafbfa);pointer-events:none}',
+      '#fbw-qr{padding:10px 14px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}',
       '#fbw-qr::-webkit-scrollbar{display:none}',
-      '.fbw-qb{background:#fff;border:1.5px solid '+CFG.green+';color:'+CFG.darkGreen+';border-radius:18px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;flex-shrink:0}',
+      '.fbw-qb{background:#fff;border:1.5px solid '+CFG.green+';color:'+CFG.darkGreen+';border-radius:18px;padding:7px 13px;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap;flex-shrink:0}',
       '.fbw-qb:hover,.fbw-qb:active{background:'+CFG.green+';color:#fff}',
       // Input
       '#fbw-inp-area{display:flex;gap:8px;padding:10px 12px;border-top:1px solid #eef0ec;flex-shrink:0;align-items:flex-end;background:#fff}',
@@ -109,14 +111,18 @@
       '#fbw-send:disabled{opacity:.4;cursor:not-allowed}',
       '#fbw-send svg{width:17px;height:17px;fill:#fff}',
       '#fbw-foot{text-align:center;padding:5px 0 6px;color:#bbb;font-size:10px;letter-spacing:.02em;flex-shrink:0;background:#fff}',
-      // Mobile: fast Vollbild
+      // Mobile: fast Vollbild -- positioniert fixed (nicht absolute) damit Header sichtbar bleibt
       '@media(max-width:480px){',
       '  #fbw{bottom:14px;right:14px}',
-      '  #fbw-win{width:calc(100vw - 16px);max-width:420px;height:calc(100vh - 90px);max-height:calc(100vh - 90px);right:-6px;bottom:68px;border-radius:18px}',
+      '  #fbw-win{position:fixed;width:calc(100vw - 16px);max-width:none;height:calc(100dvh - 88px);max-height:calc(100dvh - 88px);right:8px;left:8px;bottom:78px;top:auto;border-radius:18px}',
       '  #fbw-btn{width:54px;height:54px}',
       '  #fbw-btn svg{width:24px;height:24px}',
       '  .fbw-b{font-size:14.5px}',
       '  #fbw-msgs{padding:14px 12px 8px}',
+      '  #fbw-qr{padding:10px 12px}',
+      '  .fbw-qb{padding:8px 14px;font-size:13px}',
+      '  .fbw-opt-chip{padding:10px 20px;font-size:14px}',
+      '  .fbw-slot-chip{padding:8px 13px;font-size:13px}',
       '}',
     ].join('');
     document.head.appendChild(s);
@@ -134,7 +140,7 @@
           '<button class="fbw-hx" id="fbw-hx">'+svgX()+'</button>' +
         '</div>' +
         '<div id="fbw-msgs" role="log" aria-live="polite"></div>' +
-        '<div id="fbw-qr"></div>' +
+        '<div id="fbw-qr-wrap"><div id="fbw-qr"></div></div>' +
         '<div id="fbw-inp-area">' +
           '<textarea id="fbw-inp" placeholder="Schreib mir etwas..." rows="1" aria-label="Nachricht eingeben"></textarea>' +
           '<button id="fbw-send" aria-label="Senden">'+svgSend()+'</button>' +
@@ -261,9 +267,11 @@
 
   function renderQR() {
     var el = document.getElementById('fbw-qr');
-    if (!el) return;
-    if (msgs.length > 2) { el.style.display='none'; return; }
-    el.style.display='flex'; el.innerHTML='';
+    var wrap = document.getElementById('fbw-qr-wrap');
+    if (!el || !wrap) return;
+    if (msgs.length > 2) { wrap.style.display='none'; return; }
+    wrap.style.display='block';
+    el.innerHTML='';
     QUICK_REPLIES.forEach(function(t) {
       var b = document.createElement('button');
       b.className='fbw-qb'; b.textContent=t;
