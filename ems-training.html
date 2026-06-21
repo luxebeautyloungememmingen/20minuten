@@ -850,7 +850,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
   var REACHES = {morgens:'Morgens', mittags:'Mittags', nachmittags:'Nachmittags', abends:'Abends'};
   var WA = {MEM:'4915730024124', SEN:'4915561206719'};
 
-  function newState(){ return {step:1, goal:'', studioId:'', studioCode:'', studioName:'', reach:'', slot:null, slots:[], slotWindowStart:null, slotToday:null, leadId:null, firstName:'', lastName:'', phone:'', email:''}; }
+  function newState(){ return {step:1, goal:'', studioId:'', studioCode:'', studioName:'', reach:'', slot:null, slots:[], slotWindowStart:null, slotToday:null, leadId:null, leadTracked:false, firstName:'', lastName:'', phone:'', email:''}; }
   var states = { A: newState(), B: newState() };
 
   function $(id){ return document.getElementById(id); }
@@ -1274,6 +1274,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     })
     .then(function(rows){
       if(rows && rows[0] && rows[0].id) st.leadId = rows[0].id;
+      trackLeadEvent(formId);
       if(btn){ btn.disabled = false; btn.textContent = 'Weiter zum Termin'; }
       onDone();
     })
@@ -1285,6 +1286,60 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
   }
 
   function stripHTML(s){ var d = document.createElement('div'); d.innerHTML = s; return d.textContent || d.innerText || ''; }
+
+  var META_LEAD_VALUE = 10.00;
+  function getCookie(name){
+    var m = document.cookie.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+  function getFacebookClickId(){
+    var fbc = getCookie('_fbc');
+    if(fbc) return fbc;
+    var fbclid = new URLSearchParams(window.location.search).get('fbclid');
+    return fbclid ? 'fb.1.' + Date.now() + '.' + fbclid : null;
+  }
+  function trackLeadEvent(formId){
+    var st = states[formId];
+    if(!st || st.leadTracked) return;
+    st.leadTracked = true;
+
+    var eventId = 'lead-' + (st.leadId || 'pending') + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+    var goalLabel = st.goal ? stripHTML(GOAL_LABELS[st.goal] || st.goal) : null;
+    var customData = {
+      content_name: 'EMS Probetraining',
+      content_category: 'EMS Fitness',
+      currency: 'EUR',
+      value: META_LEAD_VALUE,
+      studio: st.studioName || null,
+      goal: goalLabel
+    };
+
+    if(typeof fbq === 'function'){
+      fbq('track', 'Lead', customData, { eventID: eventId });
+    }
+
+    fetch(SUPA_URL + '/functions/v1/meta-capi-event', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        event_name: 'Lead',
+        event_time: Math.floor(Date.now() / 1000),
+        event_source_url: window.location.href,
+        event_id: eventId,
+        user_data: {
+          first_name: st.firstName || null,
+          last_name: st.lastName || null,
+          phone: st.phone || null,
+          email: st.email || null,
+          city: st.studioCode === 'SEN' ? 'senden' : 'memmingen',
+          country: 'de',
+          fbc: getFacebookClickId(),
+          fbp: getCookie('_fbp')
+        },
+        custom_data: customData
+      })
+    }).catch(function(err){ console.warn('CAPI Lead fehlgeschlagen:', err); });
+  }
 
   function selectGoal(formId, btn){
     qa('[data-goal-grid="'+formId+'"] .gbtn').forEach(function(b){ b.classList.remove('active'); });
@@ -1492,8 +1547,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     var waBtn = q('[data-wa-succ="'+formId+'"]');
     if(waBtn) waBtn.href = waLink;
     var succ = q('[data-succ="'+formId+'"]'); if(succ) succ.classList.add('show');
-    // Meta Pixel Lead-Track: wird in ems-training.js (fbSubmit) mit eventID gefeuert
-    // um Deduplizierung mit CAPI zu gewaehrleisten — hier NICHT nochmal tracken!
+    // Lead wird bereits nach erfolgreichem pt_leads-Capture mit eventID getrackt.
     if(typeof fbq === 'function'){
       if(st.slot) fbq('trackCustom', 'AppointmentBooked', { studio: st.studioName, goal: st.goal });
     }
