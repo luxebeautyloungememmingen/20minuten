@@ -1257,12 +1257,12 @@ function addBenefitEl(b){
   d.innerHTML =
     '<button class="item-del" type="button">&times;</button>'+
     '<div class="field-row">'+
-      '<div class="field" style="max-width:70px"><label class="fl">Icon</label><input type="text" class="fi" data-b-icon value="'+ea((b&&b.icon)||'')+'" style="font-size:18px;text-align:center"></div>'+
+      '<div class="field" style="max-width:150px"><label class="fl">Icon</label><select class="fi" data-b-icon>'+benefitIconOptions((b&&b.icon)||'')+'</select></div>'+
       '<div class="field" style="flex:1"><label class="fl">Titel</label><input type="text" class="fi" data-b-title value="'+ea((b&&b.title)||'')+'" placeholder="Zeiteffizient"></div>'+
     '</div>'+
     '<div class="field"><label class="fl">Text</label><textarea class="fa" data-b-text rows="2">'+esc((b&&b.text)||'')+'</textarea></div>';
   d.querySelector('.item-del').addEventListener('click', function(){ d.remove(); onAnyChange(); });
-  d.querySelectorAll('input,textarea').forEach(function(i){ i.addEventListener('input', onAnyChange); });
+  d.querySelectorAll('input,textarea,select').forEach(function(i){ i.addEventListener('input', onAnyChange); i.addEventListener('change', onAnyChange); });
   c.appendChild(d);
 }
 function readBenefits(){
@@ -1271,6 +1271,29 @@ function readBenefits(){
     r.push({icon:el.querySelector('[data-b-icon]').value.trim(), title:el.querySelector('[data-b-title]').value.trim(), text:el.querySelector('[data-b-text]').value.trim()});
   });
   return r;
+}
+
+function benefitIconKey(v){
+  v = String(v || '').trim().toLowerCase();
+  if(['time','trainer','joint','results','tech','strength'].indexOf(v) !== -1) return v;
+  if(v.indexOf('trainer') >= 0) return 'trainer';
+  if(v.indexOf('tech') >= 0 || v.indexOf('phone') >= 0) return 'tech';
+  if(v.indexOf('result') >= 0 || v.indexOf('chart') >= 0) return 'results';
+  if(v.indexOf('joint') >= 0 || v.indexOf('heart') >= 0) return 'joint';
+  if(v.indexOf('strength') >= 0 || v.indexOf('weight') >= 0) return 'strength';
+  return 'time';
+}
+function benefitIconOptions(current){
+  var active = benefitIconKey(current);
+  var opts = [
+    ['time','Uhr'],
+    ['trainer','Trainer'],
+    ['joint','Gelenke'],
+    ['results','Ergebnisse'],
+    ['tech','Technologie'],
+    ['strength','Kraft']
+  ];
+  return opts.map(function(o){ return '<option value="'+o[0]+'" '+(o[0]===active?'selected':'')+'>'+o[1]+'</option>'; }).join('');
 }
 
 // ── TRUST ──

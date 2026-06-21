@@ -115,7 +115,8 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
 .benefits{background:var(--w);border-bottom:1px solid var(--bd)}
 .bgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:22px}
 .benefit{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:var(--benefit-card-padding);display:flex;gap:12px;align-items:flex-start}
-.bicon{width:var(--benefit-icon-box);height:var(--benefit-icon-box);background:var(--gl);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:var(--benefit-icon-size)}
+.bicon{width:var(--benefit-icon-box);height:var(--benefit-icon-box);background:var(--gl);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--g)}
+.bicon svg{width:var(--benefit-icon-size);height:var(--benefit-icon-size);stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .benefit h3{font-size:var(--benefit-title-size);font-weight:700;color:var(--b);margin-bottom:3px}
 .benefit p{font-size:var(--benefit-text-size);color:var(--m);line-height:1.5}
 
@@ -505,12 +506,12 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     <div class="sec-lbl" id="benefits-label">Deine Vorteile</div>
     <div class="sec-t" id="benefits-title">Warum fitbox?</div>
     <div class="bgrid" id="benefits-grid">
-      <div class="benefit"><div class="bicon">&#9201;</div><div><h3>Zeiteffizient</h3><p>20 Minuten ersetzen 90 Minuten klassisches Training.</p></div></div>
-      <div class="benefit"><div class="bicon">&#128106;</div><div><h3>Immer mit Personal Trainer</h3><p>Wir leiten dich an, korrigieren und motivieren. Nur so wirkt EMS 100%.</p></div></div>
-      <div class="benefit"><div class="bicon">&#10084;</div><div><h3>Gelenkschonend</h3><p>Ideal bei R&uuml;ckenschmerzen oder als sanfter Einstieg.</p></div></div>
-      <div class="benefit"><div class="bicon">&#128202;</div><div><h3>Messbare Ergebnisse</h3><p>K&ouml;rperanalyse, Check-ins und klare Ziele.</p></div></div>
-      <div class="benefit"><div class="bicon">&#128241;</div><div><h3>Modernste Technologie</h3><p>SYMBIONT &amp; miha bodytec, Made in Germany.</p></div></div>
-      <div class="benefit"><div class="bicon">&#127947;</div><div><h3>F&uuml;r alle geeignet</h3><p>Anf&auml;nger, Wiedereinsteiger oder Sportler.</p></div></div>
+      <div class="benefit"><div class="bicon" data-icon="time"></div><div><h3>Zeiteffizient</h3><p>20 Minuten ersetzen 90 Minuten klassisches Training.</p></div></div>
+      <div class="benefit"><div class="bicon" data-icon="trainer"></div><div><h3>Immer mit Personal Trainer</h3><p>Wir leiten dich an, korrigieren und motivieren. Nur so wirkt EMS 100%.</p></div></div>
+      <div class="benefit"><div class="bicon" data-icon="joint"></div><div><h3>Gelenkschonend</h3><p>Ideal bei R&uuml;ckenschmerzen oder als sanfter Einstieg.</p></div></div>
+      <div class="benefit"><div class="bicon" data-icon="results"></div><div><h3>Messbare Ergebnisse</h3><p>K&ouml;rperanalyse, Check-ins und klare Ziele.</p></div></div>
+      <div class="benefit"><div class="bicon" data-icon="tech"></div><div><h3>Modernste Technologie</h3><p>SYMBIONT &amp; miha bodytec, Made in Germany.</p></div></div>
+      <div class="benefit"><div class="bicon" data-icon="strength"></div><div><h3>F&uuml;r alle geeignet</h3><p>Anf&auml;nger, Wiedereinsteiger oder Sportler.</p></div></div>
     </div>
   </div>
 </section>
@@ -822,12 +823,12 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     benefits_label:'Deine Vorteile',
     benefits_title:'Warum fitbox?',
     benefits:[
-      {icon:'\u23f1\ufe0f', title:'Zeiteffizient', text:'20 Minuten ersetzen 90 Minuten klassisches Training.'},
-      {icon:'\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67', title:'Immer mit Personal Trainer', text:'Wir leiten dich an, korrigieren und motivieren. Nur so wirkt EMS 100%.'},
-      {icon:'\u2764\ufe0f', title:'Gelenkschonend', text:'Ideal bei R\u00fcckenschmerzen oder als sanfter Einstieg.'},
-      {icon:'\ud83d\udcca', title:'Messbare Ergebnisse', text:'K\u00f6rperanalyse, Check-ins und klare Ziele.'},
-      {icon:'\ud83d\udcf1', title:'Modernste Technologie', text:'SYMBIONT & miha bodytec, Made in Germany.'},
-      {icon:'\ud83c\udfcb\ufe0f', title:'F\u00fcr alle geeignet', text:'Anf\u00e4nger, Wiedereinsteiger oder Sportler.'}
+      {icon:'time', title:'Zeiteffizient', text:'20 Minuten ersetzen 90 Minuten klassisches Training.'},
+      {icon:'trainer', title:'Immer mit Personal Trainer', text:'Wir leiten dich an, korrigieren und motivieren. Nur so wirkt EMS 100%.'},
+      {icon:'joint', title:'Gelenkschonend', text:'Ideal bei R\u00fcckenschmerzen oder als sanfter Einstieg.'},
+      {icon:'results', title:'Messbare Ergebnisse', text:'K\u00f6rperanalyse, Check-ins und klare Ziele.'},
+      {icon:'tech', title:'Modernste Technologie', text:'SYMBIONT & miha bodytec, Made in Germany.'},
+      {icon:'strength', title:'F\u00fcr alle geeignet', text:'Anf\u00e4nger, Wiedereinsteiger oder Sportler.'}
     ],
     // Trust-Badges
     trust_label:'Ausgestattet mit professioneller Technologie',
@@ -1110,7 +1111,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     var benefits = c.benefits || DEFAULTS.benefits;
     if($('benefits-grid') && Array.isArray(benefits)){
       $('benefits-grid').innerHTML = benefits.map(function(b){
-        return '<div class="benefit"><div class="bicon">'+escapeHTML(b.icon||'')+'</div><div><h3>'+escapeHTML(b.title||'')+'</h3><p>'+escapeHTML(b.text||'')+'</p></div></div>';
+        return '<div class="benefit"><div class="bicon">'+benefitIconHTML(b.icon)+'</div><div><h3>'+escapeHTML(b.title||'')+'</h3><p>'+escapeHTML(b.text||'')+'</p></div></div>';
       }).join('');
     }
 
@@ -1342,6 +1343,39 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
         custom_data: customData
       })
     }).catch(function(err){ console.warn('CAPI Lead fehlgeschlagen:', err); });
+  }
+
+  var BENEFIT_ICONS = {
+    time: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>',
+    trainer: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="7" r="3"></circle><path d="M3 21v-2a5 5 0 0 1 10 0v2"></path><circle cx="17" cy="8" r="2.5"></circle><path d="M14.5 21v-1.5a4 4 0 0 1 6.5-3.1"></path></svg>',
+    joint: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"></path><path d="M12 8v10"></path></svg>',
+    results: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5"></path><path d="M4 19h16"></path><path d="M8 16v-4"></path><path d="M12 16V8"></path><path d="M16 16v-6"></path></svg>',
+    tech: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"></rect><path d="M10 7h4"></path><path d="M11 17h2"></path></svg>',
+    strength: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"></path><path d="M3 9v6"></path><path d="M21 9v6"></path><path d="M8 10v4"></path><path d="M16 10v4"></path></svg>'
+  };
+  function normalizeBenefitIcon(icon){
+    var v = String(icon || '').trim().toLowerCase();
+    if(BENEFIT_ICONS[v]) return v;
+    if(v.indexOf('trainer') >= 0) return 'trainer';
+    if(v.indexOf('tech') >= 0 || v.indexOf('phone') >= 0) return 'tech';
+    if(v.indexOf('result') >= 0 || v.indexOf('chart') >= 0) return 'results';
+    if(v.indexOf('joint') >= 0 || v.indexOf('heart') >= 0) return 'joint';
+    if(v.indexOf('strength') >= 0 || v.indexOf('weight') >= 0) return 'strength';
+    if(icon === '\u23f1\ufe0f' || icon === '\u23f1' || icon === '\u23f2\ufe0f') return 'time';
+    if(icon === '\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67' || icon === '\ud83d\udc65' || icon === '\ud83e\udd1d') return 'trainer';
+    if(icon === '\u2764\ufe0f' || icon === '\u2764') return 'joint';
+    if(icon === '\ud83d\udcca' || icon === '\ud83d\udcc8') return 'results';
+    if(icon === '\ud83d\udcf1') return 'tech';
+    if(icon === '\ud83c\udfcb\ufe0f' || icon === '\ud83d\udcaa') return 'strength';
+    return 'time';
+  }
+  function benefitIconHTML(icon){
+    return BENEFIT_ICONS[normalizeBenefitIcon(icon)] || BENEFIT_ICONS.time;
+  }
+  function renderStaticBenefitIcons(){
+    qa('.bicon[data-icon]').forEach(function(el){
+      el.innerHTML = benefitIconHTML(el.getAttribute('data-icon'));
+    });
   }
 
   function updateInlineWhatsAppLinks(){
@@ -1742,6 +1776,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
   function init(){
     try {
       bindEvents();
+      renderStaticBenefitIcons();
       handleURLParam();
       loadConfig();
       // Admin-Preview-Modus aktivieren wenn ?preview=admin
