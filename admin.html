@@ -386,7 +386,7 @@ kbd{display:inline-block;padding:1px 5px;border-radius:4px;background:rgba(255,2
           <div class="sec-label">Headline</div>
           <div class="field">
             <label class="fl">Zeile 1 (klein) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Einleitungszeile</strong>Schwarze kleinere Schrift über der grünen Hauptbotschaft.</span></button></label>
-            <input type="text" class="fi" id="cfg-hero_title" placeholder="Sichere dir deinen Gutschein für ein">
+            <input type="text" class="fi" id="cfg-hero_title" placeholder="20 Minuten EMS testen">
           </div>
           <div class="field">
             <label class="fl">Zeile 2 – grün, groß <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Hauptbotschaft</strong>Groß, fett, in fitbox-Grün.</span></button></label>
@@ -394,7 +394,7 @@ kbd{display:inline-block;padding:1px 5px;border-radius:4px;background:rgba(255,2
           </div>
           <div class="field">
             <label class="fl">Check-Zeile ✓</label>
-            <input type="text" class="fi" id="cfg-hero_check" placeholder="100% kostenlos und unverbindlich testen!">
+            <input type="text" class="fi" id="cfg-hero_check" placeholder="Kostenlos, unverbindlich und persönlich betreut.">
           </div>
           <div class="field">
             <label class="fl">Beschreibung <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>1-2 Sätze</strong>HTML erlaubt: <em>&lt;strong&gt;</em> für Fettschrift.</span></button></label>
@@ -418,19 +418,20 @@ kbd{display:inline-block;padding:1px 5px;border-radius:4px;background:rgba(255,2
           </div>
           <div class="field">
             <label class="fl">Nav-Button (oben rechts)</label>
-            <input type="text" class="fi" id="cfg-nav_cta_text" placeholder="Jetzt sichern">
+            <input type="text" class="fi" id="cfg-nav_cta_text" placeholder="Gratis testen">
           </div>
+          <button class="add-btn" id="apply-conversion-copy-btn" type="button">Conversion-Copy einsetzen</button>
         </div>
 
         <!-- QUIZ -->
         <div class="spanel" id="spanel-quiz">
           <div class="field">
             <label class="fl">Kleiner Text drüber</label>
-            <input type="text" class="fi" id="cfg-quiz_cta" placeholder="Klicke auf dein Ziel">
+            <input type="text" class="fi" id="cfg-quiz_cta" placeholder="Gutschein auswählen">
           </div>
           <div class="field">
             <label class="fl">Quiz-Titel</label>
-            <input type="text" class="fi" id="cfg-quiz_title" placeholder="Was ist dein Ziel?">
+            <input type="text" class="fi" id="cfg-quiz_title" placeholder="Wofür möchtest du EMS testen?">
           </div>
           <div class="field">
             <label class="fl">Untertitel</label>
@@ -559,7 +560,7 @@ kbd{display:inline-block;padding:1px 5px;border-radius:4px;background:rgba(255,2
         <!-- FORM -->
         <div class="spanel" id="spanel-form">
           <div class="sec-label">Unteres Formular</div>
-          <div class="field"><label class="fl">Titel</label><input type="text" class="fi" id="cfg-form_title" placeholder="Gutschein sichern"></div>
+          <div class="field"><label class="fl">Titel</label><input type="text" class="fi" id="cfg-form_title" placeholder="Gratis Probetraining sichern"></div>
           <div class="field"><label class="fl">Untertitel</label><input type="text" class="fi" id="cfg-form_subtitle"></div>
           <div class="sec-label">Sticky CTA (Mobile) <button class="info-btn" tabindex="-1" type="button"><span class="tip"><strong>Grüner Balken unten</strong>Erscheint auf Smartphones beim Scrollen.</span></button></div>
           <div class="field"><label class="fl">Titel</label><input type="text" class="fi" id="cfg-sticky_title" placeholder="Gratis EMS-Probetraining"></div>
@@ -1156,6 +1157,28 @@ function onAnyChange(){
 }
 
 // ── RENDER ──
+function applyConversionCopy(){
+  var copy = {
+    nav_cta_text: 'Gratis testen',
+    hero_title: '20 Minuten EMS testen',
+    hero_sub: 'GRATIS EMS-Probetraining!',
+    hero_check: 'Kostenlos, unverbindlich und pers\u00f6nlich betreut.',
+    hero_desc: 'W\u00e4hle dein Trainingsziel und sichere dir deinen Gutschein f\u00fcr fitbox Memmingen oder Senden. In nur <strong>20 Minuten</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong>.',
+    scarcity_text: '\u26a0\ufe0f Begrenzte Probetraining-Termine diese Woche.',
+    quiz_cta: 'Gutschein ausw\u00e4hlen',
+    quiz_title: 'Wof\u00fcr m\u00f6chtest du EMS testen?',
+    quiz_sub: 'W\u00e4hle dein Ziel aus. Danach sichern wir dir dein gratis Probetraining.',
+    form_title: 'Gratis Probetraining sichern',
+    form_subtitle: 'W\u00e4hle dein Ziel und wir stimmen den Termin pers\u00f6nlich ab.'
+  };
+  Object.keys(copy).forEach(function(k){
+    var el = $('cfg-' + k);
+    if(el) el.value = copy[k];
+  });
+  onAnyChange();
+  toast('Conversion-Copy eingesetzt', 'info');
+}
+
 function renderAll(c){
   var simpleFields = [
     'banner_text','banner_link_text','banner_link_url',
@@ -1855,6 +1878,7 @@ function bindAll(){
   $('historyBtn').addEventListener('click', openHistory);
   $('historyClose').addEventListener('click', function(){ $('historyModal').classList.remove('show'); });
   $('historyModal').addEventListener('click', function(e){ if(e.target===this) this.classList.remove('show'); });
+  if($('apply-conversion-copy-btn')) $('apply-conversion-copy-btn').addEventListener('click', applyConversionCopy);
 
   $('openSiteBtn').addEventListener('click', function(){ window.open('ems-training.html','_blank'); });
   $('prevDesk').addEventListener('click', function(){ setPreviewMode('desktop'); });

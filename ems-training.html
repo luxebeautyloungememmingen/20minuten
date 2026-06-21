@@ -225,6 +225,8 @@ body{font-size:var(--body-size);font-family:'DM Sans',sans-serif;background:var(
 .inp:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(47,134,21,.12)}
 .priv{font-size:11px;color:var(--m);line-height:1.5;margin:12px 0 16px}
 .priv a{color:var(--dg)}
+.wa-alt{margin:10px 0 12px;text-align:center;font-size:13px;color:var(--m);line-height:1.45}
+.wa-alt a{color:#128c45;font-weight:700;text-decoration:underline}
 .summary{background:var(--w);border:1px solid var(--g);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:13px}
 .sum-r{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px dashed var(--bd);gap:8px}
 .sum-r:last-child{border-bottom:none}
@@ -359,18 +361,18 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
 
 <nav class="nav">
   <a href="#"><img id="logo" src="https://jypbyywxfjniafuygxci.supabase.co/storage/v1/object/public/media/logos/1778437817433_fitbox_Logo.png" alt="fitbox"></a>
-  <a href="#quiz" class="nav-cta" id="nav-cta">Jetzt sichern</a>
+  <a href="#quiz" class="nav-cta" id="nav-cta">Gratis testen</a>
 </nav>
 
 <section class="hero" id="sec-hero">
   <div class="hero-in">
     <div class="hero-left">
       <div class="hero-eyebrow">EMS Personal Training</div>
-      <div class="hero-title" id="hero-title">Sichere dir deinen Gutschein f&uuml;r ein</div>
+      <div class="hero-title" id="hero-title">20 Minuten EMS testen</div>
       <div class="hero-sub" id="hero-sub">GRATIS EMS-Probetraining!</div>
-      <div class="hero-check" id="hero-check">100% kostenlos und unverbindlich testen!</div>
-      <p class="hero-desc" id="hero-desc">In nur <strong>20 Minuten</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong>. Pers&ouml;nlich betreut. Made in Germany.</p>
-      <div class="scarcity" id="scarcity">&#9888;&#65039; Nur wenige Pl&auml;tze pro Monat verf&uuml;gbar!</div>
+      <div class="hero-check" id="hero-check">Kostenlos, unverbindlich und pers&ouml;nlich betreut.</div>
+      <p class="hero-desc" id="hero-desc">W&auml;hle dein Trainingsziel und sichere dir deinen Gutschein f&uuml;r fitbox Memmingen oder Senden. In nur <strong>20 Minuten</strong> aktivierst du bis zu <strong>90 % deiner Muskelfasern</strong>.</p>
+      <div class="scarcity" id="scarcity">&#9888;&#65039; Begrenzte Probetraining-Termine diese Woche.</div>
     </div>
     <div class="hero-right" id="hero-img-wrap" style="display:none">
       <img id="hero-img" src="" alt="EMS Training" loading="eager">
@@ -381,9 +383,9 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
 <!-- TOP FORM (Quiz with Gutschein-Framing + Bilder) -->
 <section class="quiz" id="sec-quiz">
   <div class="quiz-in">
-    <div class="quiz-cta" id="quiz-cta">Klicke auf dein Ziel</div>
-    <div class="quiz-t" id="quiz-t">Was ist dein Ziel?</div>
-    <div class="quiz-s" id="quiz-s">Klicke HIER auf dein Ziel und sichere dir deinen Gutschein!</div>
+    <div class="quiz-cta" id="quiz-cta">Gutschein ausw&auml;hlen</div>
+    <div class="quiz-t" id="quiz-t">Wof&uuml;r m&ouml;chtest du EMS testen?</div>
+    <div class="quiz-s" id="quiz-s">W&auml;hle dein Ziel aus. Danach sichern wir dir dein gratis Probetraining.</div>
     <div class="quiz-arrow"><div class="quiz-arrow-inner">Ausw&auml;hlen</div></div>
 
     <div class="ind" data-form="A">
@@ -416,15 +418,16 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
 
 
     <div class="fstep" data-step="A3">
-      <div class="st-t">Wie k&ouml;nnen wir dich erreichen?</div>
-      <div class="st-s">Deine Daten werden sicher &uuml;bertragen und nicht weitergegeben.</div>
+      <div class="st-t">Wohin sollen wir deinen Gutschein schicken?</div>
+      <div class="st-s">Telefon reicht f&uuml;r die Terminabstimmung. E-Mail ist optional.</div>
       <div class="fgrid">
         <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
-        <div class="field full"><label class="lbl">Nachname *</label><input class="inp" type="text" data-input="lname" required autocomplete="family-name"></div>
+        <div class="field full"><label class="lbl">Nachname optional</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
         <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
-        <div class="field full"><label class="lbl">E-Mail *</label><input class="inp" type="email" data-input="email" required autocomplete="email" inputmode="email"></div>
+        <div class="field full"><label class="lbl">E-Mail optional</label><input class="inp" type="email" data-input="email" autocomplete="email" inputmode="email"></div>
       </div>
       <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link">Datenschutzerkl&auml;rung</a></p>
+      <div class="wa-alt">Lieber direkt schreiben? <a data-wa-inline="A" href="#" target="_blank" rel="noopener">Per WhatsApp anfragen</a></div>
       <div class="fnav">
         <button type="button" class="bback" data-back="A2">Zur&uuml;ck</button>
         <button type="button" class="bnext" data-next-contact="A">Weiter zum Termin</button>
@@ -646,8 +649,8 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     </div>
 
     <div class="fstep active" data-step="B1">
-      <div class="st-t">Was ist dein Ziel?</div>
-      <div class="st-s">Klicke auf dein Ziel, um zu starten</div>
+      <div class="st-t">Wof&uuml;r m&ouml;chtest du EMS testen?</div>
+      <div class="st-s">W&auml;hle dein Ziel und sichere dir dein gratis Probetraining.</div>
       <div class="ggrid" data-goal-grid="B"></div>
       <div class="err" data-err="B1"></div>
     </div>
@@ -666,15 +669,16 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     </div>
 
     <div class="fstep" data-step="B3">
-      <div class="st-t">Wie k&ouml;nnen wir dich erreichen?</div>
-      <div class="st-s">Deine Daten werden sicher &uuml;bertragen und nicht weitergegeben.</div>
+      <div class="st-t">Wohin sollen wir deinen Gutschein schicken?</div>
+      <div class="st-s">Telefon reicht f&uuml;r die Terminabstimmung. E-Mail ist optional.</div>
       <div class="fgrid">
         <div class="field full"><label class="lbl">Vorname *</label><input class="inp" type="text" data-input="fname" required autocomplete="given-name"></div>
-        <div class="field full"><label class="lbl">Nachname *</label><input class="inp" type="text" data-input="lname" required autocomplete="family-name"></div>
+        <div class="field full"><label class="lbl">Nachname optional</label><input class="inp" type="text" data-input="lname" autocomplete="family-name"></div>
         <div class="field full"><label class="lbl">Telefon *</label><input class="inp" type="tel" data-input="phone" required autocomplete="tel" inputmode="tel"></div>
-        <div class="field full"><label class="lbl">E-Mail *</label><input class="inp" type="email" data-input="email" required autocomplete="email" inputmode="email"></div>
+        <div class="field full"><label class="lbl">E-Mail optional</label><input class="inp" type="email" data-input="email" autocomplete="email" inputmode="email"></div>
       </div>
       <p class="priv">Mit dem Absenden stimmst du zu, dass wir deine Daten zur Bearbeitung nutzen. <a href="#" id="ds-link2">Datenschutzerkl&auml;rung</a></p>
+      <div class="wa-alt">Lieber direkt schreiben? <a data-wa-inline="B" href="#" target="_blank" rel="noopener">Per WhatsApp anfragen</a></div>
       <div class="fnav">
         <button type="button" class="bback" data-back="B2">Zur&uuml;ck</button>
         <button type="button" class="bnext" data-next-contact="B">Weiter zum Termin</button>
@@ -755,16 +759,16 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
 
   var DEFAULTS = {
     banner_active:false, banner_text:'', banner_link_text:'', banner_link_url:'#quiz',
-    nav_cta_text:'Jetzt sichern',
-    hero_title:'Sichere dir deinen Gutschein f\u00fcr ein',
+    nav_cta_text:'Gratis testen',
+    hero_title:'20 Minuten EMS testen',
     hero_sub:'GRATIS EMS-Probetraining!',
-    hero_check:'100% kostenlos und unverbindlich testen!',
-    hero_desc:'In nur 20 Minuten aktivierst du bis zu 90% deiner Muskelfasern. Pers\u00f6nlich betreut. Made in Germany.',
+    hero_check:'Kostenlos, unverbindlich und pers\u00f6nlich betreut.',
+    hero_desc:'W\u00e4hle dein Trainingsziel und sichere dir deinen Gutschein f\u00fcr fitbox Memmingen oder Senden. In nur 20 Minuten aktivierst du bis zu 90% deiner Muskelfasern.',
     hero_img:'',
-    scarcity_text:'\u26a0\ufe0f Nur wenige Pl\u00e4tze pro Monat verf\u00fcgbar!',
-    quiz_cta:'Klicke auf dein Ziel',
-    quiz_title:'Was ist dein Ziel?',
-    quiz_sub:'Klicke HIER auf dein Ziel und sichere dir deinen Gutschein!',
+    scarcity_text:'\u26a0\ufe0f Begrenzte Probetraining-Termine diese Woche.',
+    quiz_cta:'Gutschein ausw\u00e4hlen',
+    quiz_title:'Wof\u00fcr m\u00f6chtest du EMS testen?',
+    quiz_sub:'W\u00e4hle dein Ziel aus. Danach sichern wir dir dein gratis Probetraining.',
     goals:[
       {key:'abnehmen', label:'Abnehmen &amp; Figur straffen', img: GOAL_IMG_PLACEHOLDER},
       {key:'muskelaufbau', label:'Muskulatur st\u00e4rken', img: GOAL_IMG_PLACEHOLDER},
@@ -784,7 +788,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     sticky_title:'Gratis EMS-Probetraining', sticky_sub:'Nur wenige Pl\u00e4tze frei!',
     brand_tags:['#ImmermitSpa\u00df','#ImmermitTermin','#ImmermitTrainer'],
     impressum_url:'#', datenschutz_url:'#',
-    form_title:'Gutschein sichern', form_subtitle:'In 60 Sekunden zu deinem GRATIS EMS-Probetraining.',
+    form_title:'Gratis Probetraining sichern', form_subtitle:'W\u00e4hle dein Ziel und wir stimmen den Termin pers\u00f6nlich ab.',
     ctas:[
       {active:true,  title:'Jetzt kostenloses Probetraining vereinbaren!', btn:'Gutschein sichern \u2192'},
       {active:false, title:'', btn:'Gutschein sichern \u2192'},
@@ -925,6 +929,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     if($('mem-wa')) $('mem-wa').href = 'https://wa.me/'+c.mem_wa;
     if($('sen-wa')) $('sen-wa').href = 'https://wa.me/'+c.sen_wa;
     WA = {MEM: c.mem_wa, SEN: c.sen_wa};
+    updateInlineWhatsAppLinks();
     if(Array.isArray(c.reviews)){
       var rhtml = c.reviews.map(function(r){
         var avatar = r.img
@@ -1228,11 +1233,9 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     var lastName = q('[data-input="lname"]', formEl).value.trim();
 
     if(!firstName){ showError(formId, 3, 'Bitte gib deinen Vornamen ein.'); return; }
-    if(!lastName){ showError(formId, 3, 'Bitte gib deinen Nachnamen ein.'); return; }
     if(!phone){ showError(formId, 3, 'Bitte gib deine Telefonnummer ein.'); return; }
     if(phone.replace(/\D/g,'').length < 6){ showError(formId, 3, 'Bitte gib eine g\u00fcltige Telefonnummer ein.'); return; }
-    if(!email){ showError(formId, 3, 'Bitte gib deine E-Mail-Adresse ein.'); return; }
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showError(formId, 3, 'Bitte gib eine g\u00fcltige E-Mail-Adresse ein.'); return; }
+    if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showError(formId, 3, 'Bitte gib eine g\u00fcltige E-Mail-Adresse ein.'); return; }
 
     // Kontaktdaten im State speichern
     st.firstName = firstName;
@@ -1341,6 +1344,18 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     }).catch(function(err){ console.warn('CAPI Lead fehlgeschlagen:', err); });
   }
 
+  function updateInlineWhatsAppLinks(){
+    ['A','B'].forEach(function(formId){
+      var st = states[formId];
+      var code = st && st.studioCode ? st.studioCode : 'MEM';
+      var num = code === 'SEN' ? WA.SEN : WA.MEM;
+      var link = q('[data-wa-inline="'+formId+'"]');
+      if(!link) return;
+      var msg = 'Hallo, ich interessiere mich f\u00fcr das gratis EMS-Probetraining bei ' + (code === 'SEN' ? 'fitbox Senden' : 'fitbox Memmingen') + '.';
+      link.href = 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+    });
+  }
+
   function selectGoal(formId, btn){
     qa('[data-goal-grid="'+formId+'"] .gbtn').forEach(function(b){ b.classList.remove('active'); });
     btn.classList.add('active');
@@ -1358,6 +1373,7 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     st.studioCode = btn.getAttribute('data-code');
     st.studioName = st.studioCode === 'MEM' ? 'fitbox Memmingen' : 'fitbox Senden';
     if($('wa-float')) $('wa-float').href = 'https://wa.me/' + (st.studioCode === 'SEN' ? WA.SEN : WA.MEM);
+    updateInlineWhatsAppLinks();
     // Meta Pixel: Studio gewählt
     if(typeof fbq === 'function') fbq('trackCustom', 'StudioSelected', { studio: st.studioName, goal: st.goal });
     setTimeout(function(){ showStep(formId, 3); }, 150);
@@ -1467,13 +1483,13 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     var phone = st.phone || '';
     var email = st.email || '';
 
-    if(!firstName || !phone || !email){ showError(formId, 4, 'Bitte gehe zur\u00fcck und f\u00fclle alle Pflichtfelder aus.'); return; }
+    if(!firstName || !phone){ showError(formId, 4, 'Bitte gehe zur\u00fcck und f\u00fclle alle Pflichtfelder aus.'); return; }
 
     btn.classList.add('loading'); btn.disabled = true;
     var bookingSuccess = false, bookingError = null;
     var bookPromise = Promise.resolve();
 
-    if(st.studioCode === 'MEM' && st.slot){
+    if(st.studioCode === 'MEM' && st.slot && email){
       bookPromise = fetch(ML_BASE+'/connect/v1/trialsession/book', {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
@@ -1572,6 +1588,10 @@ body.admin-preview .sec-wrap:hover .sec-edit-btn{display:flex}
     });
     var sub = q('[data-submit="'+formId+'"]');
     if(sub) sub.addEventListener('click', function(){ submit(formId); });
+    var waInline = q('[data-wa-inline="'+formId+'"]');
+    if(waInline) waInline.addEventListener('click', function(){
+      if(typeof fbq === 'function') fbq('trackCustom','WhatsAppClick',{source:'contact_step_form_'+formId, studio:states[formId].studioName || 'fitbox Memmingen'});
+    });
     qa('[data-back^="'+formId+'"]').forEach(function(btn){
       var target = btn.getAttribute('data-back');
       var step = parseInt(target.substring(1), 10);
